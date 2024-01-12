@@ -8,7 +8,6 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata = {
   metadataBase: new URL(defaultUrl),
   title: "ppw",
-  description:"paid-per-word voice cloning",
 };
 
 export default function RootLayout({
