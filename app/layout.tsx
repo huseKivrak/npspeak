@@ -1,20 +1,28 @@
-import type { Metadata } from 'next'
-import './globals.css'
+import { GeistSans } from "geist/font/sans";
+import "./globals.css";
 
+const defaultUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
 
-export const metadata: Metadata = {
-  title: 'ppw',
-  description: 'get paid for every word',
-}
+export const metadata = {
+  metadataBase: new URL(defaultUrl),
+  title: "ppw",
+  description:"paid-per-word voice cloning",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className='flex flex-col justify-center items-center h-screen lowercase tracking-wide font-extralight'>{children}</body>
+    <html lang="en" className={GeistSans.className}>
+      <body className="bg-background text-foreground">
+        <main className="min-h-screen flex flex-col items-center">
+          {children}
+        </main>
+      </body>
     </html>
-  )
+  );
 }
