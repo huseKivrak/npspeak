@@ -5,7 +5,6 @@ import { NextResponse, type NextRequest } from 'next/server';
  * Prevents unauthenticated Server Component routes
  * by refreshing sessions before loading them
  */
-
 export async function middleware(request: NextRequest) {
   //new response allows header setting
   let response = NextResponse.next({
@@ -62,11 +61,16 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  await supabase.auth.getUser();
+  //redirect if user is not logged in
+  const userStatus = await supabase.auth.getUser();
+  if (userStatus.data.user === null) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
 
   return response;
 }
-
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|login).*)'],
+  // matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+
 };
