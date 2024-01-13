@@ -1,8 +1,13 @@
 'use server';
+import fs from 'fs';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+
 import { createClient } from '../supabase/server';
 import { cookies } from 'next/headers';
 
 import { BASE_URL, ELEVENLABS_API_HEADERS } from './api';
+
 export async function CreateVoiceClone(prevState: any, formData: FormData) {
   //todo: add audio file to db
   const cookieStore = cookies();
@@ -29,22 +34,41 @@ export async function CreateVoiceClone(prevState: any, formData: FormData) {
 }
 
 export async function CreateAudioClip(prevState: any, formData: FormData) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
   const voice_id = formData.get('voice_id');
-  formData.set('model_id', 'eleven_multilingual_v2');
+
+  const userText = formData.get('text');
+  console.log('voice_id: ', voice_id);
+  console.log('text: ', userText);
+
+  const requestBody = JSON.stringify({
+    model_id: 'eleven_multilingual_v2',
+    text: userText,
+  });
 
   try {
     const response = await fetch(`${BASE_URL}/text-to-speech/${voice_id}`, {
       method: 'POST',
-      headers: ELEVENLABS_API_HEADERS,
-      body: formData,
+      headers: {
+        ...ELEVENLABS_API_HEADERS,
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
     });
-
-    const data = await response.json();
-    console.log('clip:', data.clip_id);
+    console.log('response: ', response);
+    if (response.ok) {
+      const blob = await response.blob();
+      console.log('blob: ', blob);
+      const buffer = await blob.arrayBuffer();
+      console.log('buffer: ', buffer);
+      const fileName = `${uuidv4()}.mp3`;
+      const filePath = `public/audio/elevenlabs/${fileName}`;
+      console.log('filePath: ', filePath);
+      fs.writeFileSync(filePath, Buffer.from(buffer));
+      console.log('File written successfully');
+      return { message: 'Audio clip created successfully', filePath };
+    }
   } catch (error) {
+    console.error(error);
     return { message: `Error: ${error}` };
   }
 }

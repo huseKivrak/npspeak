@@ -4,16 +4,16 @@ import { useFormState } from 'react-dom';
 import { CreateAudioClip } from '@/utils/elevenlabs/actions';
 import { useState, useEffect } from 'react';
 import { ElevenLabsVoice } from '@/types/elevenlabs';
-import VoiceCard from '@/components/VoiceCard';
 
 const initialState = {
   message: '',
+  filePath: '',
 };
 
 export default function TextToSpeechPage() {
   const [state, formAction] = useFormState(CreateAudioClip, initialState);
   const [voices, setVoices] = useState<ElevenLabsVoice[]>();
-  const [showVoices, setShowVoices] = useState(false);
+  const [audioFilePath, setAudioFilePath] = useState<string>('');
 
   useEffect(() => {
     async function getVoices() {
@@ -24,6 +24,13 @@ export default function TextToSpeechPage() {
     }
     getVoices();
   }, []);
+
+  useEffect(() => {
+    if (state?.filePath) {
+      setAudioFilePath(state.filePath);
+    }
+  }, [state?.filePath]);
+
   return (
     <div className='container flex flex-col items-center p-4 mt-48'>
       <h1 className='text-2xl text-center mb-8 tracking-widest'>create audio from text</h1>
@@ -35,7 +42,7 @@ export default function TextToSpeechPage() {
           rows={6}
           required
         />
-        <select className='select select-secondary w-full max-w-xs' required>
+        <select name='voice_id' className='select select-secondary w-full max-w-xs' required>
           <option disabled selected>
             Premade Voice Options
           </option>
@@ -52,10 +59,8 @@ export default function TextToSpeechPage() {
             ))}
         </select>
         <SubmitButton text='create audio' className='mt-4 max-w-fit' />
-        <p aria-live='polite' className='sr-only' role='status'>
-          {state?.message}
-        </p>
       </form>
+      {audioFilePath && <audio src={`/${audioFilePath}`} controls />}
     </div>
   );
 }
