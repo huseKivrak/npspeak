@@ -2,12 +2,19 @@
 
 import { useFormStatus } from 'react-dom';
 
-export function SubmitButton() {
+type SubmitButtonProps = {
+  text: string;
+  className?: string;
+};
+
+export function SubmitButton({ text, className }: SubmitButtonProps) {
   const { pending } = useFormStatus();
 
+  const buttonClasses = `btn btn-primary ${className || ''}`;
+
   return (
-    <button type='submit' aria-disabled={pending}>
-      Add
+    <button type='submit' aria-disabled={pending} className={buttonClasses}>
+      {text}
     </button>
   );
 }
