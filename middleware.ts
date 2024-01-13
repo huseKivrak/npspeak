@@ -62,8 +62,8 @@ export async function middleware(request: NextRequest) {
   );
 
   //redirect if user is not logged in
-  const userStatus = await supabase.auth.getUser();
-  if (userStatus.data.user === null) {
+  const { data, error } = await supabase.auth.getUser();
+  if (data.user === null) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
@@ -71,6 +71,4 @@ export async function middleware(request: NextRequest) {
 }
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico|login).*)'],
-  // matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
-
 };
