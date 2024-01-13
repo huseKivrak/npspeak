@@ -5,7 +5,7 @@ const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY ? process.env.ELEVENLA
 export const BASE_URL = 'https://api.elevenlabs.io/v1';
 
 export const ELEVENLABS_API_HEADERS = {
-  'Xi-Api-Key': ELEVENLABS_API_KEY,
+  'xi-api-key': ELEVENLABS_API_KEY,
 };
 
 export const audioFormats = {

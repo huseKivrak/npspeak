@@ -17,7 +17,7 @@ export default function CreateClone() {
         <input type='text' name='name' placeholder='Name' required />
         <input type='text' name='description' placeholder='Description' />
         <input type='file' name='file' accept='audio/*' required />
-        <SubmitButton />
+        <SubmitButton text={'clone me'}/>
         <p aria-live='polite' className='sr-only' role='status'>
           {state?.message}
         </p>
