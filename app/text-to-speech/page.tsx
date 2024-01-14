@@ -7,7 +7,7 @@ import { ElevenLabsVoice } from '@/types/elevenlabs';
 
 const initialState = {
   message: '',
-  filePath: '',
+  audioUrl: '',
 };
 
 export default function TextToSpeechPage() {
@@ -26,10 +26,10 @@ export default function TextToSpeechPage() {
   }, []);
 
   useEffect(() => {
-    if (state?.filePath) {
-      setAudioFilePath(state.filePath);
+    if (state?.audioUrl) {
+      setAudioFilePath(state.audioUrl);
     }
-  }, [state?.filePath]);
+  }, [state?.audioUrl]);
 
   return (
     <div className='container flex flex-col items-center p-4 mt-48'>

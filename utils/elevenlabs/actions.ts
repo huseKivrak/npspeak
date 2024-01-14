@@ -1,7 +1,7 @@
 'use server';
 import fs from 'fs';
-import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { redirect } from 'next/navigation';
 
 import { createClient } from '../supabase/server';
 import { cookies } from 'next/headers';
@@ -61,11 +61,11 @@ export async function CreateAudioClip(prevState: any, formData: FormData) {
       const buffer = await blob.arrayBuffer();
       console.log('buffer: ', buffer);
       const fileName = `${uuidv4()}.mp3`;
-      const filePath = `public/audio/elevenlabs/${fileName}`;
+      const filePath = `public/${fileName}`;
       console.log('filePath: ', filePath);
       fs.writeFileSync(filePath, Buffer.from(buffer));
       console.log('File written successfully');
-      return { message: 'Audio clip created successfully', filePath };
+      return { message: 'Audio clip created successfully', audioUrl: `${fileName}` };
     }
   } catch (error) {
     console.error(error);
