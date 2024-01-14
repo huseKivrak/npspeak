@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# migrations
+database/drizzle/*.sql
+database/drizzle/meta/*
