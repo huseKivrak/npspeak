@@ -3,28 +3,34 @@ import { SubmitButton } from '@/components/SubmitButton';
 import { useFormState } from 'react-dom';
 import { CreateAudioClip } from '@/utils/elevenlabs/actions';
 import { useState, useEffect } from 'react';
+import { ELEVENLABS_PREMADE_VOICES } from '@/utils/elevenlabs/api';
 import { ElevenLabsVoice } from '@/types/elevenlabs';
-
 const initialState = {
   message: '',
   audioUrl: '',
 };
 
+/**
+ * tts form page
+ *
+ */
 export default function TextToSpeechPage() {
   const [state, formAction] = useFormState(CreateAudioClip, initialState);
-  const [voices, setVoices] = useState<ElevenLabsVoice[]>();
+  const [voices, setVoices] = useState<ElevenLabsVoice[]>(ELEVENLABS_PREMADE_VOICES); //*
   const [audioFilePath, setAudioFilePath] = useState<string>('');
 
-  useEffect(() => {
-    async function getVoices() {
-      const res = await fetch('/api/voices');
-      const data = await res.json();
-      const voices: ElevenLabsVoice[] = data.voices;
-      setVoices(voices);
-    }
-    getVoices();
-  }, []);
+  //*
+  // useEffect(() => {
+  //   async function getVoices() {
+  //     const res = await fetch('/api/voices');
+  //     const data = await res.json();
+  //     const voices: ElevenLabsVoice[] = data.voices;
+  //     setVoices(voices);
+  //   }
+  //   getVoices();
+  // }, []);
 
+  //todo: fix/remove
   useEffect(() => {
     if (state?.audioUrl) {
       setAudioFilePath(state.audioUrl);
@@ -47,7 +53,7 @@ export default function TextToSpeechPage() {
             Premade Voice Options
           </option>
           {voices
-            ?.filter((voice) => voice.category === 'premade')
+            //* .filter((voice) => voice.category === 'premade')
             .map((voice) => (
               <option
                 key={voice.voice_id}
