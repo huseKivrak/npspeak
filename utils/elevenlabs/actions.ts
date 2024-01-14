@@ -10,8 +10,8 @@ import { BASE_URL, ELEVENLABS_API_HEADERS } from './api';
 
 export async function CreateVoiceClone(prevState: any, formData: FormData) {
   //todo: add audio file to db
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  // const cookieStore = cookies();
+  // const supabase = createClient(cookieStore);
 
   console.log('formData: ', formData);
 
@@ -25,7 +25,7 @@ export async function CreateVoiceClone(prevState: any, formData: FormData) {
     const data = await response.json();
     console.log('voice:', data.voice_id);
 
-    //todo: add voiceId to db
+    //todo: add voice_id to db
 
     return { message: 'Voice clone created successfully' };
   } catch (error) {
@@ -57,15 +57,13 @@ export async function CreateAudioClip(prevState: any, formData: FormData) {
     console.log('response: ', response);
     if (response.ok) {
       const blob = await response.blob();
-      console.log('blob: ', blob);
       const buffer = await blob.arrayBuffer();
-      console.log('buffer: ', buffer);
       const fileName = `${uuidv4()}.mp3`;
       const filePath = `public/${fileName}`;
       console.log('filePath: ', filePath);
       fs.writeFileSync(filePath, Buffer.from(buffer));
-      console.log('File written successfully');
-      return { message: 'Audio clip created successfully', audioUrl: `${fileName}` };
+      console.log('** file writing complete** ');
+      return { message: 'audio recording complete', audioUrl: `${fileName}` };
     }
   } catch (error) {
     console.error(error);
