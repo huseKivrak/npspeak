@@ -1,7 +1,33 @@
-export interface ElevenLabsVoice {
+export type ElevenLabsVoice = {
   voice_id: string;
-  category: string;
   name: string;
+  samples: File[] | null;
+  category: string;
+  fine_tuning: {
+    language: any;
+    is_allowed_to_fine_tune: boolean;
+    fine_tuning_requested: boolean;
+    finetuning_state: string;
+    verification_attempts: any[] | null;
+    verification_failures: any[];
+    verification_attempts_count: number;
+    slice_ids: any;
+    manual_verification: any;
+    manual_verification_requested: boolean;
+  };
+  labels: {
+    accent: string;
+    description: string;
+    age: string;
+    gender: string;
+    use_case: string;
+  };
+  description: string | null;
   preview_url: string;
-  labels: {[key: string]: string};
-}
+  available_for_tiers: any;
+  settings: any;
+  sharing: any;
+  high_quality_base_model_ids: string[];
+};
+
+export type Label = 'accent' | 'description' | 'gender' | 'age' | 'use_case';
