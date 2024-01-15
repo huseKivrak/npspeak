@@ -6,10 +6,22 @@ import { NextResponse, type NextRequest } from 'next/server';
  * by refreshing sessions before loading them
  */
 export async function middleware(request: NextRequest) {
+
+  //attempt at not rendering AuthButton on login
+  const url = new URL(request.url);
+  const origin = url.origin;
+  const pathname = url.pathname;
+
+
+  const requestHeaders = new Headers(request.headers);
+  // if (pathname === '/login') {
+  //   requestHeaders.set('x-login', 'true');
+  // }
+
   //new response allows header setting
   let response = NextResponse.next({
     request: {
-      headers: request.headers,
+      headers: requestHeaders,
     },
   });
 
