@@ -1,26 +1,21 @@
 import {
   pgTable,
-  foreignKey,
   pgEnum,
   bigint,
   unique,
   uuid,
   timestamp,
   text,
-  pgSchema,
   varchar,
+  pgSchema,
   index,
   uniqueIndex,
   jsonb,
   boolean,
   smallint,
-  inet,
-  json,
-  bigserial,
   primaryKey,
   integer,
 } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
 
 export const keyStatus = pgEnum('key_status', ['default', 'valid', 'invalid', 'expired']);
 export const keyType = pgEnum('key_type', [
@@ -42,25 +37,9 @@ export const aalLevel = pgEnum('aal_level', ['aal1', 'aal2', 'aal3']);
 export const codeChallengeMethod = pgEnum('code_challenge_method', ['s256', 'plain']);
 export const requestStatus = pgEnum('request_status', ['PENDING', 'SUCCESS', 'ERROR']);
 
-export const auth = pgSchema('auth');
-
-export const campaignCharacters = pgTable('campaign_characters', {
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
-  id: bigint('id', { mode: 'number' }).primaryKey().notNull(),
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
-  campaign: bigint('campaign', { mode: 'number' }).references(() => campaigns.id, {
-    onDelete: 'cascade',
-  }),
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
-  character: bigint('character', { mode: 'number' }).references(() => characters.id, {
-    onDelete: 'cascade',
-  }),
-});
-
 export const audioClips = pgTable(
   'audio_clips',
   {
-    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
     id: bigint('id', { mode: 'number' }).primaryKey().notNull(),
     userId: uuid('user_id').references(() => profiles.id, { onDelete: 'set null' }),
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
@@ -69,7 +48,6 @@ export const audioClips = pgTable(
     fileUrl: text('file_url').notNull(),
     originalFileName: text('original_file_name').notNull(),
     status: text('status').default(''),
-    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
     durationSeconds: bigint('duration_seconds', { mode: 'number' }).notNull(),
   },
   (table) => {
@@ -80,20 +58,17 @@ export const audioClips = pgTable(
 );
 
 export const characters = pgTable('characters', {
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
   id: bigint('id', { mode: 'number' }).primaryKey().notNull(),
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
   userId: uuid('user_id').references(() => profiles.id, { onDelete: 'set null' }),
   name: text('name').notNull(),
   description: text('description'),
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
   voiceId: bigint('voice_id', { mode: 'number' }).references(() => voiceClones.id, {
     onDelete: 'set null',
   }),
 });
 
 export const voiceClones = pgTable('voice_clones', {
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
   id: bigint('id', { mode: 'number' }).primaryKey().notNull(),
   userId: uuid('user_id').references(() => profiles.id, { onDelete: 'set null' }),
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
@@ -103,7 +78,6 @@ export const voiceClones = pgTable('voice_clones', {
 });
 
 export const campaigns = pgTable('campaigns', {
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
   id: bigint('id', { mode: 'number' }).primaryKey().notNull(),
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
   userId: uuid('user_id').references(() => profiles.id, { onDelete: 'set null' }),
@@ -116,7 +90,7 @@ export const profiles = pgTable(
     id: uuid('id')
       .primaryKey()
       .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
+      .references(() => users.id, { onDelete: 'cascade' }), //todo
     updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }),
     username: text('username'),
     fullName: text('full_name'),
@@ -130,33 +104,65 @@ export const profiles = pgTable(
   }
 );
 
-export const ttsAudio = pgTable('tts_audio', {
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
+export const ttsAudio = pgTable(
+  'tts_audio',
+  {
+    id: bigint('id', { mode: 'number' }).primaryKey().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    voiceId: bigint('voice_id', { mode: 'number' }).references(() => voiceClones.id, {
+      onDelete: 'set null',
+    }),
+    userId: uuid('user_id').references(() => profiles.id, { onDelete: 'set null' }),
+    durationSeconds: bigint('duration_seconds', { mode: 'number' }).notNull(),
+    sourceText: text('source_text').notNull(),
+    fileUrl: text('file_url').notNull(),
+  },
+  (table) => {
+    return {
+      ttsAudioFileUrlKey: unique('tts_audio_file_url_key').on(table.fileUrl),
+    };
+  }
+);
+
+//junction tables
+export const voiceCloneClips = pgTable(
+  'voice_clone_clips',
+  {
+    voiceCloneId: integer('voice_clone_id')
+      .notNull()
+      .references(() => voiceClones.id, { onDelete: 'cascade' }),
+    audioClipId: integer('audio_clip_id')
+      .notNull()
+      .references(() => audioClips.id, { onDelete: 'cascade' }),
+  },
+  (table) => {
+    return {
+      voiceCloneClipsPkey: primaryKey({
+        columns: [table.voiceCloneId, table.audioClipId],
+        name: 'voice_clone_clips_pkey',
+      }),
+    };
+  }
+);
+
+export const campaignCharacters = pgTable('campaign_characters', {
   id: bigint('id', { mode: 'number' }).primaryKey().notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
-  voiceId: bigint('voice_id', { mode: 'number' }).references(() => voiceClones.id, {
-    onDelete: 'set null',
+  campaign: bigint('campaign', { mode: 'number' }).references(() => campaigns.id, {
+    onDelete: 'cascade',
   }),
-  userId: uuid('user_id').references(() => profiles.id, { onDelete: 'set null' }),
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
-  durationSeconds: bigint('duration_seconds', { mode: 'number' }).notNull(),
-  sourceText: text('source_text').notNull(),
+  character: bigint('character', { mode: 'number' }).references(() => characters.id, {
+    onDelete: 'cascade',
+  }),
 });
 
-export const schemaMigrations = auth.table('schema_migrations', {
-  version: varchar('version', { length: 255 }).primaryKey().notNull(),
-});
-
-export const instances = auth.table('instances', {
-  id: uuid('id').primaryKey().notNull(),
-  uuid: uuid('uuid'),
-  rawBaseConfig: text('raw_base_config'),
-  createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }),
-  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }),
-});
-
-export const users = auth.table(
+//////////////////////////////////////////////////////////////////////////////
+//todo
+//?unused, introspected auth table (read-only) for profiles reference above
+//////////////////////////////////////////////////////////////////////////////
+const auth = pgSchema('auth');
+const users = auth.table(
   'users',
   {
     instanceId: uuid('instance_id'),
@@ -214,26 +220,6 @@ export const users = auth.table(
       ),
       emailPartialKey: uniqueIndex('users_email_partial_key').on(table.email),
       usersPhoneKey: unique('users_phone_key').on(table.phone),
-    };
-  }
-);
-
-export const voiceCloneClips = pgTable(
-  'voice_clone_clips',
-  {
-    voiceCloneId: integer('voice_clone_id')
-      .notNull()
-      .references(() => voiceClones.id, { onDelete: 'cascade' }),
-    audioClipId: integer('audio_clip_id')
-      .notNull()
-      .references(() => audioClips.id, { onDelete: 'cascade' }),
-  },
-  (table) => {
-    return {
-      voiceCloneClipsPkey: primaryKey({
-        columns: [table.voiceCloneId, table.audioClipId],
-        name: 'voice_clone_clips_pkey',
-      }),
     };
   }
 );
