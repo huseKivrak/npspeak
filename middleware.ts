@@ -74,6 +74,7 @@ export async function middleware(request: NextRequest) {
   );
 
   //redirect if user is not logged in
+  //todo: getSession() might suffice here (instead of database lookups each time)
   const { data, error } = await supabase.auth.getUser();
   if (data.user === null) {
     return NextResponse.redirect(new URL('/login', request.url));
@@ -82,5 +83,5 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|login).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|login|signup).*)'],
 };
