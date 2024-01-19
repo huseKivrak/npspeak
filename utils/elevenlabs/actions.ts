@@ -63,6 +63,9 @@ export async function CreateAudioClip(prevState: any, formData: FormData) {
       console.log('filePath: ', filePath);
       fs.writeFileSync(filePath, Buffer.from(buffer));
       console.log('** file writing complete** ');
+      //todo: add audio file to db/storage
+
+      //todo: redirect to `/text-to-speech/${audio_id}` or similiar
       return { message: 'audio recording complete', audioUrl: `${fileName}` };
     }
   } catch (error) {
