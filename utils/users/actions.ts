@@ -30,3 +30,14 @@ export async function ModifyProfile(prevState: any, formData: FormData) {
     return { message: `Error: ${error}` };
   }
 }
+
+//todo: finish
+export const recoverPassword = async (formData: FormData) => {
+  'use server';
+  const email = formData.get('email') as string;
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo:'/login/reset-password'
+  });
+};
