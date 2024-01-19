@@ -1,41 +1,24 @@
 import {
   pgTable,
-  pgEnum,
-  bigint,
   unique,
+  bigint,
   uuid,
   timestamp,
   text,
   varchar,
+  boolean,
+  serial,
+  integer,
+  date,
   pgSchema,
   index,
   uniqueIndex,
   jsonb,
-  boolean,
   smallint,
   primaryKey,
-  integer,
 } from 'drizzle-orm/pg-core';
 
-export const keyStatus = pgEnum('key_status', ['default', 'valid', 'invalid', 'expired']);
-export const keyType = pgEnum('key_type', [
-  'aead-ietf',
-  'aead-det',
-  'hmacsha512',
-  'hmacsha256',
-  'auth',
-  'shorthash',
-  'generichash',
-  'kdf',
-  'secretbox',
-  'secretstream',
-  'stream_xchacha20',
-]);
-export const factorType = pgEnum('factor_type', ['totp', 'webauthn']);
-export const factorStatus = pgEnum('factor_status', ['unverified', 'verified']);
-export const aalLevel = pgEnum('aal_level', ['aal1', 'aal2', 'aal3']);
-export const codeChallengeMethod = pgEnum('code_challenge_method', ['s256', 'plain']);
-export const requestStatus = pgEnum('request_status', ['PENDING', 'SUCCESS', 'ERROR']);
+export const auth = pgSchema('auth');
 
 export const audioClips = pgTable(
   'audio_clips',
@@ -57,15 +40,21 @@ export const audioClips = pgTable(
   }
 );
 
-export const characters = pgTable('characters', {
+export const npcs = pgTable('npcs', {
   id: bigint('id', { mode: 'number' }).primaryKey().notNull(),
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
   userId: uuid('user_id').references(() => profiles.id, { onDelete: 'set null' }),
-  name: text('name').notNull(),
+  name: varchar('name').notNull(),
   description: text('description'),
   voiceId: bigint('voice_id', { mode: 'number' }).references(() => voiceClones.id, {
     onDelete: 'set null',
   }),
+  isVoiceClone: boolean('is_voice_clone').default(false).notNull(),
+});
+
+export const npcDialogueTypes = pgTable('npc_dialogue_types', {
+  id: serial('id').primaryKey().notNull(),
+  typeName: varchar('type_name', { length: 50 }).notNull(),
 });
 
 export const voiceClones = pgTable('voice_clones', {
@@ -77,32 +66,36 @@ export const voiceClones = pgTable('voice_clones', {
   status: text('status').notNull(),
 });
 
+export const npcDialogues = pgTable('npc_dialogues', {
+  dialogueId: serial('dialogue_id').primaryKey().notNull(),
+  npcId: integer('npc_id').references(() => npcs.id),
+  dialogueTypeId: integer('dialogue_type_id').references(() => npcDialogueTypes.id),
+  text: text('text').notNull(),
+  isStock: boolean('is_stock').default(false),
+  //todo: no check constraints in drizzle (zod?)
+});
+
 export const campaigns = pgTable('campaigns', {
   id: bigint('id', { mode: 'number' }).primaryKey().notNull(),
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
   userId: uuid('user_id').references(() => profiles.id, { onDelete: 'set null' }),
   description: text('description'),
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }),
+  startDate: date('start_date'),
+  endDate: date('end_date'),
 });
 
-export const profiles = pgTable(
-  'profiles',
-  {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }), //todo
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }),
-    username: text('username'),
-    fullName: text('full_name'),
-    avatarUrl: text('avatar_url'),
-    website: text('website'),
-  },
-  (table) => {
-    return {
-      profilesUsernameKey: unique('profiles_username_key').on(table.username),
-    };
-  }
-);
+export const profiles = pgTable('profiles', {
+  id: uuid('id')
+    .primaryKey()
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }),
+  username: text('username'),
+  fullName: text('full_name'),
+  avatarUrl: text('avatar_url'),
+  website: text('website'),
+});
 
 export const ttsAudio = pgTable(
   'tts_audio',
@@ -126,7 +119,26 @@ export const ttsAudio = pgTable(
   }
 );
 
-//junction tables
+export const campaignNpcs = pgTable(
+  'campaign_npcs',
+  {
+    campaignId: bigint('campaign_id', { mode: 'number' })
+      .notNull()
+      .references(() => campaigns.id, { onDelete: 'cascade' }),
+    npcId: bigint('npc_id', { mode: 'number' })
+      .notNull()
+      .references(() => npcs.id, { onDelete: 'cascade' }),
+  },
+  (table) => {
+    return {
+      campaignNpcsPkey: primaryKey({
+        columns: [table.campaignId, table.npcId],
+        name: 'campaign_npcs_pkey',
+      }),
+    };
+  }
+);
+
 export const voiceCloneClips = pgTable(
   'voice_clone_clips',
   {
@@ -147,22 +159,10 @@ export const voiceCloneClips = pgTable(
   }
 );
 
-export const campaignCharacters = pgTable('campaign_characters', {
-  id: bigint('id', { mode: 'number' }).primaryKey().notNull(),
-  campaign: bigint('campaign', { mode: 'number' }).references(() => campaigns.id, {
-    onDelete: 'cascade',
-  }),
-  character: bigint('character', { mode: 'number' }).references(() => characters.id, {
-    onDelete: 'cascade',
-  }),
-});
-
-//////////////////////////////////////////////////////////////////////////////
-//todo
-//?unused, introspected auth table (read-only) for profiles reference above
-//////////////////////////////////////////////////////////////////////////////
-const auth = pgSchema('auth');
-const users = auth.table(
+///////////////////////////////////////////////////////////////
+//todo: avoid needing (read-only) auth schema
+///////////////////////////////////////////////////////////////
+export const users = auth.table(
   'users',
   {
     instanceId: uuid('instance_id'),
