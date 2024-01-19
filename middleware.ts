@@ -7,10 +7,10 @@ import { NextResponse, type NextRequest } from 'next/server';
  */
 export async function middleware(request: NextRequest) {
 
-  //attempt at not rendering AuthButton on login
-  const url = new URL(request.url);
-  const origin = url.origin;
-  const pathname = url.pathname;
+  //* prev attempt at not rendering AuthButton on login
+  // const url = new URL(request.url);
+  // const origin = url.origin;
+  // const pathname = url.pathname;
 
 
   const requestHeaders = new Headers(request.headers);
@@ -74,7 +74,7 @@ export async function middleware(request: NextRequest) {
   );
 
   //redirect if user is not logged in
-  //todo: getSession() might suffice here (instead of database lookups each time)
+  //todo: getSession() instead?
   const { data, error } = await supabase.auth.getUser();
   if (data.user === null) {
     return NextResponse.redirect(new URL('/login', request.url));
