@@ -1,8 +1,7 @@
 import { GeistSans } from 'geist/font/sans';
-import AuthButton from '@/components/AuthButton';
-import BackButton from '@/components/BackButton';
-import { headers } from 'next/headers';
+import AuthButton from '@/components/buttons/AuthButton';
 import './globals.css';
+import Link from 'next/link';
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -14,17 +13,13 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // const headersList = headers();
-  // console.log('headersList.get("x-login"): ', headersList.get('x-login'));
-  // const onLoginPage = headersList.get('x-login') === 'true';
 
   return (
     <html lang='en' className={GeistSans.className}>
       <body className='bg-background text-foreground'>
         <nav className='w-full flex justify-center border-b border-b-secondary h-16'>
           <div className='w-full max-w-4xl flex justify-between items-center p-3 text-sm'>
-            {/* {!onLoginPage && <AuthButton />} */}
-            {/* <BackButton /> */}
+            <Link href='/'>npSpeaks</Link>
             <AuthButton />
           </div>
         </nav>
