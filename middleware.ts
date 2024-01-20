@@ -6,17 +6,7 @@ import { NextResponse, type NextRequest } from 'next/server';
  * by refreshing sessions before loading them
  */
 export async function middleware(request: NextRequest) {
-
-  //* prev attempt at not rendering AuthButton on login
-  // const url = new URL(request.url);
-  // const origin = url.origin;
-  // const pathname = url.pathname;
-
-
   const requestHeaders = new Headers(request.headers);
-  // if (pathname === '/login') {
-  //   requestHeaders.set('x-login', 'true');
-  // }
 
   //new response allows header setting
   let response = NextResponse.next({
@@ -73,15 +63,10 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  //redirect if user is not logged in
-  //todo: getSession() instead?
-  const { data, error } = await supabase.auth.getUser();
-  if (data.user === null) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
+  await supabase.auth.getSession();
 
   return response;
 }
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|login|signup).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };
