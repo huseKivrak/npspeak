@@ -1,14 +1,12 @@
 'use client';
-import { signUpAction} from '@/app/auth/actions';
+import { signUpAction } from '@/app/auth/actions';
 import { useState, FormEvent } from 'react';
 import { useFormState } from 'react-dom';
 import SendEmailIcon from '@/components/icons/SendEmailIcon';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
 
-const initialState = {message: ''};
-
 export default function SignUpForm() {
-  const [state, formAction] = useFormState(signUpAction, initialState);
+  const [message, formAction] = useFormState(signUpAction, '');
   return (
     <div className='flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2'>
       <h2 className='text-4xl font-extralight tracking-widest flex items-center justify-center mt-24'>
@@ -66,7 +64,7 @@ export default function SignUpForm() {
           >
             <SendEmailIcon className='w-6 h-6' />
           </SubmitButton>
-          {state?.message && <p className='text-red-500'>{state.message}</p>}
+          {message && <p className='text-red-500'>{message}</p>}
         </span>
       </form>
     </div>
