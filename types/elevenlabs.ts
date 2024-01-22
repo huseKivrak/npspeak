@@ -6,8 +6,10 @@ export type ElevenLabsVoice = {
   fine_tuning: {
     language: any;
     is_allowed_to_fine_tune: boolean;
-    fine_tuning_requested: boolean;
     finetuning_state: string;
+    finetuning_progress: any | null;
+    message: string | null;
+    dataset_duration_seconds: number | null;
     verification_attempts: any[] | null;
     verification_failures: any[];
     verification_attempts_count: number;
@@ -20,7 +22,7 @@ export type ElevenLabsVoice = {
     description: string;
     age: string;
     gender: string;
-    use_case: string;
+    'use case': string;
   };
   description: string | null;
   preview_url: string;
@@ -30,4 +32,4 @@ export type ElevenLabsVoice = {
   high_quality_base_model_ids: string[];
 };
 
-export type Label = 'accent' | 'description' | 'gender' | 'age' | 'use_case';
+export type Label = 'accent' | 'description' | 'gender' | 'age' | 'use case';
