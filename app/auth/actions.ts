@@ -11,13 +11,9 @@ export const signUpAction= async (prevState: any, formData: FormData) => {
   const password = formData.get('password') as string;
   const password2 = formData.get('password2') as string;
 
-  if (password !== password2) {
-    return {
-      message: 'passwords do not match',
-    };
-  }
-
-  //# optional username added as metadata. defaults to email.
+  //todo: better validation
+  if (password !== password2) return 'passwords do not match';
+    //# optional username added as metadata. defaults to email.
   const username =
     formData.get('username') !== null ? (formData.get('username') as string) : (email as string);
   const cookieStore = cookies();
@@ -36,7 +32,7 @@ export const signUpAction= async (prevState: any, formData: FormData) => {
 
   if (error) {
     console.error('signup error: ', error);
-    return redirect('/signup?message=oops, something went wrong. please try again');
+    return redirect('/signup?oops, something went wrong. please try again');
   }
 
   return redirect('/signup?message=account created! check your email to confirm');
@@ -54,13 +50,14 @@ export const signInAction = async (formData: FormData) => {
   });
 
   if (error) {
-    return redirect('/login?message=incorrect email/password. please try again');
+    // return redirect('/login?message=incorrect email/password. please try again');
+    return 'incorrect email/password. please try again';
   }
 
   console.log('data.user: ', data.user);
   const username = data.user.user_metadata.username;
 
-  return redirect(`/?message=welcome back, ${username}`);
+  return redirect(`/`);
 };
 
 // export async function ModifyProfile(prevState: any, formData: FormData) {
