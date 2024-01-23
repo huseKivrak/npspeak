@@ -9,7 +9,7 @@ const dbHost = process.env.DATABASE_HOST || '';
 
 export default {
   schema: './app/schema/*',
-  schemaFilter: ['public', 'auth'],
+  schemaFilter: ['public'],
   out: './database/drizzle',
   driver: 'pg',
   dbCredentials: {
@@ -19,4 +19,7 @@ export default {
     port: 5432,
     database: 'postgres',
   },
+  introspect:{
+    casing: 'preserve'
+  }
 } satisfies Config;
