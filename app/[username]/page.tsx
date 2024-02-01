@@ -21,9 +21,9 @@ export default function UserPage({ params }: { params: { username: string } }) {
           data: { session },
         } = await supabase.auth.getSession();
         if (session) {
-          const username = getUsername(session.user).toLowerCase();
+          const username = getUsername(session.user);
           //redirect if route username doesn't match authenticated user (reserves '/your-username' for that user)
-          if (username !== params.username.toLowerCase()) {
+          if (username.toLowerCase() !== params.username.toLowerCase()) {
             router.push('/');
           }
           setAuthUsername(username);

@@ -20,4 +20,4 @@ export const getUserFromSession = async () => {
 };
 
 //simple helper for getting nested username for now
-export const getUsername = (user?: User) => user?.user_metadata.username;
+export const getUsername = (user?: User) => user?.user_metadata.username ?? null;
