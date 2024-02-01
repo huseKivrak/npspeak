@@ -1,11 +1,11 @@
 import { cookies } from 'next/headers';
 import { createClient } from './default/server';
 import { User } from '@supabase/supabase-js';
-import { createClient as client } from './default/client';
 
 //returns a user from sessions saved in cookies
 //! not for most up-to-date user (use supabase.auth.getUser() instead)
 export const getUserFromSession = async () => {
+  'use server'
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
   try {
