@@ -18,7 +18,7 @@ export default async function AuthButton() {
   const username = user?.user_metadata.username;
   return user ? (
     <div className='flex items-center gap-4'>
-      <Link href='/dashboard'>{username}</Link>
+      <Link href={`/${username}`}>{username}</Link>
       <form action={logoutAction}>
         <button className='py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover'>
           logout
