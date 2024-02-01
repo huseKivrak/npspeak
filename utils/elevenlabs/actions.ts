@@ -1,11 +1,6 @@
 'use server';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
-import { redirect } from 'next/navigation';
-
-import { createClient } from '../supabase/server';
-import { cookies } from 'next/headers';
-
 import { BASE_URL, ELEVENLABS_API_HEADERS } from './api';
 
 export async function CreateVoiceClone(prevState: any, formData: FormData) {
@@ -24,10 +19,7 @@ export async function CreateVoiceClone(prevState: any, formData: FormData) {
 
     const data = await response.json();
     console.log('voice:', data.voice_id);
-
-    //todo: add voice_id to db
-
-    return { message: 'Voice clone created successfully' };
+    //todo: add voice_id to db    return { message:`${data.voice_id}` };
   } catch (error) {
     return { message: `Error: ${error}` };
   }
