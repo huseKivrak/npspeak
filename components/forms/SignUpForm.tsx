@@ -1,6 +1,5 @@
 'use client';
 import { signUpAction } from '@/app/auth/actions';
-import { useState, FormEvent } from 'react';
 import { useFormState } from 'react-dom';
 import SendEmailIcon from '@/components/icons/SendEmailIcon';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
@@ -54,7 +53,8 @@ export default function SignUpForm() {
         <input
           className='rounded-md px-4 py-2 bg-inherit border mb-1 font-thin tracking-widest'
           name='username'
-          placeholder='(optional)'
+          placeholder='(admin is taken)'
+          required
         />
 
         <span className='flex flex-col items-center'>
