@@ -2,6 +2,7 @@ import { GeistSans } from 'geist/font/sans';
 import './globals.css';
 import NavBar from '@/components/layout/NavBar';
 import Footer from '@/components/layout/Footer';
+import { Analytics } from '@vercel/analytics/react';
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -9,16 +10,18 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "npSpeak",
+  title: 'npSpeak',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-
   return (
     <html lang='en' className={GeistSans.className}>
       <body className=''>
         <NavBar />
-        <main className='min-h-screen flex flex-col items-center'>{children}</main>
+        <main className='min-h-screen flex flex-col items-center'>
+          {children}
+          <Analytics />
+        </main>
         <Footer />
       </body>
     </html>

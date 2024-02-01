@@ -13,6 +13,7 @@
     "@supabase/supabase-js": "^2.39.2",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
+    "@vercel/analytics": "^1.1.2",
     "drizzle-orm": "^0.29.3",
     "drizzle-zod": "^0.5.1",
     "eslint-plugin-drizzle": "^0.2.3",
