@@ -1,10 +1,11 @@
 'use client';
-import { SubmitButton } from '@/components/SubmitButton';
+import { SubmitButton } from '@/components/buttons/SubmitButton';
 import { useFormState } from 'react-dom';
 import { CreateAudioClip } from '@/utils/elevenlabs/actions';
 import { useState, useEffect } from 'react';
 import { ELEVENLABS_PREMADE_VOICES } from '@/utils/elevenlabs/api';
 import { ElevenLabsVoice } from '@/types/elevenlabs';
+
 const initialState = {
   message: '',
   audioUrl: '',
@@ -25,12 +26,12 @@ export default function TextToSpeechPage() {
   //     const res = await fetch('/api/voices');
   //     const data = await res.json();
   //     const voices: ElevenLabsVoice[] = data.voices;
+
   //     setVoices(voices);
   //   }
   //   getVoices();
   // }, []);
 
-  //todo: fix/remove
   useEffect(() => {
     if (state?.audioUrl) {
       setAudioFilePath(state.audioUrl);
