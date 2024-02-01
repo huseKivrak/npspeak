@@ -7,7 +7,7 @@ import CampaignForm from '@/components/forms/CampaignForm';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-export default async function UserPage({ params }: { params: { username: string } }) {
+export default function UserPage({ params }: { params: { username: string } }) {
   const [showCampaignForm, setShowCampaignForm] = useState(false);
   const [authUsername, setAuthUsername] = useState<string | null>(null);
   const router = useRouter();
