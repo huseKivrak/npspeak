@@ -40,3 +40,5 @@ database/drizzle/*.sql
 database/drizzle/meta/*
 
 certificates
+
+package-lock.json
