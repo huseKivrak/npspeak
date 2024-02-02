@@ -1,7 +1,8 @@
 'use client';
 
-import { Database, Tables, Enums } from '@/types/supabase';
+import { Tables } from '@/types/supabase';
 import { useState } from 'react';
+import NPCCarousel from '../NPCCarousel';
 
 export default function CampaignCard({
   campaign,
@@ -17,19 +18,14 @@ export default function CampaignCard({
       <div className='card-body'>
         <h2 className='card-title'>{campaign.campaign_name}</h2>
         {campaign.description && <p>{campaign.description}</p>}
-        <div className='card-actions justify-end'>
-          <button className='btn btn-primary' onClick={() => setShowNPCs(!showNPCs)}>
-            NPCs
+        <div className='card-actions justify-start'>
+          <button className='btn btn-ghost font-light text-xs tracking-widest' onClick={() => setShowNPCs(!showNPCs)}>
+            see NPCs
           </button>
-        </div>
-        <ul>
           {showNPCs &&
-            NPCs.map((npc, index) => (
-              <li key={index}>
-                <h4>{npc.npc_name}</h4>
-              </li>
-            ))}
-        </ul>
+          <NPCCarousel NPCs={NPCs}/>
+          }
+        </div>
       </div>
     </div>
   );
