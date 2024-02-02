@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { getCampaignsAndNPCs, GroupedResults } from '@/utils/drizzle/helpers';
 import { usePathname } from 'next/navigation';
 import CampaignCard from '@/components/cards/CampaignCard';
+import NPCCarousel from '@/components/NPCCarousel';
 
 export default function UserCampaignsPage() {
   const [userData, setUserData] = useState<GroupedResults>([]);
@@ -26,7 +27,7 @@ export default function UserCampaignsPage() {
       <ul className='flex flex-col w-full lg:flex-row gap-4'>
         {userData.map((item) => (
           <li key={item.campaign.id}>
-            <CampaignCard campaign={item.campaign} NPCs={item.npcs}/>
+            <CampaignCard campaign={item.campaign} NPCs={item.npcs} />
           </li>
         ))}
       </ul>
