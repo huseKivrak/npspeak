@@ -9,7 +9,7 @@ export default function CampaignCard({
   NPCs,
 }: {
   campaign: Tables<'campaigns'>;
-  NPCs: Tables<'npcs'>[];
+  NPCs?: Tables<'npcs'>[] | null;
 }) {
   const [showNPCs, setShowNPCs] = useState(false);
 
@@ -19,12 +19,13 @@ export default function CampaignCard({
         <h2 className='card-title'>{campaign.campaign_name}</h2>
         {campaign.description && <p>{campaign.description}</p>}
         <div className='card-actions justify-start'>
-          <button className='btn btn-ghost font-light text-xs tracking-widest' onClick={() => setShowNPCs(!showNPCs)}>
+          <button
+            className='btn btn-ghost font-light text-xs tracking-widest'
+            onClick={() => setShowNPCs(!showNPCs)}
+          >
             see NPCs
           </button>
-          {showNPCs &&
-          <NPCCarousel NPCs={NPCs}/>
-          }
+          {showNPCs && NPCs && <NPCCarousel NPCs={NPCs} />}
         </div>
       </div>
     </div>
