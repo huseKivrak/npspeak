@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react';
 import {getCampaignsAndNPCs, GroupedResults} from '@/utils/drizzle/helpers';
 import {usePathname} from 'next/navigation';
 import CampaignCard from '@/components/cards/CampaignCard';
-import NPCCarousel from '@/components/NPCCarousel';
+import OpenScrollCard from '@/components/cards/OpenScrollCard';
 
 export default function UserCampaignsPage() {
 	const [userData, setUserData] = useState<GroupedResults>([]);
@@ -26,10 +26,11 @@ export default function UserCampaignsPage() {
 			<h1 className='text-4xl tracking-widest font-extralight my-4'>
 				{username}&apos;s campaigns
 			</h1>
-			<ul className='flex flex-col w-full lg:flex-row gap-4'>
+			<ul className='flex flex-col w-full lg:flex-row gap-8'>
 				{userData.map((item) => (
 					<li key={item.campaign.id}>
-						<CampaignCard campaign={item.campaign} NPCs={item.npcs} />
+						{/* <CampaignCard campaign={item.campaign} NPCs={item.npcs} /> */}
+						<OpenScrollCard campaign={item.campaign} NPCs={item.npcs} />
 					</li>
 				))}
 			</ul>
