@@ -1,12 +1,15 @@
 'use client';
 import {useState, useEffect} from 'react';
-import {getCampaignsAndNPCs, GroupedResults} from '@/utils/drizzle/helpers';
+import {
+	getCampaignsAndNPCs,
+	CampaignsWithNPCsArray,
+} from '@/server-actions/drizzle';
 import {usePathname} from 'next/navigation';
 import CampaignCard from '@/components/cards/CampaignCard';
 import OpenScrollCard from '@/components/cards/OpenScrollCard';
 
 export default function UserCampaignsPage() {
-	const [userData, setUserData] = useState<GroupedResults>([]);
+	const [userData, setUserData] = useState<CampaignsWithNPCsArray>([]);
 	const path = usePathname();
 	const username = path.split('/').filter(Boolean)[0];
 

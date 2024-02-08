@@ -18,7 +18,7 @@ type RawCampaignJoinData = {
 	campaign_npcs: Tables<'campaign_npcs'>;
 };
 
-type CampaignsWithNPCsArray = {
+export type CampaignsWithNPCsArray = {
 	campaign: RawCampaignJoinData['campaigns'];
 	npcs: RawCampaignJoinData['npcs'][];
 }[];
