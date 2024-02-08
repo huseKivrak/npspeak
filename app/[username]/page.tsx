@@ -39,16 +39,14 @@ export default function UserPage({params}: {params: {username: string}}) {
 		};
 		fetchUserData();
 	}, [params.username, router]);
-
-	const handleShowCampaignForm = () => {
-		setShowCampaignForm((prevState) => !prevState);
-	};
-
 	return (
 		<div className='flex flex-col gap-4'>
 			<h1 className=''>hi, {authUsername}</h1>
 			<Link href={`/${authUsername}/campaigns`}>my campaigns</Link>
-			<button className='btn btn-ghost' onClick={handleShowCampaignForm}>
+			<button
+				className='btn btn-ghost'
+				onClick={(prevState) => setShowCampaignForm(!prevState)}
+			>
 				create a new campaign
 			</button>
 			{showCampaignForm && <CampaignForm />}
