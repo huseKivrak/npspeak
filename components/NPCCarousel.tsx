@@ -7,9 +7,9 @@ export default function NPCCarousel({NPCs}: {NPCs: Tables<'npcs'>[]}) {
 				{NPCs.map((npc) => (
 					<div
 						id={`${npc.id}`}
-						className='carousel-item w-full flex flex-col items-center'
+						className='carousel-item w-full flex flex-col items-center '
 					>
-						<div className='bg-green-500 p-1 border-pink-300 border-2'>
+						<div className='bg-secondary p-2 rounded-2xl'>
 							<h5 className='text-sm tracking-widest'>{npc.npc_name}</h5>
 						</div>
 						<p className='text-center mt-2'>{npc.description}</p>
