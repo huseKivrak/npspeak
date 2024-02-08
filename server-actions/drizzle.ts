@@ -1,9 +1,12 @@
 'use server';
 import {redirect} from 'next/navigation';
-import {db} from '.';
-import {getUserFromSession, getUsername} from '@/utils/supabase/helpers';
-import {campaigns, npcs, campaign_npcs} from './schema';
-import {insertCampaignSchema, insertNPCSchema} from './schema';
+import {db} from '../database/drizzle';
+import {getUserFromSession, getUsername} from '@/server-actions/auth';
+import {campaigns, npcs, campaign_npcs} from '../database/drizzle/schema';
+import {
+	insertCampaignSchema,
+	insertNPCSchema,
+} from '../database/drizzle/schema';
 import {ZodError} from 'zod';
 import {revalidatePath} from 'next/cache';
 import {eq} from 'drizzle-orm';

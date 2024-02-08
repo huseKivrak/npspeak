@@ -4,6 +4,7 @@ import {createClient} from '@/utils/supabase/defaults/server';
 import {headers} from 'next/headers';
 import {cookies} from 'next/headers';
 import {redirect} from 'next/navigation';
+import {User} from '@supabase/supabase-js';
 
 export const signUpAction = async (prevState: any, formData: FormData) => {
 	const origin = headers().get('origin');
@@ -62,3 +63,24 @@ export const logoutAction = async () => {
 	await supabase.auth.signOut();
 	return redirect('/?message=logout');
 };
+
+//returns a user from sessions saved in cookies
+//! not for most up-to-date user (use supabase.auth.getUser() instead)
+export const getUserFromSession = async () => {
+	const cookieStore = cookies();
+	const supabase = createClient(cookieStore);
+	try {
+		const {
+			data: {session},
+		} = await supabase.auth.getSession();
+		return session?.user;
+	} catch (error) {
+		console.error('Error:', error);
+		return null;
+	}
+};
+
+//simple helper for getting nested username for now
+//todo: integrate profiles table in lieu of auth
+//'db.select(username).from(profiles).where(eq(profiles.id, user.id))'
+export const getUsername = (user: User) => user.user_metadata.username;

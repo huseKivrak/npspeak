@@ -1,7 +1,7 @@
 'use client';
 
 import {createClient} from '@/utils/supabase/defaults/client';
-import {getUsername} from '@/utils/supabase/helpers';
+import {getUsername} from '@/server-actions/auth';
 import {useRouter} from 'next/navigation';
 import CampaignForm from '@/components/forms/CampaignForm';
 import {useState, useEffect} from 'react';

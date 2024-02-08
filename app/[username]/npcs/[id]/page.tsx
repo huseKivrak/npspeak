@@ -1,7 +1,7 @@
 import NPCCarousel from '@/components/NPCCarousel';
 import {db} from '@/database/drizzle';
 import {npcs} from '@/database/drizzle/schema';
-import {getUserFromSession} from '@/utils/supabase/helpers';
+import {getUserFromSession} from '@/server-actions/auth';
 import {redirect} from 'next/navigation';
 import {eq} from 'drizzle-orm';
 
