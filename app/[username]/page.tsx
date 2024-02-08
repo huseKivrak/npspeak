@@ -1,6 +1,6 @@
 'use client';
 
-import {createClient} from '@/utils/supabase/default/client';
+import {createClient} from '@/utils/supabase/defaults/client';
 import {getUsername} from '@/utils/supabase/helpers';
 import {useRouter} from 'next/navigation';
 import CampaignForm from '@/components/forms/CampaignForm';
