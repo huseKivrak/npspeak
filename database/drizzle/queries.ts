@@ -2,10 +2,70 @@
 import {redirect} from 'next/navigation';
 import {db} from '.';
 import {getUserFromSession, getUsername} from '@/utils/supabase/helpers';
-import {campaigns, npcs} from './schema';
+import {campaigns, npcs, campaign_npcs} from './schema';
 import {insertCampaignSchema, insertNPCSchema} from './schema';
 import {ZodError} from 'zod';
 import {revalidatePath} from 'next/cache';
+import {eq} from 'drizzle-orm';
+import {Tables} from '@/types/supabase';
+
+type RawCampaignJoinData = {
+	campaigns: Tables<'campaigns'>;
+	npcs: Tables<'npcs'>;
+	campaign_npcs: Tables<'campaign_npcs'>;
+};
+
+type CampaignsWithNPCsArray = {
+	campaign: RawCampaignJoinData['campaigns'];
+	npcs: RawCampaignJoinData['npcs'][];
+}[];
+
+/**
+ * Retrieves campaigns and their associated NPCs for current user.
+ *
+ * The select operation currently does not specify columns,
+ * so raw results also contain joined data from campaign_npcs table.
+ *
+ * This data is then processed to group campaigns with an array of their NPCs.
+ */
+export const getCampaignsAndNPCs =
+	async (): Promise<CampaignsWithNPCsArray | null> => {
+		const user = await getUserFromSession();
+		if (!user) return null;
+
+		const userId = user.id;
+
+		try {
+			const rawJoinedData: RawCampaignJoinData[] = await db
+				.select()
+				.from(campaigns)
+				.innerJoin(campaign_npcs, eq(campaigns.id, campaign_npcs.campaign_id))
+				.innerJoin(npcs, eq(npcs.id, campaign_npcs.npc_id))
+				.where(eq(campaigns.user_id, userId));
+
+			const campaignsWithNPCs: CampaignsWithNPCsArray = rawJoinedData.reduce(
+				(acc, {campaigns, npcs}) => {
+					let campaign = acc.find((c) => c.campaign.id === campaigns.id);
+					if (!campaign) {
+						campaign = {campaign: campaigns, npcs: []};
+						acc.push(campaign);
+					}
+					campaign.npcs.push(npcs);
+					return acc;
+				},
+				[] as {
+					campaign: RawCampaignJoinData['campaigns'];
+					npcs: RawCampaignJoinData['npcs'][];
+				}[]
+			);
+			console.log('groupedNPCs:', campaignsWithNPCs);
+			return campaignsWithNPCs;
+		} catch (error) {
+			//todo: handle error
+			console.error('Error fetching campaigns and NPCS:', error);
+			return null;
+		}
+	};
 
 //Inserts campaigns into db and redirects to its detail page
 export const createCampaignAction = async (
