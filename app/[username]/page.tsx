@@ -45,7 +45,7 @@ export default function UserPage({params}: {params: {username: string}}) {
 			<Link href={`/${authUsername}/campaigns`}>my campaigns</Link>
 			<button
 				className='btn btn-ghost'
-				onClick={(prevState) => setShowCampaignForm(!prevState)}
+				onClick={() => setShowCampaignForm((prevState) => !prevState)}
 			>
 				create a new campaign
 			</button>
