@@ -3,6 +3,9 @@ import {Tables} from '@/types/supabase';
 import {useState} from 'react';
 import NPCCarousel from '../NPCCarousel';
 
+//todo
+import Link from 'next/link';
+
 export default function OpenScrollCard({
 	campaign,
 	NPCs,
@@ -13,30 +16,30 @@ export default function OpenScrollCard({
 	const [showNPCs, setShowNPCs] = useState(false);
 
 	return (
-		<div className='relative w-96 bg-transparent'>
+		<div className='relative w-80 bg-transparent'>
 			<img
 				src={`/images/scrolls${
 					showNPCs ? '/open_scroll_no_bg.png' : '/closed_scroll_no_bg.png'
 				}`}
-				alt='scroll'
+				alt='Scroll'
 				className='absolute inset-0 w-full h-full object-cover'
+				style={{filter: 'brightness(0.6)'}}
 			/>
 
-			<div className='relative z-10 p-4'>
-				<h2 className='text-2xl font-bold text-gray-800 mt-8 px-16'>
+			<div className='relative z-10 text-center'>
+				<h2 className='mt-2 text-xl text-transparent bg-clip-text bg-gradient-to-br from-yellow-50 via-yellow-500 to-yellow-100 font-extralight hover:underline'>
 					{campaign.campaign_name}
 				</h2>
-				{campaign.description && (
+				{showNPCs ? (
 					<p className='text-stone-100 p-10'>{campaign.description}</p>
-				)}
-				<div className='flex justify-center'>
+				) : (
 					<button
-						className='btn btn-sm text-white btn-ghost mb-8'
+						className='btn btn-xs text-white btn-ghost'
 						onClick={() => setShowNPCs(!showNPCs)}
 					>
 						NPCs
 					</button>
-				</div>
+				)}
 				{showNPCs && NPCs && <NPCCarousel NPCs={NPCs} />}
 			</div>
 		</div>
