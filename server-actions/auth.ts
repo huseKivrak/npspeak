@@ -80,7 +80,12 @@ export const getUserFromSession = async () => {
 	}
 };
 
-//simple helper for getting nested username for now
-//todo: integrate profiles table in lieu of auth
+//simple helper for getting nested username value for now
+//todo: integrate profiles table in lieu of auth:
 //'db.select(username).from(profiles).where(eq(profiles.id, user.id))'
-export const getUsername = (user: User) => user.user_metadata.username;
+export const getUsername = async (user?: User) => {
+	if (user) return user.user_metadata.username;
+
+	const sessionUser = await getUserFromSession();
+	return sessionUser?.user_metadata.username;
+};
