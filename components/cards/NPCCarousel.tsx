@@ -1,5 +1,5 @@
 import {Tables} from '@/types/supabase';
-
+import Link from 'next/link';
 export default function NPCCarousel({NPCs}: {NPCs: Tables<'npcs'>[]}) {
 	return (
 		<>
@@ -12,7 +12,9 @@ export default function NPCCarousel({NPCs}: {NPCs: Tables<'npcs'>[]}) {
 						<div className='bg-secondary p-2 rounded-2xl'>
 							<h5 className='text-sm tracking-widest'>{npc.npc_name}</h5>
 						</div>
-						<p className='text-center mt-2'>{npc.description}</p>
+						<p className='text-sm font-thin mt-2 text-yellow-200'>
+							{npc.description}
+						</p>
 					</div>
 				))}
 			</div>
