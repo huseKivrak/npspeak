@@ -6,7 +6,7 @@ const config: Config = {
 		'./app/**/*.{js,ts,jsx,tsx,mdx}',
 	],
 	daisyui: {
-		themes: ['dracula'],
+		themes: ['coffee'],
 	},
 	plugins: [require('@tailwindcss/typography'), require('daisyui')],
 };

@@ -20,7 +20,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 			<head>
 				<link rel='icon' href='/favicon.ico' sizes='any' />
 			</head>
-			<body className='bg-gradient-to-t from-green-950 via-green-700 to-green-800'>
+			<body className=''>
 				<NavBar />
 				<main className='min-h-screen flex flex-col items-center'>
 					{children}
