@@ -12,16 +12,21 @@ import {revalidatePath} from 'next/cache';
 import {eq} from 'drizzle-orm';
 import {Tables} from '@/types/supabase';
 
-type RawCampaignJoinData = {
+type RawJoinData = {
 	campaigns: Tables<'campaigns'>;
 	npcs: Tables<'npcs'>;
 	campaign_npcs: Tables<'campaign_npcs'>;
 };
 
-export type CampaignsWithNPCsArray = {
-	campaign: RawCampaignJoinData['campaigns'];
-	npcs: RawCampaignJoinData['npcs'][];
-}[];
+export type CampaignsWithNPCs = {
+	campaign: RawJoinData['campaigns'];
+	npcs: RawJoinData['npcs'][];
+};
+
+export type NPCsWithCampaigns = {
+	npc: RawJoinData['npcs'];
+	campaigns: RawJoinData['campaigns'][];
+};
 
 /**
  * Retrieves campaigns and their associated NPCs for current user.
@@ -31,44 +36,45 @@ export type CampaignsWithNPCsArray = {
  *
  * This data is then processed to group campaigns with an array of their NPCs.
  */
-export const getCampaignsAndNPCs =
-	async (): Promise<CampaignsWithNPCsArray | null> => {
-		const user = await getUserFromSession();
-		if (!user) return null;
+export const getCampaignsAndNPCs = async (): Promise<
+	CampaignsWithNPCs[] | null
+> => {
+	const user = await getUserFromSession();
+	if (!user) return null;
 
-		const userId = user.id;
+	const userId = user.id;
 
-		try {
-			const rawJoinedData: RawCampaignJoinData[] = await db
-				.select()
-				.from(campaigns)
-				.innerJoin(campaign_npcs, eq(campaigns.id, campaign_npcs.campaign_id))
-				.innerJoin(npcs, eq(npcs.id, campaign_npcs.npc_id))
-				.where(eq(campaigns.user_id, userId));
+	try {
+		const rawJoinRows = await db
+			.select()
+			.from(campaigns)
+			.leftJoin(campaign_npcs, eq(campaigns.id, campaign_npcs.campaign_id))
+			.leftJoin(npcs, eq(npcs.id, campaign_npcs.npc_id))
+			.where(eq(campaigns.user_id, userId));
 
-			const campaignsWithNPCs: CampaignsWithNPCsArray = rawJoinedData.reduce(
-				(acc, {campaigns, npcs}) => {
-					let campaign = acc.find((c) => c.campaign.id === campaigns.id);
-					if (!campaign) {
-						campaign = {campaign: campaigns, npcs: []};
-						acc.push(campaign);
-					}
-					campaign.npcs.push(npcs);
-					return acc;
-				},
-				[] as {
-					campaign: RawCampaignJoinData['campaigns'];
-					npcs: RawCampaignJoinData['npcs'][];
-				}[]
-			);
-			console.log('groupedNPCs:', campaignsWithNPCs);
-			return campaignsWithNPCs;
-		} catch (error) {
-			//todo: handle error
-			console.error('Error fetching campaigns and NPCS:', error);
-			return null;
-		}
-	};
+		const campaignsWithNPCs: CampaignsWithNPCs[] = rawJoinRows.reduce(
+			(acc, {campaigns, npcs}) => {
+				let campaign = acc.find((c) => c.campaign.id === campaigns.id);
+				if (!campaign) {
+					campaign = {campaign: campaigns, npcs: []};
+					acc.push(campaign);
+				}
+				if (npcs) campaign.npcs.push(npcs);
+				return acc;
+			},
+			[] as {
+				campaign: RawJoinData['campaigns'];
+				npcs: RawJoinData['npcs'][];
+			}[]
+		);
+		console.log('groupedNPCs:', campaignsWithNPCs);
+		return campaignsWithNPCs;
+	} catch (error) {
+		//todo: handle error
+		console.error('Error fetching campaigns and NPCS:', error);
+		return null;
+	}
+};
 
 //Inserts campaigns into db and redirects to its detail page
 export const createCampaignAction = async (
@@ -110,6 +116,39 @@ export const createCampaignAction = async (
 	//* must be outside try/catch:
 	revalidatePath(`/${username}/campaigns`);
 	redirect(`/${username}/campaigns/${newCampaignId}`);
+};
+
+export const getNPCsAction = async (): Promise<NPCsWithCampaigns[] | null> => {
+	const user = await getUserFromSession();
+	if (!user) return null;
+	const userId = user.id;
+
+	const rawJoinRows = await db
+		.select()
+		.from(npcs)
+		.leftJoin(campaign_npcs, eq(npcs.id, campaign_npcs.npc_id))
+		.leftJoin(campaigns, eq(campaigns.id, campaign_npcs.campaign_id))
+		.where(eq(npcs.user_id, userId));
+	console.log('NPCS::', rawJoinRows);
+
+	const npcsWithCampaigns: NPCsWithCampaigns[] = rawJoinRows.reduce(
+		(acc, {npcs, campaigns}) => {
+			let npc = acc.find((entry) => entry.npc.id === npcs.id);
+			if (!npc) {
+				npc = {npc: npcs, campaigns: []};
+				acc.push(npc);
+			}
+			if (campaigns) npc.campaigns.push(campaigns);
+			return acc;
+		},
+		[] as {
+			npc: RawJoinData['npcs'];
+			campaigns: RawJoinData['campaigns'][];
+		}[]
+	);
+
+	console.log('FINAL RESULT:', npcsWithCampaigns);
+	return npcsWithCampaigns;
 };
 
 //Inserts NPCs into db then redirects to its detail page
