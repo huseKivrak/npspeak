@@ -62,10 +62,7 @@ export const getCampaignsAndNPCs = async (): Promise<
 				if (npcs) campaign.npcs.push(npcs);
 				return acc;
 			},
-			[] as {
-				campaign: RawJoinData['campaigns'];
-				npcs: RawJoinData['npcs'][];
-			}[]
+			[] as CampaignsWithNPCs[]
 		);
 		console.log('groupedNPCs:', campaignsWithNPCs);
 		return campaignsWithNPCs;
@@ -86,11 +83,12 @@ export const createCampaignAction = async (
 
 	const username = getUsername(user);
 
-	let newCampaignId: number;
 	const campaign_name = formData.get('campaign_name');
 	const description = formData.get('description');
 	const start_date = formData.get('start_date');
 	const end_date = formData.get('end_date');
+
+	let newCampaignId: number;
 
 	try {
 		const validatedData = insertCampaignSchema.parse({
@@ -106,6 +104,7 @@ export const createCampaignAction = async (
 			.insert(campaigns)
 			.values(validatedData)
 			.returning({id: campaigns.id});
+
 		newCampaignId = insertedCampaignId[0].id;
 	} catch (error: any) {
 		return error instanceof ZodError
@@ -157,12 +156,13 @@ export const createNPCAction = async (prevState: any, formData: FormData) => {
 	if (!user) redirect('/');
 
 	const username = getUsername(user);
-	let newNPCId;
+
+	const npc_name = formData.get('npc_name');
+	const description = formData.get('description');
+
+	let newNPCId: number;
 
 	try {
-		const npc_name = formData.get('npc_name');
-		const description = formData.get('description');
-
 		const validatedData = insertNPCSchema.parse({
 			npc_name,
 			description,
@@ -173,10 +173,12 @@ export const createNPCAction = async (prevState: any, formData: FormData) => {
 			.insert(npcs)
 			.values(validatedData)
 			.returning({id: npcs.id});
+
 		newNPCId = insertedNPCId[0].id;
 	} catch (error: any) {
-		if (error instanceof ZodError) return {zodError: error.errors};
-		return {message: error.message};
+		return error instanceof ZodError
+			? {zodError: error.errors}
+			: {message: error.message};
 	}
 	revalidatePath(`/${username}/npcs/`);
 	redirect(`/${username}/npcs/${newNPCId}`);
