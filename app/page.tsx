@@ -1,11 +1,12 @@
 import Hero from '@/components/layout/Hero';
 import {redirect} from 'next/navigation';
-import {getUserFromSession, getUsername} from '@/server-actions/auth';
+import {getUsername} from '@/server-actions/auth';
 import SignUpForm from '@/components/forms/SignUpForm';
+
 export default async function Index() {
-	const user = await getUserFromSession();
-	if (user) {
-		const username = getUsername(user);
+	const usernameFromSession = await getUsername();
+	if (usernameFromSession) {
+		const username = usernameFromSession.toLowerCase();
 		redirect(`/${username}`);
 	}
 
