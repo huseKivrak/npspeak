@@ -13,10 +13,9 @@ export default function CampaignForm() {
 
 	return (
 		<div className='flex flex-col items-center'>
-			<h1 className='my-8'>create a new campaign</h1>
 			<form action={formAction} className='w-full max-w-xs flex flex-col gap-2'>
 				<label htmlFor='campaign_name' className='form-control'>
-					name (required)
+					campaign name (required)
 				</label>
 				<input
 					type='text'

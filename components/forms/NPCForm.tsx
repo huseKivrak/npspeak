@@ -14,10 +14,9 @@ export default function NPCForm() {
 
 	return (
 		<div className='flex flex-col items-center'>
-			<h1 className='my-8'>create an NPC</h1>
 			<form action={formAction} className='flex flex-col gap-2 w-full max-w-xs'>
 				<label htmlFor='npc_name' className='form-control'>
-					name (required)
+					npc name (required)
 				</label>
 				<input
 					type='text'
