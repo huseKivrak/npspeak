@@ -1,7 +1,8 @@
 'use client';
-import {Tables} from '@/types/supabase';
+
 import {useState} from 'react';
 import NPCCarousel from './NPCCarousel';
+import DeleteCampaignModal from '../DeleteCampaignModal';
 import {CampaignsWithNPCs} from '@/server-actions/drizzle';
 import Image from 'next/image';
 
@@ -33,9 +34,12 @@ export default function OpenScrollCard({
 					{campaign.campaign_name}
 				</h2>
 				{showNPCs ? (
-					<p className='text-balance text-stone-100 text-sm p-10 text-center'>
-						{campaign.description}
-					</p>
+					<>
+						<p className='text-balance text-stone-100 text-sm p-10 text-center'>
+							{campaign.description}
+						</p>
+						<DeleteCampaignModal id={campaign.id} />
+					</>
 				) : (
 					<button
 						className='btn btn-xs px-0 text-white btn-ghost'

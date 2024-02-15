@@ -9,7 +9,7 @@ import {
 } from '../database/drizzle/schema';
 import {ZodError} from 'zod';
 import {revalidatePath} from 'next/cache';
-import {eq} from 'drizzle-orm';
+import {eq, and} from 'drizzle-orm';
 import {Tables} from '@/types/supabase';
 
 type RawJoinData = {
@@ -79,7 +79,7 @@ export const createCampaignAction = async (
 	formData: FormData
 ) => {
 	const user = await getUserFromSession();
-	if (!user) redirect('/');
+	if (!user) return {message: 'Unauthorized access'};
 
 	const username = getUsername(user);
 
@@ -109,12 +109,40 @@ export const createCampaignAction = async (
 	} catch (error: any) {
 		return error instanceof ZodError
 			? {zodError: error.errors}
-			: {message: error.message};
+			: {message: 'An error occurred while creating the campaign.'};
 	}
 
 	//* must be outside try/catch:
 	revalidatePath(`/${username}/campaigns`);
 	redirect(`/${username}/campaigns/${newCampaignId}`);
+};
+
+export const deleteCampaignAction = async (
+	prevState: any,
+	formData: FormData
+) => {
+	const user = await getUserFromSession();
+	if (!user) return {message: 'Unauthorized access'};
+
+	const campaignId = formData.get('campaign_id');
+	if (typeof campaignId !== 'string') return {message: 'No campaign selected'};
+
+	const campaignIdInt = parseInt(campaignId);
+	if (isNaN(campaignIdInt)) return {message: 'Invalid campaign ID'};
+
+	try {
+		const deletedCampaign = await db
+			.delete(campaigns)
+			.where(
+				and(eq(campaigns.id, campaignIdInt), eq(campaigns.user_id, user.id))
+			)
+			.returning();
+		revalidatePath(`/${user.user_metadata.username}`);
+	} catch (error: any) {
+		return error instanceof ZodError
+			? {zodError: error.errors}
+			: {message: 'An error occurred while deleting the campaign.'};
+	}
 };
 
 export const getNPCsAction = async (): Promise<NPCsWithCampaigns[] | null> => {
@@ -178,8 +206,33 @@ export const createNPCAction = async (prevState: any, formData: FormData) => {
 	} catch (error: any) {
 		return error instanceof ZodError
 			? {zodError: error.errors}
-			: {message: error.message};
+			: {message: 'An error occurred while creating the NPC.'};
 	}
 	revalidatePath(`/${username}/npcs/`);
 	redirect(`/${username}/npcs/${newNPCId}`);
+};
+
+export const deleteNPCAction = async (prevState: any, formData: FormData) => {
+	const user = await getUserFromSession();
+	if (!user) return {message: 'Unauthorized access'};
+
+	const npcId = formData.get('npc_id');
+	if (typeof npcId !== 'string') return {message: 'No NPC selected'};
+
+	const npcIdInt = parseInt(npcId);
+	if (isNaN(npcIdInt)) return {message: 'Invalid NPC ID'};
+
+	try {
+		const deletedNPC = await db
+			.delete(npcs)
+			.where(and(eq(npcs.id, npcIdInt), eq(npcs.user_id, user.id)))
+			.returning();
+		return {
+			message: `${deletedNPC[0].npc_name} deleted successfully`,
+		};
+	} catch (error: any) {
+		return error instanceof ZodError
+			? {zodError: error.errors}
+			: {message: 'An error occurred while deleting the NPC.'};
+	}
 };
