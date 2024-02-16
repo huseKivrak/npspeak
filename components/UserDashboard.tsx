@@ -4,6 +4,7 @@ import {User} from '@supabase/supabase-js';
 import {useState} from 'react';
 import CampaignForm from './forms/CampaignForm';
 import NPCForm from './forms/NPCForm';
+import OpenScrollCard from './cards/OpenScrollCard';
 
 export default function UserDashboard({
 	user,
@@ -26,7 +27,7 @@ export default function UserDashboard({
 				<h2 className='text-2xl underline tracking-widest'>campaigns</h2>
 				{campaigns?.map((c) => (
 					<li key={c.campaign.id}>
-						<p>{c.campaign.campaign_name}</p>
+						<OpenScrollCard campaignData={c} />
 					</li>
 				))}
 			</ul>
