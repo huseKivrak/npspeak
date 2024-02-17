@@ -11,21 +11,12 @@ import {ZodError} from 'zod';
 import {revalidatePath} from 'next/cache';
 import {eq, and} from 'drizzle-orm';
 import {Tables} from '@/types/supabase';
+import {CampaignsWithNPCs, NPCsWithCampaigns} from '@/types/drizzle';
 
 type RawJoinData = {
 	campaigns: Tables<'campaigns'>;
 	npcs: Tables<'npcs'>;
 	campaign_npcs: Tables<'campaign_npcs'>;
-};
-
-export type CampaignsWithNPCs = {
-	campaign: RawJoinData['campaigns'];
-	npcs: RawJoinData['npcs'][];
-};
-
-export type NPCsWithCampaigns = {
-	npc: RawJoinData['npcs'];
-	campaigns: RawJoinData['campaigns'][];
 };
 
 /**
@@ -209,7 +200,6 @@ export const createNPCAction = async (prevState: any, formData: FormData) => {
 			: {message: 'An error occurred while creating the NPC.'};
 	}
 	revalidatePath(`/${username}/npcs/`);
-	redirect(`/${username}/npcs/${newNPCId}`);
 };
 
 export const deleteNPCAction = async (prevState: any, formData: FormData) => {

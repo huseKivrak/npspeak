@@ -111,7 +111,6 @@ export const npcs = pgTable('npcs', {
 	user_id: uuid('user_id').references(() => users.id, {onDelete: 'set null'}),
 	npc_name: varchar('npc_name').notNull(),
 	description: text('description'),
-	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	voice_id: bigint('voice_id', {mode: 'number'}).references(
 		() => voice_clones.id,
 		{
