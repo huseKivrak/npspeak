@@ -1,8 +1,6 @@
 import {db} from '@/database/drizzle';
-import {getUserFromSession} from '@/server-actions/auth';
-import {campaigns, npcs, campaign_npcs} from '@/database/drizzle/schema';
-import {insertCampaignSchema} from '@/database/drizzle/schema';
-import {z, ZodError, ZodIssue} from 'zod';
+import {getUserFromSession} from '@/actions/auth';
+import {campaigns} from '@/database/drizzle/schema';
 import {eq, and} from 'drizzle-orm';
 import {Tables} from '@/types/supabase';
 
@@ -15,30 +13,22 @@ export type CampaignState =
 	| {
 			status: 'error';
 			message: string;
-			errors?: ZodIssue[] | unknown;
+			errors?: string | string[];
 	  }
 	| null;
 
 export const createCampaignAction = async (
 	prevState: CampaignState,
-	formData: FormData
+	formData: {
+		campaign_name: string;
+		description?: string;
+	}
 ): Promise<CampaignState> => {
 	const user = await getUserFromSession();
 	if (!user) throw new Error('You must be logged in to create campaigns.');
 
+	const {campaign_name, description} = formData;
 	try {
-		const result = insertCampaignSchema.safeParse(formData);
-		if (!result.success) {
-			return {
-				status: 'error',
-				message: 'Validation error(s)',
-				errors: result.error.issues,
-			};
-		}
-
-		const campaign_name = result.data.campaign_name;
-		const description = result.data.description;
-
 		const insertedCampaign: Tables<'campaigns'>[] = await db
 			.insert(campaigns)
 			.values({
@@ -56,7 +46,6 @@ export const createCampaignAction = async (
 		return {
 			status: 'error',
 			message: 'An error occured during campaign creation.',
-			errors: error,
 		};
 	}
 };
@@ -82,7 +71,6 @@ export const deleteCampaignAction = async (
 		return {
 			status: 'error',
 			message: 'An error occured while deleting campaign.',
-			errors: error,
 		};
 	}
 };

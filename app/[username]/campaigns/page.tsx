@@ -1,4 +1,4 @@
-import {getCampaignsAndNPCs} from '@/server-actions/drizzle';
+import {getCampaignsAndNPCs} from '@/database/drizzle/queries';
 import OpenScrollCard from '@/components/cards/OpenScrollCard';
 
 export default async function UserCampaignsPage({

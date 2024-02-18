@@ -3,7 +3,7 @@ import {npcs, campaigns, campaign_npcs} from '@/database/drizzle/schema';
 import {db} from '.';
 import {Tables} from '@/types/supabase';
 import {eq} from 'drizzle-orm';
-import {getUserFromSession} from '@/server-actions/auth';
+import {getUserFromSession} from '@/actions/auth';
 
 /**
  * Retrieves campaigns and their associated NPCs for current user.

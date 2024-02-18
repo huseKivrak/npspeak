@@ -1,13 +1,8 @@
-'use server';
-
 import {db} from '@/database/drizzle';
-import {getUserFromSession} from '@/server-actions/auth';
-import {campaigns, npcs, campaign_npcs} from '@/database/drizzle/schema';
-import {insertNPCSchema} from '@/database/drizzle/schema';
+import {getUserFromSession} from '@/actions/auth';
+import {npcs} from '@/database/drizzle/schema';
 import {eq, and} from 'drizzle-orm';
 import {Tables} from '@/types/supabase';
-
-import {revalidatePath} from 'next/cache';
 
 export type NPCState =
 	| {
@@ -41,8 +36,6 @@ export const createNPCAction = async (
 				description,
 			})
 			.returning();
-
-		revalidatePath(`/${user.user_metadata.username}/npcs`);
 		return {
 			status: 'success',
 			message: `${insertedCampaign[0].npc_name} is born!`,
@@ -53,7 +46,6 @@ export const createNPCAction = async (
 		return {
 			status: 'error',
 			message: 'An error occured while creating NPC.',
-			errors: JSON.stringify(error),
 		};
 	}
 };

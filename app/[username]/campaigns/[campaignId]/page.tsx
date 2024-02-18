@@ -1,4 +1,4 @@
-import {getUsername} from '@/server-actions/auth';
+import {getUsername} from '@/actions/auth';
 import {redirect} from 'next/navigation';
 import OpenScrollCard from '@/components/cards/OpenScrollCard';
 

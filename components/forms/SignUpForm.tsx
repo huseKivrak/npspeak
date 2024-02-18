@@ -1,5 +1,5 @@
 'use client';
-import {signUpAction} from '@/server-actions/auth';
+import {signUpAction} from '@/actions/auth';
 import {useFormState} from 'react-dom';
 import SendEmailIcon from '@/components/icons/SendEmailIcon';
 import {SubmitButton} from '@/components/buttons/SubmitButton';

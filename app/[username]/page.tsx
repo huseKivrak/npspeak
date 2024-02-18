@@ -1,5 +1,5 @@
 import UserDashboard from '@/components/UserDashboard';
-import {getUserFromSession, getUsername} from '@/server-actions/auth';
+import {getUserFromSession, getUsername} from '@/actions/auth';
 import {redirect} from 'next/navigation';
 import {getCampaignsAndNPCs, getNPCsAction} from '@/server-actions/drizzle';
 
