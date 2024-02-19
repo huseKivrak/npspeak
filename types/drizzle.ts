@@ -15,3 +15,18 @@ export type NPCsWithCampaigns = {
 	npc: RawJoinData['npcs'];
 	campaigns: RawJoinData['campaigns'][];
 };
+
+export type State =
+	| {
+			status: 'success';
+			message: string;
+	  }
+	| {
+			status: 'error';
+			message: string;
+			errors?: Array<{
+				path: string;
+				message: string;
+			}>;
+	  }
+	| null;

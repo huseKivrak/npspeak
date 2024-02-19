@@ -3,46 +3,50 @@ import {getUserFromSession} from '@/actions/auth';
 import {campaigns} from '@/database/drizzle/schema';
 import {eq, and} from 'drizzle-orm';
 import {Tables} from '@/types/supabase';
-
-export type CampaignState =
-	| {
-			status: 'success';
-			message: string;
-			value?: Tables<'campaigns'>;
-	  }
-	| {
-			status: 'error';
-			message: string;
-			errors?: string | string[];
-	  }
-	| null;
+import {State} from '@/types/drizzle';
+import {
+	campaignSchema,
+	deleteCampaignSchema,
+} from '@/database/drizzle/validation';
+import {ZodError} from 'zod';
 
 export const createCampaignAction = async (
-	prevState: CampaignState,
-	formData: {
-		campaign_name: string;
-		description?: string;
-	}
-): Promise<CampaignState> => {
+	prevState: State,
+	formData: FormData
+): Promise<State> => {
 	const user = await getUserFromSession();
 	if (!user) throw new Error('You must be logged in to create campaigns.');
 
-	const {campaign_name, description} = formData;
+	const {campaign_name, description, start_date, end_date} =
+		campaignSchema.parse(formData);
+	const user_id = user.id;
+
 	try {
 		const insertedCampaign: Tables<'campaigns'>[] = await db
 			.insert(campaigns)
 			.values({
-				user_id: user.id,
+				user_id,
 				campaign_name,
 				description,
+				start_date,
+				end_date,
 			})
 			.returning();
 		return {
 			status: 'success',
-			message: `The "${insertedCampaign[0].campaign_name}" campaign is created!`,
-			value: insertedCampaign[0],
+			message: `The "${insertedCampaign[0].campaign_name}" campaign is created`,
 		};
 	} catch (error) {
+		if (error instanceof ZodError) {
+			return {
+				status: 'error',
+				message: 'Invalid form data',
+				errors: error.issues.map((issue) => ({
+					path: issue.path.join('.'),
+					message: `${issue.message}`,
+				})),
+			};
+		}
 		return {
 			status: 'error',
 			message: 'An error occured during campaign creation.',
@@ -51,21 +55,24 @@ export const createCampaignAction = async (
 };
 
 export const deleteCampaignAction = async (
-	campaignId: number
-): Promise<CampaignState> => {
+	prevState: State,
+	formData: FormData
+): Promise<State> => {
 	const user = await getUserFromSession();
-	if (!user) throw new Error('You must be logged in to delete NPCs.');
+	if (!user) throw new Error('You must be logged in to delete campaigns.');
+
+	const {campaign_id} = deleteCampaignSchema.parse(formData);
+	const user_id = user.id;
 
 	try {
 		const deletedCampaign = await db
 			.delete(campaigns)
-			.where(and(eq(campaigns.id, campaignId), eq(campaigns.user_id, user.id)))
+			.where(and(eq(campaigns.id, campaign_id), eq(campaigns.user_id, user_id)))
 			.returning();
 
 		return {
 			status: 'success',
-			message: `${deletedCampaign[0].campaign_name} is gone!`,
-			value: deletedCampaign[0],
+			message: `${deletedCampaign[0].campaign_name} has been deleted`,
 		};
 	} catch (error) {
 		return {
