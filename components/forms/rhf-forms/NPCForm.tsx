@@ -1,78 +1,85 @@
 'use client';
 
-import {useState, useEffect} from 'react';
-import {useForm} from 'react-hook-form';
+import {useEffect} from 'react';
+import {useForm, FieldPath} from 'react-hook-form';
 import {useFormState} from 'react-dom';
-import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
-import {createNPCAction} from '@/app/actions/NPCs';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {createNPCAction} from '@/actions/database/NPCs';
+import {npcSchema} from '@/database/drizzle/validation';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
+import {State} from '@/types/drizzle';
+import {ErrorMessage} from '@hookform/error-message';
 import ErrorToast from '@/components/ErrorToast';
-import {insertNPCSchema} from '@/database/drizzle/schema';
-import {NPCState} from '@/app/actions/NPCs';
 
-type Inputs = z.infer<typeof insertNPCSchema>;
-export type NPCZodErrors = {
-	formErrors?: string[];
-	fieldErrors?: {
-		npc_name?: string[];
-		description?: string[];
-	};
-} | null;
+type Inputs = z.infer<typeof npcSchema>;
 export default function NPCForm() {
-	const [state, formAction] = useFormState(createNPCAction, null);
-	const [zodErrors, setZodErrors] = useState<NPCZodErrors>(null);
+	const [state, formAction] = useFormState<State, FormData>(
+		createNPCAction,
+		null
+	);
 
 	const {
 		register,
-		handleSubmit,
-		reset,
 		formState: {errors},
+		setError,
+		reset,
 	} = useForm<Inputs>({
-		resolver: zodResolver(insertNPCSchema),
+		resolver: zodResolver(npcSchema),
 	});
 
-	const processForm = async (data: Inputs) => {
-		const result = insertNPCSchema.safeParse(data);
-		if (!result.success) {
-			const errors = result.error.flatten();
-			setZodErrors(errors);
-		} else {
-			const {npc_name, description} = result.data;
-			const formData = {
-				npc_name,
-				description: description ? description : undefined, //todo: fix
-			};
-			await formAction(formData);
-		}
-	};
-
 	useEffect(() => {
+		if (!state) return;
 		if (state?.status === 'error') {
+			console.log('errors:', state.errors);
+			state.errors?.forEach((error) => {
+				setError(error.path as FieldPath<Inputs>, {
+					message: error.message,
+				});
+			});
 		}
-	}, [state]);
+		if (state.status === 'success') {
+			alert(state.message);
+			reset();
+		}
+	}, [state, setError, reset]);
 
 	return (
-		<form onSubmit={handleSubmit(processForm)}>
-			<div>
-				<label htmlFor='npc_name'>NPC Name</label>
+		<div className='flex flex-col items-center'>
+			<form action={formAction} className='flex flex-col gap-2 w-full max-w-xs'>
+				<label htmlFor='npc_name' className='form-control'>
+					npc name
+				</label>
 				<input
-					{...register('npc_name', {required: 'NPC Name is required'})}
-					type='text'
+					{...register('npc_name')}
 					id='npc_name'
+					type='text'
 					name='npc_name'
+					placeholder='what are they called?'
+					className='input input-bordered input-primary mb-4'
 				/>
-				{errors.npc_name && <span>{errors.npc_name.message}</span>}
-			</div>
-			<div>
-				<label htmlFor='description'>Description</label>
+				<ErrorMessage
+					errors={errors}
+					name='npc_name'
+					as={<ErrorToast message='NPC name is required' />}
+				/>
+				<label htmlFor='description' className='form-control'>
+					description
+				</label>
 				<textarea
 					{...register('description')}
 					id='description'
 					name='description'
+					placeholder='describe your NPC'
+					className='textarea textarea-primary w-full h-24'
 				/>
-				{errors.description && <span>{errors.description.message}</span>}
-			</div>
-		</form>
+				<ErrorMessage
+					errors={errors}
+					name='description'
+					as={<ErrorToast message='Description is required' />}
+				/>
+				<SubmitButton text='create' />
+			</form>
+		</div>
 	);
 }
