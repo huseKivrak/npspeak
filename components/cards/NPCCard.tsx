@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import {getUsername} from '@/server-actions/auth';
-import {NPCsWithCampaigns} from '@/server-actions/drizzle';
+import {getUsername} from '@/actions/auth';
+import {NPCsWithCampaigns} from '@/types/drizzle';
 
 export default async function NPCCard({npcData}: {npcData: NPCsWithCampaigns}) {
 	const {npc, campaigns} = npcData;

@@ -1,7 +1,7 @@
 'use client';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {useFormState} from 'react-dom';
-import {CreateAudioClip} from '@/server-actions/elevenLabs';
+import {CreateAudioClip} from '@/actions/elevenLabs';
 import {useState, useEffect} from 'react';
 import {ELEVENLABS_PREMADE_VOICES} from '@/utils/elevenlabs/api';
 import {ElevenLabsVoice} from '@/types/elevenlabs';

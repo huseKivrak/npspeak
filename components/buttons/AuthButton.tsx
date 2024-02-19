@@ -2,7 +2,7 @@ import {createClient} from '@/utils/supabase/defaults/server';
 import Link from 'next/link';
 import {cookies} from 'next/headers';
 import LoginForm from '../forms/LoginForm';
-import {logoutAction} from '@/server-actions/auth';
+import {logoutAction} from '@/actions/auth';
 
 /**
  * Login/logout button depending on user auth state

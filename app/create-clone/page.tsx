@@ -2,7 +2,7 @@
 
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {useFormState} from 'react-dom';
-import {CreateVoiceClone} from '@/server-actions/elevenLabs';
+import {CreateVoiceClone} from '@/actions/elevenLabs';
 
 const initialState = {
 	message: '',

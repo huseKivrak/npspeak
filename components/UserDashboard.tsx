@@ -1,10 +1,10 @@
 'use client';
-import {CampaignsWithNPCs, NPCsWithCampaigns} from '@/server-actions/drizzle';
+import {CampaignsWithNPCs, NPCsWithCampaigns} from '@/types/drizzle';
 import {User} from '@supabase/supabase-js';
 import {useState} from 'react';
 import CampaignForm from './forms/CampaignForm';
 import NPCForm from './forms/NPCForm';
-import OpenScrollCard from './cards/OpenScrollCard';
+import Link from 'next/link';
 
 export default function UserDashboard({
 	user,
@@ -18,16 +18,18 @@ export default function UserDashboard({
 	const [showCampaignForm, setShowCampaignForm] = useState(false);
 	const [showNPCForm, setShowNPCForm] = useState(false);
 
+	const username = user.user_metadata.username;
+
 	return (
 		<div className='flex flex-col gap-2'>
-			<h1 className='text-3xl'>
-				{user.user_metadata.username}&apos;s dashboard
-			</h1>
+			<h1 className='text-3xl'>{username}&apos;s dashboard</h1>
 			<ul>
 				<h2 className='text-2xl underline tracking-widest'>campaigns</h2>
 				{campaigns?.map((c) => (
 					<li key={c.campaign.id}>
-						<OpenScrollCard campaignData={c} />
+						<Link href={`${username}/campaigns/${c.campaign.id}`}>
+							{c.campaign.campaign_name}
+						</Link>
 					</li>
 				))}
 			</ul>
@@ -35,14 +37,14 @@ export default function UserDashboard({
 				className='btn btn-primary btn-sm'
 				onClick={() => setShowCampaignForm(!showCampaignForm)}
 			>
-				add a new campaign
+				{!showCampaignForm ? 'add a new campaign' : 'cancel'}
 			</button>
 			{showCampaignForm && <CampaignForm />}
 			<ul>
 				<h2 className='text-2xl underline tracking-widest'>NPCs</h2>
 				{npcs?.map((n) => (
 					<li key={n.npc.id}>
-						<p>{n.npc.npc_name}</p>
+						<Link href={`${username}/npcs/${n.npc.id}`}>{n.npc.npc_name}</Link>
 					</li>
 				))}
 			</ul>
@@ -50,7 +52,7 @@ export default function UserDashboard({
 				className='btn btn-primary btn-sm'
 				onClick={() => setShowNPCForm(!showNPCForm)}
 			>
-				add a new NPC
+				{!showNPCForm ? 'add a new NPC' : 'cancel'}
 			</button>
 			{showNPCForm && <NPCForm />}
 		</div>

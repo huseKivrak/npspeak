@@ -1,7 +1,7 @@
 'use client';
 import {useFormState} from 'react-dom';
 import Link from 'next/link';
-import {signInAction} from '@/server-actions/auth';
+import {signInAction} from '@/actions/auth';
 import {SubmitButton} from '../buttons/SubmitButton';
 
 export default function LoginForm() {

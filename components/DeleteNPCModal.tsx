@@ -2,7 +2,7 @@
 
 import {useRef} from 'react';
 import {useFormState} from 'react-dom';
-import {deleteNPCAction} from '@/server-actions/drizzle';
+import {deleteNPCAction} from '@/actions/drizzle/NPCs';
 import {SubmitButton} from './buttons/SubmitButton';
 
 export default function DeleteNPCModal({id}: {id: number}) {
