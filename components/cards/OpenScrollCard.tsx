@@ -3,7 +3,7 @@
 import {useState} from 'react';
 import NPCCarousel from './NPCCarousel';
 import DeleteCampaignModal from '../DeleteCampaignModal';
-import {CampaignsWithNPCs} from '@/server-actions/drizzle';
+import {CampaignsWithNPCs} from '@/types/drizzle';
 import Image from 'next/image';
 
 //todo
