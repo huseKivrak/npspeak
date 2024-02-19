@@ -1,7 +1,10 @@
 import UserDashboard from '@/components/UserDashboard';
-import {getUserFromSession, getUsername} from '@/actions/auth';
+import {getUserFromSession} from '@/actions/auth';
 import {redirect} from 'next/navigation';
-import {getCampaignsAndNPCs, getNPCsAction} from '@/server-actions/drizzle';
+import {
+	getCampaignsAndNPCs,
+	getNPCsWithCampaignsAction,
+} from '@/database/drizzle/queries';
 
 export default async function UserPage({params}: {params: {username: string}}) {
 	const user = await getUserFromSession();
@@ -12,7 +15,7 @@ export default async function UserPage({params}: {params: {username: string}}) {
 		redirect('/login');
 
 	const campaigns = await getCampaignsAndNPCs();
-	const npcs = await getNPCsAction();
+	const npcs = await getNPCsWithCampaignsAction();
 
 	return (
 		<div>
