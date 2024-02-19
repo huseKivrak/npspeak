@@ -3,22 +3,21 @@ import {zfd} from 'zod-form-data';
 
 export const campaignSchema = zfd
 	.formData({
-		user_id: zfd.text(z.string()),
 		campaign_name: zfd.text(
 			z
 				.string()
-				.min(2, 'Name must be at least 2 characters long')
+				.min(3, 'Name must be at least 3 characters long')
 				.max(50, 'Name must be at most 50 characters long')
 		),
 		description: zfd.text(
 			z
 				.string()
-				.min(2, 'Description must be at least 2 characters long')
+				.min(5, 'Description must be at least 5 characters long')
 				.max(255, 'Description must be at most 255 characters long')
 				.optional()
 		),
-		start_date: z.string().optional(),
-		end_date: z.string().optional(),
+		start_date: zfd.text(z.string().optional()),
+		end_date: zfd.text(z.string().optional()),
 	})
 	.superRefine((data, ctx) => {
 		const {start_date, end_date} = data;
@@ -52,7 +51,6 @@ export const deleteCampaignSchema = zfd.formData({
 });
 
 export const npcSchema = zfd.formData({
-	user_id: zfd.text(z.string()),
 	npc_name: zfd.text(
 		z
 			.string()
