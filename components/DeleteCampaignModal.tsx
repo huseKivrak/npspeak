@@ -2,7 +2,7 @@
 
 import {useRef} from 'react';
 import {useFormState} from 'react-dom';
-import {deleteCampaignAction} from '@/server-actions/drizzle';
+import {deleteCampaignAction} from '@/actions/database/campaigns';
 import {SubmitButton} from './buttons/SubmitButton';
 
 export default function DeleteCampaignModal({id}: {id: number}) {
