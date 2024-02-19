@@ -56,12 +56,12 @@ export default function NPCForm() {
 					type='text'
 					name='npc_name'
 					placeholder='what are they called?'
-					className='input input-bordered input-primary mb-4'
+					className='input input-bordered input-primary mb-0'
 				/>
 				<ErrorMessage
 					errors={errors}
 					name='npc_name'
-					as={<ErrorToast message='NPC name is required' />}
+					render={({message}) => <ErrorToast message={message} />}
 				/>
 				<label htmlFor='description' className='form-control'>
 					description
@@ -76,7 +76,7 @@ export default function NPCForm() {
 				<ErrorMessage
 					errors={errors}
 					name='description'
-					as={<ErrorToast message='Description is required' />}
+					render={({message}) => <ErrorToast message={message} />}
 				/>
 				<SubmitButton text='create' />
 			</form>

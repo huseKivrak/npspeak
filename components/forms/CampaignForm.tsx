@@ -56,12 +56,11 @@ export default function CampaignForm() {
 					name='campaign_name'
 					placeholder="what's your campaign called?"
 					className='input input-bordered input-primary mb-4'
-					required
 				/>
 				<ErrorMessage
 					errors={errors}
 					name='campaign_name'
-					as={<ErrorToast message='Campaign name is required' />}
+					render={({message}) => <ErrorToast message={message} />}
 				/>
 				<label htmlFor='description' className='form-control'>
 					description
@@ -76,7 +75,7 @@ export default function CampaignForm() {
 				<ErrorMessage
 					errors={errors}
 					name='description'
-					as={<ErrorToast message='Description is required' />}
+					render={({message}) => <ErrorToast message={message} />}
 				/>
 				<label htmlFor='start_date' className='form-control'>
 					start date
@@ -91,7 +90,7 @@ export default function CampaignForm() {
 				<ErrorMessage
 					errors={errors}
 					name='start_date'
-					as={<ErrorToast message='Start date is required' />}
+					render={({message}) => <ErrorToast message={message} />}
 				/>
 				<label htmlFor='end_date' className='form-control'>
 					end date
@@ -106,7 +105,7 @@ export default function CampaignForm() {
 				<ErrorMessage
 					errors={errors}
 					name='end_date'
-					as={<ErrorToast message='End date is required' />}
+					render={({message}) => <ErrorToast message={message} />}
 				/>
 				<SubmitButton text='submit' className={'flex mt-10'} />
 			</form>
