@@ -1,3 +1,4 @@
+'use server';
 import {db} from '@/database/drizzle';
 import {getUserFromSession} from '@/actions/auth';
 import {campaigns} from '@/database/drizzle/schema';
@@ -9,6 +10,7 @@ import {
 	deleteCampaignSchema,
 } from '@/database/drizzle/validation';
 import {ZodError} from 'zod';
+import {revalidatePath} from 'next/cache';
 
 export const createCampaignAction = async (
 	prevState: State,
@@ -63,7 +65,7 @@ export const deleteCampaignAction = async (
 
 	const {campaign_id} = deleteCampaignSchema.parse(formData);
 	const user_id = user.id;
-
+	console.log('campaign_id', campaign_id);
 	try {
 		const deletedCampaign = await db
 			.delete(campaigns)

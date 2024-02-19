@@ -1,3 +1,4 @@
+'use server';
 import {db} from '@/database/drizzle';
 import {getUserFromSession} from '@/actions/auth';
 import {npcs} from '@/database/drizzle/schema';
