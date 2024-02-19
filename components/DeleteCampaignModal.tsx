@@ -1,6 +1,6 @@
 'use client';
 
-import {useRef} from 'react';
+import {useRef, useEffect} from 'react';
 import {useFormState} from 'react-dom';
 import {deleteCampaignAction} from '@/actions/drizzle/campaigns';
 import {SubmitButton} from './buttons/SubmitButton';
@@ -15,6 +15,16 @@ export default function DeleteCampaignModal({id}: {id: number}) {
 		}
 	};
 
+	useEffect(() => {
+		if (!state) return;
+		if (state?.status === 'error') {
+			console.log('STATE ERRORS:', state.errors);
+		}
+		if (state.status === 'success') {
+			dialogRef.current?.close();
+		}
+	}, [state]);
+
 	return (
 		<>
 			<button className='btn' onClick={openModal}>
@@ -23,6 +33,7 @@ export default function DeleteCampaignModal({id}: {id: number}) {
 			<dialog ref={dialogRef} className='modal modal-bottom sm:modal-middle'>
 				<div className='modal-box'>
 					<h3 className='font-bold text-lg'>Delete Campaign</h3>
+
 					<p className='py-4'>
 						Are you sure you want to delete this campaign? This action cannot be
 						undone.
