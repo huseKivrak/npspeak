@@ -5,7 +5,7 @@ import {useForm, FieldPath} from 'react-hook-form';
 import {useFormState} from 'react-dom';
 import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {createNPCAction} from '@/actions/database/NPCs';
+import {createNPCAction} from '@/actions/drizzle/NPCs';
 import {npcSchema} from '@/database/drizzle/validation';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {State} from '@/types/drizzle';

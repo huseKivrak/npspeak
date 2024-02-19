@@ -4,7 +4,7 @@ import {useForm, FieldPath} from 'react-hook-form';
 import {useFormState} from 'react-dom';
 import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {createCampaignAction} from '@/actions/database/campaigns';
+import {createCampaignAction} from '@/actions/drizzle/campaigns';
 import {campaignSchema} from '@/database/drizzle/validation';
 import {State} from '@/types/drizzle';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
