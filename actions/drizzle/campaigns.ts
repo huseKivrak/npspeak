@@ -11,6 +11,7 @@ import {
 } from '@/database/drizzle/validation';
 import {ZodError} from 'zod';
 import {revalidatePath} from 'next/cache';
+import {redirect} from 'next/navigation';
 
 export const createCampaignAction = async (
 	prevState: State,
@@ -19,11 +20,10 @@ export const createCampaignAction = async (
 	const user = await getUserFromSession();
 	if (!user) throw new Error('You must be logged in to create campaigns.');
 
-	const {campaign_name, description, start_date, end_date} =
-		campaignSchema.parse(formData);
 	const user_id = user.id;
-
 	try {
+		const {campaign_name, description, start_date, end_date} =
+			campaignSchema.parse(formData);
 		const insertedCampaign: Tables<'campaigns'>[] = await db
 			.insert(campaigns)
 			.values({
@@ -34,6 +34,7 @@ export const createCampaignAction = async (
 				end_date,
 			})
 			.returning();
+		revalidatePath('/');
 		return {
 			status: 'success',
 			message: `The "${insertedCampaign[0].campaign_name}" campaign is created`,
@@ -65,21 +66,22 @@ export const deleteCampaignAction = async (
 
 	const {campaign_id} = deleteCampaignSchema.parse(formData);
 	const user_id = user.id;
-	console.log('campaign_id', campaign_id);
 	try {
 		const deletedCampaign = await db
 			.delete(campaigns)
 			.where(and(eq(campaigns.id, campaign_id), eq(campaigns.user_id, user_id)))
 			.returning();
 
-		return {
-			status: 'success',
-			message: `${deletedCampaign[0].campaign_name} has been deleted`,
-		};
+		revalidatePath('/');
+		// return {
+		// 	status: 'success',
+		// 	message: `${deletedCampaign[0].campaign_name} has been deleted`,
+		// };
 	} catch (error) {
 		return {
 			status: 'error',
 			message: 'An error occured while deleting campaign.',
 		};
 	}
+	redirect('/dashboard');
 };

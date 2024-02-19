@@ -7,7 +7,8 @@ import {Tables} from '@/types/supabase';
 import {State} from '@/types/drizzle';
 import {deleteNPCSchema, npcSchema} from '@/database/drizzle/validation';
 import {ZodError} from 'zod';
-
+import {redirect} from 'next/navigation';
+import {revalidatePath} from 'next/cache';
 export const createNPCAction = async (
 	prevState: State,
 	formData: FormData
@@ -15,10 +16,10 @@ export const createNPCAction = async (
 	const user = await getUserFromSession();
 	if (!user) throw new Error('You must be logged in to create NPCs.');
 
-	const {npc_name, description} = npcSchema.parse(formData);
 	const user_id = user.id;
 
 	try {
+		const {npc_name, description} = npcSchema.parse(formData);
 		const insertedNPC: Tables<'npcs'>[] = await db
 			.insert(npcs)
 			.values({
@@ -65,14 +66,17 @@ export const deleteNPCAction = async (
 			.where(and(eq(npcs.id, npc_id), eq(npcs.user_id, user_id)))
 			.returning();
 
-		return {
-			status: 'success',
-			message: `${deletedNPC[0].npc_name} is gone!`,
-		};
+		// return {
+		// 	status: 'success',
+		// 	message: `${deletedNPC[0].npc_name} is gone!`,
+		// };
+
+		revalidatePath('/');
 	} catch (error) {
 		return {
 			status: 'error',
 			message: 'An error occured while deleting NPC.',
 		};
 	}
+	redirect('/dashboard');
 };
