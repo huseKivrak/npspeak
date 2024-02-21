@@ -44,10 +44,10 @@ export const createCampaignAction = async (
 		}
 
 		revalidatePath('/');
-		return {
-			status: 'success',
-			message: `The "${insertedCampaign[0].campaign_name}" campaign is created`,
-		};
+		// return {
+		// 	status: 'success',
+		// 	message: `The "${insertedCampaign[0].campaign_name}" campaign is created`,
+		// };
 	} catch (error) {
 		if (error instanceof ZodError) {
 			return {
@@ -64,6 +64,7 @@ export const createCampaignAction = async (
 			message: 'An error occured during campaign creation.',
 		};
 	}
+	redirect(`/${user.user_metadata.username}/campaigns`);
 };
 
 export const deleteCampaignAction = async (
