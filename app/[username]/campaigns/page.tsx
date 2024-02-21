@@ -1,4 +1,4 @@
-import {getCampaignsAndNPCs} from '@/database/drizzle/queries';
+import {getCampaignsWithNPCs} from '@/database/drizzle/queries';
 import OpenScrollCard from '@/components/cards/OpenScrollCard';
 
 export default async function UserCampaignsPage({
@@ -9,7 +9,7 @@ export default async function UserCampaignsPage({
 	};
 }) {
 	const username = params.username;
-	const userData = await getCampaignsAndNPCs();
+	const userData = await getCampaignsWithNPCs();
 
 	return (
 		<div className='flex flex-col items-center'>

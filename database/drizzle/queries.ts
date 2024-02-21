@@ -2,7 +2,7 @@ import {CampaignsWithNPCs, NPCsWithCampaigns} from '@/types/drizzle';
 import {npcs, campaigns, campaign_npcs} from '@/database/drizzle/schema';
 import {db} from '.';
 import {Tables} from '@/types/supabase';
-import {eq} from 'drizzle-orm';
+import {eq, and} from 'drizzle-orm';
 import {getUserFromSession} from '@/actions/auth';
 
 /**
@@ -13,7 +13,7 @@ import {getUserFromSession} from '@/actions/auth';
  *
  * This data is then processed to group campaigns with an array of their NPCs.
  */
-export const getCampaignsAndNPCs = async (): Promise<
+export const getCampaignsWithNPCs = async (): Promise<
 	CampaignsWithNPCs[] | null
 > => {
 	const user = await getUserFromSession();
@@ -49,7 +49,31 @@ export const getCampaignsAndNPCs = async (): Promise<
 	}
 };
 
-export const getNPCsWithCampaignsAction = async (): Promise<
+export const getCampaignById = async (id: string) => {
+	const user = await getUserFromSession();
+	if (!user) return null;
+	const userId = user.id;
+
+	const campaignId = parseInt(id);
+	if (isNaN(campaignId)) return null;
+
+	try {
+		const campaign = await db
+			.select()
+			.from(campaigns)
+			.where(and(eq(campaigns.id, campaignId), eq(campaigns.user_id, userId)));
+
+		return campaign;
+	} catch (error) {
+		console.error('Error fetching campaign:', error);
+		throw new Error('An error occured while getting campaign');
+	}
+};
+
+///////////////////////////////////////////////////
+/// NPCs
+///////////////////////////////////////////////////
+export const getNPCsWithCampaigns = async (): Promise<
 	NPCsWithCampaigns[] | null
 > => {
 	const user = await getUserFromSession();
@@ -83,5 +107,26 @@ export const getNPCsWithCampaignsAction = async (): Promise<
 	} catch (error) {
 		console.error('Error fetching NPCS:', error);
 		throw new Error('An error occured while getting NPCs');
+	}
+};
+
+export const getNPCById = async (id: string) => {
+	const user = await getUserFromSession();
+	if (!user) return null;
+	const userId = user.id;
+
+	const npcId = parseInt(id);
+	if (isNaN(npcId)) return null;
+
+	try {
+		const npc = await db
+			.select()
+			.from(npcs)
+			.where(and(eq(npcs.id, npcId), eq(npcs.user_id, userId)));
+
+		return npc;
+	} catch (error) {
+		console.error('Error fetching NPC:', error);
+		throw new Error('An error occured while getting NPC');
 	}
 };

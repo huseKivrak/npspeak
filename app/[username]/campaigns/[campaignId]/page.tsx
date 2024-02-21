@@ -1,7 +1,7 @@
 import {getUsername} from '@/actions/auth';
 import {redirect} from 'next/navigation';
 import OpenScrollCard from '@/components/cards/OpenScrollCard';
-import {getCampaignsAndNPCs} from '@/database/drizzle/queries';
+import {getCampaignsWithNPCs} from '@/database/drizzle/queries';
 import ErrorToast from '@/components/ErrorToast';
 
 export default async function CampaignDetailPage({
@@ -16,7 +16,7 @@ export default async function CampaignDetailPage({
 	if (!username) return redirect('/login');
 
 	const campaignId = params.campaignId;
-	const userCampaigns = await getCampaignsAndNPCs();
+	const userCampaigns = await getCampaignsWithNPCs();
 	if (!userCampaigns) return <ErrorToast message='No campaigns found' />;
 	const campaign = userCampaigns.find((c) => c.campaign.id === campaignId);
 	if (!campaign) return <ErrorToast message='Campaign not found' />;

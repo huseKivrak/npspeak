@@ -1,8 +1,8 @@
-import {getNPCsWithCampaignsAction} from '@/database/drizzle/queries';
+import {getNPCsWithCampaigns} from '@/database/drizzle/queries';
 import NPCCard from '@/components/cards/NPCCard';
 
 export default async function NPCsPage({params}: {params: {username: string}}) {
-	const npcs = await getNPCsWithCampaignsAction();
+	const npcs = await getNPCsWithCampaigns();
 	const username = params.username;
 	return (
 		<div>
