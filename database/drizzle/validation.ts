@@ -71,3 +71,14 @@ export const npcSchema = zfd.formData({
 export const deleteNPCSchema = zfd.formData({
 	npc_id: zfd.numeric(),
 });
+
+export const dialogueSchema = zfd.formData({
+	npc_id: zfd.numeric(),
+	dialogue_type_id: zfd.numeric(),
+	text: zfd.text(
+		z
+			.string()
+			.min(2, 'Dialogue must be at least 2 characters long')
+			.max(255, 'Dialogue must be at most 255 characters long')
+	),
+});

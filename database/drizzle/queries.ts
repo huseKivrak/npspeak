@@ -1,5 +1,10 @@
 import {CampaignWithNPCs, NPCWithCampaigns} from '@/types/drizzle';
-import {npcs, campaigns, campaign_npcs} from '@/database/drizzle/schema';
+import {
+	npcs,
+	campaigns,
+	campaign_npcs,
+	npc_dialogue_types,
+} from '@/database/drizzle/schema';
 import {db} from '.';
 import {Tables} from '@/types/supabase';
 import {eq, and} from 'drizzle-orm';
@@ -128,5 +133,15 @@ export const getNPCById = async (id: string) => {
 	} catch (error) {
 		console.error('Error fetching NPC:', error);
 		throw new Error('An error occured while getting NPC');
+	}
+};
+
+export const getDialogueTypes = async () => {
+	try {
+		const dialogueTypes = await db.select().from(npc_dialogue_types);
+		return dialogueTypes;
+	} catch (error) {
+		console.error('Error fetching dialogue types:', error);
+		throw new Error('An error occured while getting dialogue types');
 	}
 };
