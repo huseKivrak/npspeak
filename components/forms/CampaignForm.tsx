@@ -1,5 +1,5 @@
 'use client';
-import {useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {useForm, FieldPath} from 'react-hook-form';
 import {useFormState} from 'react-dom';
 import {z} from 'zod';
@@ -22,7 +22,7 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 		createCampaignAction,
 		null
 	);
-
+	const [showAddNpc, setShowAddNpc] = useState(false);
 	const {
 		register,
 		formState: {errors},
@@ -112,15 +112,20 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 					name='end_date'
 					render={({message}) => <ErrorToast message={message} />}
 				/>
-				<label htmlFor='npc_ids' className='form-control'>
-					NPCs to include
-				</label>
-				{npcOptions && npcOptions.length > 0 && (
-					<CheckboxSelections
-						fieldName='npc_ids'
-						options={npcOptions}
-						register={register}
-					/>
+				<button type='button' onClick={() => setShowAddNpc(!showAddNpc)}>
+					{showAddNpc ? 'hide' : 'add NPCs'}
+				</button>
+				{showAddNpc && npcOptions && npcOptions.length > 0 && (
+					<>
+						<label htmlFor='npc_ids' className='form-control'>
+							NPCs to include
+						</label>
+						<CheckboxSelections
+							fieldName='npc_ids'
+							options={npcOptions}
+							register={register}
+						/>
+					</>
 				)}
 				<SubmitButton text='submit' className={'flex mt-10'} />
 			</form>

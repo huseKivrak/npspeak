@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {useForm, FieldPath} from 'react-hook-form';
 import {useFormState} from 'react-dom';
 import {z} from 'zod';
@@ -23,6 +23,7 @@ export default function NPCForm({campaignOptions}: NPCFormProps) {
 		createNPCAction,
 		null
 	);
+	const [showAddCampaign, setShowAddCampaign] = useState(false);
 
 	const {
 		register,
@@ -83,15 +84,20 @@ export default function NPCForm({campaignOptions}: NPCFormProps) {
 					name='description'
 					render={({message}) => <ErrorToast message={message} />}
 				/>
-				<label htmlFor='campaign_ids' className='form-control'>
-					add to campaigns
-				</label>
-				{campaignOptions && campaignOptions.length > 0 && (
-					<CheckboxSelections
-						fieldName='campaign_ids'
-						options={campaignOptions}
-						register={register}
-					/>
+				<button onClick={() => setShowAddCampaign(!showAddCampaign)}>
+					{showAddCampaign ? 'hide' : 'add to campaign'}
+				</button>
+				{showAddCampaign && campaignOptions && campaignOptions.length > 0 && (
+					<>
+						<label htmlFor='campaign_ids' className='form-control'>
+							add to campaigns
+						</label>
+						<CheckboxSelections
+							fieldName='campaign_ids'
+							options={campaignOptions}
+							register={register}
+						/>
+					</>
 				)}
 				<SubmitButton text='create' />
 			</form>
