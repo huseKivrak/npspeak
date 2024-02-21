@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import {getUsername} from '@/actions/auth';
-import {NPCsWithCampaigns} from '@/types/drizzle';
+import {NPCWithCampaigns} from '@/types/drizzle';
+import DeleteNPCModal from '../DeleteNPCModal';
 
-export default async function NPCCard({npcData}: {npcData: NPCsWithCampaigns}) {
+export default async function NPCCard({npcData}: {npcData: NPCWithCampaigns}) {
 	const {npc, campaigns} = npcData;
 	const username = await getUsername();
 	return (
@@ -11,6 +12,7 @@ export default async function NPCCard({npcData}: {npcData: NPCsWithCampaigns}) {
 				<h2 className='card-title'>{npc.npc_name}</h2>
 				<p>{npc.description}</p>
 				<div className='card-actions'>
+					<DeleteNPCModal id={npc.id} />
 					<ul>
 						{campaigns &&
 							campaigns.map((c) => (
