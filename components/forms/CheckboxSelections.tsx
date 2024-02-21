@@ -4,7 +4,7 @@ import {UseFormRegister} from 'react-hook-form';
 interface CheckboxSelectionsProps {
 	fieldName: 'npc_ids' | 'campaign_ids';
 	options: FormOptions;
-	register: UseFormRegister<any>;
+	register: UseFormRegister<any>; //todo: fix any typing here
 }
 
 export const CheckboxSelections = ({

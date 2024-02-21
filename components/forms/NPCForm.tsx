@@ -84,13 +84,17 @@ export default function NPCForm({campaignOptions}: NPCFormProps) {
 					name='description'
 					render={({message}) => <ErrorToast message={message} />}
 				/>
-				<button onClick={() => setShowAddCampaign(!showAddCampaign)}>
-					{showAddCampaign ? 'hide' : 'add to campaign'}
+				<button
+					type='button'
+					className='btn btn-sm btn-secondary w-full'
+					onClick={() => setShowAddCampaign(!showAddCampaign)}
+				>
+					{showAddCampaign ? 'cancel' : 'add to campaign(s)'}
 				</button>
 				{showAddCampaign && campaignOptions && campaignOptions.length > 0 && (
 					<>
 						<label htmlFor='campaign_ids' className='form-control'>
-							add to campaigns
+							Which campaign(s) is this NPC a part of?
 						</label>
 						<CheckboxSelections
 							fieldName='campaign_ids'

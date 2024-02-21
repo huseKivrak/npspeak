@@ -12,8 +12,8 @@ export default async function NPCCard({npcData}: {npcData: NPCWithCampaigns}) {
 				<h2 className='card-title'>{npc.npc_name}</h2>
 				<p>{npc.description}</p>
 				<div className='card-actions'>
-					<DeleteNPCModal id={npc.id} />
 					<ul>
+						<h3 className='underline font-semibold'>Campaigns:</h3>
 						{campaigns &&
 							campaigns.map((c) => (
 								<li key={c.id}>
@@ -23,6 +23,9 @@ export default async function NPCCard({npcData}: {npcData: NPCWithCampaigns}) {
 								</li>
 							))}
 					</ul>
+					<div className='flex w-full justify-center'>
+						<DeleteNPCModal id={npc.id} />
+					</div>
 				</div>
 			</div>
 		</div>

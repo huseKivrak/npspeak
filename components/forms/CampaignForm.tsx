@@ -59,7 +59,7 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 					id='campaign_name'
 					type='text'
 					name='campaign_name'
-					placeholder="what's your campaign called?"
+					placeholder='name your campaign'
 					className='input input-bordered input-primary mb-4'
 				/>
 				<ErrorMessage
@@ -112,13 +112,17 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 					name='end_date'
 					render={({message}) => <ErrorToast message={message} />}
 				/>
-				<button type='button' onClick={() => setShowAddNpc(!showAddNpc)}>
-					{showAddNpc ? 'hide' : 'add NPCs'}
+				<button
+					type='button'
+					className='btn btn-sm btn-secondary w-full mt-4'
+					onClick={() => setShowAddNpc(!showAddNpc)}
+				>
+					{showAddNpc ? 'cancel' : 'add NPC(s) to campaign'}
 				</button>
 				{showAddNpc && npcOptions && npcOptions.length > 0 && (
 					<>
 						<label htmlFor='npc_ids' className='form-control'>
-							NPCs to include
+							Which NPC(s) are part of this campaign?
 						</label>
 						<CheckboxSelections
 							fieldName='npc_ids'

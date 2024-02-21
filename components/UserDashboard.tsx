@@ -35,19 +35,24 @@ export default function UserDashboard({
 				<h2 className='text-2xl underline tracking-widest'>campaigns</h2>
 				{campaigns?.map((c) => (
 					<li key={c.campaign.id}>
-						<Link href={`${username}/campaigns/${c.campaign.id}`}>
+						<Link href={`/${username}/campaigns/${c.campaign.id}`}>
 							{c.campaign.campaign_name}
 						</Link>
 					</li>
 				))}
 			</ul>
-			<button
+			{/* <button
 				className='btn btn-primary btn-sm'
 				onClick={() => setShowCampaignForm(!showCampaignForm)}
 			>
 				{!showCampaignForm ? 'add a new campaign' : 'cancel'}
 			</button>
-			{showCampaignForm && <CampaignForm npcOptions={npcOptions} />}
+			{showCampaignForm && <CampaignForm npcOptions={npcOptions} />} */}
+			<Link href={`/${username}/campaigns/create`}>
+				<button className='btn btn-secondary btn-sm'>
+					create a new campaign
+				</button>
+			</Link>
 			<ul>
 				<h2 className='text-2xl underline tracking-widest'>NPCs</h2>
 				{npcs?.map((n) => (
@@ -56,13 +61,16 @@ export default function UserDashboard({
 					</li>
 				))}
 			</ul>
-			<button
+			{/* <button
 				className='btn btn-primary btn-sm'
 				onClick={() => setShowNPCForm(!showNPCForm)}
 			>
 				{!showNPCForm ? 'add a new NPC' : 'cancel'}
 			</button>
-			{showNPCForm && <NPCForm campaignOptions={campaignOptions} />}
+			{showNPCForm && <NPCForm campaignOptions={campaignOptions} />} */}
+			<Link href={`/${username}/npcs/create`}>
+				<button className='btn btn-secondary btn-sm'>create a new NPC</button>
+			</Link>
 		</div>
 	);
 }

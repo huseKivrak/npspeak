@@ -27,7 +27,7 @@ export default function DeleteCampaignModal({id}: {id: number}) {
 
 	return (
 		<>
-			<button className='btn' onClick={openModal}>
+			<button className='btn btn-xs btn-error' onClick={openModal}>
 				Delete
 			</button>
 			<dialog ref={dialogRef} className='modal modal-bottom sm:modal-middle'>
@@ -40,11 +40,11 @@ export default function DeleteCampaignModal({id}: {id: number}) {
 					</p>
 					<div className='modal-action'>
 						<form method='dialog'>
-							<button className='btn'>Close</button>
+							<button className='btn btn-sm'>Close</button>
 						</form>
 						<form action={formAction}>
 							<input type='hidden' name='campaign_id' value={id} />
-							<SubmitButton className='btn' text='Delete' />
+							<SubmitButton className='btn btn-sm btn-warning' text='Delete' />
 						</form>
 					</div>
 				</div>

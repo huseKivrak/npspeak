@@ -38,7 +38,6 @@ export default function OpenScrollCard({
 						<p className='text-balance text-stone-100 text-sm p-10 text-center'>
 							{campaign.description}
 						</p>
-						<DeleteCampaignModal id={campaign.id} />
 					</>
 				) : (
 					<button
@@ -50,6 +49,7 @@ export default function OpenScrollCard({
 				)}
 				{showNPCs && npcs && <NPCCarousel NPCs={npcs} />}
 				{/* {showNPCs && NPCs && <Responsive NPCs={NPCs} />} */}
+				<DeleteCampaignModal id={campaign.id} />
 			</div>
 		</div>
 	);
