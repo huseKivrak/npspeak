@@ -16,6 +16,7 @@ export const campaignSchema = zfd
 				.max(255, 'Description must be at most 255 characters long')
 				.optional()
 		),
+		npc_ids: zfd.repeatableOfType(zfd.numeric().optional()),
 		start_date: zfd.text(z.string().optional()),
 		end_date: zfd.text(z.string().optional()),
 	})
@@ -64,6 +65,7 @@ export const npcSchema = zfd.formData({
 			.max(255, 'Description must be at most 255 characters long')
 			.optional()
 	),
+	campaign_ids: zfd.repeatableOfType(zfd.numeric().optional()),
 });
 
 export const deleteNPCSchema = zfd.formData({

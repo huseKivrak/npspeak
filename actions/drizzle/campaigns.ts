@@ -1,7 +1,7 @@
 'use server';
 import {db} from '@/database/drizzle';
 import {getUserFromSession} from '@/actions/auth';
-import {campaigns} from '@/database/drizzle/schema';
+import {campaigns, campaign_npcs} from '@/database/drizzle/schema';
 import {eq, and} from 'drizzle-orm';
 import {Tables} from '@/types/supabase';
 import {State} from '@/types/drizzle';
@@ -22,7 +22,7 @@ export const createCampaignAction = async (
 
 	const user_id = user.id;
 	try {
-		const {campaign_name, description, start_date, end_date} =
+		const {campaign_name, description, npc_ids, start_date, end_date} =
 			campaignSchema.parse(formData);
 		const insertedCampaign: Tables<'campaigns'>[] = await db
 			.insert(campaigns)
@@ -34,6 +34,15 @@ export const createCampaignAction = async (
 				end_date,
 			})
 			.returning();
+
+		if (npc_ids && npc_ids.length > 0) {
+			const associations = npc_ids.map((npc_id) => ({
+				npc_id: npc_id as number, //fixes type error
+				campaign_id: insertedCampaign[0].id,
+			}));
+			await db.insert(campaign_npcs).values(associations);
+		}
+
 		revalidatePath('/');
 		return {
 			status: 'success',
