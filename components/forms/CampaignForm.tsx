@@ -10,9 +10,14 @@ import {State} from '@/types/drizzle';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {ErrorMessage} from '@hookform/error-message';
 import ErrorToast from '../ErrorToast';
+import {FormOptions} from '@/types/drizzle';
+import {CheckboxSelections} from './CheckboxSelections';
+interface CampaignFormProps {
+	npcOptions?: FormOptions;
+}
 
 type Inputs = z.infer<typeof campaignSchema>;
-export default function CampaignForm() {
+export default function CampaignForm({npcOptions}: CampaignFormProps) {
 	const [state, formAction] = useFormState<State, FormData>(
 		createCampaignAction,
 		null
@@ -107,6 +112,16 @@ export default function CampaignForm() {
 					name='end_date'
 					render={({message}) => <ErrorToast message={message} />}
 				/>
+				<label htmlFor='npc_ids' className='form-control'>
+					NPCs to include
+				</label>
+				{npcOptions && npcOptions.length > 0 && (
+					<CheckboxSelections
+						fieldName='npc_ids'
+						options={npcOptions}
+						register={register}
+					/>
+				)}
 				<SubmitButton text='submit' className={'flex mt-10'} />
 			</form>
 		</div>

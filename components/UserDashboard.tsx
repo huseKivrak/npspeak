@@ -1,24 +1,32 @@
 'use client';
-import {CampaignsWithNPCs, NPCsWithCampaigns} from '@/types/drizzle';
+import {CampaignWithNPCs, NPCWithCampaigns} from '@/types/drizzle';
 import {User} from '@supabase/supabase-js';
 import {useState} from 'react';
 import CampaignForm from './forms/CampaignForm';
 import NPCForm from './forms/NPCForm';
 import Link from 'next/link';
-
+import {
+	transformCampaignOptions,
+	transformNPCOptions,
+} from '@/utils/helpers/formHelpers';
+import {FormOptions} from '@/types/drizzle';
 export default function UserDashboard({
 	user,
 	campaigns,
 	npcs,
 }: {
 	user: User;
-	campaigns: CampaignsWithNPCs[] | null;
-	npcs: NPCsWithCampaigns[] | null;
+	campaigns: CampaignWithNPCs[] | null;
+	npcs: NPCWithCampaigns[] | null;
 }) {
 	const [showCampaignForm, setShowCampaignForm] = useState(false);
 	const [showNPCForm, setShowNPCForm] = useState(false);
 
 	const username = user.user_metadata.username;
+	const campaignOptions: FormOptions = campaigns
+		? transformCampaignOptions(campaigns)
+		: [];
+	const npcOptions: FormOptions = npcs ? transformNPCOptions(npcs) : [];
 
 	return (
 		<div className='flex flex-col gap-2'>
@@ -39,7 +47,7 @@ export default function UserDashboard({
 			>
 				{!showCampaignForm ? 'add a new campaign' : 'cancel'}
 			</button>
-			{showCampaignForm && <CampaignForm />}
+			{showCampaignForm && <CampaignForm npcOptions={npcOptions} />}
 			<ul>
 				<h2 className='text-2xl underline tracking-widest'>NPCs</h2>
 				{npcs?.map((n) => (
@@ -54,7 +62,7 @@ export default function UserDashboard({
 			>
 				{!showNPCForm ? 'add a new NPC' : 'cancel'}
 			</button>
-			{showNPCForm && <NPCForm />}
+			{showNPCForm && <NPCForm campaignOptions={campaignOptions} />}
 		</div>
 	);
 }

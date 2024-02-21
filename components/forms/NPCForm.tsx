@@ -11,9 +11,14 @@ import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {State} from '@/types/drizzle';
 import {ErrorMessage} from '@hookform/error-message';
 import ErrorToast from '@/components/ErrorToast';
+import {FormOptions} from '@/types/drizzle';
+import {CheckboxSelections} from './CheckboxSelections';
+interface NPCFormProps {
+	campaignOptions?: FormOptions;
+}
 
 type Inputs = z.infer<typeof npcSchema>;
-export default function NPCForm() {
+export default function NPCForm({campaignOptions}: NPCFormProps) {
 	const [state, formAction] = useFormState<State, FormData>(
 		createNPCAction,
 		null
@@ -78,6 +83,16 @@ export default function NPCForm() {
 					name='description'
 					render={({message}) => <ErrorToast message={message} />}
 				/>
+				<label htmlFor='campaign_ids' className='form-control'>
+					add to campaigns
+				</label>
+				{campaignOptions && campaignOptions.length > 0 && (
+					<CheckboxSelections
+						fieldName='campaign_ids'
+						options={campaignOptions}
+						register={register}
+					/>
+				)}
 				<SubmitButton text='create' />
 			</form>
 		</div>
