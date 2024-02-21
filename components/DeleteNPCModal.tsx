@@ -1,6 +1,6 @@
 'use client';
 
-import {useRef} from 'react';
+import {useEffect, useRef} from 'react';
 import {useFormState} from 'react-dom';
 import {deleteNPCAction} from '@/actions/drizzle/NPCs';
 import {SubmitButton} from './buttons/SubmitButton';
@@ -14,6 +14,16 @@ export default function DeleteNPCModal({id}: {id: number}) {
 			dialogRef.current.showModal();
 		}
 	};
+
+	useEffect(() => {
+		if (!state) return;
+		if (state?.status === 'error') {
+			console.log('STATE ERRORS:', state.errors);
+		}
+		if (state.status === 'success') {
+			dialogRef.current?.close();
+		}
+	}, [state]);
 
 	return (
 		<>
