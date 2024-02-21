@@ -3,7 +3,7 @@
 import {useState} from 'react';
 import NPCCarousel from './NPCCarousel';
 import DeleteCampaignModal from '../DeleteCampaignModal';
-import {CampaignsWithNPCs} from '@/types/drizzle';
+import {CampaignWithNPCs} from '@/types/drizzle';
 import Image from 'next/image';
 
 //todo
@@ -12,7 +12,7 @@ import Link from 'next/link';
 export default function OpenScrollCard({
 	campaignData,
 }: {
-	campaignData: CampaignsWithNPCs;
+	campaignData: CampaignWithNPCs;
 }) {
 	const [showNPCs, setShowNPCs] = useState(false);
 	const {campaign, npcs} = campaignData;

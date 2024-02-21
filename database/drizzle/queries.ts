@@ -1,4 +1,4 @@
-import {CampaignsWithNPCs, NPCsWithCampaigns} from '@/types/drizzle';
+import {CampaignWithNPCs, NPCWithCampaigns} from '@/types/drizzle';
 import {npcs, campaigns, campaign_npcs} from '@/database/drizzle/schema';
 import {db} from '.';
 import {Tables} from '@/types/supabase';
@@ -14,7 +14,7 @@ import {getUserFromSession} from '@/actions/auth';
  * This data is then processed to group campaigns with an array of their NPCs.
  */
 export const getCampaignsWithNPCs = async (): Promise<
-	CampaignsWithNPCs[] | null
+	CampaignWithNPCs[] | null
 > => {
 	const user = await getUserFromSession();
 	if (!user) return null;
@@ -29,7 +29,7 @@ export const getCampaignsWithNPCs = async (): Promise<
 			.leftJoin(npcs, eq(npcs.id, campaign_npcs.npc_id))
 			.where(eq(campaigns.user_id, userId));
 
-		const campaignsWithNPCs: CampaignsWithNPCs[] = rawJoinRows.reduce(
+		const campaignsWithNPCs: CampaignWithNPCs[] = rawJoinRows.reduce(
 			(acc, {campaigns, npcs}) => {
 				let campaign = acc.find((c) => c.campaign.id === campaigns.id);
 				if (!campaign) {
@@ -39,7 +39,7 @@ export const getCampaignsWithNPCs = async (): Promise<
 				if (npcs) campaign.npcs.push(npcs);
 				return acc;
 			},
-			[] as CampaignsWithNPCs[]
+			[] as CampaignWithNPCs[]
 		);
 		console.log('groupedNPCs:', campaignsWithNPCs);
 		return campaignsWithNPCs;
@@ -74,7 +74,7 @@ export const getCampaignById = async (id: string) => {
 /// NPCs
 ///////////////////////////////////////////////////
 export const getNPCsWithCampaigns = async (): Promise<
-	NPCsWithCampaigns[] | null
+	NPCWithCampaigns[] | null
 > => {
 	const user = await getUserFromSession();
 	if (!user) return null;
@@ -87,7 +87,7 @@ export const getNPCsWithCampaigns = async (): Promise<
 			.leftJoin(campaigns, eq(campaigns.id, campaign_npcs.campaign_id))
 			.where(eq(npcs.user_id, user.id));
 
-		const npcsWithCampaigns: NPCsWithCampaigns[] = rawJoinRows.reduce(
+		const npcsWithCampaigns: NPCWithCampaigns[] = rawJoinRows.reduce(
 			(acc, {npcs, campaigns}) => {
 				let npc = acc.find((entry) => entry.npc.id === npcs.id);
 				if (!npc) {
