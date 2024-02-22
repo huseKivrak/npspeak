@@ -155,7 +155,7 @@ export const getNPCById = async (
 		if (rawJoinRows.length === 0) return null;
 
 		const npc = rawJoinRows.reduce((acc, row) => {
-			if (!acc) {
+			if (!acc.id) {
 				acc = {
 					...row.npcs,
 					campaigns: row.campaigns ? [row.campaigns] : [],
