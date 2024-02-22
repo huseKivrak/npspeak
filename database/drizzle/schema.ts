@@ -12,17 +12,17 @@ import {
 	date,
 	primaryKey,
 } from 'drizzle-orm/pg-core';
+import {sql} from 'drizzle-orm';
 import {authUsers as users} from '../supabase/authSchema';
-import {createInsertSchema, createSelectSchema} from 'drizzle-zod';
-import {z} from 'zod';
-// import { relations } from 'drizzle-orm';
 
 export const campaigns = pgTable('campaigns', {
 	id: serial('id').primaryKey().notNull(),
 	created_at: timestamp('created_at', {withTimezone: true, mode: 'string'})
 		.defaultNow()
 		.notNull(),
-	user_id: uuid('user_id').references(() => users.id, {onDelete: 'set null'}),
+	user_id: uuid('user_id')
+		.default(sql`auth.uid()`)
+		.references(() => users.id, {onDelete: 'set null'}),
 	description: text('description'),
 	updated_at: timestamp('updated_at', {withTimezone: true, mode: 'string'}),
 	start_date: date('start_date', {mode: 'string'}),
@@ -31,84 +31,15 @@ export const campaigns = pgTable('campaigns', {
 	campaign_name: varchar('campaign_name').notNull(),
 });
 
-// export const campaignRelations = relations(campaigns, ({ one, many }) => ({
-//   user: one(users, { fields: [campaigns.user_id], references: [users.id] }),
-//   campaign: many(campaigns),
-// }));
-
-export const insertCampaignSchema = createInsertSchema(campaigns, {
-	start_date: z.string().optional(),
-	end_date: z.string().optional(),
-}).superRefine((data, ctx) => {
-	/** various date validations for start and end dates:
-	 * - are valid dates
-	 * - are set for today or later
-	 * - end date >= start date
-	 *
-	 * todo: dates
-	 * */
-
-	if (data.start_date) {
-		const startDate = new Date(data.start_date);
-		if (isNaN(startDate.getTime())) {
-			ctx.addIssue({
-				code: 'invalid_date',
-				message: 'Start date is not a valid date',
-				path: ['start_date'],
-			});
-		}
-		const now = new Date();
-		if (startDate < now) {
-			ctx.addIssue({
-				code: 'invalid_date',
-				message: 'Start date must be in the future',
-				path: ['start_date'],
-			});
-		}
-
-		if (data.end_date) {
-			const endDate = new Date(data.end_date);
-			if (isNaN(endDate.getTime())) {
-				ctx.addIssue({
-					code: 'invalid_date',
-					message: 'End date is not a valid date',
-					path: ['end_date'],
-				});
-			}
-			if (endDate < now) {
-				ctx.addIssue({
-					code: 'invalid_date',
-					message: 'End date must be in the future',
-					path: ['end_date'],
-				});
-			}
-		}
-	}
-
-	if (data.start_date && data.end_date) {
-		const startDate = new Date(data.start_date);
-		const endDate = new Date(data.end_date);
-
-		if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
-			if (endDate < startDate) {
-				ctx.addIssue({
-					code: 'invalid_date',
-					message: 'End date must be on or after start date',
-					path: ['end_date'],
-				});
-			}
-		}
-	}
-});
-
-export const selectCampaignSchema = createSelectSchema(campaigns);
-
 export const npcs = pgTable('npcs', {
 	id: serial('id').primaryKey().notNull(),
 	created_at: timestamp('created_at', {withTimezone: true, mode: 'string'})
 		.defaultNow()
 		.notNull(),
-	user_id: uuid('user_id').references(() => users.id, {onDelete: 'set null'}),
+	user_id: uuid('user_id')
+		.default(sql`auth.uid()`)
+		.notNull()
+		.references(() => users.id, {onDelete: 'set null'}),
 	npc_name: varchar('npc_name').notNull(),
 	description: text('description'),
 	voice_id: bigint('voice_id', {mode: 'number'}).references(
@@ -120,14 +51,14 @@ export const npcs = pgTable('npcs', {
 	is_default: boolean('is_default').default(false).notNull(),
 });
 
-export const insertNPCSchema = createInsertSchema(npcs);
-export const selectNPCSchema = createSelectSchema(npcs);
-
 export const audio_clips = pgTable(
 	'audio_clips',
 	{
 		id: serial('id').primaryKey().notNull(),
-		user_id: uuid('user_id').references(() => users.id, {onDelete: 'set null'}),
+		user_id: uuid('user_id')
+			.default(sql`auth.uid()`)
+			.notNull()
+			.references(() => users.id, {onDelete: 'set null'}),
 		created_at: timestamp('created_at', {withTimezone: true, mode: 'string'})
 			.defaultNow()
 			.notNull(),
@@ -150,7 +81,10 @@ export const audio_clips = pgTable(
 export const npc_dialogue_types = pgTable('npc_dialogue_types', {
 	id: serial('id').primaryKey().notNull(),
 	type_name: varchar('type_name', {length: 50}).notNull(),
-	user_id: uuid('user_id').references(() => users.id, {onDelete: 'set null'}),
+	user_id: uuid('user_id')
+		.default(sql`auth.uid()`)
+		.notNull()
+		.references(() => users.id, {onDelete: 'set null'}),
 	is_default: boolean('is_default').default(false).notNull(),
 });
 
@@ -188,7 +122,10 @@ export const profiles = pgTable('profiles', {
 
 export const voice_clones = pgTable('voice_clones', {
 	id: serial('id').primaryKey().notNull(),
-	user_id: uuid('user_id').references(() => users.id, {onDelete: 'set null'}),
+	user_id: uuid('user_id')
+		.default(sql`auth.uid()`)
+		.notNull()
+		.references(() => users.id, {onDelete: 'set null'}),
 	created_at: timestamp('created_at', {withTimezone: true, mode: 'string'})
 		.defaultNow()
 		.notNull(),
@@ -223,7 +160,10 @@ export const tts_audio = pgTable(
 				onDelete: 'set null',
 			}
 		),
-		user_id: uuid('user_id').references(() => users.id, {onDelete: 'set null'}),
+		user_id: uuid('user_id')
+			.default(sql`auth.uid()`)
+			.notNull()
+			.references(() => users.id, {onDelete: 'set null'}),
 		duration_seconds: bigint('duration_seconds', {mode: 'number'}).notNull(),
 		source_text: text('source_text').notNull(),
 		file_url: text('file_url').notNull(),
