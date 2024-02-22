@@ -1,4 +1,4 @@
-import {getUsername} from '@/actions/auth';
+import {getUserInfo} from '@/actions/auth';
 import {redirect} from 'next/navigation';
 import OpenScrollCard from '@/components/cards/OpenScrollCard';
 import {getCampaignsWithNPCs} from '@/database/drizzle/queries';
@@ -12,8 +12,8 @@ export default async function CampaignDetailPage({
 		campaignId: number;
 	};
 }) {
-	const username = await getUsername();
-	if (!username) return redirect('/login');
+	const {user} = await getUserInfo();
+	if (!user) return redirect('/login');
 
 	const campaignId = params.campaignId;
 	const userCampaigns = await getCampaignsWithNPCs();

@@ -66,7 +66,7 @@ export const logoutAction = async () => {
 
 //returns a user from sessions saved in cookies
 //! not for most up-to-date user (use supabase.auth.getUser() instead)
-export const getUserFromSession = async () => {
+export const old_getUserFromSession = async () => {
 	const cookieStore = cookies();
 	const supabase = createClient(cookieStore);
 	try {
@@ -83,9 +83,42 @@ export const getUserFromSession = async () => {
 //simple helper for getting nested username value for now
 //todo: integrate profiles table in lieu of auth:
 //'db.select(username).from(profiles).where(eq(profiles.id, user.id))'
-export const getUsername = async (user?: User) => {
+export const old_getUsername = async (user?: User) => {
 	if (user) return user.user_metadata.username;
 
-	const sessionUser = await getUserFromSession();
+	const sessionUser = await old_getUserFromSession();
 	return sessionUser?.user_metadata.username;
+};
+
+export interface BasicUserInfo {
+	id: string;
+	username: string;
+	lastSignIn: string | null;
+}
+
+interface UserAuth {
+	user: BasicUserInfo | null;
+	error: string | null;
+}
+//streamlined method for auth check from server (not cookies) and returning user info
+export const getUserInfo = async (): Promise<UserAuth> => {
+	const cookieStore = cookies();
+	const supabase = createClient(cookieStore);
+	try {
+		const {
+			data: {user},
+			error,
+		} = await supabase.auth.getUser();
+		if (!user) {
+			console.error('Auth Error:', error);
+			return {user: null, error: `Auth Error: ${error?.message}`};
+		}
+		const username = user.user_metadata.username;
+		const id = user.id;
+		const lastSignIn = user.last_sign_in_at ?? null;
+		return {user: {id, username, lastSignIn}, error: null};
+	} catch (error) {
+		console.error('Error:', error);
+		return {user: null, error: `Unexpected error: ${error}`};
+	}
 };

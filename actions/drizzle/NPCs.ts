@@ -1,6 +1,6 @@
 'use server';
 import {db} from '@/database/drizzle';
-import {getUserFromSession} from '@/actions/auth';
+import {getUserInfo} from '../auth';
 import {npcs, campaign_npcs} from '@/database/drizzle/schema';
 import {eq, and} from 'drizzle-orm';
 import {Tables} from '@/types/supabase';
@@ -14,7 +14,7 @@ export const createNPCAction = async (
 	prevState: State,
 	formData: FormData
 ): Promise<State> => {
-	const user = await getUserFromSession();
+	const {user} = await getUserInfo();
 	if (!user) throw new Error('You must be logged in to create NPCs.');
 
 	const user_id = user.id;
@@ -64,7 +64,7 @@ export const deleteNPCAction = async (
 	prevState: State,
 	formData: FormData
 ): Promise<State> => {
-	const user = await getUserFromSession();
+	const {user} = await getUserInfo();
 	if (!user) throw new Error('You must be logged in to delete NPCs.');
 
 	const user_id = user.id;

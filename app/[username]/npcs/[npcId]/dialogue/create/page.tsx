@@ -1,4 +1,4 @@
-import {getUsername} from '@/actions/auth';
+import {getUserInfo} from '@/actions/auth';
 import DialogueForm from '@/components/forms/DialogueForm';
 import {getNPCsWithCampaigns} from '@/database/drizzle/queries';
 import {redirect} from 'next/navigation';
@@ -10,13 +10,15 @@ export default async function CreateNPCDialoguePage({
 }: {
 	params: {username: string; npcId: number};
 }) {
-	const username = await getUsername();
-	if (!username) return redirect('/login');
-	if (username !== params.username) return <p>Unauthorized</p>;
+	const {user} = await getUserInfo();
+	if (!user) return redirect('/login');
+	if (user.username !== params.username) return <p>Unauthorized</p>;
 
 	const npcs = await getNPCsWithCampaigns();
 	const npc = npcs?.find((npc) => npc.npc.id === params.npcId);
 	if (!npc) return <p>NPC not found</p>;
+	if (npc.npc.user_id !== user.id) return <p>Unauthorized</p>;
+
 	const dialogueTypes = await getDialogueTypes();
 	const dialogueOptions = transformDialogueOptions(dialogueTypes);
 

@@ -1,11 +1,11 @@
 import NPCForm from '@/components/forms/NPCForm';
-import {getUserFromSession} from '@/actions/auth';
+import {getUserInfo} from '@/actions/auth';
 import {redirect} from 'next/navigation';
 import {getCampaignsWithNPCs} from '@/database/drizzle/queries';
 import {transformCampaignOptions} from '@/utils/helpers/formHelpers';
 
 export default async function CreateCampaignPage() {
-	const user = getUserFromSession();
+	const {user} = await getUserInfo();
 	if (!user) {
 		redirect('/login');
 	}

@@ -1,5 +1,5 @@
 import UserDashboard from '../../components/UserDashboard';
-import {getUserFromSession} from '../../actions/auth';
+import {getUserInfo} from '@/actions/auth';
 import {
 	getCampaignsWithNPCs,
 	getNPCsWithCampaigns,
@@ -9,14 +9,8 @@ import {createClient} from '@/utils/supabase/server';
 import {cookies} from 'next/headers';
 
 export default async function UserPage() {
-	const cookieStore = cookies();
-	const supabase = createClient(cookieStore);
-	const {
-		data: {user},
-	} = await supabase.auth.getUser();
-	if (!user) {
-		return redirect('/login');
-	}
+	const {user} = await getUserInfo();
+	if (!user) return redirect('/login');
 
 	const campaigns = await getCampaignsWithNPCs();
 	const npcs = await getNPCsWithCampaigns();

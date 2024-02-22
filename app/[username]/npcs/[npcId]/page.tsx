@@ -1,6 +1,6 @@
 import {redirect} from 'next/navigation';
 import NPCCard from '@/components/cards/NPCCard';
-import {getUsername} from '@/actions/auth';
+import {getUserInfo} from '@/actions/auth';
 import {getNPCsWithCampaigns} from '@/database/drizzle/queries';
 
 export default async function NPCDetailPage({
@@ -11,8 +11,8 @@ export default async function NPCDetailPage({
 		npcId: number;
 	};
 }) {
-	const username = getUsername();
-	if (!username) return redirect('/login');
+	const {user} = await getUserInfo();
+	if (!user) return redirect('/login');
 
 	const npcId = params.npcId;
 	const NPCs = await getNPCsWithCampaigns();

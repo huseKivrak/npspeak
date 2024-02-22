@@ -1,5 +1,5 @@
 import UserDashboard from '@/components/UserDashboard';
-import {getUserFromSession} from '@/actions/auth';
+import {getUserInfo} from '@/actions/auth';
 import {redirect} from 'next/navigation';
 import {
 	getCampaignsWithNPCs,
@@ -7,10 +7,10 @@ import {
 } from '@/database/drizzle/queries';
 
 export default async function UserPage({params}: {params: {username: string}}) {
-	const user = await getUserFromSession();
+	const {user} = await getUserInfo();
 	if (!user) redirect('/login');
 
-	const sessionUsername = user?.user_metadata.username;
+	const sessionUsername = user.username;
 	if (sessionUsername.toLowerCase() !== params.username.toLowerCase())
 		redirect('/login');
 

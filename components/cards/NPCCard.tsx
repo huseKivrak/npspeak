@@ -1,11 +1,12 @@
 import Link from 'next/link';
-import {getUsername} from '@/actions/auth';
+import {getUserInfo} from '@/actions/auth';
 import {NPCWithCampaigns} from '@/types/drizzle';
 import DeleteNPCModal from '../DeleteNPCModal';
+import DialogueForm from '../forms/DialogueForm';
 
 export default async function NPCCard({npcData}: {npcData: NPCWithCampaigns}) {
 	const {npc, campaigns} = npcData;
-	const username = await getUsername();
+	const {user} = await getUserInfo();
 	return (
 		<div className='card w-96 bg-base-100 shadow-xl'>
 			<div className='card-body'>
@@ -17,7 +18,7 @@ export default async function NPCCard({npcData}: {npcData: NPCWithCampaigns}) {
 						{campaigns &&
 							campaigns.map((c) => (
 								<li key={c.id}>
-									<Link href={`/${username}/campaigns/${c.id}`}>
+									<Link href={`/${user?.username}/campaigns/${c.id}`}>
 										{c.campaign_name}
 									</Link>
 								</li>

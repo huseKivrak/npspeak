@@ -1,3 +1,5 @@
+import 'server-only';
+
 import {CampaignWithNPCs, NPCWithCampaigns} from '@/types/drizzle';
 import {
 	npcs,
@@ -8,7 +10,7 @@ import {
 import {db} from '.';
 import {Tables} from '@/types/supabase';
 import {eq, and} from 'drizzle-orm';
-import {getUserFromSession} from '@/actions/auth';
+import {getUserInfo} from '@/actions/auth';
 
 /**
  * Retrieves campaigns and their associated NPCs for current user.
@@ -21,7 +23,7 @@ import {getUserFromSession} from '@/actions/auth';
 export const getCampaignsWithNPCs = async (): Promise<
 	CampaignWithNPCs[] | null
 > => {
-	const user = await getUserFromSession();
+	const {user} = await getUserInfo();
 	if (!user) return null;
 
 	const userId = user.id;
@@ -55,7 +57,7 @@ export const getCampaignsWithNPCs = async (): Promise<
 };
 
 export const getCampaignById = async (id: string) => {
-	const user = await getUserFromSession();
+	const {user} = await getUserInfo();
 	if (!user) return null;
 	const userId = user.id;
 
@@ -81,7 +83,7 @@ export const getCampaignById = async (id: string) => {
 export const getNPCsWithCampaigns = async (): Promise<
 	NPCWithCampaigns[] | null
 > => {
-	const user = await getUserFromSession();
+	const {user} = await getUserInfo();
 	if (!user) return null;
 
 	try {
@@ -116,7 +118,7 @@ export const getNPCsWithCampaigns = async (): Promise<
 };
 
 export const getNPCById = async (id: string) => {
-	const user = await getUserFromSession();
+	const {user} = await getUserInfo();
 	if (!user) return null;
 	const userId = user.id;
 

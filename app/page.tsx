@@ -1,10 +1,10 @@
 import Hero from '@/components/layout/Hero';
 import {redirect} from 'next/navigation';
-import {getUsername} from '@/actions/auth';
+import {getUserInfo} from '@/actions/auth';
 import SignUpForm from '@/components/forms/SignUpForm';
 
 export default async function Index() {
-	const user = await getUsername();
+	const {user} = await getUserInfo();
 	if (user) {
 		redirect('/dashboard');
 	}

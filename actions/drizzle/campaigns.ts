@@ -1,6 +1,6 @@
 'use server';
 import {db} from '@/database/drizzle';
-import {getUserFromSession} from '@/actions/auth';
+import {getUserInfo} from '../auth';
 import {campaigns, campaign_npcs} from '@/database/drizzle/schema';
 import {eq, and} from 'drizzle-orm';
 import {Tables} from '@/types/supabase';
@@ -17,7 +17,7 @@ export const createCampaignAction = async (
 	prevState: State,
 	formData: FormData
 ): Promise<State> => {
-	const user = await getUserFromSession();
+	const {user} = await getUserInfo();
 	if (!user) throw new Error('You must be logged in to create campaigns.');
 
 	const user_id = user.id;
@@ -64,14 +64,14 @@ export const createCampaignAction = async (
 			message: 'An error occured during campaign creation.',
 		};
 	}
-	redirect(`/${user.user_metadata.username}/campaigns`);
+	redirect(`/${user.username}/campaigns`);
 };
 
 export const deleteCampaignAction = async (
 	prevState: State,
 	formData: FormData
 ): Promise<State> => {
-	const user = await getUserFromSession();
+	const {user} = await getUserInfo();
 	if (!user) throw new Error('You must be logged in to delete campaigns.');
 
 	const {campaign_id} = deleteCampaignSchema.parse(formData);

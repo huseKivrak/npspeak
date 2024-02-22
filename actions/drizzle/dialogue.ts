@@ -1,6 +1,6 @@
 'use server';
 import {db} from '@/database/drizzle';
-import {getUserFromSession} from '@/actions/auth';
+import {getUserInfo} from '../auth';
 import {npc_dialogues} from '@/database/drizzle/schema';
 import {Tables} from '@/types/supabase';
 import {State} from '@/types/drizzle';
@@ -13,7 +13,7 @@ export const createDialogueAction = async (
 	prevState: State,
 	formData: FormData
 ): Promise<State> => {
-	const user = await getUserFromSession();
+	const {user} = await getUserInfo();
 	if (!user) throw new Error('You must be logged in to create dialogues.');
 
 	const user_id = user.id;
