@@ -10,12 +10,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function OpenScrollCard({
-	campaignData,
+	campaign,
 }: {
-	campaignData: CampaignWithNPCs;
+	campaign: CampaignWithNPCs;
 }) {
 	const [showNPCs, setShowNPCs] = useState(false);
-	const {campaign, npcs} = campaignData;
 
 	return (
 		<div className='relative w-full bg-transparent m-12'>
@@ -47,7 +46,7 @@ export default function OpenScrollCard({
 						NPCs
 					</button>
 				)}
-				{showNPCs && npcs && <NPCCarousel NPCs={npcs} />}
+				{showNPCs && campaign.npcs && <NPCCarousel NPCs={campaign.npcs} />}
 				{/* {showNPCs && NPCs && <Responsive NPCs={NPCs} />} */}
 				<DeleteCampaignModal id={campaign.id} />
 			</div>

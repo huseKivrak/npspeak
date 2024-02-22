@@ -18,12 +18,12 @@ export default async function CampaignDetailPage({
 	const campaignId = params.campaignId;
 	const userCampaigns = await getCampaignsWithNPCs();
 	if (!userCampaigns) return <ErrorToast message='No campaigns found' />;
-	const campaign = userCampaigns.find((c) => c.campaign.id === campaignId);
+	const campaign = userCampaigns.find((c) => c.id === campaignId);
 	if (!campaign) return <ErrorToast message='Campaign not found' />;
 
 	return (
 		<div>
-			<OpenScrollCard campaignData={campaign} />
+			<OpenScrollCard campaign={campaign} />
 		</div>
 	);
 }
