@@ -3,22 +3,17 @@ import Link from 'next/link';
 import LoginForm from '../forms/LoginForm';
 import {logoutAction} from '@/actions/auth';
 import {cookies} from 'next/headers';
+import {getUserInfo} from '@/actions/auth';
 
 /**
  * Login/logout button depending on user auth state
  */
 export default async function AuthButton() {
-	const cookieStore = cookies();
-	const supabase = createClient(cookieStore);
+	const {user} = await getUserInfo();
 
-	const {
-		data: {user},
-	} = await supabase.auth.getUser();
-
-	const username = user?.user_metadata.username;
 	return user ? (
 		<div className='flex items-center gap-4'>
-			<Link href={`/${username}`}>{username}</Link>
+			<Link href={`/${user.username}`}>{user.username}</Link>
 			<form action={logoutAction}>
 				<button className='py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover'>
 					logout
