@@ -10,8 +10,8 @@ export default async function Index() {
 	}
 
 	return (
-		<div className='w-full mt-12'>
-			<div className='animate-in opacity-0 px-24'>
+		<div className='w-full max-w-xl px-5 xl:px-0'>
+			<div className='animate-in opacity-0'>
 				<div className='flex flex-col justify-center items-center'>
 					<Hero />
 					<SignUpForm />

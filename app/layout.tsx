@@ -22,7 +22,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 			</head>
 			<body className=''>
 				<NavBar />
-				<main className='min-h-screen flex flex-col items-center'>
+				<main className='flex min-h-screen w-full flex-col items-center py-16'>
 					{children}
 					<Analytics />
 					<SpeedInsights />
