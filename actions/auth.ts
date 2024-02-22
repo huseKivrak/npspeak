@@ -3,28 +3,30 @@
 import {createClient} from '@/utils/supabase/server';
 import {headers} from 'next/headers';
 import {redirect} from 'next/navigation';
-
 import {User} from '@supabase/supabase-js';
+import {cookies} from 'next/headers';
 
 export const signUpAction = async (prevState: any, formData: FormData) => {
 	const origin = headers().get('origin');
+
+	//todo: zod
 	const email = formData.get('email') as string;
 	const password = formData.get('password') as string;
 	const password2 = formData.get('password2') as string;
 	const username = formData.get('username');
-
-	//todo: zod
 	if (password !== password2) return 'passwords do not match';
 
-	const supabase = createClient();
+	const cookieStore = cookies();
+	const supabase = createClient(cookieStore);
+
 	const {error} = await supabase.auth.signUp({
 		email,
 		password,
 		options: {
+			emailRedirectTo: `${origin}/auth/callback`,
 			data: {
 				username,
 			},
-			emailRedirectTo: `${origin}/auth/callback`,
 		},
 	});
 
@@ -39,7 +41,9 @@ export const signUpAction = async (prevState: any, formData: FormData) => {
 export const signInAction = async (formData: FormData) => {
 	const email = formData.get('email') as string;
 	const password = formData.get('password') as string;
-	const supabase = createClient();
+
+	const cookieStore = cookies();
+	const supabase = createClient(cookieStore);
 
 	const {error} = await supabase.auth.signInWithPassword({
 		email,
@@ -54,7 +58,8 @@ export const signInAction = async (formData: FormData) => {
 };
 
 export const logoutAction = async () => {
-	const supabase = createClient();
+	const cookieStore = cookies();
+	const supabase = createClient(cookieStore);
 	await supabase.auth.signOut();
 	return redirect('/?message=logout');
 };
@@ -62,7 +67,8 @@ export const logoutAction = async () => {
 //returns a user from sessions saved in cookies
 //! not for most up-to-date user (use supabase.auth.getUser() instead)
 export const getUserFromSession = async () => {
-	const supabase = createClient();
+	const cookieStore = cookies();
+	const supabase = createClient(cookieStore);
 	try {
 		const {
 			data: {session},

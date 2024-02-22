@@ -2,12 +2,14 @@ import {createClient} from '@/utils/supabase/server';
 import Link from 'next/link';
 import LoginForm from '../forms/LoginForm';
 import {logoutAction} from '@/actions/auth';
+import {cookies} from 'next/headers';
 
 /**
  * Login/logout button depending on user auth state
  */
 export default async function AuthButton() {
-	const supabase = createClient();
+	const cookieStore = cookies();
+	const supabase = createClient(cookieStore);
 
 	const {
 		data: {user},
