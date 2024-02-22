@@ -1,7 +1,7 @@
 import CampaignForm from '@/components/forms/CampaignForm';
 import {getUserInfo} from '@/actions/auth';
 import {redirect} from 'next/navigation';
-import {getNPCsWithCampaigns} from '@/database/drizzle/queries';
+import {getNPCsWithRelatedData} from '@/database/drizzle/queries';
 import {transformNPCOptions} from '@/utils/helpers/formHelpers';
 
 export default async function CreateCampaignPage() {
@@ -9,7 +9,7 @@ export default async function CreateCampaignPage() {
 	if (!user) {
 		redirect('/login');
 	}
-	const npcs = await getNPCsWithCampaigns();
+	const npcs = await getNPCsWithRelatedData();
 	const npcOptions = npcs ? transformNPCOptions(npcs) : [];
 
 	return (

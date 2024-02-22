@@ -1,16 +1,16 @@
-import {CampaignWithNPCs, NPCWithCampaigns} from '@/types/drizzle';
+import {CampaignWithNPCs, DetailedNPC} from '@/types/drizzle';
 import {Tables} from '@/types/supabase';
 export const transformCampaignOptions = (campaigns: CampaignWithNPCs[]) => {
 	return campaigns.map((campaign) => ({
-		value: campaign.campaign.id,
-		label: campaign.campaign.campaign_name,
+		value: campaign.id,
+		label: campaign.campaign_name,
 	}));
 };
 
-export const transformNPCOptions = (npcs: NPCWithCampaigns[]) => {
+export const transformNPCOptions = (npcs: DetailedNPC[]) => {
 	return npcs.map((npc) => ({
-		value: npc.npc.id,
-		label: npc.npc.npc_name,
+		value: npc.id,
+		label: npc.npc_name,
 	}));
 };
 

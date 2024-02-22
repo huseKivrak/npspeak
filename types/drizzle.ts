@@ -6,14 +6,13 @@ type RawJoinData = {
 	campaign_npcs: Tables<'campaign_npcs'>;
 };
 
-export type CampaignWithNPCs = {
-	campaign: RawJoinData['campaigns'];
-	npcs: RawJoinData['npcs'][];
+export type CampaignWithNPCs = Tables<'campaigns'> & {
+	npcs: Tables<'npcs'>[];
 };
 
-export type NPCWithCampaigns = {
-	npc: RawJoinData['npcs'];
-	campaigns: RawJoinData['campaigns'][];
+export type DetailedNPC = Tables<'npcs'> & {
+	campaigns: Tables<'campaigns'>[];
+	dialogues: Tables<'npc_dialogues'>[];
 };
 
 export type State =

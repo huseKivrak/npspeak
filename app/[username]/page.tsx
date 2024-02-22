@@ -3,7 +3,7 @@ import {getUserInfo} from '@/actions/auth';
 import {redirect} from 'next/navigation';
 import {
 	getCampaignsWithNPCs,
-	getNPCsWithCampaigns,
+	getNPCsWithRelatedData,
 } from '@/database/drizzle/queries';
 
 export default async function UserPage({params}: {params: {username: string}}) {
@@ -15,7 +15,7 @@ export default async function UserPage({params}: {params: {username: string}}) {
 		redirect('/login');
 
 	const campaigns = await getCampaignsWithNPCs();
-	const npcs = await getNPCsWithCampaigns();
+	const npcs = await getNPCsWithRelatedData();
 
 	return (
 		<div>

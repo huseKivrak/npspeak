@@ -13,10 +13,10 @@ import ErrorToast from '@/components/ErrorToast';
 
 type Inputs = z.infer<typeof dialogueSchema>;
 export default function DialogueForm({
-	dialogueTypes,
+	dialogueOptions,
 	npcId,
 }: {
-	dialogueTypes: FormOptions;
+	dialogueOptions: FormOptions;
 	npcId: number;
 }) {
 	const [state, formAction] = useFormState<State, FormData>(
@@ -55,9 +55,9 @@ export default function DialogueForm({
 				<input type='hidden' {...register('npc_id')} value={npcId} />
 
 				<label htmlFor='dialogue_type_id' className='form-control'>
-					Type of Dialogue
+					type of dialogue
 				</label>
-				{dialogueTypes?.map((option) => (
+				{dialogueOptions.map((option) => (
 					<label key={option.value} className='label cursor-pointer'>
 						<span className='label-text'>{option.label}</span>
 						<input

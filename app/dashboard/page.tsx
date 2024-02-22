@@ -2,7 +2,7 @@ import UserDashboard from '../../components/UserDashboard';
 import {getUserInfo} from '@/actions/auth';
 import {
 	getCampaignsWithNPCs,
-	getNPCsWithCampaigns,
+	getNPCsWithRelatedData,
 } from '../../database/drizzle/queries';
 import {redirect} from 'next/navigation';
 import {createClient} from '@/utils/supabase/server';
@@ -13,7 +13,7 @@ export default async function UserPage() {
 	if (!user) return redirect('/login');
 
 	const campaigns = await getCampaignsWithNPCs();
-	const npcs = await getNPCsWithCampaigns();
+	const npcs = await getNPCsWithRelatedData();
 
 	return (
 		<div>

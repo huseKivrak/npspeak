@@ -1,7 +1,10 @@
 import {redirect} from 'next/navigation';
-import NPCCard from '@/components/cards/NPCCard';
 import {getUserInfo} from '@/actions/auth';
-import {getNPCsWithCampaigns} from '@/database/drizzle/queries';
+import {getNPCById} from '@/database/drizzle/queries';
+import {getDialogueTypes} from '@/database/drizzle/queries';
+import DeleteNPCModal from '@/components/DeleteNPCModal';
+import DialogueForm from '@/components/forms/DialogueForm';
+import {transformDialogueOptions} from '@/utils/helpers/formHelpers';
 
 export default async function NPCDetailPage({
 	params,
@@ -14,15 +17,19 @@ export default async function NPCDetailPage({
 	const {user} = await getUserInfo();
 	if (!user) return redirect('/login');
 
-	const npcId = params.npcId;
-	const NPCs = await getNPCsWithCampaigns();
-	console.log('NPCs:', NPCs);
-	const npc = NPCs?.find((npc) => npc.npc.id === npcId);
+	const npc = await getNPCById(params.npcId);
+	console.log('NPC!: ', npc);
+	if (!npc) return redirect('/404');
+	if (npc.user_id !== user.id) return <p>Unauthorized</p>;
 
+	const dialogueTypes = await getDialogueTypes();
+	const dialogueOptions = transformDialogueOptions(dialogueTypes);
 	return (
 		<div>
-			<h1>NPC Detail</h1>
-			{npc ? <NPCCard npcData={npc} /> : <p>NPC not found</p>}
+			<h1>{npc.npc_name}</h1>
+			<p>{npc.description}</p>
+			<DialogueForm npcId={npc.id} dialogueOptions={dialogueOptions} />
+			<DeleteNPCModal id={npc.id} />
 		</div>
 	);
 }
