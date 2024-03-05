@@ -1,10 +1,8 @@
 import {redirect} from 'next/navigation';
 import {getUserInfo} from '@/actions/auth';
 import {getNPCById} from '@/database/drizzle/queries';
-import {getDialogueTypes} from '@/database/drizzle/queries';
-import DeleteNPCModal from '@/components/DeleteNPCModal';
-import DialogueForm from '@/components/forms/DialogueForm';
 import {transformDialogueOptions} from '@/utils/helpers/formHelpers';
+import NPCTabCard from '@/components/cards/NPCTabCard';
 
 export default async function NPCDetailPage({
 	params,
@@ -22,14 +20,9 @@ export default async function NPCDetailPage({
 	if (!npc) return redirect('/404');
 	if (npc.user_id !== user.id) return <p>Unauthorized</p>;
 
-	const dialogueTypes = await getDialogueTypes();
-	const dialogueOptions = transformDialogueOptions(dialogueTypes);
 	return (
 		<div>
-			<h1>{npc.npc_name}</h1>
-			<p>{npc.description}</p>
-			<DialogueForm npcId={npc.id} dialogueOptions={dialogueOptions} />
-			<DeleteNPCModal id={npc.id} />
+			<NPCTabCard npc={npc} />
 		</div>
 	);
 }
