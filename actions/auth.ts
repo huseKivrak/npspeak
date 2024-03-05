@@ -100,7 +100,7 @@ interface UserAuth {
 	user: BasicUserInfo | null;
 	error: string | null;
 }
-//streamlined method for auth check from server (not cookies) and returning user info
+//streamlined method for returning up-to-date user info
 export const getUserInfo = async (): Promise<UserAuth> => {
 	const cookieStore = cookies();
 	const supabase = createClient(cookieStore);
