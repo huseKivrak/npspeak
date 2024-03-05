@@ -2,6 +2,7 @@
 import {CampaignWithNPCs, DetailedNPC} from '@/types/drizzle';
 import Link from 'next/link';
 import {BasicUserInfo} from '@/actions/auth';
+
 export default function UserDashboard({
 	user,
 	campaigns,
@@ -16,7 +17,7 @@ export default function UserDashboard({
 			<h1 className='text-3xl'>{user.username}&apos;s dashboard</h1>
 			<div>
 				<ul>
-					<h2 className='text-2xl tracking-widest text-info'>campaigns</h2>
+					<h2 className='text-2xl tracking-widest text-primary'>campaigns</h2>
 					{campaigns?.map((c) => (
 						<li key={c.id}>
 							<Link href={`/${user.username}/campaigns/${c.id}`}>
@@ -27,12 +28,10 @@ export default function UserDashboard({
 				</ul>
 			</div>
 			<Link href={`/${user.username}/campaigns/create`}>
-				<button className='btn btn-secondary btn-sm'>
-					create a new campaign
-				</button>
+				<button className='btn btn-info btn-sm '>create a new campaign</button>
 			</Link>
 			<ul>
-				<h2 className='text-2xl text-info tracking-widest'>NPCs</h2>
+				<h2 className='text-2xl text-primary tracking-widest'>NPCs</h2>
 				{npcs?.map((n) => (
 					<li key={n.id}>
 						<Link href={`${user.username}/npcs/${n.id}`}>{n.npc_name}</Link>
@@ -40,7 +39,7 @@ export default function UserDashboard({
 				))}
 			</ul>
 			<Link href={`/${user.username}/npcs/create`}>
-				<button className='btn btn-secondary btn-sm'>create a new NPC</button>
+				<button className='btn btn-info btn-sm'>create a new NPC</button>
 			</Link>
 		</div>
 	);

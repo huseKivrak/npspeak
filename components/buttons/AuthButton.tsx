@@ -1,8 +1,6 @@
-import {createClient} from '@/utils/supabase/server';
 import Link from 'next/link';
 import LoginForm from '../forms/LoginForm';
 import {logoutAction} from '@/actions/auth';
-import {cookies} from 'next/headers';
 import {getUserInfo} from '@/actions/auth';
 
 /**
@@ -13,16 +11,23 @@ export default async function AuthButton() {
 
 	return user ? (
 		<div className='flex items-center gap-4'>
-			<Link href={`/${user.username}`}>{user.username}</Link>
+			<Link
+				href='/dashboard'
+				className='btn btn-ghost text-secondary tracking-widest'
+			>
+				{user.username}
+			</Link>
 			<form action={logoutAction}>
-				<button className='py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover'>
-					logout
-				</button>
+				<button className='btn btn-ghost text-primary'>logout</button>
 			</form>
 		</div>
 	) : (
 		<div className='dropdown dropdown-end'>
-			<div tabIndex={0} role='button' className='btn btn-ghost m-1'>
+			<div
+				tabIndex={0}
+				role='button'
+				className='btn btn-ghost m-1 btn-secondary'
+			>
 				login
 			</div>
 			<div
