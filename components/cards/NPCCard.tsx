@@ -17,9 +17,7 @@ export default async function NPCCard({npc}: {npc: DetailedNPC}) {
 						{npc.campaigns &&
 							npc.campaigns.map((c) => (
 								<li key={c.id} className='badge badge-primary'>
-									{/* <Link href={`/${user?.username}/campaigns/${c.id}`}>
-										{c.campaign_name}
-									</Link> */}
+									{c.campaign_name}
 								</li>
 							))}
 					</ul>

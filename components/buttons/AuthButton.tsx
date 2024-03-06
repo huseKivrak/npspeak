@@ -10,15 +10,15 @@ export default async function AuthButton() {
 	const {user} = await getUserInfo();
 
 	return user ? (
-		<div className='flex items-center gap-4'>
+		<div className='flex items-center gap-4 text-primary-content'>
 			<Link
 				href='/dashboard'
-				className='btn btn-ghost text-secondary tracking-widest'
+				className='btn btn-ghost text-secondary text-xl tracking-widest'
 			>
 				{user.username}
 			</Link>
 			<form action={logoutAction}>
-				<button className='btn btn-ghost text-primary'>logout</button>
+				<button className='btn btn-ghost text-xl'>logout</button>
 			</form>
 		</div>
 	) : (
@@ -26,7 +26,7 @@ export default async function AuthButton() {
 			<div
 				tabIndex={0}
 				role='button'
-				className='btn btn-ghost m-1 btn-secondary'
+				className='btn btn-ghost m-1 text-xl text-primary-content'
 			>
 				login
 			</div>

@@ -20,16 +20,16 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 		<html
 			lang='en'
 			className={clsx(
-				'bg-base-100 bg-gradient-to-b bg-no-repeat bg-cover from-base-100 to-base-200 via-neutral',
+				'bg-gradient-to-b from-base-100 to-base-200',
 				GeistSans.className
 			)}
 		>
 			<head>
 				<link rel='icon' href='/favicon.ico' sizes='any' />
 			</head>
-			<body className='font-sans flex flex-col min-h-screen'>
+			<body className='flex flex-col min-h-screen'>
 				<NavBar />
-				<main className=' flex flex-col items-center py-16 min-h-screen mx-auto'>
+				<main className='flex flex-col items-center justify-center mx-auto w-full sm:max-w-4/5 md:max-w-3/4 lg:max-w-5/6 pt-8 pb-36'>
 					{children}
 				</main>
 				<Analytics />

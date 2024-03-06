@@ -15,12 +15,15 @@ export default function UserDashboard({
 	return (
 		<div className='flex flex-col items-center justify-center gap-4'>
 			<h1 className='text-3xl'>{user.username}&apos;s dashboard</h1>
-			<div>
+			<div className=''>
 				<ul>
-					<h2 className='text-2xl tracking-widest text-primary'>campaigns</h2>
+					<h2 className='text-2xl text-primary tracking-widest'>campaigns</h2>
 					{campaigns?.map((c) => (
 						<li key={c.id}>
-							<Link href={`/${user.username}/campaigns/${c.id}`}>
+							<Link
+								href={`/${user.username}/campaigns/${c.id}`}
+								className='hover:text-primary'
+							>
 								{c.campaign_name}
 							</Link>
 						</li>
@@ -31,10 +34,15 @@ export default function UserDashboard({
 				<button className='btn btn-info btn-sm '>create a new campaign</button>
 			</Link>
 			<ul>
-				<h2 className='text-2xl text-primary tracking-widest'>NPCs</h2>
+				<h2 className='text-2xl text-secondary tracking-widest'>NPCs</h2>
 				{npcs?.map((n) => (
 					<li key={n.id}>
-						<Link href={`${user.username}/npcs/${n.id}`}>{n.npc_name}</Link>
+						<Link
+							href={`${user.username}/npcs/${n.id}`}
+							className='hover:text-secondary'
+						>
+							{n.npc_name}
+						</Link>
 					</li>
 				))}
 			</ul>

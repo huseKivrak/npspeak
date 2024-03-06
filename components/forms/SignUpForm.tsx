@@ -57,7 +57,7 @@ export default function SignUpForm() {
 						text={'create account'}
 						className={'btn btn-secondary font-light w-4/5 rounded-md py-2'}
 					>
-						<SendEmailIcon className='w-6 h-6' />
+						<SendEmailIcon className='w-5' />
 					</SubmitButton>
 					{message && <p className='text-red-500'>{message}</p>}
 				</span>

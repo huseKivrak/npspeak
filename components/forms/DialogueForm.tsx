@@ -16,13 +16,23 @@ export default function DialogueForm({
 	dialogueOptions,
 	npcId,
 }: {
-	dialogueOptions: FormOptions;
+	dialogueOptions?: FormOptions;
 	npcId: number;
 }) {
 	const [state, formAction] = useFormState<State, FormData>(
 		createDialogueAction,
 		null
 	);
+
+	const dialogueChoices = dialogueOptions || [
+		{label: 'greeting', value: 1},
+		{label: 'farewell', value: 2},
+		{label: 'story', value: 3},
+		{label: 'other', value: 4},
+		{label: 'question', value: 5},
+		{label: 'answer', value: 6},
+		{label: 'exclamation', value: 7},
+	];
 
 	const {
 		register,
@@ -50,14 +60,17 @@ export default function DialogueForm({
 	}, [state, setError, reset]);
 
 	return (
-		<div className='flex flex-col items-center'>
-			<form action={formAction} className='flex flex-col gap-2 w-full max-w-xs'>
+		<div className='flex flex-col items-start mt-4'>
+			<form action={formAction} className='flex flex-col gap-1 w-4/5 max-w-xs'>
 				<input type='hidden' {...register('npc_id')} value={npcId} />
 
-				<label htmlFor='dialogue_type_id' className='form-control'>
-					type of dialogue
+				<label
+					htmlFor='dialogue_type_id'
+					className='form-control text-primary font-semibold'
+				>
+					dialogue type
 				</label>
-				{dialogueOptions.map((option) => (
+				{dialogueChoices.map((option) => (
 					<label key={option.value} className='label cursor-pointer'>
 						<span className='label-text'>{option.label}</span>
 						<input
@@ -73,11 +86,12 @@ export default function DialogueForm({
 				<label htmlFor='text' className='form-control'>
 					Text
 				</label>
-				<input
+				<textarea
 					{...register('text')}
-					type='text'
 					id='text'
-					className='input-field'
+					className='textarea textarea-secondary textarea-sm w-full max-w-xs'
+					rows={3}
+					cols={20}
 				/>
 				<ErrorMessage errors={errors} name='text' />
 
