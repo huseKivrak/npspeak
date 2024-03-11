@@ -64,10 +64,9 @@ export const audio_clips = pgTable(
 			.notNull(),
 		file_url: text('file_url').notNull(),
 		original_file_name: text('original_file_name').notNull(),
-		// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 		duration_seconds: bigint('duration_seconds', {mode: 'number'}).notNull(),
 		is_default: boolean('is_default').default(false).notNull(),
-		audio_clip_name: varchar('audio_clip_name').notNull(),
+		audio_clip_name: varchar('audio_clip_name').notNull(), //e.g.
 	},
 	(table) => {
 		return {
@@ -137,7 +136,7 @@ export const voice_clones = pgTable('voice_clones', {
 });
 
 export const npc_dialogues = pgTable('npc_dialogues', {
-	dialogue_id: serial('dialogue_id').primaryKey().notNull(),
+	id: serial('dialogue_id').primaryKey().notNull(),
 	npc_id: integer('npc_id').references(() => npcs.id),
 	dialogue_type_id: integer('dialogue_type_id').references(
 		() => npc_dialogue_types.id
@@ -145,6 +144,10 @@ export const npc_dialogues = pgTable('npc_dialogues', {
 	text: text('text').notNull(),
 	user_id: uuid('user_id').references(() => users.id),
 	is_default: boolean('is_default').default(false).notNull(),
+	tts_audio_id: bigint('tts_audio_id', {mode: 'number'}).references(
+		() => tts_audio.id,
+		{onDelete: 'set null'}
+	),
 });
 
 export const tts_audio = pgTable(
@@ -154,12 +157,11 @@ export const tts_audio = pgTable(
 		created_at: timestamp('created_at', {withTimezone: true, mode: 'string'})
 			.defaultNow()
 			.notNull(),
-		voice_id: bigint('voice_id', {mode: 'number'}).references(
-			() => voice_clones.id,
-			{
+		voice_id: bigint('voice_id', {mode: 'number'})
+			.notNull()
+			.references(() => voice_clones.id, {
 				onDelete: 'set null',
-			}
-		),
+			}),
 		user_id: uuid('user_id')
 			.default(sql`auth.uid()`)
 			.notNull()
@@ -168,7 +170,6 @@ export const tts_audio = pgTable(
 		source_text: text('source_text').notNull(),
 		file_url: text('file_url').notNull(),
 		is_default: boolean('is_default').default(false).notNull(),
-		tts_audio_name: varchar('tts_audio_name').notNull(),
 	},
 	(table) => {
 		return {
