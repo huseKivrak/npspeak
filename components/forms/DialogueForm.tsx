@@ -4,10 +4,10 @@ import {useForm, FieldPath} from 'react-hook-form';
 import {useFormState} from 'react-dom';
 import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {createDialogueAction} from '@/actions/drizzle/dialogue';
+import {createDialogueAction} from '@/actions/db/dialogue';
 import {dialogueSchema} from '@/database/drizzle/validation';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
-import {FormOptions, State} from '@/types/drizzle';
+import {FormOptions, ActionStatus} from '@/types/drizzle';
 import {ErrorMessage} from '@hookform/error-message';
 import ErrorToast from '@/components/ErrorToast';
 
@@ -19,9 +19,9 @@ export default function DialogueForm({
 	dialogueOptions?: FormOptions;
 	npcId: number;
 }) {
-	const [state, formAction] = useFormState<State, FormData>(
+	const [state, formAction] = useFormState<ActionStatus, FormData>(
 		createDialogueAction,
-		null
+		{status: 'idle', message: ''}
 	);
 
 	const dialogueChoices = dialogueOptions || [
