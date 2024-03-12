@@ -4,7 +4,7 @@ import {getUserInfo} from '../auth';
 import {campaigns, campaign_npcs} from '@/database/drizzle/schema';
 import {eq, and} from 'drizzle-orm';
 import {Tables} from '@/types/supabase';
-import {State} from '@/types/drizzle';
+import {ActionStatus} from '@/types/drizzle';
 import {
 	campaignSchema,
 	deleteCampaignSchema,
@@ -14,11 +14,11 @@ import {revalidatePath} from 'next/cache';
 import {redirect} from 'next/navigation';
 
 export const createCampaignAction = async (
-	prevState: State,
+	prevState: ActionStatus,
 	formData: FormData
-): Promise<State> => {
+): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
-	if (!user) throw new Error('You must be logged in to create campaigns.');
+	if (!user) return {status: 'error', message: 'Unauthenticated'};
 
 	const user_id = user.id;
 	try {
@@ -68,11 +68,11 @@ export const createCampaignAction = async (
 };
 
 export const deleteCampaignAction = async (
-	prevState: State,
+	prevState: ActionStatus,
 	formData: FormData
-): Promise<State> => {
+): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
-	if (!user) throw new Error('You must be logged in to delete campaigns.');
+	if (!user) return {status: 'error', message: 'Unauthenticated'};
 
 	const {campaign_id} = deleteCampaignSchema.parse(formData);
 	const user_id = user.id;

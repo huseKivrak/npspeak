@@ -4,16 +4,16 @@ import {getUserInfo} from '../auth';
 import {npcs, campaign_npcs} from '@/database/drizzle/schema';
 import {eq, and} from 'drizzle-orm';
 import {Tables} from '@/types/supabase';
-import {State} from '@/types/drizzle';
+import {ActionStatus} from '@/types/drizzle';
 import {deleteNPCSchema, npcSchema} from '@/database/drizzle/validation';
 import {ZodError} from 'zod';
 import {redirect} from 'next/navigation';
 import {revalidatePath} from 'next/cache';
 
 export const createNPCAction = async (
-	prevState: State,
+	prevState: ActionStatus,
 	formData: FormData
-): Promise<State> => {
+): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
 	if (!user) throw new Error('You must be logged in to create NPCs.');
 
@@ -61,9 +61,9 @@ export const createNPCAction = async (
 };
 
 export const deleteNPCAction = async (
-	prevState: State,
+	prevState: ActionStatus,
 	formData: FormData
-): Promise<State> => {
+): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
 	if (!user) throw new Error('You must be logged in to delete NPCs.');
 
