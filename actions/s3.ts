@@ -3,7 +3,7 @@
 import {getUserInfo} from './auth';
 import {ActionStatus} from '@/types/drizzle';
 
-import {S3Client, PutObjectCommand} from '@aws-sdk/client-s3';
+import {S3Client, PutObjectCommand, GetObjectCommand} from '@aws-sdk/client-s3';
 import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
 import {v4 as uuidv4} from 'uuid';
 
@@ -19,7 +19,7 @@ const s3 = new S3Client({
  *  Generates presigned URLs for uploading/downloading to S3
  */
 
-export async function getPresignedURL(): Promise<ActionStatus> {
+export async function getPresignedUploadURL(): Promise<ActionStatus> {
 	const {user} = await getUserInfo();
 	if (!user) return {status: 'error', message: 'not authenticated'};
 
@@ -43,10 +43,10 @@ export async function getPresignedURL(): Promise<ActionStatus> {
 		console.log('Presigned URL: ', url);
 		return {status: 'success', message: url};
 	} catch (error) {
-		console.error('Error generating presigned URL: ', error);
+		console.error('Error generating presigned upload URL: ', error);
 		return {
 			status: 'error',
-			message: `Error generating presigned URL: ${error} `,
+			message: `Error generating presigned upload URL: ${error} `,
 		};
 	}
 }
@@ -55,7 +55,7 @@ export async function uploadAudioToS3(
 	audioBuffer: ArrayBuffer
 ): Promise<ActionStatus> {
 	try {
-		const {status, message} = await getPresignedURL();
+		const {status, message} = await getPresignedUploadURL();
 
 		const uploadResponse = await fetch(message, {
 			method: 'PUT',
@@ -75,5 +75,31 @@ export async function uploadAudioToS3(
 	} catch (error) {
 		console.error('Error uploading audio to S3: ', error);
 		return {status: 'error', message: `Error uploading audio to S3: ${error}`};
+	}
+}
+
+export async function getPresignedDownloadURL(
+	fileName: string
+): Promise<ActionStatus> {
+	const {user} = await getUserInfo();
+	if (!user) return {status: 'error', message: 'not authenticated'};
+
+	const getCommand = new GetObjectCommand({
+		Bucket: process.env.AWS_BUCKET_NAME!,
+		Key: fileName,
+	});
+
+	try {
+		const url = await getSignedUrl(s3, getCommand, {
+			expiresIn: 900,
+		});
+		console.log('Presigned Download URL: ', url);
+		return {status: 'success', message: url};
+	} catch (error) {
+		console.error('Error generating presigned download URL: ', error);
+		return {
+			status: 'error',
+			message: `Error generating presigned download URL: ${error} `,
+		};
 	}
 }
