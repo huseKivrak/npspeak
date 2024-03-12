@@ -14,7 +14,7 @@ export const transformNPCOptions = (npcs: DetailedNPC[]) => {
 	}));
 };
 
-export const transformDialogueOptions = (
+export const transformDialogueTypeOptions = (
 	dialogueTypes: Tables<'npc_dialogue_types'>[]
 ) => {
 	return dialogueTypes.map((option) => ({
