@@ -15,10 +15,11 @@ export type DetailedNPC = Tables<'npcs'> & {
 	dialogues: Tables<'npc_dialogues'>[];
 };
 
-export type State =
+export type ActionStatus =
 	| {
 			status: 'success';
 			message: string;
+			data?: any;
 	  }
 	| {
 			status: 'error';
@@ -28,7 +29,10 @@ export type State =
 				message: string;
 			}>;
 	  }
-	| null;
+	| {
+			status: 'idle';
+			message: '';
+	  };
 
 export type FormOptions =
 	| {

@@ -42,12 +42,9 @@ export const npcs = pgTable('npcs', {
 		.references(() => users.id, {onDelete: 'set null'}),
 	npc_name: varchar('npc_name').notNull(),
 	description: text('description'),
-	voice_id: bigint('voice_id', {mode: 'number'}).references(
-		() => voice_clones.id,
-		{
-			onDelete: 'set null',
-		}
-	),
+	voice_id: text('voice_id').references(() => voice_clones.id, {
+		onDelete: 'set null',
+	}),
 	is_default: boolean('is_default').default(false).notNull(),
 });
 
@@ -119,24 +116,34 @@ export const profiles = pgTable('profiles', {
 	website: text('website'),
 });
 
-export const voice_clones = pgTable('voice_clones', {
-	id: serial('id').primaryKey().notNull(),
-	user_id: uuid('user_id')
-		.default(sql`auth.uid()`)
-		.notNull()
-		.references(() => users.id, {onDelete: 'set null'}),
-	created_at: timestamp('created_at', {withTimezone: true, mode: 'string'})
-		.defaultNow()
-		.notNull(),
-	clone_url: text('clone_url'),
-	elevenlabs_voice_id: text('elevenlabs_voice_id'),
-	status: text('status').notNull(),
-	is_default: boolean('is_default').default(false).notNull(),
-	voice_clone_name: varchar('voice_clone_name'),
-});
+export const voice_clones = pgTable(
+	'voice_clones',
+	{
+		id: serial('id').primaryKey().notNull(),
+		user_id: uuid('user_id')
+			.default(sql`auth.uid()`)
+			.notNull()
+			.references(() => users.id, {onDelete: 'set null'}),
+		created_at: timestamp('created_at', {withTimezone: true, mode: 'string'})
+			.defaultNow()
+			.notNull(),
+		clone_url: text('clone_url'),
+		elevenlabs_voice_id: text('elevenlabs_voice_id'),
+		status: text('status').notNull(),
+		is_default: boolean('is_default').default(false).notNull(),
+		voice_clone_name: varchar('voice_clone_name'),
+	},
+	(table) => {
+		return {
+			voice_clones_elevenlabs_voice_id_key: unique(
+				'voice_clones_elevenlabs_voice_id_key'
+			).on(table.elevenlabs_voice_id),
+		};
+	}
+);
 
 export const npc_dialogues = pgTable('npc_dialogues', {
-	id: serial('dialogue_id').primaryKey().notNull(),
+	id: serial('id').primaryKey().notNull(),
 	npc_id: integer('npc_id').references(() => npcs.id),
 	dialogue_type_id: integer('dialogue_type_id').references(
 		() => npc_dialogue_types.id
@@ -157,9 +164,9 @@ export const tts_audio = pgTable(
 		created_at: timestamp('created_at', {withTimezone: true, mode: 'string'})
 			.defaultNow()
 			.notNull(),
-		voice_id: bigint('voice_id', {mode: 'number'})
+		voice_id: text('voice_id')
 			.notNull()
-			.references(() => voice_clones.id, {
+			.references(() => voice_clones.elevenlabs_voice_id, {
 				onDelete: 'set null',
 			}),
 		user_id: uuid('user_id')

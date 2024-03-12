@@ -81,4 +81,19 @@ export const dialogueSchema = zfd.formData({
 			.min(2, 'Dialogue must be at least 2 characters long')
 			.max(255, 'Dialogue must be at most 255 characters long')
 	),
+	tts_audio_id: zfd.numeric().optional(),
+});
+
+export const ttsAudioSchema = zfd.formData({
+	voice_id: zfd.text(z.string()),
+	source_text: zfd.text(z.string()),
+	file_url: zfd.text(z.string()),
+	duration_seconds: zfd.numeric(),
+});
+
+export const ttsHandlerSchema = zfd.formData({
+	text: zfd.text(z.string()),
+	voice_id: zfd.text(z.string()),
+	npc_id: zfd.numeric(),
+	dialogue_id: zfd.numeric(),
 });

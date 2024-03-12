@@ -164,7 +164,7 @@ export interface Database {
 					tts_audio_id?: number | null;
 				};
 				Insert: {
-					dialogue_id?: number;
+					id?: number;
 					dialogue_type_id?: number | null;
 					is_default?: boolean;
 					npc_id?: number | null;
@@ -173,7 +173,7 @@ export interface Database {
 					tts_audio_id?: number | null;
 				};
 				Update: {
-					dialogue_id?: number;
+					id?: number;
 					dialogue_type_id?: number | null;
 					is_default?: boolean;
 					npc_id?: number | null;
@@ -220,7 +220,7 @@ export interface Database {
 					is_default: boolean;
 					npc_name: string;
 					user_id: string | null;
-					voice_id: number | null;
+					voice_id: string | null;
 				};
 				Insert: {
 					created_at?: string;
@@ -229,7 +229,7 @@ export interface Database {
 					is_default?: boolean;
 					npc_name: string;
 					user_id?: string | null;
-					voice_id?: number | null;
+					voice_id?: string | null;
 				};
 				Update: {
 					created_at?: string;
@@ -238,7 +238,7 @@ export interface Database {
 					is_default?: boolean;
 					npc_name?: string;
 					user_id?: string | null;
-					voice_id?: number | null;
+					voice_id?: string | null;
 				};
 				Relationships: [
 					{
@@ -301,7 +301,7 @@ export interface Database {
 					is_default: boolean;
 					source_text: string;
 					user_id: string | null;
-					voice_id: number | null;
+					voice_id: string | null;
 				};
 				Insert: {
 					created_at?: string;
@@ -311,7 +311,7 @@ export interface Database {
 					is_default?: boolean;
 					source_text: string;
 					user_id?: string | null;
-					voice_id?: number | null;
+					voice_id?: string | null;
 				};
 				Update: {
 					created_at?: string;
@@ -321,7 +321,7 @@ export interface Database {
 					is_default?: boolean;
 					source_text?: string;
 					user_id?: string | null;
-					voice_id?: number | null;
+					voice_id?: string | null;
 				};
 				Relationships: [
 					{

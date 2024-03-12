@@ -170,9 +170,7 @@ export const getNPCById = async (
 			}
 			if (
 				row.npc_dialogues &&
-				!acc.dialogues.find(
-					(dialogue) => dialogue.dialogue_id === row.npc_dialogues?.dialogue_id
-				)
+				!acc.dialogues.find((dialogue) => dialogue.id === row.npc_dialogues?.id)
 			) {
 				acc.dialogues.push(row.npc_dialogues);
 			}
