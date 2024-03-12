@@ -3,7 +3,7 @@ import DialogueForm from '@/components/forms/DialogueForm';
 import {getNPCById} from '@/database/drizzle/queries';
 import {redirect} from 'next/navigation';
 import {getDialogueTypes} from '@/database/drizzle/queries';
-import {transformDialogueOptions} from '@/utils/helpers/formHelpers';
+import {transformDialogueTypeOptions} from '@/utils/helpers/formHelpers';
 
 export default async function CreateNPCDialoguePage({
 	params,
@@ -19,7 +19,7 @@ export default async function CreateNPCDialoguePage({
 	if (npc.user_id !== user.id) return <p>Unauthorized</p>;
 
 	const dialogueTypes = await getDialogueTypes();
-	const dialogueOptions = transformDialogueOptions(dialogueTypes);
+	const dialogueOptions = transformDialogueTypeOptions(dialogueTypes);
 
 	return (
 		<div>

@@ -4,9 +4,9 @@ import {useForm, FieldPath} from 'react-hook-form';
 import {useFormState} from 'react-dom';
 import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {createCampaignAction} from '@/actions/drizzle/campaigns';
+import {createCampaignAction} from '@/actions/db/campaigns';
 import {campaignSchema} from '@/database/drizzle/validation';
-import {State} from '@/types/drizzle';
+import {ActionStatus} from '@/types/drizzle';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {ErrorMessage} from '@hookform/error-message';
 import ErrorToast from '../ErrorToast';
@@ -18,9 +18,9 @@ interface CampaignFormProps {
 
 type Inputs = z.infer<typeof campaignSchema>;
 export default function CampaignForm({npcOptions}: CampaignFormProps) {
-	const [state, formAction] = useFormState<State, FormData>(
+	const [state, formAction] = useFormState<ActionStatus, FormData>(
 		createCampaignAction,
-		null
+		{status: 'idle', message: ''}
 	);
 	const [showAddNpc, setShowAddNpc] = useState(false);
 	const {

@@ -15,7 +15,7 @@ export default async function CreateCampaignPage() {
 	return (
 		<div className='flex flex-col items-center'>
 			<h1 className='mb-4 font-bold tracking-widest underline'>
-				create a new campaign
+				create a new npc
 			</h1>
 			<NPCForm campaignOptions={campaignOptions} />
 		</div>

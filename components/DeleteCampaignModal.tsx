@@ -2,11 +2,14 @@
 
 import {useRef, useEffect} from 'react';
 import {useFormState} from 'react-dom';
-import {deleteCampaignAction} from '@/actions/drizzle/campaigns';
+import {deleteCampaignAction} from '@/actions/db/campaigns';
 import {SubmitButton} from './buttons/SubmitButton';
 
 export default function DeleteCampaignModal({id}: {id: number}) {
-	const [state, formAction] = useFormState(deleteCampaignAction, null);
+	const [state, formAction] = useFormState(deleteCampaignAction, {
+		status: 'idle',
+		message: '',
+	});
 	const dialogRef = useRef<HTMLDialogElement>(null);
 
 	const openModal = () => {

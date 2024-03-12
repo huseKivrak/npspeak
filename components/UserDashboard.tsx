@@ -2,7 +2,6 @@
 import {CampaignWithNPCs, DetailedNPC} from '@/types/drizzle';
 import Link from 'next/link';
 import {BasicUserInfo} from '@/actions/auth';
-
 export default function UserDashboard({
 	user,
 	campaigns,

@@ -1,7 +1,7 @@
 import {redirect} from 'next/navigation';
 import {getUserInfo} from '@/actions/auth';
 import {getNPCById} from '@/database/drizzle/queries';
-import {transformDialogueOptions} from '@/utils/helpers/formHelpers';
+import {transformDialogueTypeOptions} from '@/utils/helpers/formHelpers';
 import NPCTabCard from '@/components/cards/NPCTabCard';
 
 export default async function NPCDetailPage({
