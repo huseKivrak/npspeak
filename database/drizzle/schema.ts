@@ -11,6 +11,7 @@ import {
 	integer,
 	date,
 	primaryKey,
+	real,
 } from 'drizzle-orm/pg-core';
 import {sql} from 'drizzle-orm';
 import {authUsers as users} from '../supabase/authSchema';
@@ -164,16 +165,12 @@ export const tts_audio = pgTable(
 		created_at: timestamp('created_at', {withTimezone: true, mode: 'string'})
 			.defaultNow()
 			.notNull(),
-		voice_id: text('voice_id')
-			.notNull()
-			.references(() => voice_clones.elevenlabs_voice_id, {
-				onDelete: 'set null',
-			}),
+		voice_id: text('voice_id').notNull(),
 		user_id: uuid('user_id')
 			.default(sql`auth.uid()`)
 			.notNull()
 			.references(() => users.id, {onDelete: 'set null'}),
-		duration_seconds: bigint('duration_seconds', {mode: 'number'}).notNull(),
+		duration_seconds: real('duration_seconds').notNull(),
 		source_text: text('source_text').notNull(),
 		file_url: text('file_url').notNull(),
 		is_default: boolean('is_default').default(false).notNull(),
