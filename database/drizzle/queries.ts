@@ -10,7 +10,7 @@ import {
 	tts_audio,
 } from '@/database/drizzle/schema';
 import {db} from '.';
-import {eq, and} from 'drizzle-orm';
+import {eq, and, isNotNull} from 'drizzle-orm';
 import {getUserInfo} from '@/actions/auth';
 
 /**
@@ -193,7 +193,11 @@ export const getAudioURLsforNPCDialogues = async (
 		.from(npc_dialogues)
 		.leftJoin(tts_audio, eq(npc_dialogues.tts_audio_id, tts_audio.id))
 		.where(
-			and(eq(npc_dialogues.npc_id, npcId), eq(npc_dialogues.user_id, userId))
+			and(
+				eq(npc_dialogues.npc_id, npcId),
+				eq(npc_dialogues.user_id, userId),
+				isNotNull(tts_audio.file_url)
+			)
 		);
 
 	return rows;
