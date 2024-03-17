@@ -2,14 +2,17 @@
 
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {useFormState} from 'react-dom';
-import {CreateVoiceClone} from '@/actions/elevenLabs';
+import {createElevenLabsVoiceAction} from '@/actions/elevenLabs';
 
 const initialState = {
 	message: '',
 };
 
 export default function CreateClone() {
-	const [state, formAction] = useFormState(CreateVoiceClone, initialState);
+	const [state, formAction] = useFormState(
+		createElevenLabsVoiceAction,
+		initialState
+	);
 
 	return (
 		<div className='flex-1 w-full flex flex-col gap-20 items-center'>
