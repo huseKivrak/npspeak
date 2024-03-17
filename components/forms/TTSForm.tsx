@@ -14,13 +14,14 @@ import {FormOptions} from '@/types/drizzle';
 import ttsHandler from '@/actions/ttsHandler';
 import {RadioSelections} from './RadioSelections';
 import {VoiceOptions} from './VoiceOptions';
+import Link from 'next/link';
 
 type Inputs = z.infer<typeof ttsHandlerSchema>;
 export default function TTSForm({
-	dialogueOptions,
+	npcDialogueChoices,
 	npc_id,
 }: {
-	dialogueOptions: FormOptions;
+	npcDialogueChoices: FormOptions;
 	npc_id: number;
 }) {
 	const [state, formAction] = useFormState<ActionStatus, FormData>(ttsHandler, {
@@ -58,24 +59,36 @@ export default function TTSForm({
 		<div className='flex flex-col items-center'>
 			<form action={formAction} className='flex flex-col gap-2 w-full max-w-xs'>
 				<input type='hidden' name='npc_id' value={npc_id} />
-				<RadioSelections
-					fieldName='dialogue_id'
-					options={dialogueOptions}
-					register={register}
-					setValue={setValue}
-				/>
-				<ErrorMessage
-					errors={errors}
-					name='dialogue_id'
-					render={({message}) => <ErrorToast message={message} />}
-				/>
-				<VoiceOptions register={register} />
-				<ErrorMessage
-					errors={errors}
-					name='voice_id'
-					render={({message}) => <ErrorToast message={message} />}
-				/>
-				<SubmitButton text='create audio!' />
+				{npcDialogueChoices.length > 0 ? (
+					<>
+						<RadioSelections
+							fieldName='dialogue_id'
+							options={npcDialogueChoices}
+							register={register}
+							setValue={setValue}
+						/>
+
+						<ErrorMessage
+							errors={errors}
+							name='dialogue_id'
+							render={({message}) => <ErrorToast text={message} />}
+						/>
+						<VoiceOptions register={register} />
+						<ErrorMessage
+							errors={errors}
+							name='voice_id'
+							render={({message}) => <ErrorToast text={message} />}
+						/>
+						<SubmitButton text='create audio!' />
+					</>
+				) : (
+					<ErrorToast text='TTS Unavailable!' className='text-center'>
+						<p className='mt-4 text-accent'>
+							Any dialogue for this NPC has audio.
+						</p>
+						<p className='text-accent'>Go create some more!</p>
+					</ErrorToast>
+				)}
 			</form>
 		</div>
 	);
