@@ -2,7 +2,7 @@ import {redirect} from 'next/navigation';
 import {getUserInfo} from '@/actions/auth';
 import {getNPCById} from '@/database/drizzle/queries';
 import NPCTabCard from '@/components/cards/NPCTabCard';
-
+import DialogueTabCard from '@/components/cards/DialogueTabCard';
 export default async function NPCDetailPage({
 	params,
 }: {
@@ -21,7 +21,9 @@ export default async function NPCDetailPage({
 
 	return (
 		<div>
-			<NPCTabCard npc={npc} />
+			<NPCTabCard npc={npc}>
+				<DialogueTabCard npc={npc} />
+			</NPCTabCard>
 		</div>
 	);
 }
