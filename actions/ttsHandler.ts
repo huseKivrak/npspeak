@@ -41,14 +41,14 @@ export default async function ttsHandler(
 	if (s3Response.status !== 'success') {
 		return s3Response;
 	}
-	const s3Url = s3Response.data.url;
+	const s3Key = s3Response.data.key;
 	const duration = s3Response.data.duration;
 
 	const ttsAudioData = new FormData();
 	ttsAudioData.append('source_text', text);
 	ttsAudioData.append('voice_id', voice_id);
 	ttsAudioData.append('npc_id', npc_id.toString());
-	ttsAudioData.append('file_url', s3Url);
+	ttsAudioData.append('file_url', s3Key);
 	ttsAudioData.append('duration_seconds', duration);
 
 	//insert TTS audio into database

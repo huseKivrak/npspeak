@@ -41,7 +41,7 @@ export async function getPresignedUploadURL(): Promise<ActionStatus> {
 		});
 
 		console.log('Presigned URL: ', url);
-		return {status: 'success', message: url};
+		return {status: 'success', message: url, data: {key: s3FileName}};
 	} catch (error) {
 		console.error('Error generating presigned upload URL: ', error);
 		return {
@@ -55,8 +55,9 @@ export async function uploadAudioToS3(
 	audioBuffer: ArrayBuffer
 ): Promise<ActionStatus> {
 	try {
-		const {status, message} = await getPresignedUploadURL();
-		if (status === 'error') return {status, message};
+		const response = await getPresignedUploadURL();
+		if (response.status !== 'success') return response;
+		const {message, data} = response;
 
 		const uploadResponse = await fetch(message, {
 			method: 'PUT',
@@ -72,13 +73,13 @@ export async function uploadAudioToS3(
 			);
 		}
 
-		const s3Url = message.split('?')[0];
+		const file_key = data.key;
 		const file_duration = audioBuffer.byteLength / 44100 / 2;
 
 		return {
 			status: 'success',
 			message: 'uploaded to s3',
-			data: {url: s3Url, duration: file_duration},
+			data: {key: file_key, duration: file_duration},
 		};
 	} catch (error) {
 		console.error('Error uploading audio to S3: ', error);
