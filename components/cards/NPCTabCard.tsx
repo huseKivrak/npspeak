@@ -8,12 +8,13 @@ import {cn} from '@/utils/helpers/clsxMerge';
 import {PiSkullBold} from 'react-icons/pi';
 import DialogueForm from '../forms/DialogueForm';
 import TTSForm from '../forms/TTSForm';
+
 export default function NPCTabCard({npc}: {npc: DetailedNPC}) {
 	const [tab, setTab] = useState(1);
 	const [showDialogueForm, setShowDialogueForm] = useState(false);
 	const {username} = useParams();
 
-	const dialogueOptions = npc.dialogues.map((d) => {
+	const TTSdialogueOptions = npc.dialogues.map((d) => {
 		return {label: d.text, value: d.id};
 	});
 
@@ -127,7 +128,7 @@ export default function NPCTabCard({npc}: {npc: DetailedNPC}) {
 					<div className='card bg-base-200'>
 						<div className='card-body items-center'>
 							<h2 className='card-title'>TTS</h2>
-							<TTSForm dialogueOptions={dialogueOptions} npc_id={npc.id} />
+							<TTSForm dialogueOptions={TTSdialogueOptions} npc_id={npc.id} />
 						</div>
 					</div>
 				</div>
