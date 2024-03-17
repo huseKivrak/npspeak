@@ -1,6 +1,37 @@
 import {z} from 'zod';
 import {zfd} from 'zod-form-data';
 
+//Auth
+export const loginSchema = zfd.formData({
+	username: zfd.text(z.string()),
+	password: zfd.text(z.string()),
+});
+
+export const signupSchema = zfd
+	.formData({
+		email: zfd.text(z.string().email()),
+		username: zfd.text(
+			z.string().min(4, 'Username must be at least 4 characters long')
+		),
+		password: zfd.text(
+			z.string().min(7, 'Password must be at least 7 characters long')
+		),
+		confirm_password: zfd.text(
+			z.string().min(7, 'Password must be at least 7 characters long')
+		),
+	})
+	.superRefine((data, ctx) => {
+		const {password, confirm_password} = data;
+		if (password !== confirm_password) {
+			ctx.addIssue({
+				code: 'custom',
+				path: ['password', 'confirm_password'],
+				message: 'Passwords do not match',
+			});
+		}
+	});
+
+//Campaigns
 export const campaignSchema = zfd
 	.formData({
 		campaign_name: zfd.text(
@@ -51,6 +82,7 @@ export const deleteCampaignSchema = zfd.formData({
 	campaign_id: zfd.numeric(),
 });
 
+//NPCs
 export const npcSchema = zfd.formData({
 	npc_name: zfd.text(
 		z
@@ -72,6 +104,7 @@ export const deleteNPCSchema = zfd.formData({
 	npc_id: zfd.numeric(),
 });
 
+//Dialogues
 export const dialogueSchema = zfd.formData({
 	npc_id: zfd.numeric(),
 	dialogue_type_id: zfd.numeric(),
@@ -84,6 +117,7 @@ export const dialogueSchema = zfd.formData({
 	tts_audio_id: zfd.numeric().optional(),
 });
 
+//TTS
 export const ttsAudioSchema = zfd.formData({
 	voice_id: zfd.text(z.string()),
 	source_text: zfd.text(z.string()),
