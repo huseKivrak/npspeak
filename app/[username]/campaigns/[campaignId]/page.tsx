@@ -17,9 +17,9 @@ export default async function CampaignDetailPage({
 
 	const campaignId = params.campaignId;
 	const userCampaigns = await getCampaignsWithNPCs();
-	if (!userCampaigns) return <ErrorToast message='No campaigns found' />;
+	if (!userCampaigns) return <ErrorToast text='No campaigns found' />;
 	const campaign = userCampaigns.find((c) => c.id === campaignId);
-	if (!campaign) return <ErrorToast message='Campaign not found' />;
+	if (!campaign) return <ErrorToast text='Campaign not found' />;
 
 	return (
 		<div>

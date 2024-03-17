@@ -51,7 +51,7 @@ export default function SignUpForm() {
 					placeholder='you@example.com'
 					required
 				/>
-				{errors.email && <ErrorToast message={errors.email} />}
+				{errors.email && <ErrorToast text={errors.email} />}
 				<label className='font-thin tracking-widest' htmlFor='username'>
 					username
 				</label>
@@ -61,7 +61,7 @@ export default function SignUpForm() {
 					placeholder='your username'
 					required
 				/>
-				{errors.username && <ErrorToast message={errors.username} />}
+				{errors.username && <ErrorToast text={errors.username} />}
 
 				<label className='font-thin tracking-widest' htmlFor='password'>
 					password
@@ -73,7 +73,7 @@ export default function SignUpForm() {
 					placeholder='••••••••'
 					required
 				/>
-				{errors.password && <ErrorToast message={errors.password} />}
+				{errors.password && <ErrorToast text={errors.password} />}
 
 				<label className='font-thin tracking-widest' htmlFor='password2'>
 					confirm password
@@ -86,7 +86,7 @@ export default function SignUpForm() {
 					required
 				/>
 				{errors.confirm_password && (
-					<ErrorToast message={errors.confirm_password} />
+					<ErrorToast text={errors.confirm_password} />
 				)}
 				<span className='flex flex-col items-center'>
 					<SubmitButton

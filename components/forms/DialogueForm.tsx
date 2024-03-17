@@ -6,6 +6,7 @@ import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {createDialogueAction} from '@/actions/db/dialogue';
 import {dialogueSchema} from '@/database/drizzle/validation';
+import {DefaultDialogueOptions} from '@/lib/constants';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {FormOptions, ActionStatus} from '@/types/drizzle';
 import {ErrorMessage} from '@hookform/error-message';
@@ -13,26 +14,16 @@ import ErrorToast from '@/components/ErrorToast';
 
 type Inputs = z.infer<typeof dialogueSchema>;
 export default function DialogueForm({
-	dialogueOptions,
+	dialogueChoices = DefaultDialogueOptions,
 	npcId,
 }: {
-	dialogueOptions?: FormOptions;
+	dialogueChoices?: FormOptions;
 	npcId: number;
 }) {
 	const [state, formAction] = useFormState<ActionStatus, FormData>(
 		createDialogueAction,
 		{status: 'idle', message: ''}
 	);
-
-	const dialogueChoices = dialogueOptions || [
-		{label: 'greeting', value: 1},
-		{label: 'farewell', value: 2},
-		{label: 'story', value: 3},
-		{label: 'other', value: 4},
-		{label: 'question', value: 5},
-		{label: 'answer', value: 6},
-		{label: 'exclamation', value: 7},
-	];
 
 	const {
 		register,
@@ -54,7 +45,6 @@ export default function DialogueForm({
 			});
 		}
 		if (state.status === 'success') {
-			alert(state.message);
 			reset();
 		}
 	}, [state, setError, reset]);
@@ -97,7 +87,7 @@ export default function DialogueForm({
 
 				<SubmitButton text='add dialogue' />
 			</form>
-			{state?.status === 'error' && <ErrorToast message={state.message} />}
+			{state?.status === 'error' && <ErrorToast text={state.message} />}
 		</div>
 	);
 }

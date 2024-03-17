@@ -68,7 +68,7 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 				<ErrorMessage
 					errors={errors}
 					name='campaign_name'
-					render={({message}) => <ErrorToast message={message} />}
+					render={({message}) => <ErrorToast text={message} />}
 				/>
 				<label htmlFor='description' className='form-control'>
 					description
@@ -83,7 +83,7 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 				<ErrorMessage
 					errors={errors}
 					name='description'
-					render={({message}) => <ErrorToast message={message} />}
+					render={({message}) => <ErrorToast text={message} />}
 				/>
 				<label htmlFor='start_date' className='form-control'>
 					start date
@@ -98,7 +98,7 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 				<ErrorMessage
 					errors={errors}
 					name='start_date'
-					render={({message}) => <ErrorToast message={message} />}
+					render={({message}) => <ErrorToast text={message} />}
 				/>
 				<label htmlFor='end_date' className='form-control'>
 					end date
@@ -113,7 +113,7 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 				<ErrorMessage
 					errors={errors}
 					name='end_date'
-					render={({message}) => <ErrorToast message={message} />}
+					render={({message}) => <ErrorToast text={message} />}
 				/>
 				<button
 					type='button'

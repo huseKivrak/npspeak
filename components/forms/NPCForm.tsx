@@ -67,7 +67,7 @@ export default function NPCForm({campaignOptions}: NPCFormProps) {
 				<ErrorMessage
 					errors={errors}
 					name='npc_name'
-					render={({message}) => <ErrorToast message={message} />}
+					render={({message}) => <ErrorToast text={message} />}
 				/>
 				<label htmlFor='description' className='form-control'>
 					description
@@ -82,7 +82,7 @@ export default function NPCForm({campaignOptions}: NPCFormProps) {
 				<ErrorMessage
 					errors={errors}
 					name='description'
-					render={({message}) => <ErrorToast message={message} />}
+					render={({message}) => <ErrorToast text={message} />}
 				/>
 				<button
 					type='button'
