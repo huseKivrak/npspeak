@@ -52,7 +52,11 @@ export const createDialogueAction = async (
 		};
 	}
 	revalidatePath('/');
-	redirect(`/${user.username}/npcs/${formData.get('npc_id')}`);
+	// redirect(`/${user.username}/npcs/${formData.get('npc_id')}`);
+	return {
+		status: 'success',
+		message: '',
+	};
 };
 
 export async function createTTSAudioAction(
