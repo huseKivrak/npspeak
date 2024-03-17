@@ -7,11 +7,11 @@ import {
 	campaign_npcs,
 	npc_dialogue_types,
 	npc_dialogues,
+	tts_audio,
 } from '@/database/drizzle/schema';
 import {db} from '.';
 import {eq, and} from 'drizzle-orm';
 import {getUserInfo} from '@/actions/auth';
-import {Tables} from '@/types/supabase';
 
 /**
  * Retrieves campaigns and their associated NPCs for current user.
@@ -182,6 +182,21 @@ export const getNPCById = async (
 		console.error('Error fetching NPC:', error);
 		throw new Error('An error occured while getting NPC');
 	}
+};
+
+export const getAudioURLsforNPCDialogues = async (
+	npcId: number,
+	userId: string
+) => {
+	const rows = await db
+		.select({id: npc_dialogues.id, audioURL: tts_audio.file_url})
+		.from(npc_dialogues)
+		.leftJoin(tts_audio, eq(npc_dialogues.tts_audio_id, tts_audio.id))
+		.where(
+			and(eq(npc_dialogues.npc_id, npcId), eq(npc_dialogues.user_id, userId))
+		);
+
+	return rows;
 };
 
 export const getDialogueTypes = async () => {
