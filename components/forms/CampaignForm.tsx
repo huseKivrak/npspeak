@@ -20,7 +20,10 @@ type Inputs = z.infer<typeof campaignSchema>;
 export default function CampaignForm({npcOptions}: CampaignFormProps) {
 	const [state, formAction] = useFormState<ActionStatus, FormData>(
 		createCampaignAction,
-		{status: 'idle', message: ''}
+		{
+			status: 'idle',
+			message: '',
+		}
 	);
 	const [showAddNpc, setShowAddNpc] = useState(false);
 	const {
@@ -33,7 +36,7 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 	});
 
 	useEffect(() => {
-		if (!state) return;
+		if (state.status === 'idle') return;
 		if (state?.status === 'error') {
 			console.log('errors:', state.errors);
 			state.errors?.forEach((error) => {
