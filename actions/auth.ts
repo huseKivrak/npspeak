@@ -3,39 +3,58 @@
 import {createClient} from '@/utils/supabase/server';
 import {headers} from 'next/headers';
 import {redirect} from 'next/navigation';
-import {User} from '@supabase/supabase-js';
+import {AuthError, User} from '@supabase/supabase-js';
 import {cookies} from 'next/headers';
-
-export const signUpAction = async (prevState: any, formData: FormData) => {
+import {signupSchema, loginSchema} from '@/database/drizzle/validation';
+import {ZodError} from 'zod';
+import {ActionStatus} from '@/types/drizzle';
+export const signUpAction = async (
+	prevState: ActionStatus,
+	formData: FormData
+): Promise<ActionStatus> => {
 	const origin = headers().get('origin');
 
-	//todo: zod
-	const email = formData.get('email') as string;
-	const password = formData.get('password') as string;
-	const password2 = formData.get('password2') as string;
-	const username = formData.get('username');
-	if (password !== password2) return 'passwords do not match';
+	try {
+		const {email, password, username} = signupSchema.parse(formData);
 
-	const cookieStore = cookies();
-	const supabase = createClient(cookieStore);
+		const cookieStore = cookies();
+		const supabase = createClient(cookieStore);
 
-	const {error} = await supabase.auth.signUp({
-		email,
-		password,
-		options: {
-			emailRedirectTo: `${origin}/auth/callback`,
-			data: {
-				username,
+		const {error} = await supabase.auth.signUp({
+			email,
+			password,
+			options: {
+				emailRedirectTo: `${origin}/auth/callback`,
+				data: {
+					username,
+				},
 			},
-		},
-	});
-
-	//todo: zod
-	if (error) {
-		console.error('signup error: ', error);
-		return redirect('/error');
+		});
+		if (error) {
+			if (error instanceof AuthError) {
+				return {
+					status: 'error',
+					message: `Auth error: ${error.message}`,
+				};
+			}
+		}
+	} catch (error) {
+		if (error instanceof ZodError) {
+			console.log('zod error: ', error);
+			return {
+				status: 'error',
+				message: 'Invalid form data',
+				errors: error.issues.map((issue) => ({
+					path: issue.path.join('.'),
+					message: `${issue.message}`,
+				})),
+			};
+		} else {
+			console.error('Error during signup: ', error);
+			return redirect('/error');
+		}
 	}
-	return redirect('/signup/success');
+	redirect('/signup/success');
 };
 
 export const signInAction = async (formData: FormData) => {
@@ -51,8 +70,10 @@ export const signInAction = async (formData: FormData) => {
 	});
 
 	if (error) {
-		// return redirect('/login?message=incorrect email/password. please try again');
-		return redirect('/error');
+		return redirect(
+			'/login?message=incorrect email/password. please try again'
+		);
+		// return redirect('/error');
 	}
 	return redirect(`/`);
 };
@@ -60,7 +81,13 @@ export const signInAction = async (formData: FormData) => {
 export const logoutAction = async () => {
 	const cookieStore = cookies();
 	const supabase = createClient(cookieStore);
-	await supabase.auth.signOut();
+
+	const {error} = await supabase.auth.signOut();
+	if (error) {
+		console.error('Error:', error);
+		return redirect('/error'); //todo: handle logout error
+	}
+
 	return redirect('/?message=logout');
 };
 
