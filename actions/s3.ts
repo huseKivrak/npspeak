@@ -56,6 +56,7 @@ export async function uploadAudioToS3(
 ): Promise<ActionStatus> {
 	try {
 		const {status, message} = await getPresignedUploadURL();
+		if (status === 'error') return {status, message};
 
 		const uploadResponse = await fetch(message, {
 			method: 'PUT',
@@ -64,6 +65,13 @@ export async function uploadAudioToS3(
 			},
 			body: Buffer.from(audioBuffer),
 		});
+
+		if (!uploadResponse.ok) {
+			throw new Error(
+				`S3 Error code: ${uploadResponse.status}; ${uploadResponse.statusText}`
+			);
+		}
+
 		const s3Url = message.split('?')[0];
 		const file_duration = audioBuffer.byteLength / 44100 / 2;
 
@@ -84,12 +92,12 @@ export async function getPresignedDownloadURL(
 	const {user} = await getUserInfo();
 	if (!user) return {status: 'error', message: 'not authenticated'};
 
-	const getCommand = new GetObjectCommand({
-		Bucket: process.env.AWS_BUCKET_NAME!,
-		Key: fileName,
-	});
-
 	try {
+		const getCommand = new GetObjectCommand({
+			Bucket: process.env.AWS_BUCKET_NAME!,
+			Key: fileName,
+		});
+
 		const url = await getSignedUrl(s3, getCommand, {
 			expiresIn: 900,
 		});
