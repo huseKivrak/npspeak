@@ -1,50 +1,41 @@
 'use client';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {useFormState} from 'react-dom';
-import {CreateAudioClip} from '@/actions/elevenLabs';
+import {createElevenLabsTTSAction} from '@/actions/elevenLabs';
 import {useState, useEffect} from 'react';
-import {ELEVENLABS_PREMADE_VOICES} from '@/utils/elevenlabs/api';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
-
-const initialState = {
-	message: '',
-	audioUrl: '',
-};
 
 /**
  * tts form page
  *
  */
 export default function TextToSpeechPage() {
-	const [state, formAction] = useFormState(CreateAudioClip, initialState);
-	const [voices, setVoices] = useState<ElevenLabsVoice[]>(
-		ELEVENLABS_PREMADE_VOICES
-	); //*
+	const [state, formAction] = useFormState(createElevenLabsTTSAction, {
+		status: 'idle',
+		message: '',
+	});
+	const [voices, setVoices] = useState<ElevenLabsVoice[] | null>(null); //*
 	const [audioFilePath, setAudioFilePath] = useState<string>('');
 
-	//*
-	// useEffect(() => {
-	//   async function getVoices() {
-	//     const res = await fetch('/api/voices');
-	//     const data = await res.json();
-	//     const voices: ElevenLabsVoice[] = data.voices;
-
-	//     setVoices(voices);
-	//   }
-	//   getVoices();
-	// }, []);
-
 	useEffect(() => {
-		if (state?.audioUrl) {
-			setAudioFilePath(state.audioUrl);
+		async function fetchVoices() {
+			try {
+				const response = await fetch('/api/elevenlabs');
+				const data = await response.json();
+				setVoices(data.voices);
+			} catch (error) {
+				console.error('error getting elevenlabs voices:', error);
+			}
 		}
-	}, [state?.audioUrl]);
+		fetchVoices();
+	}, []);
 
 	return (
-		<div className='container flex flex-col items-center p-4 mt-48'>
+		<div className='container flex flex-col items-center p-4'>
 			<h1 className='text-2xl text-center mb-8 tracking-widest'>
 				create audio from text
 			</h1>
+			<h2>Enter your text and select a voice to create an audio clip.</h2>
 			<form
 				action={formAction}
 				className='flex flex-col items-center mx-auto max-w-6xl'
@@ -59,22 +50,22 @@ export default function TextToSpeechPage() {
 				<select
 					name='voice_id'
 					className='select select-secondary w-full max-w-xs'
+					defaultValue='premade voices'
 					required
 				>
-					<option disabled selected>
-						Premade Voice Options
-					</option>
-					{voices
-						//* .filter((voice) => voice.category === 'premade')
-						.map((voice) => (
-							<option
-								key={voice.voice_id}
-								value={voice.voice_id}
-								title={Object.values(voice.labels).join(', ')}
-							>
-								{voice.name}
-							</option>
-						))}
+					<option disabled>Select a voice</option>
+					{voices &&
+						voices
+							//* .filter((voice) => voice.category === 'premade')
+							.map((voice) => (
+								<option
+									key={voice.voice_id}
+									value={voice.voice_id}
+									title={Object.values(voice.labels).join(', ')}
+								>
+									{voice.name}
+								</option>
+							))}
 				</select>
 				<SubmitButton text='create audio' className='mt-4 max-w-fit' />
 			</form>
