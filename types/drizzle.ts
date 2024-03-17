@@ -1,10 +1,5 @@
+import {IconType} from 'react-icons';
 import {Tables} from './supabase';
-
-type RawJoinData = {
-	campaigns: Tables<'campaigns'>;
-	npcs: Tables<'npcs'>;
-	campaign_npcs: Tables<'campaign_npcs'>;
-};
 
 export type CampaignWithNPCs = Tables<'campaigns'> & {
 	npcs: Tables<'npcs'>[];
@@ -40,3 +35,10 @@ export type FormOptions =
 			label: string;
 	  }[]
 	| [];
+
+export type DialogueOptions = {
+	label: string;
+	value: number;
+	icon?: IconType;
+	color?: string;
+}[];
