@@ -5,10 +5,12 @@ import {
 	getNPCsWithRelatedData,
 } from '../../database/drizzle/queries';
 import {redirect} from 'next/navigation';
-import {createClient} from '@/utils/supabase/server';
-import {cookies} from 'next/headers';
 
-export default async function UserPage() {
+export default async function UserPage({
+	searchParams,
+}: {
+	searchParams: {[key: string]: string | undefined};
+}) {
 	const {user} = await getUserInfo();
 	if (!user) return redirect('/login');
 
