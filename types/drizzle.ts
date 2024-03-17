@@ -39,6 +39,6 @@ export type FormOptions =
 export type DialogueOptions = {
 	label: string;
 	value: number;
-	icon?: IconType;
+	Icon?: IconType;
 	color?: string;
 }[];
