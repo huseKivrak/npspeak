@@ -8,6 +8,8 @@ import {db} from '@/database/drizzle';
 import {eq} from 'drizzle-orm';
 import {npc_dialogues} from '@/database/drizzle/schema';
 import {ActionStatus} from '@/types/drizzle';
+import {revalidatePath} from 'next/cache';
+import {redirect} from 'next/navigation';
 
 export default async function ttsHandler(
 	prevState: any,
@@ -71,11 +73,6 @@ export default async function ttsHandler(
 			message: 'Failed to update dialogue with TTS audio id',
 		};
 	}
-	return {
-		status: 'success',
-		message: 'TTS Audio created!',
-		data: {
-			id: ttsAudioId,
-		},
-	};
+	revalidatePath('/');
+	redirect(`/${user.username}/npcs/${npc_id}`);
 }

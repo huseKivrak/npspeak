@@ -21,6 +21,8 @@ export const createCampaignAction = async (
 	if (!user) return {status: 'error', message: 'Unauthenticated'};
 
 	const user_id = user.id;
+	let newCampaignId: number | null = null;
+
 	try {
 		const {campaign_name, description, npc_ids, start_date, end_date} =
 			campaignSchema.parse(formData);
@@ -37,17 +39,13 @@ export const createCampaignAction = async (
 
 		if (npc_ids && npc_ids.length > 0) {
 			const associations = npc_ids.map((npc_id) => ({
-				npc_id: npc_id as number, //fixes type error
+				npc_id: npc_id as number, //safe type assertion after Zod validation
 				campaign_id: insertedCampaign[0].id,
 			}));
 			await db.insert(campaign_npcs).values(associations);
 		}
 
-		revalidatePath('/');
-		// return {
-		// 	status: 'success',
-		// 	message: `The "${insertedCampaign[0].campaign_name}" campaign is created`,
-		// };
+		newCampaignId = insertedCampaign[0].id;
 	} catch (error) {
 		if (error instanceof ZodError) {
 			return {
@@ -64,7 +62,8 @@ export const createCampaignAction = async (
 			message: 'An error occured during campaign creation.',
 		};
 	}
-	redirect(`/${user.username}/campaigns`);
+	revalidatePath('/');
+	redirect(`/${user.username}/campaigns/${newCampaignId}`);
 };
 
 export const deleteCampaignAction = async (
@@ -73,25 +72,24 @@ export const deleteCampaignAction = async (
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
 	if (!user) return {status: 'error', message: 'Unauthenticated'};
-
-	const {campaign_id} = deleteCampaignSchema.parse(formData);
 	const user_id = user.id;
+
+	let deletedCampaignName;
+
 	try {
+		const {campaign_id} = deleteCampaignSchema.parse(formData);
 		const deletedCampaign = await db
 			.delete(campaigns)
 			.where(and(eq(campaigns.id, campaign_id), eq(campaigns.user_id, user_id)))
 			.returning();
-
-		revalidatePath('/');
-		// return {
-		// 	status: 'success',
-		// 	message: `${deletedCampaign[0].campaign_name} has been deleted`,
-		// };
+		deletedCampaignName = deletedCampaign[0].campaign_name;
 	} catch (error) {
 		return {
 			status: 'error',
 			message: 'An error occured while deleting campaign.',
 		};
 	}
-	redirect('/dashboard');
+	const deleted = encodeURIComponent(deletedCampaignName);
+	revalidatePath('/');
+	redirect(`/dashboard?message=${deleted}`);
 };

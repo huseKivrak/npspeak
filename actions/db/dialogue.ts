@@ -7,6 +7,7 @@ import {ActionStatus} from '@/types/drizzle';
 import {dialogueSchema, ttsAudioSchema} from '@/database/drizzle/validation';
 import {ZodError} from 'zod';
 import {revalidatePath} from 'next/cache';
+import {redirect} from 'next/navigation';
 
 export const createDialogueAction = async (
 	prevState: ActionStatus,
@@ -32,14 +33,7 @@ export const createDialogueAction = async (
 				text,
 			})
 			.returning();
-		revalidatePath('/');
-
 		console.log('insertedDialogue', insertedDialogue[0]);
-
-		return {
-			status: 'success',
-			message: `Dialogue created!`,
-		};
 	} catch (error) {
 		if (error instanceof ZodError) {
 			return {
@@ -57,6 +51,8 @@ export const createDialogueAction = async (
 			message: 'An error occured while creating dialogue.',
 		};
 	}
+	revalidatePath('/');
+	redirect(`/${user.username}/npcs/${formData.get('npc_id')}`);
 };
 
 export async function createTTSAudioAction(

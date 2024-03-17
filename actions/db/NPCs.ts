@@ -18,9 +18,11 @@ export const createNPCAction = async (
 	if (!user) throw new Error('You must be logged in to create NPCs.');
 
 	const user_id = user.id;
+	let newNPCId: number | null = null;
 
 	try {
 		const {npc_name, description, campaign_ids} = npcSchema.parse(formData);
+
 		const insertedNPC: Tables<'npcs'>[] = await db
 			.insert(npcs)
 			.values({
@@ -31,16 +33,15 @@ export const createNPCAction = async (
 			.returning();
 
 		if (campaign_ids && campaign_ids.length > 0) {
-			const associations = campaign_ids.map((campaign_id) => ({
+			const campaign_associations = campaign_ids.map((campaign_id) => ({
 				npc_id: insertedNPC[0].id,
-				campaign_id: campaign_id as number, //fixes type error
+				campaign_id: campaign_id as number, //safe assertion post-Zod validation
 			}));
-			await db.insert(campaign_npcs).values(associations);
+
+			await db.insert(campaign_npcs).values(campaign_associations);
 		}
-		return {
-			status: 'success',
-			message: `${insertedNPC[0].npc_name} is born!`,
-		};
+
+		newNPCId = insertedNPC[0].id;
 	} catch (error) {
 		if (error instanceof ZodError) {
 			return {
@@ -58,6 +59,8 @@ export const createNPCAction = async (
 			message: 'An error occured while creating NPC.',
 		};
 	}
+	revalidatePath('/');
+	redirect(`/${user.username}/npcs/${newNPCId}`);
 };
 
 export const deleteNPCAction = async (
@@ -68,24 +71,24 @@ export const deleteNPCAction = async (
 	if (!user) throw new Error('You must be logged in to delete NPCs.');
 
 	const user_id = user.id;
-	const {npc_id} = deleteNPCSchema.parse(formData);
+	let deletedNPCName: string | null = null;
+
 	try {
+		const {npc_id} = deleteNPCSchema.parse(formData);
 		const deletedNPC = await db
 			.delete(npcs)
 			.where(and(eq(npcs.id, npc_id), eq(npcs.user_id, user_id)))
 			.returning();
 
-		// return {
-		// 	status: 'success',
-		// 	message: `${deletedNPC[0].npc_name} is gone!`,
-		// };
-
-		revalidatePath('/');
+		deletedNPCName = deletedNPC[0].npc_name;
 	} catch (error) {
+		console.error('Error deleting NPC:', error);
 		return {
 			status: 'error',
 			message: 'An error occured while deleting NPC.',
 		};
 	}
-	redirect('/dashboard');
+	const deleted = encodeURIComponent(`${deletedNPCName} has been deleted.`);
+	revalidatePath('/');
+	redirect(`/dashboard?deleted=true&message=${deleted}`);
 };
