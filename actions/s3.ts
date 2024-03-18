@@ -103,7 +103,11 @@ export async function getPresignedDownloadURL(
 			expiresIn: 900,
 		});
 		console.log('Presigned Download URL: ', url);
-		return {status: 'success', message: url};
+		return {
+			status: 'success',
+			message: `Retrieved presigned URL for ${fileName}`,
+			data: url,
+		};
 	} catch (error) {
 		console.error('Error generating presigned download URL: ', error);
 		return {
