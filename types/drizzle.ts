@@ -14,7 +14,7 @@ export type ActionStatus =
 	| {
 			status: 'success';
 			message: string;
-			data?: any;
+			data: any;
 	  }
 	| {
 			status: 'error';
@@ -33,12 +33,19 @@ export type FormOptions =
 	| {
 			value: number;
 			label: string;
-	  }[]
-	| [];
+	  }[];
 
-export type DialogueOptions = {
+export type DefaultDialogueStyles = {
 	label: string;
 	value: number;
-	Icon?: IconType;
-	color?: string;
-}[];
+	iconName: string;
+	color: string;
+};
+
+export type StyledDialogueWithAudioURL = {
+	id: number;
+	text: string;
+	audioURL: string | null;
+	color: string;
+	iconName: string | null;
+};
