@@ -1526,9 +1526,18 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 	},
 ];
 
-const PREMADE_LABELS = ['accent', 'description', 'gender', 'age', 'use_case'];
+export const ELEVENLABS_PREMADE_LABELS = [
+	'accent',
+	'description',
+	'gender',
+	'age',
+	'use_case',
+	'use case',
+];
+
+//finds non-default/common labels
 export function findLabels(voices?: ElevenLabsVoice[]): string[] {
-	if (!Array.isArray(voices)) return PREMADE_LABELS;
+	if (!Array.isArray(voices)) return ELEVENLABS_PREMADE_LABELS;
 
 	const uniqueLabels = voices.reduce<Set<string>>((acc, curr) => {
 		Object.keys(curr.labels).forEach((label) => acc.add(label));
@@ -1544,3 +1553,30 @@ export const filterByLabelValue = (
 	lableValue: string
 ): ElevenLabsVoice[] =>
 	voices.filter((voice) => voice.labels[label] === lableValue);
+
+export const getLabelOptions = ({
+	voices = ELEVENLABS_PREMADE_VOICES,
+	label,
+}: {
+	voices: ElevenLabsVoice[];
+	label: Label;
+}) => {
+	const labelOptions: Record<string, string[]> = {
+		accent: [],
+		description: [],
+		gender: [],
+		age: [],
+		'use case': [],
+	};
+
+	for (const voice of voices) {
+		labelOptions.accent.push(voice.labels.accent);
+		labelOptions.description.push(voice.labels.description);
+		labelOptions.gender.push(voice.labels.gender);
+		labelOptions.age.push(voice.labels.age);
+
+		const useCase = voice.labels.use_case || voice.labels['use case'];
+		if (useCase) labelOptions['use case'].push(useCase);
+	}
+	return labelOptions;
+};
