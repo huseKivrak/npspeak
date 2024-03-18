@@ -7,6 +7,37 @@ import {
 } from '../utils/elevenlabs/api';
 import {ActionStatus} from '@/types/drizzle';
 
+export async function getAllElevenLabsVoices() {
+	try {
+		const response = await fetch(`${ELEVENLABS_BASE_URL}/voices`, {
+			method: 'GET',
+			headers: ELEVENLABS_API_HEADERS,
+		});
+		const data = await response.json();
+		return {status: 'success', message: 'Retrieved all voices', data};
+	} catch (error) {
+		console.error(error);
+		return {status: 'error', message: `Error: ${error}`};
+	}
+}
+
+export async function getElevenLabsVoiceInfo(voice_id: string) {
+	try {
+		const response = await fetch(
+			`${ELEVENLABS_BASE_URL}/voices/${voice_id}?with_settings=true`,
+			{
+				method: 'GET',
+				headers: ELEVENLABS_API_HEADERS,
+			}
+		);
+		const data = await response.json();
+		return {status: 'success', message: 'Retrieved voice info', data};
+	} catch (error) {
+		console.error(error);
+		return {status: 'error', message: `Error: ${error}`};
+	}
+}
+
 export async function createElevenLabsVoiceAction(
 	prevState: any,
 	formData: FormData
