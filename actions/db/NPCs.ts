@@ -92,3 +92,47 @@ export const deleteNPCAction = async (
 	revalidatePath('/');
 	redirect(`/dashboard?deleted=true&message=${deleted}`);
 };
+
+export const addVoiceToNPC = async (
+	prevState: any,
+	formData: FormData
+): Promise<ActionStatus> => {
+	const {user} = await getUserInfo();
+	if (!user)
+		return {
+			status: 'error',
+			message: 'You must be logged in to add voices to NPCs.',
+		};
+	const user_id = user.id;
+
+	const npc_id = parseInt(formData.get('npc_id') as string);
+	const voice_id = formData.get('voice_id') as string;
+
+	if (!npc_id || !voice_id) {
+		return {
+			status: 'error',
+			message: 'Invalid form data',
+		};
+	}
+
+	try {
+		const rows: Tables<'npcs'>[] = await db
+			.update(npcs)
+			.set({voice_id})
+			.where(and(eq(npcs.id, npc_id), eq(npcs.user_id, user_id)))
+			.returning();
+
+		const updatedNPC = rows[0];
+		return {
+			status: 'success',
+			message: `${updatedNPC.npc_name} has a voice!`,
+			data: updatedNPC,
+		};
+	} catch (error) {
+		console.error('Error adding voice to NPC:', error);
+		return {
+			status: 'error',
+			message: 'An error occured while adding voice to NPC.',
+		};
+	}
+};
