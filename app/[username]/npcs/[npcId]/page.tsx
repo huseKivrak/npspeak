@@ -1,8 +1,9 @@
 import {redirect} from 'next/navigation';
+import NPCTabListCard from '@/components/cards/NPCTabListCard';
 import {getUserInfo} from '@/actions/auth';
 import {getNPCById} from '@/database/drizzle/queries';
-import NPCTabCard from '@/components/cards/NPCTabCard';
-import DialogueTabCard from '@/components/cards/DialogueTabCard';
+import {createAllTabData} from '@/actions/npcTabData';
+
 export default async function NPCDetailPage({
 	params,
 }: {
@@ -15,15 +16,9 @@ export default async function NPCDetailPage({
 	if (!user) return redirect('/login');
 
 	const npc = await getNPCById(params.npcId);
-	console.log('NPC!: ', npc);
 	if (!npc) return redirect('/404');
 	if (npc.user_id !== user.id) return <p>Unauthorized</p>;
 
-	return (
-		<div>
-			<NPCTabCard npc={npc}>
-				<DialogueTabCard npc={npc} />
-			</NPCTabCard>
-		</div>
-	);
+	const allTabData = await createAllTabData(npc);
+	return <NPCTabListCard npc={npc} allTabData={allTabData} />;
 }

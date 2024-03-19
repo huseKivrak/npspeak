@@ -1,6 +1,9 @@
+'use client';
+
 import {useState} from 'react';
 import {FormOptions} from '@/types/drizzle';
 import {UseFormRegister, UseFormSetValue} from 'react-hook-form';
+
 interface RadioSelectionProps {
 	fieldName: 'npc_ids' | 'campaign_ids' | 'dialogue_id';
 	options: FormOptions;

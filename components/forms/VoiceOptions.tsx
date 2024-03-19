@@ -1,29 +1,14 @@
 'use client';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
-import {useEffect, useState} from 'react';
 import {UseFormRegister} from 'react-hook-form';
 
-export function VoiceOptions({register}: {register: UseFormRegister<any>}) {
-	const [voices, setVoices] = useState<ElevenLabsVoice[]>([]);
-
-	useEffect(() => {
-		async function fetchVoices() {
-			try {
-				const response = await fetch('/api/elevenlabs');
-				const data = await response.json();
-
-				setVoices(data.voices);
-			} catch (error) {
-				console.error('error getting elevenlabs voices:', error);
-			}
-		}
-		fetchVoices();
-	}, []);
-
-	if (voices.length === 0) {
-		return <option value=''>loading voices...</option>;
-	}
-
+export function VoiceOptions({
+	voices,
+	register,
+}: {
+	voices: ElevenLabsVoice[];
+	register: UseFormRegister<any>;
+}) {
 	return (
 		<div className='form-control'>
 			<select
