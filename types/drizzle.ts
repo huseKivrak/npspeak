@@ -42,7 +42,7 @@ export type DefaultDialogueStyles = {
 	color: string;
 };
 
-export type StyledDialogueWithAudioURL = {
+export type DetailedDialogue = {
 	id: number;
 	text: string;
 	audioURL: string | null;
