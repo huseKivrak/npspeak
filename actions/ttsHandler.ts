@@ -57,7 +57,7 @@ export default async function ttsHandler(
 	if (audioAction.status !== 'success') {
 		return audioAction;
 	}
-	const ttsAudioId = parseInt(audioAction.message);
+	const ttsAudioId = parseInt(audioAction.data);
 
 	//update dialogue with tts_audio_id
 	const updateDialogue = await db
