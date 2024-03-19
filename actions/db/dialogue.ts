@@ -34,6 +34,13 @@ export const createDialogueAction = async (
 			})
 			.returning();
 		console.log('insertedDialogue', insertedDialogue[0]);
+		revalidatePath('/');
+		// redirect(`/${user.username}/npcs/${formData.get('npc_id')}`);
+		return {
+			status: 'success',
+			message: 'Dialogue added successfully',
+			data: insertedDialogue[0],
+		};
 	} catch (error) {
 		if (error instanceof ZodError) {
 			return {
@@ -51,12 +58,6 @@ export const createDialogueAction = async (
 			message: 'An error occured while creating dialogue.',
 		};
 	}
-	revalidatePath('/');
-	// redirect(`/${user.username}/npcs/${formData.get('npc_id')}`);
-	return {
-		status: 'success',
-		message: '',
-	};
 };
 
 export async function createTTSAudioAction(
@@ -89,7 +90,8 @@ export async function createTTSAudioAction(
 		revalidatePath('/');
 		return {
 			status: 'success',
-			message: `${insertedTTS[0].id}`,
+			message: `TTS Audio successfully added`,
+			data: `${insertedTTS[0].id}`,
 		};
 	} catch (error) {
 		if (error instanceof ZodError) {
