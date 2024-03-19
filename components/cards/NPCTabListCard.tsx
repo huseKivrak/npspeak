@@ -69,7 +69,11 @@ export default function NPCTabListCard({
 			</div>
 			<div className=''>
 				{activeTab === 'overview' && (
-					<OverviewTab npc={npc} npcVoice={overviewData} />
+					<OverviewTab
+						npc={npc}
+						npcVoice={overviewData}
+						allVoices={allVoicesData}
+					/>
 				)}
 				{activeTab === 'tts' && <TTSTab npc={npc} allVoices={allVoicesData} />}
 				{activeTab === 'dialogue' && (
