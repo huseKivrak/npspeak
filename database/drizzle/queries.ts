@@ -12,6 +12,7 @@ import {
 import {db} from '.';
 import {eq, and, isNotNull} from 'drizzle-orm';
 import {getUserInfo} from '@/actions/auth';
+import {ActionStatus} from '@/types/drizzle';
 
 /**
  * Retrieves campaigns and their associated NPCs for current user.
@@ -187,7 +188,19 @@ export const getNPCById = async (
 export const getAudioURLsforNPCDialogues = async (
 	npcId: number,
 	userId: string
-) => {
+): Promise<ActionStatus> => {
+	const {user} = await getUserInfo();
+	if (!user)
+		return {
+			status: 'error',
+			message: 'Unauthenticated',
+		};
+	if (user.id !== userId)
+		return {
+			status: 'error',
+			message: 'Unauthorized access.',
+		};
+
 	const rows = await db
 		.select({id: npc_dialogues.id, audioURL: tts_audio.file_url})
 		.from(npc_dialogues)
@@ -200,7 +213,11 @@ export const getAudioURLsforNPCDialogues = async (
 			)
 		);
 
-	return rows;
+	return {
+		status: 'success',
+		message: 'Audio URLs fetched successfully',
+		data: rows,
+	};
 };
 
 export const getDialogueTypes = async () => {
