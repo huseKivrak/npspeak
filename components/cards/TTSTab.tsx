@@ -1,27 +1,29 @@
-import {Tables} from '@/types/supabase';
-import TTSForm from '../forms/TTSForm';
-import {FormOptions} from '@/types/drizzle';
-export default function TTSTab({
-	npcDialogue,
-}: {
-	npcDialogue: Tables<'npc_dialogues'>[];
-}) {
-	const npcId = npcDialogue[0].npc_id!;
+'use client';
 
-	/** Filters for npc dialogue without audio and formats for form selection
-	 */
-	const ttsFormOptions = npcDialogue.reduce<FormOptions>((acc, dialogue) => {
-		if (!dialogue.tts_audio_id) {
-			acc.push({label: dialogue.text, value: dialogue.id});
-		}
-		return acc;
-	}, []);
+import TTSForm from '../forms/TTSForm';
+import {createTTSFormOptions} from '@/utils/formatHelpers';
+import {DetailedNPC} from '@/types/drizzle';
+import {ElevenLabsVoice} from '@/types/elevenlabs';
+import {ELEVENLABS_PREMADE_VOICES} from '@/utils/elevenlabs/api';
+
+export default function TTSTab({
+	npc,
+	allVoices = ELEVENLABS_PREMADE_VOICES,
+}: {
+	npc: DetailedNPC;
+	allVoices: ElevenLabsVoice[];
+}) {
+	const ttsFormOptions = createTTSFormOptions(npc.dialogues);
 
 	return (
 		<div className='card bg-base-200'>
 			<div className='card-body items-center'>
 				<h2 className='card-title'>TTS</h2>
-				<TTSForm npcDialogueChoices={ttsFormOptions} npc_id={npcId} />
+				<TTSForm
+					ttsDialogueOptions={ttsFormOptions}
+					npc_id={npc.id}
+					voices={allVoices}
+				/>
 			</div>
 		</div>
 	);

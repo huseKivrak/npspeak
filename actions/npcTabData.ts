@@ -4,9 +4,61 @@ import {createNPCStats, createStyledDialogue} from '../utils/formatHelpers';
 import {getPresignedDownloadURL} from './s3';
 import {getAudioURLsforNPCDialogues} from '@/database/drizzle/queries';
 import {ActionStatus, DetailedNPC} from '@/types/drizzle';
-import {StyledDialogueWithAudioURL} from '@/types/drizzle';
+import {DetailedDialogue} from '@/types/drizzle';
 import {getAllElevenLabsVoices, getElevenLabsVoiceInfo} from './elevenLabs';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
+import {revalidatePath} from 'next/cache';
+
+//Overview Tab Data
+export const getNPCOverviewTabData = async (
+	npc: DetailedNPC
+): Promise<ActionStatus> => {
+	const {user} = await getUserInfo();
+	if (!user) {
+		return {
+			status: 'error',
+			message: 'Unauthenticated',
+		};
+	}
+	if (npc.user_id !== user.id) {
+		return {
+			status: 'error',
+			message: 'Unauthorized access to this NPC',
+		};
+	}
+
+	const _getNPCVoiceInfo = async (): Promise<ActionStatus> => {
+		const voiceId = npc.voice_id;
+		if (!voiceId) {
+			return {
+				status: 'error',
+				message: 'No voice id found for NPC',
+			};
+		}
+
+		const voiceInfoResponse = await getElevenLabsVoiceInfo(voiceId);
+		if (voiceInfoResponse.status === 'success') {
+			const voiceInfo: ElevenLabsVoice = voiceInfoResponse.data;
+			console.log('Voice INFO:', voiceInfo);
+			return {
+				status: 'success',
+				message: 'Successfully fetched voice info for NPC',
+				data: voiceInfo,
+			};
+		} else {
+			console.error('Error fetching voice info for NPC:', voiceInfoResponse);
+			return {
+				status: 'error',
+				message: voiceInfoResponse.message,
+			};
+		}
+	};
+
+	const npcVoice = await _getNPCVoiceInfo();
+	return npcVoice;
+};
+
+//Dialogue Tab Data
 export const getNPCDialogueTabData = async (
 	npc: DetailedNPC
 ): Promise<ActionStatus> => {
@@ -25,10 +77,17 @@ export const getNPCDialogueTabData = async (
 	}
 
 	// gets the url associated with each dialogue audio from database
-	const allNPCDialogueAudioURLs = await getAudioURLsforNPCDialogues(
+	const audioURLsResponse = await getAudioURLsforNPCDialogues(
 		npc.id,
 		npc.user_id
 	);
+
+	if (audioURLsResponse.status !== 'success') {
+		return audioURLsResponse;
+	}
+
+	const allNPCDialogueAudioURLs: {id: number; audioURL: string}[] =
+		audioURLsResponse.data;
 
 	// fetches the presigned urls for all audio files from s3
 	const presignedAudioURLs = await Promise.all(
@@ -50,16 +109,17 @@ export const getNPCDialogueTabData = async (
 		})
 	);
 
-	// create render-ready dialogue object with styles and audio urls
-	const styledDialoguesWithAudioURLs: StyledDialogueWithAudioURL[] =
-		npc.dialogues.map((d) => {
+	// create detailed dialogue objects with styles and audio urls
+	const styledDialoguesWithAudioURLs: DetailedDialogue[] = npc.dialogues.map(
+		(d) => {
 			const styledDialogue = createStyledDialogue(d);
 			const audioURL = presignedAudioURLs.find(({id}) => id === d.id) || null;
 			return {
 				...styledDialogue,
 				audioURL: audioURL?.url || null,
 			};
-		});
+		}
+	);
 
 	return {
 		status: 'success',
@@ -68,59 +128,19 @@ export const getNPCDialogueTabData = async (
 	};
 };
 
-export const getNPCOverviewTabData = async (
-	npc: DetailedNPC
-): Promise<ActionStatus> => {
-	const {user} = await getUserInfo();
-	if (!user) {
-		return {
-			status: 'error',
-			message: 'Unauthenticated',
-		};
-	}
-	if (npc.user_id !== user.id) {
-		return {
-			status: 'error',
-			message: 'Unauthorized access to this NPC',
-		};
-	}
+export const createAllTabData = async (npc: DetailedNPC) => {
+	const [overviewTab, dialogueTab, allVoices] = await Promise.all([
+		getNPCOverviewTabData(npc),
+		getNPCDialogueTabData(npc),
+		getAllElevenLabsVoices(),
+	]);
 
-	const _getNPCVoiceInfo = async (
-		npcVoiceId: string
-	): Promise<ActionStatus> => {
-		const voiceInfoResponse = await getElevenLabsVoiceInfo(npcVoiceId);
-		if (voiceInfoResponse.status === 'success') {
-			const voiceInfo: ElevenLabsVoice = voiceInfoResponse.data;
-			console.log('Voice INFO:', voiceInfo);
-			return {
-				status: 'success',
-				message: 'Successfully fetched voice info for NPC',
-				data: voiceInfo,
-			};
-		} else {
-			console.error('Error fetching voice info for NPC:', voiceInfoResponse);
-			return {
-				status: 'error',
-				message: voiceInfoResponse.message,
-			};
-		}
+	const allTabData = {
+		overviewTab,
+		dialogueTab,
+		allVoices,
 	};
+	console.log('All Tab Data:', allTabData);
 
-	const npcVoiceInfo = npc.voice_id
-		? await _getNPCVoiceInfo(npc.voice_id)
-		: {
-				status: 'error',
-				message: 'NPC does not have a voice',
-		  };
-
-	const npcStats = createNPCStats(npc);
-
-	return {
-		status: 'success',
-		message: 'Successfully fetched NPC overview data',
-		data: {
-			voiceInfo: npcVoiceInfo,
-			stats: npcStats,
-		},
-	};
+	return allTabData;
 };

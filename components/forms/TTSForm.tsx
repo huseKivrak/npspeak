@@ -14,14 +14,16 @@ import {FormOptions} from '@/types/drizzle';
 import ttsHandler from '@/actions/ttsHandler';
 import {RadioSelections} from './RadioSelections';
 import {VoiceOptions} from './VoiceOptions';
-import Link from 'next/link';
+import {ElevenLabsVoice} from '@/types/elevenlabs';
 
 type Inputs = z.infer<typeof ttsHandlerSchema>;
 export default function TTSForm({
-	npcDialogueChoices,
+	voices,
+	ttsDialogueOptions,
 	npc_id,
 }: {
-	npcDialogueChoices: FormOptions;
+	voices: ElevenLabsVoice[];
+	ttsDialogueOptions: FormOptions;
 	npc_id: number;
 }) {
 	const [state, formAction] = useFormState<ActionStatus, FormData>(ttsHandler, {
@@ -59,11 +61,11 @@ export default function TTSForm({
 		<div className='flex flex-col items-center'>
 			<form action={formAction} className='flex flex-col gap-2 w-full max-w-xs'>
 				<input type='hidden' name='npc_id' value={npc_id} />
-				{npcDialogueChoices.length > 0 ? (
+				{ttsDialogueOptions.length > 0 ? (
 					<>
 						<RadioSelections
 							fieldName='dialogue_id'
-							options={npcDialogueChoices}
+							options={ttsDialogueOptions}
 							register={register}
 							setValue={setValue}
 						/>
@@ -73,7 +75,7 @@ export default function TTSForm({
 							name='dialogue_id'
 							render={({message}) => <ErrorToast text={message} />}
 						/>
-						<VoiceOptions register={register} />
+						<VoiceOptions voices={voices} register={register} />
 						<ErrorMessage
 							errors={errors}
 							name='voice_id'

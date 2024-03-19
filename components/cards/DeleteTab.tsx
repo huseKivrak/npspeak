@@ -1,3 +1,4 @@
+'use client';
 import DeleteNPCModal from '../DeleteNPCModal';
 import {PiSkullBold} from 'react-icons/pi';
 

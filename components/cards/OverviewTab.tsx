@@ -1,36 +1,15 @@
 'use client';
 
-import {useState, useEffect} from 'react';
 import {DetailedNPC} from '@/types/drizzle';
-import {getNPCOverviewTabData} from '@/actions/npcTabData';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
 
-export default function OverviewTab({npc}: {npc: DetailedNPC}) {
-	const [isLoading, setIsLoading] = useState(true);
-	const [npcVoice, setNpcVoice] = useState<ElevenLabsVoice | null>(null);
-	const [npcStats, setNpcStats] = useState({});
-
-	useEffect(() => {
-		const fetchNPCInfo = async () => {
-			const response = await getNPCOverviewTabData(npc);
-			if (response.status !== 'success') {
-				console.error(response);
-				return;
-			}
-			const {voiceInfo, stats} = response.data;
-			if (voiceInfo.status !== 'success') {
-				console.error(voiceInfo);
-			}
-			setNpcVoice(voiceInfo.data);
-			setNpcStats(stats.data);
-			setIsLoading(false);
-		};
-		fetchNPCInfo();
-	}, []);
-
-	if (isLoading) {
-		return <p>Loading...</p>;
-	}
+export default function OverviewTab({
+	npc,
+	npcVoice,
+}: {
+	npc: DetailedNPC;
+	npcVoice?: ElevenLabsVoice | null;
+}) {
 	return (
 		<div className='card bg-base-200'>
 			<div className='card-body'>
@@ -46,9 +25,6 @@ export default function OverviewTab({npc}: {npc: DetailedNPC}) {
 							<li>Gender: {npcVoice.labels.gender}</li>
 							<li>Age: {npcVoice.labels.age}</li>
 						</ul>
-
-						<h4>Preview:</h4>
-						<audio src={npcVoice.preview_url} controls />
 					</>
 				)}
 			</div>
