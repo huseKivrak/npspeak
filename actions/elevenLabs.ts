@@ -1,27 +1,34 @@
 'use server';
 
-import {v4 as uuidv4} from 'uuid';
+import {ElevenLabsVoice} from '@/types/elevenlabs';
 import {
 	ELEVENLABS_BASE_URL,
 	ELEVENLABS_API_HEADERS,
 } from '../utils/elevenlabs/api';
 import {ActionStatus} from '@/types/drizzle';
 
-export async function getAllElevenLabsVoices() {
+export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
 	try {
 		const response = await fetch(`${ELEVENLABS_BASE_URL}/voices`, {
 			method: 'GET',
 			headers: ELEVENLABS_API_HEADERS,
 		});
 		const data = await response.json();
-		return {status: 'success', message: 'Retrieved all voices', data};
+		const allVoices: ElevenLabsVoice[] = data.voices;
+		return {
+			status: 'success',
+			message: 'Retrieved all voices',
+			data: allVoices,
+		};
 	} catch (error) {
 		console.error(error);
 		return {status: 'error', message: `Error: ${error}`};
 	}
 }
 
-export async function getElevenLabsVoiceInfo(voice_id: string) {
+export async function getElevenLabsVoiceInfo(
+	voice_id: string
+): Promise<ActionStatus> {
 	try {
 		const response = await fetch(
 			`${ELEVENLABS_BASE_URL}/voices/${voice_id}?with_settings=true`,
