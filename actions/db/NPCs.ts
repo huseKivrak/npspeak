@@ -123,6 +123,7 @@ export const addVoiceToNPC = async (
 			.returning();
 
 		const updatedNPC = rows[0];
+		revalidatePath('/');
 		return {
 			status: 'success',
 			message: `${updatedNPC.npc_name} has a voice!`,
