@@ -3,6 +3,7 @@
 import {DetailedNPC} from '@/types/drizzle';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
 import AddVoiceToNPCForm from '../forms/AddVoiceToNPCForm';
+import {VoiceOption} from '../VoiceOption';
 
 export default function OverviewTab({
 	npc,
@@ -21,16 +22,12 @@ export default function OverviewTab({
 				{npcVoice ? (
 					<>
 						<h3>{npc.npc_name}'s voice</h3>
-						<ul>
-							<li>Accent: {npcVoice.labels.accent}</li>
-							<li>Description: {npcVoice.labels.description}</li>
-							<li>Use case: {npcVoice.labels['use case']}</li>
-							<li>Gender: {npcVoice.labels.gender}</li>
-							<li>Age: {npcVoice.labels.age}</li>
-						</ul>
 					</>
 				) : (
-					<AddVoiceToNPCForm npc_id={npc.id} voiceOptions={allVoices} />
+					<>
+						<h3>{npc.npc_name} has no voice! Choose one:</h3>
+						<AddVoiceToNPCForm npc_id={npc.id} voiceOptions={allVoices} />
+					</>
 				)}
 			</div>
 		</div>

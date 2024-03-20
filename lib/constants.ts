@@ -43,3 +43,29 @@ export const DefaultDialogueOptions: DefaultDialogueStyles[] = [
 		color: 'text-success',
 	},
 ];
+
+export const AccentEmojiMap: {[key: string]: string} = {
+	american: '🇺🇸',
+	'british-essex': '🇬🇧',
+	irish: '🇮🇪',
+	australian: '🇦🇺',
+	british: '🇬🇧',
+	'english-swedish': '🇬🇧/🇸🇪',
+	'american-irish': '🇺🇸/🇮🇪',
+	jolly: '🎅🏼',
+	'american-southern': '🇺🇸/🤠',
+	'english-italian': '🇬🇧/🇮🇹',
+};
+
+export const AgeColorMap: {[key: string]: string} = {
+	young: '#86efac',
+	'middle aged': '#16a34a',
+	old: '#166534',
+	default: '#14b8a6',
+};
+
+export const GenderColorMap: {[key: string]: string} = {
+	male: '#60a5fa',
+	female: '#f472b6',
+	default: '#a78bfa',
+};
