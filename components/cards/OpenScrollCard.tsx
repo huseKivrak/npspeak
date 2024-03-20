@@ -2,7 +2,7 @@
 
 import {useState} from 'react';
 import NPCCarousel from '../NPCCarousel';
-import DeleteCampaignModal from '../DeleteCampaignModal';
+import DeleteCampaignModal from '../forms/DeleteCampaignModal';
 import {CampaignWithNPCs} from '@/types/drizzle';
 import Image from 'next/image';
 

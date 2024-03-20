@@ -1,5 +1,5 @@
 'use client';
-import DeleteNPCModal from '../DeleteNPCModal';
+import DeleteNPCModal from '../forms/DeleteNPCModal';
 import {PiSkullBold} from 'react-icons/pi';
 
 export default function DeleteTab({npcId}: {npcId: number}) {
