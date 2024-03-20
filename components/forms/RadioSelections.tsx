@@ -27,15 +27,18 @@ export const RadioSelections = ({
 	return (
 		<div className='form-control'>
 			{options.map((option) => (
-				<label key={option.value} className='label cursor-pointer'>
+				<label
+					key={option.value}
+					className='label cursor-pointer justify-start'
+				>
 					<input
 						type='radio'
 						value={option.value}
 						{...register(fieldName, {required: true})}
-						className='radio'
+						className='radio radio-primary'
 						onChange={() => handleRadioChange(option.value, option.label)}
 					/>
-					<span className='label-text'>{option.label}</span>
+					<span className='label-text ml-4'>{option.label}</span>
 				</label>
 			))}
 			<input type='hidden' value={selectedText} {...register('text')} />

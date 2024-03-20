@@ -17,11 +17,11 @@ export default function TTSTab({
 
 	return (
 		<div className='card bg-base-200'>
-			<div className='card-body items-center'>
-				<h2 className='card-title'>TTS</h2>
+			<div className='card-body'>
+				<h2 className='card-title '>TTS</h2>
 				<TTSForm
 					ttsDialogueOptions={ttsFormOptions}
-					npc_id={npc.id}
+					npc={npc}
 					voices={allVoices}
 				/>
 			</div>

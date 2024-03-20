@@ -52,7 +52,7 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 	}, [state, setError, reset]);
 
 	return (
-		<div className='flex flex-col items-center'>
+		<div className='flex flex-col'>
 			<form action={formAction} className='w-full max-w-xs flex flex-col gap-2'>
 				<label htmlFor='campaign_name' className='form-control'>
 					campaign name
