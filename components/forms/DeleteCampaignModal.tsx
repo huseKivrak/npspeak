@@ -3,7 +3,7 @@
 import {useRef, useEffect} from 'react';
 import {useFormState} from 'react-dom';
 import {deleteCampaignAction} from '@/actions/db/campaigns';
-import {SubmitButton} from './buttons/SubmitButton';
+import {SubmitButton} from '../buttons/SubmitButton';
 
 export default function DeleteCampaignModal({id}: {id: number}) {
 	const [state, formAction] = useFormState(deleteCampaignAction, {

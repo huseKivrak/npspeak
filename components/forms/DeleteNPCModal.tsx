@@ -3,7 +3,7 @@
 import {useEffect, useRef} from 'react';
 import {useFormState} from 'react-dom';
 import {deleteNPCAction} from '@/actions/db/NPCs';
-import {SubmitButton} from './buttons/SubmitButton';
+import {SubmitButton} from '../buttons/SubmitButton';
 import {cn} from '@/utils/helpers/clsxMerge';
 
 export default function DeleteNPCModal({
