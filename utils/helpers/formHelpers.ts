@@ -1,5 +1,7 @@
 import {CampaignWithNPCs, DetailedNPC} from '@/types/drizzle';
 import {Tables} from '@/types/supabase';
+import {AccentEmojiMap} from '@/lib/constants';
+
 export const transformCampaignOptions = (campaigns: CampaignWithNPCs[]) => {
 	return campaigns.map((campaign) => ({
 		value: campaign.id,
@@ -22,3 +24,6 @@ export const transformDialogueTypeOptions = (
 		label: option.type_name,
 	}));
 };
+
+export const getAccentEmoji = (accent: string) =>
+	AccentEmojiMap[accent] || accent;

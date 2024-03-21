@@ -11,13 +11,13 @@ export const createStyledDialogue = (dialogue: Tables<'npc_dialogues'>) => {
 		: null;
 
 	const {id, text} = dialogue;
-	const iconName = style?.iconName || null;
+	const icon = style?.icon || null;
 	const color = style?.color ? style.color : 'text-primary';
 
 	return {
 		id,
 		text,
-		iconName,
+		icon,
 		color,
 	};
 };
@@ -53,7 +53,7 @@ export const createTTSFormOptions = (dialogues: Tables<'npc_dialogues'>[]) => {
 const createStyledVoiceLabels = (voice: ElevenLabsVoice) => {
 	const gender = voice.labels.gender;
 	const age = voice.labels.age;
-	const useCase = voice.labels.use_case || voice.labels['use case']; //API is not consistent
+	const useCase = voice.labels.use_case;
 
 	//todo: style these
 	const accent = voice.labels.accent;

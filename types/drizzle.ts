@@ -38,7 +38,7 @@ export type FormOptions =
 export type DefaultDialogueStyles = {
 	label: string;
 	value: number;
-	iconName: string;
+	icon: IconType;
 	color: string;
 };
 

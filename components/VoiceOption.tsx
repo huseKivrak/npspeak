@@ -1,38 +1,25 @@
 import {components, OptionProps} from 'react-select';
 import {FaMars, FaVenus, FaMarsAndVenus} from 'react-icons/fa6';
-import {AccentEmojiMap, GenderColorMap} from '@/lib/constants';
+import {getAccentEmoji} from '@/utils/helpers/formHelpers';
+import {GenderIcon} from './icons/GenderIcon';
 
-interface VoiceOption {
+export interface VoiceOptionProps {
 	label: string;
 	value: string;
 	gender: string;
-	age: string;
 	accent: string;
-	description: string;
 	useCase: string;
+	description?: string;
 }
 
-export const VoiceOption: React.FC<OptionProps<VoiceOption, false>> = (
+export const VoiceOption: React.FC<OptionProps<VoiceOptionProps, false>> = (
 	props
 ) => {
 	const {label, gender, accent, description, useCase} = props.data;
 
-	//Gender Icon
-	const genderIconProps = {
-		size: 15,
-		color: GenderColorMap[gender] || GenderColorMap.default,
-	};
-	const genderIcon =
-		gender === 'male' ? (
-			<FaMars {...genderIconProps} />
-		) : gender === 'female' ? (
-			<FaVenus {...genderIconProps} />
-		) : (
-			<FaMarsAndVenus {...genderIconProps} />
-		);
+	const genderIcon = GenderIcon({gender});
+	const accentEmoji = getAccentEmoji(accent);
 
-	//Accent Emoji
-	const accentEmoji = AccentEmojiMap[accent] || accent;
 	return (
 		<components.Option {...props}>
 			<div style={{display: 'flex', gap: 4, alignItems: 'center'}}>
