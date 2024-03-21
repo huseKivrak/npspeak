@@ -2,6 +2,7 @@ import Select from 'react-select';
 import {Controller, Control} from 'react-hook-form';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
 import {VoiceOption} from './VoiceOption';
+import {VoiceSingleValue} from './VoiceSingleValue';
 
 interface VoiceSelectProps {
 	control: Control<any>;
@@ -36,10 +37,10 @@ export const VoiceSelect = ({
 						gender: voice.labels.gender,
 						accent: voice.labels.accent,
 						description: voice.labels.description,
-						useCase: voice.labels.use_case || voice.labels['use case'],
+						useCase: voice.labels.use_case,
 						url: voice.preview_url,
 					}))}
-					components={{Option: VoiceOption}}
+					components={{Option: VoiceOption, SingleValue: VoiceSingleValue}}
 					onChange={(selectedOption) => {
 						handleChange(selectedOption);
 					}}
