@@ -15,13 +15,15 @@ export const VoiceSingleValue: React.FC<VoiceSingleValueProps> = (props) => {
 
 	return (
 		<components.SingleValue {...props}>
-			<div style={{display: 'flex', gap: 4, alignItems: 'center'}}>
-				<span>{label}</span>
+			<div className='flex gap-3 items-center'>
+				<span className='font-bold text-secondary'>{label}</span>
 				{genderIcon}
-				<span>{accentEmoji}</span>
-				<div className='badge badge-sm badge-primary justify-start'>
-					{useCase}
-				</div>
+				<span className='text-lg'>{accentEmoji}</span>
+				{useCase && (
+					<div className='badge badge-sm badge-primary justify-start'>
+						{useCase}
+					</div>
+				)}
 				{description && (
 					<div className='badge badge-sm badge-accent'>{description}</div>
 				)}

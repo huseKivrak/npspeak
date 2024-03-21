@@ -22,13 +22,15 @@ export const VoiceOption: React.FC<OptionProps<VoiceOptionProps, false>> = (
 
 	return (
 		<components.Option {...props}>
-			<div style={{display: 'flex', gap: 4, alignItems: 'center'}}>
-				<span className=''>{label}</span>
+			<div className='flex gap-3 items-center'>
+				<span className='text-primary'>{label}</span>
 				{genderIcon}
-				<span>{accentEmoji}</span>
-				<div className='badge badge-sm badge-primary justify-start'>
-					{useCase}
-				</div>
+				<span className='text-lg'>{accentEmoji}</span>
+				{useCase && (
+					<div className='badge badge-sm badge-primary justify-start'>
+						{useCase}
+					</div>
+				)}
 				{description && (
 					<div className='badge badge-sm badge-accent'>{description}</div>
 				)}

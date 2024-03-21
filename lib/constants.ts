@@ -17,21 +17,21 @@ export const GenderIconMap: {[key: string]: IconProps} = {
 	male: {
 		icon: FaMars,
 		props: {
-			size: 16,
+			size: 12,
 			color: '#60a5fa',
 		},
 	},
 	female: {
 		icon: FaVenus,
 		props: {
-			size: 16,
+			size: 12,
 			color: '#f472b6',
 		},
 	},
 	default: {
 		icon: FaMarsAndVenus,
 		props: {
-			size: 16,
+			size: 12,
 			color: '#a78bfa',
 		},
 	},
