@@ -3,7 +3,6 @@
 import {DetailedNPC} from '@/types/drizzle';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
 import AddVoiceToNPCForm from '../forms/AddVoiceToNPCForm';
-import {VoiceOption} from '../VoiceOption';
 
 export default function OverviewTab({
 	npc,
