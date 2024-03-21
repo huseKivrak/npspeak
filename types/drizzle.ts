@@ -47,5 +47,4 @@ export type DetailedDialogue = {
 	text: string;
 	audioURL: string | null;
 	color: string;
-	iconName: string | null;
 };
