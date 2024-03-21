@@ -21,10 +21,21 @@ export const audioFormats = {
 	ulaw_telephony_8kHz: 'ulaw_8000',
 };
 
+/**
+ * Normalizes any 'use case' labels to 'use_case'.
+ * ! Modifies the voice object in place.
+ */
+export function normalizeVoiceUseCaseLabel(voice: ElevenLabsVoice): void {
+	if (voice.labels['use case']) {
+		voice.labels.use_case = voice.labels['use case'];
+		delete voice.labels['use case'];
+	}
+}
+
 /** all elevenlabs voices as of 1/14/24
  * - changes:
  * - 'description '
- * - 'use case' -> use_case
+ * - use_case -> use_case
  * - santa labels
  */
 export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
@@ -52,7 +63,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'calm',
 			age: 'young',
 			gender: 'female',
-			'use case': 'narration',
+			use_case: 'narration',
 		},
 		description: null,
 		preview_url:
@@ -86,7 +97,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'well-rounded',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'news',
+			use_case: 'news',
 		},
 		description: null,
 		preview_url:
@@ -120,7 +131,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'war veteran',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'video games',
+			use_case: 'video games',
 		},
 		description: null,
 		preview_url:
@@ -154,7 +165,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'ground reporter',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'news',
+			use_case: 'news',
 		},
 		description: null,
 		preview_url:
@@ -188,7 +199,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'strong',
 			age: 'young',
 			gender: 'female',
-			'use case': 'narration',
+			use_case: 'narration',
 		},
 		description: null,
 		preview_url:
@@ -222,7 +233,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'conversational',
 			age: 'young',
 			gender: 'male',
-			'use case': 'video games',
+			use_case: 'video games',
 		},
 		description: null,
 		preview_url:
@@ -256,7 +267,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'sailor',
 			age: 'old',
 			gender: 'male',
-			'use case': 'video games',
+			use_case: 'video games',
 		},
 		description: null,
 		preview_url:
@@ -290,7 +301,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'soft',
 			age: 'young',
 			gender: 'female',
-			'use case': 'news',
+			use_case: 'news',
 		},
 		description: null,
 		preview_url:
@@ -324,7 +335,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'well-rounded',
 			age: 'young',
 			gender: 'male',
-			'use case': 'narration',
+			use_case: 'narration',
 		},
 		description: null,
 		preview_url:
@@ -358,7 +369,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'calm',
 			age: 'young',
 			gender: 'male',
-			'use case': 'meditation',
+			use_case: 'meditation',
 		},
 		description: null,
 		preview_url:
@@ -392,7 +403,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'casual',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'conversational',
+			use_case: 'conversational',
 		},
 		description: null,
 		preview_url:
@@ -426,7 +437,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'raspy',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'narration',
+			use_case: 'narration',
 		},
 		description: null,
 		preview_url:
@@ -460,7 +471,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'calm',
 			age: 'young',
 			gender: 'female',
-			'use case': 'meditation',
+			use_case: 'meditation',
 		},
 		description: null,
 		preview_url:
@@ -494,7 +505,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'emotional',
 			age: 'young',
 			gender: 'female',
-			'use case': 'narration',
+			use_case: 'narration',
 		},
 		description: null,
 		preview_url:
@@ -528,7 +539,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'hoarse',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'video games',
+			use_case: 'video games',
 		},
 		description: null,
 		preview_url:
@@ -562,7 +573,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'shouty',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'video games',
+			use_case: 'video games',
 		},
 		description: null,
 		preview_url:
@@ -596,7 +607,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'anxious',
 			age: 'young',
 			gender: 'male',
-			'use case': 'video games',
+			use_case: 'video games',
 		},
 		description: null,
 		preview_url:
@@ -629,7 +640,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			accent: 'american',
 			age: 'young',
 			gender: 'male',
-			'use case': 'narration',
+			use_case: 'narration',
 			description: 'neutral',
 		},
 		description: null,
@@ -664,7 +675,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'pleasant',
 			age: 'young',
 			gender: 'female',
-			'use case': "children's stories",
+			use_case: "children's stories",
 		},
 		description: null,
 		preview_url:
@@ -698,7 +709,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'deep',
 			age: 'young',
 			gender: 'male',
-			'use case': 'narration',
+			use_case: 'narration',
 		},
 		description: null,
 		preview_url:
@@ -732,7 +743,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'crisp',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'narration',
+			use_case: 'narration',
 		},
 		description: null,
 		preview_url:
@@ -766,7 +777,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'seductive',
 			age: 'middle aged',
 			gender: 'female',
-			'use case': 'video games',
+			use_case: 'video games',
 		},
 		description: null,
 		preview_url:
@@ -800,7 +811,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'warm',
 			age: 'young',
 			gender: 'female',
-			'use case': 'audiobook',
+			use_case: 'audiobook',
 		},
 		description: null,
 		preview_url:
@@ -833,7 +844,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			accent: 'british',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'audiobook',
+			use_case: 'audiobook',
 			description: 'calm',
 		},
 		description: null,
@@ -868,7 +879,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'calm ',
 			age: 'old',
 			gender: 'male',
-			'use case': 'news',
+			use_case: 'news',
 		},
 		description: null,
 		preview_url:
@@ -901,7 +912,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			accent: 'british',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'news',
+			use_case: 'news',
 			description: 'ground reporter ',
 		},
 		description: null,
@@ -936,7 +947,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'excited',
 			age: 'young',
 			gender: 'male',
-			'use case': 'narration',
+			use_case: 'narration',
 		},
 		description: null,
 		preview_url:
@@ -969,7 +980,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			accent: 'american',
 			age: 'old',
 			gender: 'male',
-			'use case': 'audiobook',
+			use_case: 'audiobook',
 			description: 'orotund',
 		},
 		description: null,
@@ -1003,7 +1014,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			accent: 'american',
 			age: 'young',
 			gender: 'male',
-			'use case': 'ASMR',
+			use_case: 'ASMR',
 			description: 'whisper',
 		},
 		description: null,
@@ -1038,7 +1049,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'childlish',
 			age: 'young',
 			gender: 'female',
-			'use case': 'animation',
+			use_case: 'animation',
 		},
 		description: null,
 		preview_url:
@@ -1072,7 +1083,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			age: 'young',
 			gender: 'female',
 			description: 'overhyped',
-			'use case': 'video games',
+			use_case: 'video games',
 		},
 		description: null,
 		preview_url:
@@ -1106,7 +1117,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'festive',
 			age: 'old',
 			gender: 'male',
-			'use case': 'christmas',
+			use_case: 'christmas',
 		},
 		description: null,
 		preview_url:
@@ -1139,7 +1150,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			accent: 'american-southern',
 			age: 'young',
 			gender: 'female',
-			'use case': 'audiobook ',
+			use_case: 'audiobook ',
 			description: 'gentle',
 		},
 		description: null,
@@ -1174,7 +1185,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'deep',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'news presenter',
+			use_case: 'news presenter',
 		},
 		description: null,
 		preview_url:
@@ -1208,7 +1219,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'raspy',
 			age: 'middle aged',
 			gender: 'female',
-			'use case': 'narration',
+			use_case: 'narration',
 		},
 		description: null,
 		preview_url:
@@ -1242,7 +1253,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'pleasant',
 			age: 'middle aged',
 			gender: 'female',
-			'use case': 'interactive',
+			use_case: 'interactive',
 		},
 		description: null,
 		preview_url:
@@ -1276,7 +1287,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'deep',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'narration',
+			use_case: 'narration',
 		},
 		description: null,
 		preview_url:
@@ -1310,7 +1321,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'whisper',
 			age: 'young',
 			gender: 'female',
-			'use case': 'audiobook',
+			use_case: 'audiobook',
 		},
 		description: null,
 		preview_url:
@@ -1344,7 +1355,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'strong',
 			age: 'middle aged',
 			gender: 'male',
-			'use case': 'documentary',
+			use_case: 'documentary',
 		},
 		description: null,
 		preview_url:
@@ -1378,7 +1389,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'raspy ',
 			age: 'old',
 			gender: 'male',
-			'use case': 'video games',
+			use_case: 'video games',
 		},
 		description: null,
 		preview_url:
@@ -1412,7 +1423,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'raspy',
 			age: 'young',
 			gender: 'male',
-			'use case': 'narration',
+			use_case: 'narration',
 		},
 		description: null,
 		preview_url:
@@ -1446,7 +1457,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'witch',
 			age: 'middle aged',
 			gender: 'female',
-			'use case': 'video games',
+			use_case: 'video games',
 		},
 		description: null,
 		preview_url:
@@ -1480,7 +1491,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'foreigner',
 			age: 'young',
 			gender: 'male',
-			'use case': 'audiobook',
+			use_case: 'audiobook',
 		},
 		description: null,
 		preview_url:
@@ -1514,7 +1525,7 @@ export const ELEVENLABS_PREMADE_VOICES: ElevenLabsVoice[] = [
 			description: 'childish',
 			age: 'young',
 			gender: 'female',
-			'use case': 'animation',
+			use_case: 'animation',
 		},
 		description: null,
 		preview_url:
@@ -1532,10 +1543,9 @@ export const ELEVENLABS_PREMADE_LABELS = [
 	'gender',
 	'age',
 	'use_case',
-	'use case',
 ];
 
-//finds non-default/common labels
+//finds non-default labels
 export function findLabels(voices?: ElevenLabsVoice[]): string[] {
 	if (!Array.isArray(voices)) return ELEVENLABS_PREMADE_LABELS;
 
@@ -1566,7 +1576,7 @@ export const getLabelOptions = ({
 		description: [],
 		gender: [],
 		age: [],
-		'use case': [],
+		use_case: [],
 	};
 
 	for (const voice of voices) {
@@ -1575,8 +1585,9 @@ export const getLabelOptions = ({
 		labelOptions.gender.push(voice.labels.gender);
 		labelOptions.age.push(voice.labels.age);
 
+		// @ts-ignore
 		const useCase = voice.labels.use_case || voice.labels['use case'];
-		if (useCase) labelOptions['use case'].push(useCase);
+		if (useCase) labelOptions.use_case.push(useCase);
 	}
 	return labelOptions;
 };

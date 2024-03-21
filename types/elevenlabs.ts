@@ -22,8 +22,8 @@ export type ElevenLabsVoice = {
 		description: string;
 		age: string;
 		gender: string;
-		'use case'?: string;
-		use_case?: string;
+		use_case: string;
+		'use case'?: string | null;
 	};
 
 	description: string | null;
@@ -34,4 +34,4 @@ export type ElevenLabsVoice = {
 	high_quality_base_model_ids: string[];
 };
 
-export type Label = 'accent' | 'description' | 'gender' | 'age' | 'use case';
+export type Label = 'accent' | 'description' | 'gender' | 'age' | 'use_case';
