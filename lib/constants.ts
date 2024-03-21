@@ -1,5 +1,5 @@
 import {DefaultDialogueStyles} from '@/types/drizzle';
-import {IconBaseProps, IconType} from 'react-icons';
+import {IconBaseProps} from 'react-icons';
 import {
 	FaRegSmile,
 	FaRegSadCry,
