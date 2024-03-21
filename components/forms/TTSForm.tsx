@@ -32,6 +32,7 @@ export default function TTSForm({
 		message: '',
 	});
 	const [npcVoiceChosen, setNPCVoiceChosen] = useState(false);
+	const [selectedVoiceURL, setSelectedVoiceURL] = useState('');
 
 	const {
 		register,
@@ -60,10 +61,8 @@ export default function TTSForm({
 		}
 	}, [state, setError, reset]);
 
-	const toggleNPCVoiceChoice = () => {
-		const voiceId = !npcVoiceChosen && npc.voice_id ? npc.voice_id : '';
-		setValue('voice_id', voiceId, {shouldValidate: true});
-		setNPCVoiceChosen(!npcVoiceChosen);
+	const handleVoiceChange = (url: string) => {
+		setSelectedVoiceURL(url);
 	};
 
 	return (
@@ -91,16 +90,11 @@ export default function TTSForm({
 						)}
 						{!npcVoiceChosen && (
 							<>
-								{npc.voice_id && (
-									<button
-										type='button'
-										className='btn'
-										onClick={toggleNPCVoiceChoice}
-									>
-										use {npc.npc_name}'s voice
-									</button>
-								)}
-								<VoiceSelect control={control} voiceOptions={voices} />
+								<VoiceSelect
+									control={control}
+									voiceOptions={voices}
+									onVoiceChange={handleVoiceChange}
+								/>
 							</>
 						)}
 						<ErrorMessage
