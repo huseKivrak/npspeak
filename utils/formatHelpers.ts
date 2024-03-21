@@ -1,23 +1,5 @@
-import {DefaultDialogueOptions} from '@/lib/constants';
 import {DetailedNPC, FormOptions} from '@/types/drizzle';
 import {Tables} from '@/types/supabase';
-
-export const createStyledDialogue = (dialogue: Tables<'npc_dialogues'>) => {
-	const style = dialogue.dialogue_type_id
-		? DefaultDialogueOptions.find(
-				(option) => option.value === dialogue.dialogue_type_id
-		  )
-		: null;
-
-	const {id, text} = dialogue;
-	const color = style?.color ? style.color : 'text-primary';
-
-	return {
-		id,
-		text,
-		color,
-	};
-};
 
 export const createNPCStats = (npc: DetailedNPC) => {
 	const dialogueCount = npc.dialogues.length;

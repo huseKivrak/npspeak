@@ -1,13 +1,12 @@
 'use server';
 import {getUserInfo} from './auth';
-import {createNPCStats, createStyledDialogue} from '../utils/formatHelpers';
 import {getPresignedDownloadURL} from './s3';
 import {getAudioURLsforNPCDialogues} from '@/database/drizzle/queries';
 import {ActionStatus, DetailedNPC} from '@/types/drizzle';
 import {DetailedDialogue} from '@/types/drizzle';
 import {getAllElevenLabsVoices, getElevenLabsVoiceInfo} from './elevenLabs';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
-import {revalidatePath} from 'next/cache';
+import {DefaultDialogueTypes} from '@/lib/constants';
 
 //Overview Tab Data
 export const getNPCOverviewTabData = async (
@@ -110,21 +109,24 @@ export const getNPCDialogueTabData = async (
 	);
 
 	// create detailed dialogue objects with styles and audio urls
-	const styledDialoguesWithAudioURLs: DetailedDialogue[] = npc.dialogues.map(
-		(d) => {
-			const styledDialogue = createStyledDialogue(d);
-			const audioURL = presignedAudioURLs.find(({id}) => id === d.id) || null;
-			return {
-				...styledDialogue,
-				audioURL: audioURL?.url || null,
-			};
-		}
-	);
+	const detailedDialogues: DetailedDialogue[] = npc.dialogues.map((d) => {
+		const dialogueType = d.dialogue_type_id
+			? DefaultDialogueTypes[d.dialogue_type_id]
+			: 'other';
+		const audioURL = presignedAudioURLs.find(({id}) => id === d.id) || null;
+		const {id, text} = d;
+		return {
+			id,
+			text,
+			dialogueType,
+			audioURL: audioURL?.url || null,
+		};
+	});
 
 	return {
 		status: 'success',
 		message: 'Successfully fetched NPC dialogue data',
-		data: styledDialoguesWithAudioURLs,
+		data: detailedDialogues,
 	};
 };
 

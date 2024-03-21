@@ -1,4 +1,3 @@
-import {DefaultDialogueStyles} from '@/types/drizzle';
 import {IconBaseProps} from 'react-icons';
 import {
 	FaRegSmile,
@@ -10,11 +9,11 @@ import {
 } from 'react-icons/fa';
 import {FaMars, FaVenus, FaMarsAndVenus} from 'react-icons/fa6';
 
-interface GenderIcon {
+interface IconProps {
 	icon: React.ComponentType<IconBaseProps>;
 	props: IconBaseProps;
 }
-export const GenderIconMap: {[key: string]: GenderIcon} = {
+export const GenderIconMap: {[key: string]: IconProps} = {
 	male: {
 		icon: FaMars,
 		props: {
@@ -38,50 +37,67 @@ export const GenderIconMap: {[key: string]: GenderIcon} = {
 	},
 };
 
-export const DefaultDialogueOptions: DefaultDialogueStyles[] = [
-	{
-		label: 'greeting',
-		value: 1,
+export const DialogueIconMap: {[key: string]: IconProps} = {
+	greeting: {
 		icon: FaRegSmile,
-		color: 'text-primary',
+		props: {
+			size: 20,
+			color: '#60a5fa',
+		},
 	},
-	{
-		label: 'farewell',
-		value: 2,
+	farewell: {
 		icon: FaRegSadCry,
-		color: 'text-error',
+		props: {
+			size: 20,
+			color: '#f472b6',
+		},
 	},
-	{
-		label: 'story',
-		value: 3,
+	story: {
 		icon: FaBook,
-		color: 'text-info',
+		props: {
+			size: 20,
+			color: '#a78bfa',
+		},
 	},
-	{
-		label: 'other',
-		value: 4,
+	question: {
 		icon: FaQuestion,
-		color: 'text-secondary',
+		props: {
+			size: 20,
+			color: '#f59e0b',
+		},
 	},
-	{
-		label: 'question',
-		value: 5,
-		icon: FaQuestion,
-		color: 'text-warning',
-	},
-	{
-		label: 'answer',
-		value: 6,
+	answer: {
 		icon: FaRegCheckCircle,
-		color: 'text-accent',
+		props: {
+			size: 20,
+			color: '#16a34a',
+		},
 	},
-	{
-		label: 'exclamation',
-		value: 7,
+	exclamation: {
 		icon: FaExclamation,
-		color: 'text-success',
+		props: {
+			size: 20,
+			color: '#f59e0b',
+		},
 	},
-];
+	other: {
+		icon: FaQuestion,
+		props: {
+			size: 20,
+			color: '#a78bfa',
+		},
+	},
+};
+
+export const DefaultDialogueTypes: {[key: number]: string} = {
+	1: 'greeting',
+	2: 'farewell',
+	3: 'story',
+	4: 'other',
+	5: 'question',
+	6: 'answer',
+	7: 'exclamation',
+};
 
 export const AccentEmojiMap: {[key: string]: string} = {
 	american: '🇺🇸',
@@ -94,11 +110,4 @@ export const AccentEmojiMap: {[key: string]: string} = {
 	jolly: '🎅🏼',
 	'american-southern': '🇺🇸/🤠',
 	'english-italian': '🇬🇧/🇮🇹',
-};
-
-export const AgeColorMap: {[key: string]: string} = {
-	young: '#86efac',
-	'middle aged': '#16a34a',
-	old: '#166534',
-	default: '#14b8a6',
 };

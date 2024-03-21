@@ -1,6 +1,7 @@
 'use client';
 import AddDialogueInTab from './AddDialogueInTab';
 import {DetailedNPC, DetailedDialogue} from '@/types/drizzle';
+import {DialogueIcon} from '@/components/icons/DialogueIcon';
 
 export default function DialogueTab({
 	npc,
@@ -17,6 +18,7 @@ export default function DialogueTab({
 					{detailedDialogues.map((d) => {
 						return (
 							<li key={d.id}>
+								{DialogueIcon(d.dialogueType)}
 								<p>{d.text}</p>
 								{d.audioURL && <audio src={d.audioURL} controls />}
 							</li>

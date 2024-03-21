@@ -35,16 +35,9 @@ export type FormOptions =
 			label: string;
 	  }[];
 
-export type DefaultDialogueStyles = {
-	label: string;
-	value: number;
-	icon: IconType;
-	color: string;
-};
-
 export type DetailedDialogue = {
 	id: number;
 	text: string;
+	dialogueType: string;
 	audioURL: string | null;
-	color: string;
 };
