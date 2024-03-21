@@ -1,6 +1,5 @@
-import {useForm, Controller} from 'react-hook-form';
-import Select from 'react-select';
-import {VoiceOption} from '../VoiceOption';
+import {useState} from 'react';
+import {useForm} from 'react-hook-form';
 import {addVoiceToNPC} from '@/actions/db/NPCs';
 import {SubmitButton} from '../buttons/SubmitButton';
 import {useFormState} from 'react-dom';
@@ -25,13 +24,23 @@ export default function AddVoiceToNPCForm({
 		addVoiceToNPC,
 		{status: 'idle', message: ''}
 	);
+	const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null);
 	const {control} = useForm<Inputs>();
+
+	const handleVoiceChange = (url: string) => {
+		setSelectedVoiceURL(url);
+	};
 
 	return (
 		<form action={formAction}>
 			<input type='hidden' name='npc_id' value={npc_id} />
-			<VoiceSelect control={control} voiceOptions={voiceOptions} />
-			<SubmitButton text='select voice' className='btn btn-accent' />
+			<VoiceSelect
+				control={control}
+				voiceOptions={voiceOptions}
+				onVoiceChange={handleVoiceChange}
+			/>
+			{selectedVoiceURL && <audio src={selectedVoiceURL} controls />}
+			<SubmitButton text='select voice' className='btn btn-accent btn-sm' />
 		</form>
 	);
 }
