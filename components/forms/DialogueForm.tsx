@@ -68,6 +68,7 @@ export default function DialogueForm({
 							value={option.value}
 							{...register('dialogue_type_id')}
 							className='checkbox'
+							required
 						/>
 					</label>
 				))}
