@@ -17,7 +17,7 @@ export const VoiceOption: React.FC<OptionProps<VoiceOptionProps, false>> = (
 ) => {
 	const {label, gender, accent, description, useCase} = props.data;
 
-	const genderIcon = GenderIcon({gender});
+	const genderIcon = GenderIcon(gender);
 	const accentEmoji = getAccentEmoji(accent);
 
 	return (

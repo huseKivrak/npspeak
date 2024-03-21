@@ -10,7 +10,7 @@ interface VoiceSingleValueProps
 export const VoiceSingleValue: React.FC<VoiceSingleValueProps> = (props) => {
 	const {label, gender, accent, useCase, description} = props.data;
 
-	const genderIcon = GenderIcon({gender});
+	const genderIcon = GenderIcon(gender);
 	const accentEmoji = getAccentEmoji(accent);
 
 	return (
