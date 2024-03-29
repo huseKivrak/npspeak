@@ -1,4 +1,3 @@
-import {IconType} from 'react-icons';
 import {Tables} from './supabase';
 
 export type CampaignWithNPCs = Tables<'campaigns'> & {
