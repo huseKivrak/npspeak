@@ -39,8 +39,11 @@ export default function AddVoiceToNPCForm({
 				voiceOptions={voiceOptions}
 				onVoiceChange={handleVoiceChange}
 			/>
-			{selectedVoiceURL && <audio src={selectedVoiceURL} controls />}
-			<SubmitButton text='select voice' className='btn btn-accent btn-sm' />
+			<div className='flex items-center mt-2'>
+				<span className='text-primary font-semibold'>Voice Preview:</span>
+				{selectedVoiceURL && <audio src={selectedVoiceURL} controls />}
+			</div>
+			<SubmitButton text='select voice' className=' btn-accent btn-sm mt-8' />
 		</form>
 	);
 }
