@@ -44,6 +44,7 @@ export const VoiceSelect = ({
 					onChange={(selectedOption) => {
 						handleChange(selectedOption);
 					}}
+					required
 				/>
 			)}
 		/>
