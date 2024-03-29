@@ -117,6 +117,10 @@ export const dialogueSchema = zfd.formData({
 	tts_audio_id: zfd.numeric().optional(),
 });
 
+export const deleteDialogueSchema = zfd.formData({
+	dialogue_id: zfd.numeric(),
+});
+
 //TTS
 export const ttsAudioSchema = zfd.formData({
 	voice_id: zfd.text(z.string()),
