@@ -3,7 +3,7 @@ import {useState} from 'react';
 import DialogueForm from '../forms/DialogueForm';
 import {cn} from '@/utils/helpers/clsxMerge';
 
-export default function AddDialogueInTab({npcId}: {npcId: number}) {
+export default function AddDialogueToNPC({npcId}: {npcId: number}) {
 	const [showDialogueForm, setShowDialogueForm] = useState(false);
 	return (
 		<>
@@ -14,7 +14,7 @@ export default function AddDialogueInTab({npcId}: {npcId: number}) {
 				})}
 				onClick={() => setShowDialogueForm(!showDialogueForm)}
 			>
-				{showDialogueForm ? 'cancel' : 'add'}
+				{showDialogueForm ? 'cancel' : '+ add dialogue'}
 			</button>
 			{showDialogueForm && <DialogueForm npcId={npcId} />}
 		</>
