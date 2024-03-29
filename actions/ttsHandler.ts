@@ -74,5 +74,5 @@ export default async function ttsHandler(
 		};
 	}
 	revalidatePath('/');
-	redirect(`/${user.username}/npcs/${npc_id}`);
+	redirect(`/npcs/${npc_id}`);
 }

@@ -1,12 +1,12 @@
 'use client';
 
-import {useRef, useEffect} from 'react';
+import {useEffect, useRef} from 'react';
 import {useFormState} from 'react-dom';
-import {deleteCampaignAction} from '@/actions/db/campaigns';
 import {SubmitButton} from '../buttons/SubmitButton';
 import {cn} from '@/utils/helpers/clsxMerge';
+import {deleteDialogueAction} from '@/actions/db/dialogue';
 
-export default function DeleteCampaignModal({
+export default function DeleteDialogueModal({
 	id,
 	className,
 	children,
@@ -16,7 +16,7 @@ export default function DeleteCampaignModal({
 	className?: string;
 	children?: React.ReactNode;
 }) {
-	const [state, formAction] = useFormState(deleteCampaignAction, {
+	const [state, formAction] = useFormState(deleteDialogueAction, {
 		status: 'idle',
 		message: '',
 	});
@@ -42,26 +42,25 @@ export default function DeleteCampaignModal({
 		<>
 			<button
 				onClick={openModal}
-				className={cn('btn btn-xs btn-danger', className)}
+				className={cn('btn btn-sm btn-danger', className)}
 				{...props}
 			>
 				{children}
 			</button>
 			<dialog ref={dialogRef} className='modal modal-bottom sm:modal-middle'>
 				<div className='modal-box'>
-					<h3 className='font-bold text-lg'>Delete Campaign</h3>
-
+					<h3 className='font-bold text-lg'>Delete Dialogue</h3>
 					<p className='py-4'>
-						Are you sure you want to delete this campaign? This action cannot be
-						undone.
+						Are you sure you want to delete this dialogue and any associated
+						audio? This action cannot be undone.
 					</p>
 					<div className='modal-action'>
 						<form method='dialog'>
 							<button className='btn btn-sm'>Close</button>
 						</form>
 						<form action={formAction}>
-							<input type='hidden' name='campaign_id' value={id} />
-							<SubmitButton className='btn btn-sm btn-warning' text='Delete' />
+							<input type='hidden' name='dialogue_id' value={id} />
+							<SubmitButton className='btn btn-sm btn-error' text='Delete' />
 						</form>
 					</div>
 				</div>

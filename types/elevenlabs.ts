@@ -20,14 +20,27 @@ export type ElevenLabsVoice = {
 	labels: {
 		accent: string;
 		description: string;
+		'description '?: string;
 		age: string;
 		gender: string;
-		use_case: string;
+		use_case?: string | null;
 		'use case'?: string | null;
+		featured?: string | null;
 	};
 
 	description: string | null;
 	preview_url: string;
+	safety_control: string | null;
+	voice_verification: {
+		requires_verification: boolean;
+		is_verified: boolean;
+		verification_failures: [];
+		verification_attempts_count: number;
+		language: string | null;
+		verification_attempts: [] | null;
+	};
+	owner_id: string | null;
+	permission_on_resource: string | null;
 	available_for_tiers: any;
 	settings: any;
 	sharing: any;

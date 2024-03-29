@@ -95,6 +95,14 @@ export default function TTSForm({
 									voiceOptions={voices}
 									onVoiceChange={handleVoiceChange}
 								/>
+								<div className='flex items-center  mt-2'>
+									<span className='text-primary font-semibold'>
+										Voice Preview:
+									</span>
+									{selectedVoiceURL && (
+										<audio src={selectedVoiceURL} controls />
+									)}
+								</div>
 							</>
 						)}
 						<ErrorMessage
@@ -102,7 +110,7 @@ export default function TTSForm({
 							name='voice_id'
 							render={({message}) => <ErrorToast text={message} />}
 						/>
-						<SubmitButton text='create audio!' className='mt-2' />
+						<SubmitButton text='create audio!' className='btn-accent mt-8' />
 					</>
 				) : (
 					<ErrorToast text='TTS Unavailable!' className='text-center'>

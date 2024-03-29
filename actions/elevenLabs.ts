@@ -4,7 +4,7 @@ import {
 	ELEVENLABS_BASE_URL,
 	ELEVENLABS_API_HEADERS,
 } from '../utils/elevenlabs/api';
-import {normalizeVoiceUseCaseLabel} from '../utils/elevenlabs/api';
+import {normalizeLabels} from '../utils/elevenlabs/api';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
 import {ActionStatus} from '@/types/drizzle';
 
@@ -16,7 +16,7 @@ export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
 		});
 		const data = await response.json();
 		const allVoices: ElevenLabsVoice[] = data.voices;
-		allVoices.forEach(normalizeVoiceUseCaseLabel);
+		allVoices.forEach(normalizeLabels);
 		return {
 			status: 'success',
 			message: 'Retrieved all voices',
@@ -40,7 +40,7 @@ export async function getElevenLabsVoiceInfo(
 			}
 		);
 		const data = await response.json();
-		normalizeVoiceUseCaseLabel(data);
+		normalizeLabels(data);
 		return {status: 'success', message: 'Retrieved voice info', data};
 	} catch (error) {
 		console.error(error);

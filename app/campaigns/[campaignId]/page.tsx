@@ -8,7 +8,6 @@ export default async function CampaignDetailPage({
 	params,
 }: {
 	params: {
-		username: string;
 		campaignId: number;
 	};
 }) {

@@ -1,3 +1,4 @@
+import {FormOptions} from '@/types/drizzle';
 import {IconBaseProps} from 'react-icons';
 import {
 	FaRegSmile,
@@ -17,21 +18,21 @@ export const GenderIconMap: {[key: string]: IconProps} = {
 	male: {
 		icon: FaMars,
 		props: {
-			size: 16,
+			size: 12,
 			color: '#60a5fa',
 		},
 	},
 	female: {
 		icon: FaVenus,
 		props: {
-			size: 16,
+			size: 12,
 			color: '#f472b6',
 		},
 	},
 	default: {
 		icon: FaMarsAndVenus,
 		props: {
-			size: 16,
+			size: 12,
 			color: '#a78bfa',
 		},
 	},
@@ -89,15 +90,15 @@ export const DialogueIconMap: {[key: string]: IconProps} = {
 	},
 };
 
-export const DefaultDialogueTypes: {[key: number]: string} = {
-	1: 'greeting',
-	2: 'farewell',
-	3: 'story',
-	4: 'other',
-	5: 'question',
-	6: 'answer',
-	7: 'exclamation',
-};
+export const DefaultDialogueTypes: FormOptions = [
+	{label: 'greeting', value: 1},
+	{label: 'farewell', value: 2},
+	{label: 'story', value: 3},
+	{label: 'other', value: 4},
+	{label: 'question', value: 5},
+	{label: 'answer', value: 6},
+	{label: 'exclamation', value: 7},
+];
 
 export const AccentEmojiMap: {[key: string]: string} = {
 	american: '🇺🇸',

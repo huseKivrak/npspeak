@@ -110,9 +110,11 @@ export const getNPCDialogueTabData = async (
 
 	// create detailed dialogue objects with styles and audio urls
 	const detailedDialogues: DetailedDialogue[] = npc.dialogues.map((d) => {
-		const dialogueType = d.dialogue_type_id
-			? DefaultDialogueTypes[d.dialogue_type_id]
-			: 'other';
+		const dialogueType =
+			DefaultDialogueTypes.find(
+				(dialogueType) => dialogueType.value === d.dialogue_type_id
+			)?.label || 'other';
+
 		const audioURL = presignedAudioURLs.find(({id}) => id === d.id) || null;
 		const {id, text} = d;
 		return {

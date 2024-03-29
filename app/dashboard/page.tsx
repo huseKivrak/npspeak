@@ -1,4 +1,5 @@
-import UserDashboard from '../../components/UserDashboard';
+import NPCListTable from '@/components/NPCListTable';
+import CampaignListTable from '@/components/CampaignListTable';
 import {getUserInfo} from '@/actions/auth';
 import {
 	getCampaignsWithNPCs,
@@ -19,7 +20,10 @@ export default async function UserPage({
 
 	return (
 		<div>
-			<UserDashboard user={user} campaigns={campaigns} npcs={npcs} />
+			{/* <UserDashboard user={user} campaigns={campaigns} npcs={npcs} />
+			 */}
+			{campaigns && <CampaignListTable campaigns={campaigns} />}
+			{npcs && <NPCListTable npcs={npcs} />}
 		</div>
 	);
 }

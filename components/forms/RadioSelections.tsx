@@ -37,6 +37,7 @@ export const RadioSelections = ({
 						{...register(fieldName, {required: true})}
 						className='radio radio-primary'
 						onChange={() => handleRadioChange(option.value, option.label)}
+						required
 					/>
 					<span className='label-text ml-4'>{option.label}</span>
 				</label>

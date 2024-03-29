@@ -3,7 +3,12 @@
 import {getUserInfo} from './auth';
 import {ActionStatus} from '@/types/drizzle';
 
-import {S3Client, PutObjectCommand, GetObjectCommand} from '@aws-sdk/client-s3';
+import {
+	S3Client,
+	PutObjectCommand,
+	GetObjectCommand,
+	DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
 import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
 import {v4 as uuidv4} from 'uuid';
 
@@ -114,5 +119,30 @@ export async function getPresignedDownloadURL(
 			status: 'error',
 			message: `Error generating presigned download URL: ${error} `,
 		};
+	}
+}
+
+export async function deleteAudioFromS3(
+	fileName: string
+): Promise<ActionStatus> {
+	const {user} = await getUserInfo();
+	if (!user) return {status: 'error', message: 'not authenticated'};
+
+	const deleteCommand = new DeleteObjectCommand({
+		Bucket: process.env.AWS_BUCKET_NAME!,
+		Key: fileName,
+	});
+
+	try {
+		const response = await s3.send(deleteCommand);
+		console.log('Delete response: ', response);
+		return {
+			status: 'success',
+			message: 'Audio deleted from S3',
+			data: response,
+		};
+	} catch (error) {
+		console.error('Error deleting audio from S3: ', error);
+		return {status: 'error', message: `Error deleting audio from S3: ${error}`};
 	}
 }

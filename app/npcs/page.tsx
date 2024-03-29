@@ -1,10 +1,9 @@
 import {getNPCsWithRelatedData} from '@/database/drizzle/queries';
-import NPCTabListCard from '@/components/cards/NPCTabListCard';
 import {createAllTabData} from '@/actions/npcTabData';
+import NPCListTable from '@/components/NPCListTable';
 
-export default async function NPCsPage({params}: {params: {username: string}}) {
+export default async function NPCsPage() {
 	const npcs = await getNPCsWithRelatedData();
-	const username = params.username;
 	if (!npcs) return <p>no npcs!</p>;
 
 	const totalNPCTabData = await Promise.all(
@@ -15,15 +14,16 @@ export default async function NPCsPage({params}: {params: {username: string}}) {
 	);
 	return (
 		<div>
-			<h1>{username}&apos;s npcs</h1>
-			<ul>
+			<h1>NPCs</h1>
+			{/* <ul>
 				{totalNPCTabData &&
 					totalNPCTabData.map((n) => (
 						<li key={n.npc.id}>
 							<NPCTabListCard npc={n.npc} allTabData={n.tabData} />
 						</li>
 					))}
-			</ul>
+			</ul> */}
+			<NPCListTable npcs={npcs} />
 		</div>
 	);
 }

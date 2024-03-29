@@ -70,14 +70,13 @@ export const deleteNPCAction = async (
 	const {user} = await getUserInfo();
 	if (!user) throw new Error('You must be logged in to delete NPCs.');
 
-	const user_id = user.id;
 	let deletedNPCName: string | null = null;
 
 	try {
 		const {npc_id} = deleteNPCSchema.parse(formData);
 		const deletedNPC = await db
 			.delete(npcs)
-			.where(and(eq(npcs.id, npc_id), eq(npcs.user_id, user_id)))
+			.where(and(eq(npcs.id, npc_id), eq(npcs.user_id, user.id)))
 			.returning();
 
 		deletedNPCName = deletedNPC[0].npc_name;
