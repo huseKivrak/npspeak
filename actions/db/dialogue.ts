@@ -1,10 +1,16 @@
 'use server';
 import {db} from '@/database/drizzle';
+import {eq, and} from 'drizzle-orm';
 import {getUserInfo} from '../auth';
 import {npc_dialogues, tts_audio} from '@/database/drizzle/schema';
+import {deleteAudioFromS3} from '../s3';
 import {Tables} from '@/types/supabase';
 import {ActionStatus} from '@/types/drizzle';
-import {dialogueSchema, ttsAudioSchema} from '@/database/drizzle/validation';
+import {
+	dialogueSchema,
+	ttsAudioSchema,
+	deleteDialogueSchema,
+} from '@/database/drizzle/validation';
 import {ZodError} from 'zod';
 import {revalidatePath} from 'next/cache';
 import {redirect} from 'next/navigation';
@@ -60,6 +66,67 @@ export const createDialogueAction = async (
 	}
 };
 
+export const deleteDialogueAction = async (
+	prevState: ActionStatus,
+	formData: FormData
+): Promise<ActionStatus> => {
+	const {user} = await getUserInfo();
+	if (!user)
+		return {
+			status: 'error',
+			message: 'You must be logged in to delete dialogues.',
+		};
+
+	const {dialogue_id} = deleteDialogueSchema.parse(formData);
+	let deletedDialogue: Tables<'npc_dialogues'> | null = null;
+	try {
+		//Check if dialogue has an audio file
+		const dialogueAudioIdRows = await db
+			.select({tts_audio_id: npc_dialogues.tts_audio_id})
+			.from(npc_dialogues)
+			.where(eq(npc_dialogues.id, dialogue_id));
+		const dialogueAudioId = dialogueAudioIdRows[0].tts_audio_id;
+
+		//If it does, get the file name and delete it from S3
+		if (dialogueAudioId) {
+			const ttsAudioRows = await db
+				.select()
+				.from(tts_audio)
+				.where(eq(tts_audio.id, dialogueAudioId));
+			if (ttsAudioRows.length > 0) {
+				const fileName = ttsAudioRows[0].file_url;
+				const response = await deleteAudioFromS3(fileName);
+				if (response.status !== 'success') {
+					console.error('Error deleting audio from S3: ', response);
+				}
+			}
+		}
+
+		//Delete the dialogue from the database
+		const deletedDialogueRows = await db
+			.delete(npc_dialogues)
+			.where(
+				and(
+					eq(npc_dialogues.id, dialogue_id),
+					eq(npc_dialogues.user_id, user.id)
+				)
+			)
+			.returning();
+		deletedDialogue = deletedDialogueRows[0];
+	} catch (error) {
+		console.error(error);
+		return {
+			status: 'error',
+			message: 'An error occured while deleting dialogue.',
+		};
+	}
+	revalidatePath('/');
+	const deletedDialogueTextSnippet = deletedDialogue?.text.slice(0, 10) + '...';
+	const deletedMessage = encodeURIComponent(deletedDialogueTextSnippet);
+	redirect(
+		`/npcs/${deletedDialogue.npc_id}?deleted=true&message=${deletedMessage}`
+	);
+};
 export async function createTTSAudioAction(
 	prevState: ActionStatus,
 	formData: FormData
