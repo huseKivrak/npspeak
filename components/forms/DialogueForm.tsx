@@ -10,15 +10,10 @@ import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {FormOptions, ActionStatus} from '@/types/drizzle';
 import {ErrorMessage} from '@hookform/error-message';
 import ErrorToast from '@/components/ErrorToast';
+import {DefaultDialogueTypes} from '@/lib/constants';
 
 type Inputs = z.infer<typeof dialogueSchema>;
-export default function DialogueForm({
-	dialogueChoices,
-	npcId,
-}: {
-	dialogueChoices: FormOptions;
-	npcId: number;
-}) {
+export default function DialogueForm({npcId}: {npcId: number}) {
 	const [state, formAction] = useFormState<ActionStatus, FormData>(
 		createDialogueAction,
 		{status: 'idle', message: ''}
@@ -59,7 +54,7 @@ export default function DialogueForm({
 				>
 					dialogue type
 				</label>
-				{dialogueChoices.map((option) => (
+				{DefaultDialogueTypes.map((option) => (
 					<label key={option.value} className='label cursor-pointer'>
 						<span className='label-text'>{option.label}</span>
 						<input
