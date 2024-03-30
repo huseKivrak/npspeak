@@ -1,5 +1,4 @@
 'use client';
-import {usePathname} from 'next/navigation';
 import {CampaignWithNPCs} from '@/types/drizzle';
 import Link from 'next/link';
 import DeleteCampaignModal from './forms/DeleteCampaignModal';
@@ -10,16 +9,11 @@ export default function CampaignListTable({
 }: {
 	campaigns: CampaignWithNPCs[];
 }) {
-	const pathname = usePathname();
-	const username = pathname.split('/')[1];
 	return (
 		<div className='overflow-x-auto'>
 			<div className='flex justify-start items-center'>
 				<h2 className='text-2xl font-bold'>Campaigns</h2>
-				<Link
-					href={`/${username}/campaigns/create`}
-					className='btn btn-accent btn-xs ml-4'
-				>
+				<Link href={`/campaigns/create`} className='btn btn-accent btn-xs ml-4'>
 					+ Create Campaign
 				</Link>
 			</div>
@@ -37,7 +31,7 @@ export default function CampaignListTable({
 					{campaigns.map((campaign) => (
 						<tr key={campaign.id} className='hover'>
 							<td className='link-hover text-secondary font-bold'>
-								<Link href={`/${username}/campaigns/${campaign.id}`}>
+								<Link href={`/campaigns/${campaign.id}`}>
 									{campaign.campaign_name}
 								</Link>
 							</td>
@@ -46,9 +40,7 @@ export default function CampaignListTable({
 								<ul>
 									{campaign.npcs.map((npc) => (
 										<li key={npc.id}>
-											<Link href={`/${username}/npcs/${npc.id}`}>
-												{npc.npc_name}
-											</Link>
+											<Link href={`/npcs/${npc.id}`}>{npc.npc_name}</Link>
 										</li>
 									))}
 								</ul>
