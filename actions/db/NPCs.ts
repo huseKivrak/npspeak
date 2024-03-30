@@ -60,7 +60,7 @@ export const createNPCAction = async (
 		};
 	}
 	revalidatePath('/');
-	redirect(`/${user.username}/npcs/${newNPCId}`);
+	redirect(`/npcs/${newNPCId}`);
 };
 
 export const deleteNPCAction = async (

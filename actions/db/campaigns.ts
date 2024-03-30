@@ -63,7 +63,7 @@ export const createCampaignAction = async (
 		};
 	}
 	revalidatePath('/');
-	redirect(`/${user.username}/campaigns/${newCampaignId}`);
+	redirect(`/campaigns/${newCampaignId}`);
 };
 
 export const deleteCampaignAction = async (
