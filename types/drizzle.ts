@@ -40,3 +40,8 @@ export type DetailedDialogue = {
 	dialogueType: string;
 	audioURL: string | null;
 };
+
+export type ServerAction = (
+	prevState: ActionStatus,
+	formData: FormData
+) => Promise<ActionStatus>;
