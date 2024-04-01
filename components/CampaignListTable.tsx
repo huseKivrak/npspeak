@@ -1,7 +1,8 @@
 'use client';
 import {CampaignWithNPCs} from '@/types/drizzle';
 import Link from 'next/link';
-import DeleteCampaignModal from './forms/DeleteCampaignModal';
+import {DeleteModal} from './forms/DeleteModal';
+import {deleteCampaignAction} from '@/actions/db/campaigns';
 import {PiSkullBold} from 'react-icons/pi';
 
 export default function CampaignListTable({
@@ -47,14 +48,16 @@ export default function CampaignListTable({
 							</td>
 							<td>{campaign.created_at.toString()}</td>
 							<td>
-								<DeleteCampaignModal
+								<DeleteModal
+									idName='campaign_id'
+									serverAction={deleteCampaignAction}
 									id={campaign.id}
 									className='group btn btn-outline btn-error btn-xs hover:bg-error hover:text-white'
 								>
 									<div className='tooltip tooltip-error' data-tip='delete'>
 										<PiSkullBold className='font-bold text-lg text-error group-hover:text-white' />
 									</div>
-								</DeleteCampaignModal>
+								</DeleteModal>
 							</td>
 						</tr>
 					))}

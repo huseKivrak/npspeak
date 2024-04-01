@@ -2,21 +2,26 @@
 
 import {useEffect, useRef} from 'react';
 import {useFormState} from 'react-dom';
-import {deleteNPCAction} from '@/actions/db/NPCs';
 import {SubmitButton} from '../buttons/SubmitButton';
 import {cn} from '@/utils/helpers/clsxMerge';
+import {ServerAction} from '@/types/drizzle';
+import {DeleteModalMessages} from '@/lib/constants';
 
-export default function DeleteNPCModal({
+export function DeleteModal({
 	id,
+	idName,
+	serverAction,
 	className,
 	children,
 	...props
 }: {
 	id: number;
+	idName: 'npc_id' | 'dialogue_id' | 'campaign_id';
+	serverAction: ServerAction;
 	className?: string;
 	children?: React.ReactNode;
 }) {
-	const [state, formAction] = useFormState(deleteNPCAction, {
+	const [state, formAction] = useFormState(serverAction, {
 		status: 'idle',
 		message: '',
 	});
@@ -38,6 +43,8 @@ export default function DeleteNPCModal({
 		}
 	}, [state]);
 
+	const modalMessage = DeleteModalMessages[idName];
+	const modalTitle = 'Delete ' + idName.replace('_id', '').toUpperCase();
 	return (
 		<>
 			<button
@@ -49,17 +56,14 @@ export default function DeleteNPCModal({
 			</button>
 			<dialog ref={dialogRef} className='modal modal-bottom sm:modal-middle'>
 				<div className='modal-box'>
-					<h3 className='font-bold text-lg'>Delete NPC</h3>
-					<p className='py-4'>
-						Are you sure you want to delete this NPC and all of its dialogue?
-						This action cannot be undone.
-					</p>
+					<h3 className='font-bold text-lg'>{modalTitle}</h3>
+					<p className='py-4'>{modalMessage}</p>
 					<div className='modal-action'>
 						<form method='dialog'>
 							<button className='btn btn-sm'>Close</button>
 						</form>
 						<form action={formAction}>
-							<input type='hidden' name='npc_id' value={id} />
+							<input type='hidden' name={idName} value={id} />
 							<SubmitButton className='btn btn-sm btn-error' text='Delete' />
 						</form>
 					</div>

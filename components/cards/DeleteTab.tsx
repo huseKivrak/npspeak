@@ -1,5 +1,6 @@
 'use client';
-import DeleteNPCModal from '../forms/DeleteNPCModal';
+import {DeleteModal} from '../forms/DeleteModal';
+import {deleteNPCAction} from '@/actions/db/NPCs';
 import {PiSkullBold} from 'react-icons/pi';
 
 export default function DeleteTab({npcId}: {npcId: number}) {
@@ -7,12 +8,14 @@ export default function DeleteTab({npcId}: {npcId: number}) {
 		<div className='card bg-base-200'>
 			<div className='card-body items-center'>
 				<h2 className='card-title'>
-					<DeleteNPCModal
+					<DeleteModal
 						id={npcId}
+						idName='npc_id'
+						serverAction={deleteNPCAction}
 						className='group btn btn-outline btn-error btn-lg hover:bg-error'
 					>
 						<PiSkullBold className='font-bold text-4xl text-error group-hover:text-white' />
-					</DeleteNPCModal>
+					</DeleteModal>
 				</h2>
 			</div>
 		</div>

@@ -2,8 +2,9 @@
 
 import {DetailedNPC} from '@/types/drizzle';
 import Link from 'next/link';
-import DeleteNPCModal from './forms/DeleteNPCModal';
 import {PiSkullBold} from 'react-icons/pi';
+import {DeleteModal} from './forms/DeleteModal';
+import {deleteNPCAction} from '@/actions/db/NPCs';
 
 export default function NPCListTable({npcs}: {npcs: DetailedNPC[]}) {
 	console.log('npcs:', npcs);
@@ -47,14 +48,16 @@ export default function NPCListTable({npcs}: {npcs: DetailedNPC[]}) {
 							<td>{npc.dialogues.length}</td>
 							<td>{npc.created_at.toString()}</td>
 							<td>
-								<DeleteNPCModal
+								<DeleteModal
 									id={npc.id}
+									idName='npc_id'
+									serverAction={deleteNPCAction}
 									className='group btn btn-outline btn-error btn-xs hover:bg-error'
 								>
 									<div className='tooltip tooltip-error' data-tip='delete'>
 										<PiSkullBold className='font-bold text-lg text-error group-hover:text-white' />
 									</div>
-								</DeleteNPCModal>
+								</DeleteModal>
 							</td>
 						</tr>
 					))}
