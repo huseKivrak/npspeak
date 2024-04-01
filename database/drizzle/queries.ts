@@ -120,7 +120,10 @@ export const getNPCsWithRelatedData = async (): Promise<
 				};
 				acc.push(npc);
 			} else {
-				if (row.campaigns) {
+				if (
+					row.campaigns &&
+					!npc.campaigns.find((c) => c.id === row.campaigns?.id)
+				) {
 					npc.campaigns.push(row.campaigns);
 				}
 				if (row.npc_dialogues) {
