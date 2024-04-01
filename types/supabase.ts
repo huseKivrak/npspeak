@@ -222,7 +222,6 @@ export interface Database {
 					npc_name: string;
 					user_id: string | null;
 					voice_id: string | null;
-					voice_data: ElevenLabsVoice | null;
 				};
 				Insert: {
 					created_at?: string;
@@ -232,7 +231,6 @@ export interface Database {
 					npc_name: string;
 					user_id?: string | null;
 					voice_id?: string | null;
-					voice_data?: ElevenLabsVoice | null;
 				};
 				Update: {
 					created_at?: string;
@@ -242,7 +240,6 @@ export interface Database {
 					npc_name?: string;
 					user_id?: string | null;
 					voice_id?: string | null;
-					voice_data?: ElevenLabsVoice | null;
 				};
 				Relationships: [
 					{

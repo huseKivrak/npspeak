@@ -46,7 +46,6 @@ export const npcs = pgTable('npcs', {
 	npc_name: varchar('npc_name').notNull(),
 	description: text('description'),
 	voice_id: text('voice_id'),
-	voice_data: jsonb('voice_data').$type<ElevenLabsVoice | null>(),
 	is_default: boolean('is_default').default(false).notNull(),
 });
 
