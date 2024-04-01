@@ -112,3 +112,12 @@ export const AccentEmojiMap: {[key: string]: string} = {
 	'american-southern': '🇺🇸/🤠',
 	'english-italian': '🇬🇧/🇮🇹',
 };
+
+export const DeleteModalMessages: {[key: string]: string} = {
+	npc_id:
+		'Are you sure you want to delete this NPC and all of its dialogue? This action cannot be undone.',
+	dialogue_id:
+		'Are you sure you want to delete this dialogue and any audio it may have? This action cannot be undone.',
+	campaign_id:
+		'Are you sure you want to delete this campaign? This action cannot be undone.',
+};
