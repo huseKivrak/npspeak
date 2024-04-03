@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import {Providers} from './providers';
 import {siteConfig} from '@/config/site';
 import {fontSans} from '@/config/fonts';
-
+import AuthButton from '@/components/buttons/AuthButton';
 const defaultUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
 	: 'http://localhost:3000';
@@ -35,7 +35,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 					fontSans.variable
 				)}
 			>
-				<NavBar />
+				<NavBar>
+					<AuthButton />
+				</NavBar>
 				{/* @ts-ignore */}
 				<Providers themeProps={{attribute: 'class', defaultTheme: 'dark'}}>
 					<div className='relative flex flex-col h-screen'>

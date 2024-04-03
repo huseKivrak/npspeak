@@ -5,11 +5,10 @@ import {
 	NavbarContent,
 	NavbarItem,
 } from '@nextui-org/react';
-import AuthButton from '../buttons/AuthButton';
 import Link from 'next/link';
 import {ScrollEmoji} from '../icons/ScrollEmoji';
 
-export default function NavBar() {
+export default function NavBar({children}: {children: React.ReactNode}) {
 	return (
 		<Navbar>
 			<NavbarBrand>
@@ -19,9 +18,7 @@ export default function NavBar() {
 				</Link>
 			</NavbarBrand>
 			<NavbarContent className='hidden sm:flex gap-4' justify='center'>
-				<NavbarItem>
-					<AuthButton />
-				</NavbarItem>
+				<NavbarItem>{children}</NavbarItem>
 			</NavbarContent>
 		</Navbar>
 	);
