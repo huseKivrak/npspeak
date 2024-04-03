@@ -13,8 +13,7 @@ export default function Sidebar({children}: {children: React.ReactNode}) {
 					aria-label='close sidebar'
 					className='drawer-overlay'
 				></label>
-				<ul className='menu p-2 max-w-fit min-h-full bg-secondary text-base-content'>
-					{/* Sidebar content here */}
+				<ul className='menu p-2 max-w-fit min-h-full bg-secondary text-secondary-content'>
 					<li>
 						<Link href='/npcs'>NPCs</Link>
 					</li>
