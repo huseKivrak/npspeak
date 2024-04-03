@@ -2,8 +2,10 @@ import {GeistSans} from 'geist/font/sans';
 import './globals.css';
 import NavBar from '@/components/layout/NavBar';
 import Footer from '@/components/layout/Footer';
+import Sidebar from '@/components/layout/Sidebar';
 import {Analytics} from '@vercel/analytics/react';
 import {SpeedInsights} from '@vercel/speed-insights/next';
+
 import clsx from 'clsx';
 
 const defaultUrl = process.env.VERCEL_URL
@@ -20,7 +22,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 		<html
 			lang='en'
 			className={clsx(
-				'bg-gradient-to-b from-base-100 to-base-200',
+				'bg-gradient-to-b from-base-100 to-base-300',
 				GeistSans.className
 			)}
 		>
@@ -29,12 +31,14 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 			</head>
 			<body className='flex flex-col min-h-screen'>
 				<NavBar />
-				<main className='flex flex-col items-center justify-center mx-auto w-full sm:max-w-4/5 md:max-w-3/4 lg:max-w-5/6 pt-8 pb-36'>
-					{children}
-				</main>
-				<Analytics />
-				<SpeedInsights />
-				<Footer />
+				<Sidebar>
+					<main className='flex flex-col items-center justify-center mx-auto w-full sm:max-w-4/5 md:max-w-3/4 lg:max-w-5/6 pt-8 pb-36'>
+						{children}
+					</main>
+					<Analytics />
+					<SpeedInsights />
+					<Footer />
+				</Sidebar>
 			</body>
 		</html>
 	);
