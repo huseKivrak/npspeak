@@ -6,9 +6,6 @@ export default async function UserCampaignsPage() {
 
 	return (
 		<div className='flex flex-col items-center'>
-			<h1 className='text-4xl tracking-widest font-extralight my-4'>
-				Campaigns
-			</h1>
 			{campaigns ? (
 				<CampaignListTable campaigns={campaigns} />
 			) : (
