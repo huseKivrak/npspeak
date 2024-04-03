@@ -21,7 +21,8 @@ export const createNPCAction = async (
 	let newNPCId: number | null = null;
 
 	try {
-		const {npc_name, description, campaign_ids} = npcSchema.parse(formData);
+		const {npc_name, description, campaign_ids, voice_id} =
+			npcSchema.parse(formData);
 
 		const insertedNPC: Tables<'npcs'>[] = await db
 			.insert(npcs)
@@ -29,6 +30,7 @@ export const createNPCAction = async (
 				user_id,
 				npc_name,
 				description,
+				voice_id,
 			})
 			.returning();
 

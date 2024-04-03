@@ -13,26 +13,36 @@ import {ErrorMessage} from '@hookform/error-message';
 import ErrorToast from '@/components/ErrorToast';
 import {FormOptions} from '@/types/drizzle';
 import {CheckboxSelections} from './CheckboxSelections';
+import {VoiceSelect} from './dropdown/VoiceSelect';
+import {ElevenLabsVoice} from '@/types/elevenlabs';
+
 interface NPCFormProps {
 	campaignOptions?: FormOptions;
+	voiceOptions: ElevenLabsVoice[];
 }
 
 type Inputs = z.infer<typeof npcSchema>;
-export default function NPCForm({campaignOptions}: NPCFormProps) {
+export default function NPCForm({campaignOptions, voiceOptions}: NPCFormProps) {
 	const [state, formAction] = useFormState<ActionStatus, FormData>(
 		createNPCAction,
 		{status: 'idle', message: ''}
 	);
 	const [showAddCampaign, setShowAddCampaign] = useState(false);
+	const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null);
 
 	const {
 		register,
+		control,
 		formState: {errors},
 		setError,
 		reset,
 	} = useForm<Inputs>({
 		resolver: zodResolver(npcSchema),
 	});
+
+	const handleVoiceChange = (voiceURL: string) => {
+		setSelectedVoiceURL(voiceURL);
+	};
 
 	useEffect(() => {
 		if (!state) return;
@@ -82,6 +92,20 @@ export default function NPCForm({campaignOptions}: NPCFormProps) {
 				<ErrorMessage
 					errors={errors}
 					name='description'
+					render={({message}) => <ErrorToast text={message} />}
+				/>
+				<VoiceSelect
+					control={control}
+					voiceOptions={voiceOptions}
+					onVoiceChange={handleVoiceChange}
+				/>
+				<div className='flex items-center mt-2'>
+					<span className='text-primary font-semibold'>Voice Preview:</span>
+					{selectedVoiceURL && <audio src={selectedVoiceURL} controls />}
+				</div>
+				<ErrorMessage
+					errors={errors}
+					name='voice_id'
 					render={({message}) => <ErrorToast text={message} />}
 				/>
 				<button

@@ -98,6 +98,7 @@ export const npcSchema = zfd.formData({
 			.optional()
 	),
 	campaign_ids: zfd.repeatableOfType(zfd.numeric().optional()),
+	voice_id: zfd.text(z.string()),
 });
 
 export const deleteNPCSchema = zfd.formData({
