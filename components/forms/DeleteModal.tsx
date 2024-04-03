@@ -44,7 +44,13 @@ export function DeleteModal({
 	}, [state]);
 
 	const modalMessage = DeleteModalMessages[idName];
-	const modalTitle = 'Delete ' + idName.replace('_id', '').toUpperCase();
+	const title =
+		idName === 'npc_id'
+			? 'NPC'
+			: idName === 'dialogue_id'
+			? 'Dialogue'
+			: 'Campaign';
+	const modalTitle = `Delete ${title}?`;
 	return (
 		<>
 			<button
