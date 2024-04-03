@@ -1,14 +1,14 @@
 import {components, OptionProps} from 'react-select';
 import {FaMars, FaVenus, FaMarsAndVenus} from 'react-icons/fa6';
 import {getAccentEmoji} from '@/utils/helpers/formHelpers';
-import {GenderIcon} from './icons/GenderIcon';
+import {GenderIcon} from '@/components/icons/GenderIcon';
 
 export interface VoiceOptionProps {
 	label: string;
 	value: string;
 	gender: string;
 	accent: string;
-	useCase: string;
+	useCase?: string | null;
 	description?: string;
 }
 

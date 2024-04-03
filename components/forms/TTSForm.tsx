@@ -13,7 +13,7 @@ import ErrorToast from '@/components/ErrorToast';
 import {FormOptions} from '@/types/drizzle';
 import ttsHandler from '@/actions/ttsHandler';
 import {RadioSelections} from './RadioSelections';
-import {VoiceSelect} from '../VoiceSelect';
+import {VoiceSelect} from './dropdown/VoiceSelect';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
 import {cn} from '@/utils/helpers/clsxMerge';
 

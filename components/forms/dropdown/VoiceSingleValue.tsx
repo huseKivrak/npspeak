@@ -1,5 +1,5 @@
 import {components, SingleValueProps} from 'react-select';
-import {GenderIcon} from './icons/GenderIcon';
+import {GenderIcon} from '@/components/icons/GenderIcon';
 import {getAccentEmoji} from '@/utils/helpers/formHelpers';
 
 import {VoiceOptionProps} from './VoiceOption';
