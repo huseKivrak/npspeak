@@ -1,11 +1,10 @@
-import NPCListTable from '@/components/NPCListTable';
-import CampaignListTable from '@/components/CampaignListTable';
 import {getUserInfo} from '@/actions/auth';
 import {
 	getCampaignsWithNPCs,
 	getNPCsWithRelatedData,
 } from '../../database/drizzle/queries';
 import {redirect} from 'next/navigation';
+import {UserDashboard} from '@/components/UserDashboard';
 
 export default async function UserPage({
 	searchParams,
@@ -18,12 +17,5 @@ export default async function UserPage({
 	const campaigns = await getCampaignsWithNPCs();
 	const npcs = await getNPCsWithRelatedData();
 
-	return (
-		<div>
-			{/* <UserDashboard user={user} campaigns={campaigns} npcs={npcs} />
-			 */}
-			{campaigns && <CampaignListTable campaigns={campaigns} />}
-			{npcs && <NPCListTable npcs={npcs} />}
-		</div>
-	);
+	return <UserDashboard campaigns={campaigns} npcs={npcs} />;
 }
