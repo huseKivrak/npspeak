@@ -1,4 +1,4 @@
-import {createClient} from '@/utils/supabase/server';
+import {createClientOnServer} from '@/utils/supabase/server';
 import {NextResponse} from 'next/server';
 import {cookies} from 'next/headers';
 
@@ -9,7 +9,7 @@ export async function GET(request: Request) {
 
 	if (code) {
 		const cookieStore = cookies();
-		const supabase = createClient(cookieStore);
+		const supabase = createClientOnServer(cookieStore);
 		await supabase.auth.exchangeCodeForSession(code);
 	}
 

@@ -10,7 +10,7 @@ import {npcSchema} from '@/database/drizzle/validation';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {ActionStatus} from '@/types/drizzle';
 import {ErrorMessage} from '@hookform/error-message';
-import ErrorToast from '@/components/ErrorToast';
+import {ErrorToast} from '@/components/ErrorToast';
 import {FormOptions} from '@/types/drizzle';
 import {CheckboxSelections} from './CheckboxSelections';
 import {VoiceSelect} from './dropdown/VoiceSelect';

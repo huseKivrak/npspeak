@@ -9,7 +9,7 @@ import {dialogueSchema} from '@/database/drizzle/validation';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {FormOptions, ActionStatus} from '@/types/drizzle';
 import {ErrorMessage} from '@hookform/error-message';
-import ErrorToast from '@/components/ErrorToast';
+import {ErrorToast} from '@/components/ErrorToast';
 import {DefaultDialogueTypes} from '@/lib/constants';
 
 type Inputs = z.infer<typeof dialogueSchema>;
