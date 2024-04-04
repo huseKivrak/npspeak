@@ -4,11 +4,7 @@ interface ErrorToastProps {
 	children?: React.ReactNode;
 }
 
-export default function ErrorToast({
-	text,
-	className,
-	children,
-}: ErrorToastProps) {
+export function ErrorToast({text, className, children}: ErrorToastProps) {
 	const toastClasses = `text-error ml-2 ${className || ''}`;
 	return (
 		<div className={toastClasses}>

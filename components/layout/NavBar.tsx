@@ -8,7 +8,7 @@ import {
 import Link from 'next/link';
 import {ScrollEmoji} from '../icons/ScrollEmoji';
 
-export default function NavBar({children}: {children: React.ReactNode}) {
+export const NavBar = ({children}: {children: React.ReactNode}) => {
 	return (
 		<Navbar>
 			<NavbarBrand>
@@ -22,4 +22,4 @@ export default function NavBar({children}: {children: React.ReactNode}) {
 			</NavbarContent>
 		</Navbar>
 	);
-}
+};
