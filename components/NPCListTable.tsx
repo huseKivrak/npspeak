@@ -1,68 +1,132 @@
 'use client';
-
+import {useCallback} from 'react';
 import {DetailedNPC} from '@/types/drizzle';
-import Link from 'next/link';
-import {PiSkullBold} from 'react-icons/pi';
+import {
+	Table,
+	TableHeader,
+	TableBody,
+	TableColumn,
+	TableRow,
+	TableCell,
+	getKeyValue,
+	Button,
+	Chip,
+	Tooltip,
+} from '@nextui-org/react';
+import {DeleteIcon} from './icons/DeleteIcon';
 import {DeleteModal} from './forms/DeleteModal';
 import {deleteNPCAction} from '@/actions/db/NPCs';
+import Link from 'next/link';
 
-export default function NPCListTable({npcs}: {npcs: DetailedNPC[]}) {
-	console.log('npcs:', npcs);
-	return (
-		<div className='overflow-x-auto'>
-			<div className='flex justify-start items-center'>
-				<h2 className='text-2xl font-bold'>NPCs</h2>
-				<Link href={`/npcs/create`} className='btn btn-accent btn-xs ml-4'>
-					+ Create NPC
-				</Link>
-			</div>
-			<table className='table'>
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Description</th>
-						<th>Campaigns</th>
-						<th>Dialogue Count</th>
-						<th>Created</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					{npcs.map((npc) => (
-						<tr key={npc.id} className='hover'>
-							<td className='text-primary link-hover font-bold'>
-								<Link href={`/npcs/${npc.id}`}>{npc.npc_name}</Link>
-							</td>
-							<td>{npc.description}</td>
-							<td className='flex flex-col gap-2 text-secondary link-hover font-medium'>
-								<ul>
-									{npc.campaigns.map((campaign) => (
-										<li key={campaign.id}>
-											<Link href={`/campaigns/${campaign.id}`}>
-												{campaign.campaign_name}
-											</Link>
-										</li>
-									))}
-								</ul>
-							</td>
-							<td>{npc.dialogues.length}</td>
-							<td>{npc.created_at.toString()}</td>
-							<td>
-								<DeleteModal
-									id={npc.id}
-									idName='npc_id'
-									serverAction={deleteNPCAction}
-									className='group btn btn-outline btn-error btn-xs hover:bg-error'
+export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
+	const columns = [
+		{name: 'NAME', uid: 'name'},
+		{name: 'DESCRIPTION', uid: 'description'},
+		{name: 'CAMPAIGNS', uid: 'campaigns'},
+		{name: 'CREATED', uid: 'created_at'},
+		{name: 'ACTIONS', uid: 'actions'},
+	];
+
+	const rows = npcs.map((npc) => ({
+		id: npc.id,
+		name: npc.npc_name,
+		description: npc.description,
+		campaigns: npc.campaigns,
+		created_at: npc.created_at,
+	}));
+
+	type NPC = (typeof rows)[0];
+	const renderCell = useCallback((npc: NPC, columnKey: React.Key) => {
+		switch (columnKey) {
+			case 'name':
+				return (
+					<div className='flex flex-col'>
+						<p className='font-semibold capitalize hover:underline'>
+							<Link href={`/npcs/${npc.id}`}>{npc.name}</Link>
+						</p>
+					</div>
+				);
+			case 'description':
+				return (
+					<div className='flex flex-col'>
+						<p className='text-bold text-tiny capitalize'>{npc.description}</p>
+					</div>
+				);
+			case 'campaigns':
+				return (
+					<div className='flex flex-col'>
+						{npc.campaigns.map((campaign) => (
+							<Link key={campaign.id} href={`/campaigns/${campaign.id}`}>
+								<Chip
+									key={campaign.id}
+									size='sm'
+									color='primary'
+									variant='flat'
+									className='hover:underline hover:bg-primary-200'
 								>
-									<div className='tooltip tooltip-error' data-tip='delete'>
-										<PiSkullBold className='font-bold text-lg text-error group-hover:text-white' />
-									</div>
-								</DeleteModal>
-							</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
-		</div>
+									{campaign.campaign_name.slice(0, 12) + '...'}
+								</Chip>
+							</Link>
+						))}
+					</div>
+				);
+			case 'created_at':
+				return (
+					<div className='flex flex-col'>
+						<p className='text-bold text-sm capitalize'>
+							{new Date(npc.created_at).toLocaleDateString()}
+						</p>
+					</div>
+				);
+			case 'actions':
+				return (
+					<div className='relative flex justify-center gap-2'>
+						<DeleteModal
+							idName='npc_id'
+							serverAction={deleteNPCAction}
+							id={npc.id}
+							className=''
+						>
+							<Tooltip color='danger' content='Delete NPC'>
+								<DeleteIcon className='text-danger' />
+							</Tooltip>
+						</DeleteModal>
+					</div>
+				);
+			default:
+				return null;
+		}
+	}, []);
+
+	return (
+		<Table
+			isHeaderSticky
+			isStriped
+			aria-label='NPCs Table'
+			classNames={{
+				wrapper: 'max-h-[382px] p-0 rounded-none',
+			}}
+		>
+			<TableHeader columns={columns}>
+				{(column) => (
+					<TableColumn
+						key={column.uid}
+						align={column.uid === 'actions' ? 'center' : 'start'}
+						className='bg-primary text-lg tracking-widest'
+					>
+						{column.name}
+					</TableColumn>
+				)}
+			</TableHeader>
+			<TableBody items={rows} emptyContent={'No NPCs to display.'}>
+				{(item) => (
+					<TableRow key={item.id}>
+						{(columnKey) => (
+							<TableCell>{renderCell(item, columnKey)}</TableCell>
+						)}
+					</TableRow>
+				)}
+			</TableBody>
+		</Table>
 	);
-}
+};

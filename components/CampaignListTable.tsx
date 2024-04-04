@@ -1,68 +1,135 @@
 'use client';
+import {useCallback} from 'react';
 import {CampaignWithNPCs} from '@/types/drizzle';
-import Link from 'next/link';
+import {
+	Table,
+	TableHeader,
+	TableBody,
+	TableColumn,
+	TableRow,
+	TableCell,
+	getKeyValue,
+	Button,
+	Chip,
+	Tooltip,
+} from '@nextui-org/react';
 import {DeleteModal} from './forms/DeleteModal';
 import {deleteCampaignAction} from '@/actions/db/campaigns';
-import {PiSkullBold} from 'react-icons/pi';
-
-export default function CampaignListTable({
+import {DeleteIcon} from './icons/DeleteIcon';
+import Link from 'next/link';
+export function CampaignListTable({
 	campaigns,
 }: {
 	campaigns: CampaignWithNPCs[];
 }) {
-	return (
-		<div className='overflow-x-auto'>
-			<div className='flex justify-start items-center'>
-				<h2 className='text-2xl font-bold'>Campaigns</h2>
-				<Link href={`/campaigns/create`} className='btn btn-accent btn-xs ml-4'>
-					+ Create Campaign
-				</Link>
-			</div>
-			<table className='table'>
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Description</th>
-						<th>NPCs</th>
-						<th>Created</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					{campaigns.map((campaign) => (
-						<tr key={campaign.id} className='hover'>
-							<td className='link-hover text-secondary font-bold'>
-								<Link href={`/campaigns/${campaign.id}`}>
-									{campaign.campaign_name}
+	const columns = [
+		{name: 'NAME', uid: 'name'},
+		{name: 'DESCRIPTION', uid: 'description'},
+		{name: 'NPCS', uid: 'npcs'},
+		{name: 'CREATED', uid: 'created_at'},
+		{name: 'ACTIONS', uid: 'actions'},
+	];
+
+	const rows = campaigns.map((campaign) => ({
+		id: campaign.id,
+		name: campaign.campaign_name,
+		description: campaign.description,
+		npcs: campaign.npcs,
+		created_at: campaign.created_at,
+	}));
+	type Campaign = (typeof rows)[0];
+	const renderCell = useCallback((campaign: Campaign, columnKey: React.Key) => {
+		switch (columnKey) {
+			case 'name':
+				return (
+					<div className='flex flex-col'>
+						<p className='font-semibold capitalize hover:underline'>
+							<Link href={`/campaigns/${campaign.id}`}>{campaign.name}</Link>
+						</p>
+					</div>
+				);
+			case 'description':
+				return (
+					<div className='flex flex-col'>
+						<p className='text-bold text-tiny capitalize'>
+							{campaign.description}
+						</p>
+					</div>
+				);
+			case 'npcs':
+				return (
+					<div className='flex flex-col space-y-2 '>
+						{campaign.npcs.map((npc) => (
+							<Chip
+								key={npc.id}
+								size='sm'
+								color='secondary'
+								variant='flat'
+								className='hover:underline hover:bg-secondary-200'
+							>
+								<Link key={npc.id} href={`/npcs/${npc.id}`}>
+									{npc.npc_name}
 								</Link>
-							</td>
-							<td>{campaign.description}</td>
-							<td className='flex flex-col gap-2 text-primary font-semibold'>
-								<ul>
-									{campaign.npcs.map((npc) => (
-										<li key={npc.id}>
-											<Link href={`/npcs/${npc.id}`}>{npc.npc_name}</Link>
-										</li>
-									))}
-								</ul>
-							</td>
-							<td>{campaign.created_at.toString()}</td>
-							<td>
-								<DeleteModal
-									idName='campaign_id'
-									serverAction={deleteCampaignAction}
-									id={campaign.id}
-									className='group btn btn-outline btn-error btn-xs hover:bg-error hover:text-white'
-								>
-									<div className='tooltip tooltip-error' data-tip='delete'>
-										<PiSkullBold className='font-bold text-lg text-error group-hover:text-white' />
-									</div>
-								</DeleteModal>
-							</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
-		</div>
+							</Chip>
+						))}
+					</div>
+				);
+			case 'created_at':
+				return (
+					<div className='flex flex-col'>
+						<p className='text-bold text-sm capitalize '>
+							{new Date(campaign.created_at).toLocaleDateString()}
+						</p>
+					</div>
+				);
+			case 'actions':
+				return (
+					<div className='relative flex justify-center gap-2'>
+						<DeleteModal
+							idName='campaign_id'
+							serverAction={deleteCampaignAction}
+							id={campaign.id}
+							className=''
+						>
+							<Tooltip color='danger' content='Delete NPC'>
+								<DeleteIcon className='text-danger' />
+							</Tooltip>
+						</DeleteModal>
+					</div>
+				);
+			default:
+				return null;
+		}
+	}, []);
+	return (
+		<Table
+			isHeaderSticky
+			isStriped
+			aria-label='Campaigns Table'
+			classNames={{
+				wrapper: 'max-h-[382px] p-0 rounded-none',
+			}}
+		>
+			<TableHeader columns={columns}>
+				{(column) => (
+					<TableColumn
+						key={column.uid}
+						align={column.uid === 'actions' ? 'center' : 'start'}
+						className='bg-secondary text-lg tracking-widest '
+					>
+						{column.name}
+					</TableColumn>
+				)}
+			</TableHeader>
+			<TableBody items={rows}>
+				{(item) => (
+					<TableRow key={item.id}>
+						{(columnKey) => (
+							<TableCell>{renderCell(item, columnKey)}</TableCell>
+						)}
+					</TableRow>
+				)}
+			</TableBody>
+		</Table>
 	);
 }
