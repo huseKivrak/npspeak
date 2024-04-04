@@ -1,11 +1,13 @@
 'use client';
+import {useForm} from 'react-hook-form';
 import {signUpAction} from '@/actions/auth';
 import {useFormState} from 'react-dom';
 import SendEmailIcon from '@/components/icons/SendEmailIcon';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {ActionStatus} from '@/types/drizzle';
 import {useEffect, useState} from 'react';
-import ErrorToast from '../ErrorToast';
+import {ErrorToast} from '../ErrorToast';
+import {Input} from '@nextui-org/react';
 
 interface InputErrors {
 	email?: string;
@@ -13,6 +15,13 @@ interface InputErrors {
 	password?: string;
 	confirm_password?: string;
 }
+
+type Inputs = {
+	email: string;
+	username: string;
+	password: string;
+	confirm_password: string;
+};
 
 export default function SignUpForm() {
 	const [state, formAction] = useFormState<ActionStatus, FormData>(
@@ -23,6 +32,7 @@ export default function SignUpForm() {
 		}
 	);
 	const [errors, setErrors] = useState<InputErrors>({});
+	const {register} = useForm<Inputs>();
 
 	useEffect(() => {
 		if (state.status === 'idle') return;
@@ -40,50 +50,59 @@ export default function SignUpForm() {
 			<h2 className='text-4xl font-extralight tracking-widest mt-24'>signup</h2>
 			<form
 				action={formAction}
-				className='animate-in flex flex-col max-w-fit justify-items-center gap-2'
+				className='flex flex-col max-w-fit justify-items-center gap-2'
 			>
 				<label className='font-thin tracking-widest' htmlFor='email'>
 					email
 				</label>
-				<input
-					className='rounded-md px-4 py-2 border mb-1 font-thin tracking-widest'
-					name='email'
+				<Input
+					isRequired
+					type='email'
+					label='email'
 					placeholder='you@example.com'
-					required
+					variant='bordered'
+					className='max-w-xs'
+					{...register('email')}
 				/>
 				{errors.email && <ErrorToast text={errors.email} />}
 				<label className='font-thin tracking-widest' htmlFor='username'>
 					username
 				</label>
-				<input
-					className='rounded-md px-4 py-2 border mb-1 font-thin tracking-widest'
-					name='username'
+				<Input
+					isRequired
+					label='username'
 					placeholder='your username'
-					required
+					variant='bordered'
+					className='max-w-xs'
+					{...register('username')}
 				/>
 				{errors.username && <ErrorToast text={errors.username} />}
 
 				<label className='font-thin tracking-widest' htmlFor='password'>
 					password
 				</label>
-				<input
-					className='rounded-md px-4 py-2 border mb-1 font-thin tracking-widest'
+				<Input
+					isRequired
 					type='password'
-					name='password'
+					label='password'
 					placeholder='••••••••'
-					required
+					variant='bordered'
+					className='max-w-xs'
+					{...register('password')}
 				/>
 				{errors.password && <ErrorToast text={errors.password} />}
 
 				<label className='font-thin tracking-widest' htmlFor='password2'>
 					confirm password
 				</label>
-				<input
-					className='rounded-md px-4 py-2 border mb-1 font-thin tracking-widest'
+				<Input
+					isRequired
 					type='password'
-					name='confirm_password'
+					label='confirm password'
 					placeholder='••••••••'
-					required
+					variant='bordered'
+					className='max-w-xs'
+					{...register('confirm_password')}
 				/>
 				{errors.confirm_password && (
 					<ErrorToast text={errors.confirm_password} />
@@ -93,7 +112,7 @@ export default function SignUpForm() {
 						text={'create account'}
 						className={'btn btn-secondary font-light w-4/5 rounded-md py-2'}
 					>
-						<SendEmailIcon className='w-5' />
+						<SendEmailIcon className='w-12' />
 					</SubmitButton>
 				</span>
 			</form>
