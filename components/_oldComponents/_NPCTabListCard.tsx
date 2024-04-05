@@ -2,11 +2,11 @@
 
 import {DetailedNPC} from '@/types/drizzle';
 import {useState} from 'react';
-import TTSTab from './TTSTab';
-import DialogueTab from './DialogueTab';
-import OverviewTab from './OverviewTab';
-import CampaignTab from './CampaignTab';
-import DeleteTab from './DeleteTab';
+import TTSTab from './_TTSTab';
+import DialogueTab from './_DialogueTab';
+import OverviewTab from './_OverviewTab';
+import CampaignTab from './_CampaignTab';
+import DeleteTab from './_DeleteTab';
 import {ActionStatus} from '@/types/drizzle';
 
 export default function NPCTabListCard({

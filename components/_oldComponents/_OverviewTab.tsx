@@ -2,7 +2,7 @@
 
 import {DetailedNPC} from '@/types/drizzle';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
-import AddVoiceToNPCForm from '../forms/AddVoiceToNPCForm';
+// import AddVoiceToNPCForm from '../forms/AddVoiceToNPCForm';
 
 export default function OverviewTab({
 	npc,
@@ -25,7 +25,7 @@ export default function OverviewTab({
 				) : (
 					<>
 						<h3>{npc.npc_name} has no voice! Choose one:</h3>
-						<AddVoiceToNPCForm npc_id={npc.id} voiceOptions={allVoices} />
+						{/* <AddVoiceToNPCForm npc_id={npc.id} voiceOptions={allVoices} /> */}
 					</>
 				)}
 			</div>
