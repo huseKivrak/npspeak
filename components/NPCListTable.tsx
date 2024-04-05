@@ -14,7 +14,7 @@ import {
 	Tooltip,
 } from '@nextui-org/react';
 import {DeleteIcon} from './icons/DeleteIcon';
-import {DeleteModal} from './forms/DeleteModal';
+import {DeleteModal} from './DeleteModal';
 import {deleteNPCAction} from '@/actions/db/NPCs';
 import Link from 'next/link';
 
@@ -112,7 +112,7 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 					<TableColumn
 						key={column.uid}
 						align={column.uid === 'actions' ? 'center' : 'start'}
-						className='bg-primary text-lg tracking-widest'
+						className='bg-primary text-lg tracking-widest text-white font-light'
 					>
 						{column.name}
 					</TableColumn>

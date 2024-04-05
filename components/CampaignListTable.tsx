@@ -13,10 +13,10 @@ import {
 	Chip,
 	Tooltip,
 } from '@nextui-org/react';
-import {DeleteModal} from './forms/DeleteModal';
 import {deleteCampaignAction} from '@/actions/db/campaigns';
 import {DeleteIcon} from './icons/DeleteIcon';
 import Link from 'next/link';
+import {DeleteModal} from './DeleteModal';
 export function CampaignListTable({
 	campaigns,
 }: {
@@ -89,7 +89,6 @@ export function CampaignListTable({
 							idName='campaign_id'
 							serverAction={deleteCampaignAction}
 							id={campaign.id}
-							className=''
 						>
 							<Tooltip color='danger' content='Delete NPC'>
 								<DeleteIcon className='text-danger' />
@@ -115,7 +114,7 @@ export function CampaignListTable({
 					<TableColumn
 						key={column.uid}
 						align={column.uid === 'actions' ? 'center' : 'start'}
-						className='bg-secondary text-lg tracking-widest '
+						className='bg-secondary text-lg tracking-widest text-white font-light'
 					>
 						{column.name}
 					</TableColumn>

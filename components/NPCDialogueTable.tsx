@@ -3,15 +3,15 @@ import {DetailedDialogue, DetailedNPC} from '@/types/drizzle';
 import AddDialogueToNPC from './cards/AddDialogueToNPC';
 import Link from 'next/link';
 import {DialogueIcon} from './icons/DialogueIcon';
-import AddTTSModal from './forms/AddTTSModal';
+
 import {
 	PiSkullBold,
 	PiMicrophoneBold,
 	PiMicrophoneSlashBold,
 } from 'react-icons/pi';
-import {DeleteModal} from './forms/DeleteModal';
+import {DeleteModal} from './DeleteModal';
 import {deleteDialogueAction} from '@/actions/db/dialogue';
-
+import {TTSModal} from './TTSModal';
 export default async function NPCDialogueTable({npc}: {npc: DetailedNPC}) {
 	const dialogueData = await getNPCDialogueTabData(npc);
 	const detailedDialogues =
@@ -64,7 +64,9 @@ export default async function NPCDialogueTable({npc}: {npc: DetailedNPC}) {
 								<tr key={dialogue.id}>
 									<td>
 										<div className='tooltip' data-tip={dialogue.dialogueType}>
-											<DialogueIcon dialogueType={dialogue.dialogueType} />
+											<DialogueIcon
+												dialogueType={dialogue.dialogueType || 'other'}
+											/>
 										</div>
 									</td>
 									<td>{dialogue.text}</td>
@@ -86,13 +88,14 @@ export default async function NPCDialogueTable({npc}: {npc: DetailedNPC}) {
 												<PiSkullBold className='font-bold text-lg text-error group-hover:text-white' />
 											</DeleteModal>
 											{npc.voice_id && dialogue.audioURL === null && (
-												<AddTTSModal
-													dialogue={dialogue}
+												<TTSModal
+													dialogueId={dialogue.id}
+													text={dialogue.text}
 													voiceId={npc.voice_id}
 													npcId={npc.id}
 												>
 													<PiMicrophoneBold className='font-bold text-lg text-primary group-hover:text-white' />
-												</AddTTSModal>
+												</TTSModal>
 											)}
 										</div>
 									</td>
