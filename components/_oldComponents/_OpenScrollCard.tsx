@@ -1,8 +1,8 @@
 'use client';
 
 import {useState} from 'react';
-import NPCCarousel from '../NPCCarousel';
-import {DeleteModal} from '../forms/DeleteModal';
+// import NPCCarousel from '../NPCCarousel';
+import {DeleteModal} from './_DeleteModal';
 import {deleteCampaignAction} from '@/actions/db/campaigns';
 import {CampaignWithNPCs} from '@/types/drizzle';
 import Image from 'next/image';

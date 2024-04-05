@@ -1,7 +1,7 @@
 import {DialogueListTable} from '@/components/DialogueListTable';
 import {DetailedDialogue, DetailedNPC} from '@/types/drizzle';
 import {Divider} from '@nextui-org/divider';
-import AddDialogueToNPC from './cards/AddDialogueToNPC';
+import AddDialogueToNPC from './AddDialogueToNPC';
 export function NPCDetail({
 	npc,
 	dialogues,

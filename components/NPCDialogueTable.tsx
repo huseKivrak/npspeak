@@ -1,6 +1,6 @@
 import {getNPCDialogueTabData} from '@/actions/npcTabData';
 import {DetailedDialogue, DetailedNPC} from '@/types/drizzle';
-import AddDialogueToNPC from './cards/AddDialogueToNPC';
+import AddDialogueToNPC from './AddDialogueToNPC';
 import Link from 'next/link';
 import {DialogueIcon} from './icons/DialogueIcon';
 
