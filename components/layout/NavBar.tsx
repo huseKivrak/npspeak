@@ -10,14 +10,16 @@ import {ScrollEmoji} from '../icons/ScrollEmoji';
 
 export const NavBar = ({children}: {children: React.ReactNode}) => {
 	return (
-		<Navbar>
-			<NavbarBrand>
-				<Link href='/'>
-					<ScrollEmoji />
-					<p className='font-bold text-inherit'>npSpeak</p>
-				</Link>
-			</NavbarBrand>
-			<NavbarContent className='hidden sm:flex gap-4' justify='center'>
+		<Navbar maxWidth='xl' position='sticky'>
+			<NavbarContent className='basis-1/5 sm:basis-full' justify='start'>
+				<NavbarBrand className='gap-3 max-w-fit'>
+					<Link href='/'>
+						<ScrollEmoji />
+						<p className='font-bold text-inherit'>npSpeak</p>
+					</Link>
+				</NavbarBrand>
+			</NavbarContent>
+			<NavbarContent className='basis-1' justify='end'>
 				<NavbarItem>{children}</NavbarItem>
 			</NavbarContent>
 		</Navbar>
