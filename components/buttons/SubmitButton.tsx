@@ -1,7 +1,7 @@
 'use client';
 
 import {useFormStatus} from 'react-dom';
-
+import {Button} from '@nextui-org/button';
 type SubmitButtonProps = {
 	text: string;
 	className?: string;
@@ -11,17 +11,18 @@ type SubmitButtonProps = {
 export function SubmitButton({text, className, children}: SubmitButtonProps) {
 	const {pending} = useFormStatus();
 
-	const buttonClasses = `btn btn-primary ${className || ''}`;
+	const buttonClasses = ` ${className || ''}`;
 
 	return (
-		<button
+		<Button
 			type='submit'
+			radius='sm'
 			aria-disabled={pending}
 			disabled={pending}
 			className={buttonClasses}
 		>
 			{text}
 			{children}
-		</button>
+		</Button>
 	);
 }
