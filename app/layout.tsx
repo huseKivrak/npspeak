@@ -1,14 +1,11 @@
 import './globals.css';
 import {Metadata} from 'next';
-import NavBar from '@/components/layout/NavBar';
-import Footer from '@/components/layout/Footer';
 import {Analytics} from '@vercel/analytics/react';
 import {SpeedInsights} from '@vercel/speed-insights/next';
-import clsx from 'clsx';
 import {Providers} from './providers';
 import {siteConfig} from '@/config/site';
 import {fontSans} from '@/config/fonts';
-import AuthButton from '@/components/buttons/AuthButton';
+import clsx from 'clsx';
 const defaultUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
 	: 'http://localhost:3000';
@@ -35,9 +32,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 					fontSans.variable
 				)}
 			>
-				<NavBar>
-					<AuthButton />
-				</NavBar>
 				{/* @ts-ignore */}
 				<Providers themeProps={{attribute: 'class', defaultTheme: 'dark'}}>
 					<div className='relative flex flex-col h-screen'>
@@ -46,7 +40,11 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 						</main>
 						<Analytics />
 						<SpeedInsights />
-						<Footer />
+						<footer className='w-full flex items-center justify-center py-3'>
+							<p className='text-default-600 text-small'>
+								Copyright © 2024 - All rights reserved by npSpeak
+							</p>
+						</footer>
 					</div>
 				</Providers>
 			</body>
