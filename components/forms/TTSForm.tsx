@@ -9,7 +9,7 @@ import {ttsHandlerSchema} from '@/database/drizzle/validation';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {ActionStatus, DetailedNPC} from '@/types/drizzle';
 import {ErrorMessage} from '@hookform/error-message';
-import ErrorToast from '@/components/ErrorToast';
+import {ErrorToast} from '@/components/ErrorToast';
 import {FormOptions} from '@/types/drizzle';
 import ttsHandler from '@/actions/ttsHandler';
 import {RadioSelections} from './RadioSelections';

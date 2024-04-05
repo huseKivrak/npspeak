@@ -1,6 +1,6 @@
 import 'server-only';
 
-import {CampaignWithNPCs, DetailedNPC} from '@/types/drizzle';
+import {ActionStatus, CampaignWithNPCs, DetailedNPC} from '@/types/drizzle';
 import {
 	npcs,
 	campaigns,
@@ -10,107 +10,118 @@ import {
 	tts_audio,
 } from '@/database/drizzle/schema';
 import {db} from '.';
-import {eq, and, isNotNull} from 'drizzle-orm';
+import {eq, and} from 'drizzle-orm';
 import {getUserInfo} from '@/actions/auth';
-import {ActionStatus} from '@/types/drizzle';
-
+import {DetailedDialogue} from '@/types/drizzle';
+import {PgSelect} from 'drizzle-orm/pg-core';
 /**
- * Retrieves campaigns and their associated NPCs for current user.
- *
- * The select operation currently does not specify columns,
- * so raw results also contain joined data from campaign_npcs table.
- *
- * This data is then processed to group campaigns with an array of their NPCs.
+ * @param campaignId Optional: Returns all user campaigns if not provided
+ * @returns CampaignWithNPCs | CampaignWithNPCs[] | {status: string; message: string}
  */
-export const getCampaignsWithNPCs = async (): Promise<
-	CampaignWithNPCs[] | null
-> => {
+export const getCampaignsWithNPCs = async (
+	campaignId?: number
+): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
-	if (!user) return null;
+	if (!user)
+		return {
+			status: 'error',
+			message: 'Unauthorized',
+		};
 
-	const userId = user.id;
+	function withCampaignId<T extends PgSelect>(qb: T, campaignId: number) {
+		return qb.where(eq(campaigns.id, campaignId));
+	}
 
 	try {
-		const rawJoinRows = await db
+		let campaignQuery = db
 			.select()
 			.from(campaigns)
 			.leftJoin(campaign_npcs, eq(campaigns.id, campaign_npcs.campaign_id))
 			.leftJoin(npcs, eq(npcs.id, campaign_npcs.npc_id))
-			.where(eq(campaigns.user_id, userId));
+			.where(eq(campaigns.user_id, user.id))
+			.$dynamic();
 
-		const campaignsWithNPCs: CampaignWithNPCs[] = rawJoinRows.reduce(
-			(acc, row) => {
-				let campaign = acc.find((entry) => entry.id === row.campaigns.id);
-				if (!campaign) {
-					campaign = {
-						...row.campaigns,
-						npcs: row.npcs ? [row.npcs] : [],
-					};
-					acc.push(campaign);
-				} else {
-					if (row.npcs) {
-						campaign.npcs.push(row.npcs);
-					}
+		campaignQuery = campaignId
+			? withCampaignId(campaignQuery, campaignId)
+			: campaignQuery;
+
+		const rows = await campaignQuery;
+
+		const campaignData: CampaignWithNPCs[] = rows.reduce((acc, row) => {
+			let campaign = acc.find((entry) => entry.id === row.campaigns.id);
+			if (!campaign) {
+				campaign = {
+					...row.campaigns,
+					npcs: row.npcs ? [row.npcs] : [],
+				};
+				acc.push(campaign);
+			} else {
+				if (row.npcs) {
+					campaign.npcs.push(row.npcs);
 				}
-				return acc;
-			},
-			[] as CampaignWithNPCs[]
-		);
-		return campaignsWithNPCs;
+			}
+			return acc;
+		}, [] as CampaignWithNPCs[]);
+
+		const data =
+			campaignId && campaignData.length ? campaignData[0] : campaignData;
+		return {
+			status: 'success',
+			data,
+		};
 	} catch (error) {
 		console.error('Error fetching campaigns:', error);
-		throw new Error('An error occured while getting campaigns');
-	}
-};
-
-export const getCampaignById = async (id: string) => {
-	const {user} = await getUserInfo();
-	if (!user) return null;
-	const userId = user.id;
-
-	const campaignId = parseInt(id);
-	if (isNaN(campaignId)) return null;
-
-	try {
-		const campaign = await db
-			.select()
-			.from(campaigns)
-			.leftJoin(campaign_npcs, eq(campaigns.id, campaign_npcs.campaign_id))
-			.where(and(eq(campaigns.id, campaignId), eq(campaigns.user_id, userId)));
-
-		return campaign;
-	} catch (error) {
-		console.error('Error fetching campaign:', error);
-		throw new Error('An error occured while getting campaign');
+		return {
+			status: 'error',
+			message: `Error fetching campaigns: ${error}`,
+		};
 	}
 };
 
 ///////////////////////////////////////////////////
 /// NPCs
 ///////////////////////////////////////////////////
+
 /**
- * Retrieves all user NPCs and their associated campaigns and dialogues.
  *
- * @returns DetailedNPC[] | null
+ * @param npcId Optional: Returns all user NPCs if not provided
+ * @returns DetailedNPC | DetailedNPC[] | {status: string; message: string}
  */
-export const getNPCsWithRelatedData = async (): Promise<
-	DetailedNPC[] | null
-> => {
+export const getNPCsWithRelatedData = async (
+	npcId?: number
+): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
-	if (!user) return null;
+	if (!user)
+		return {
+			status: 'error',
+			message: 'Unauthenticated',
+		};
+
+	function withNPCId<T extends PgSelect>(qb: T, npcId: number) {
+		return qb.where(eq(npcs.id, npcId));
+	}
 
 	try {
-		const rawJoinRows = await db
+		let npcQuery = db
 			.select()
 			.from(npcs)
 			.leftJoin(campaign_npcs, eq(npcs.id, campaign_npcs.npc_id))
 			.leftJoin(campaigns, eq(campaigns.id, campaign_npcs.campaign_id))
 			.leftJoin(npc_dialogues, eq(npcs.id, npc_dialogues.npc_id))
-			.where(eq(npcs.user_id, user.id));
+			.where(eq(npcs.user_id, user.id))
+			.$dynamic();
 
-		if (rawJoinRows.length === 0) return null;
+		npcQuery = npcId ? withNPCId(npcQuery, npcId) : npcQuery;
 
-		const transformedNPCs: DetailedNPC[] = rawJoinRows.reduce((acc, row) => {
+		const rows = await npcQuery;
+
+		if (rows.length === 0)
+			return {
+				status: 'error',
+				message: 'NPC not found',
+			};
+
+		const npcData: DetailedNPC[] = rows.reduce((acc, row) => {
 			let npc = acc.find((entry) => entry.id === row.npcs.id);
 			if (!npc) {
 				npc = {
@@ -122,113 +133,79 @@ export const getNPCsWithRelatedData = async (): Promise<
 			} else {
 				if (
 					row.campaigns &&
-					!npc.campaigns.find((c) => c.id === row.campaigns?.id)
+					!npc.campaigns.find((campaign) => campaign.id === row.campaigns?.id)
 				) {
 					npc.campaigns.push(row.campaigns);
 				}
-				if (row.npc_dialogues) {
+				if (
+					row.npc_dialogues &&
+					!npc.dialogues.find(
+						(dialogue) => dialogue.id === row.npc_dialogues?.id
+					)
+				) {
 					npc.dialogues.push(row.npc_dialogues);
 				}
 			}
 			return acc;
 		}, [] as DetailedNPC[]);
 
-		return transformedNPCs;
-	} catch (error) {
-		//todo: handle errors
-		console.error('Error fetching NPCS:', error);
-		return null;
-	}
-};
-
-export const getNPCById = async (
-	npcId: number
-): Promise<DetailedNPC | null> => {
-	const {user} = await getUserInfo();
-	if (!user) return null;
-	const userId = user.id;
-	try {
-		const rawJoinRows = await db
-			.select()
-			.from(npcs)
-			.leftJoin(campaign_npcs, eq(npcs.id, campaign_npcs.npc_id))
-			.leftJoin(campaigns, eq(campaigns.id, campaign_npcs.campaign_id))
-			.leftJoin(npc_dialogues, eq(npcs.id, npc_dialogues.npc_id))
-			.where(and(eq(npcs.id, npcId), eq(npcs.user_id, userId)));
-
-		if (rawJoinRows.length === 0) return null;
-
-		const npc = rawJoinRows.reduce((acc, row) => {
-			if (!acc.id) {
-				acc = {
-					...row.npcs,
-					campaigns: row.campaigns ? [row.campaigns] : [],
-					dialogues: row.npc_dialogues ? [row.npc_dialogues] : [],
-				};
-			}
-			if (
-				row.campaigns &&
-				!acc.campaigns.find((campaign) => campaign.id === row.campaigns?.id)
-			) {
-				acc.campaigns.push(row.campaigns);
-			}
-			if (
-				row.npc_dialogues &&
-				!acc.dialogues.find((dialogue) => dialogue.id === row.npc_dialogues?.id)
-			) {
-				acc.dialogues.push(row.npc_dialogues);
-			}
-			return acc;
-		}, {} as DetailedNPC);
-
-		return npc;
+		const data = npcId && npcData.length ? npcData[0] : npcData;
+		return {
+			status: 'success',
+			data,
+		};
 	} catch (error) {
 		console.error('Error fetching NPC:', error);
-		throw new Error('An error occured while getting NPC');
+		return {
+			status: 'error',
+			message: `Error fetching NPC: ${error}`,
+		};
 	}
 };
 
-export const getAudioURLsforNPCDialogues = async (
-	npcId: number,
-	userId: string
+/**
+ * Fetches detailed dialogue data for given NPC
+ *
+ * @param npcId
+ * @returns DetailedDialogue[] | {status: string; message: string}
+ */
+export const getDetailedDialogues = async (
+	npcId: number
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
-	if (!user)
+	if (!user) {
 		return {
 			status: 'error',
 			message: 'Unauthenticated',
 		};
-	if (user.id !== userId)
+	}
+	try {
+		const rows: DetailedDialogue[] = await db
+			.select({
+				id: npc_dialogues.id,
+				npc_id: npc_dialogues.npc_id,
+				user_id: npc_dialogues.user_id,
+				text: npc_dialogues.text,
+				dialogueType: npc_dialogue_types.type_name,
+				audioFileKey: tts_audio.file_url,
+				audioDuration: tts_audio.duration_seconds,
+			})
+			.from(npc_dialogues)
+			.leftJoin(tts_audio, eq(npc_dialogues.tts_audio_id, tts_audio.id))
+			.leftJoin(
+				npc_dialogue_types,
+				eq(npc_dialogues.dialogue_type_id, npc_dialogue_types.id)
+			)
+			.where(eq(npc_dialogues.npc_id, npcId));
+		return {
+			status: 'success',
+			data: rows,
+		};
+	} catch (error) {
+		console.error('Error fetching detailed dialogues: ', error);
 		return {
 			status: 'error',
-			message: 'Unauthorized access.',
+			message: `Error fetching detailed dialogues: ${error}`,
 		};
-
-	const rows = await db
-		.select({id: npc_dialogues.id, audioURL: tts_audio.file_url})
-		.from(npc_dialogues)
-		.leftJoin(tts_audio, eq(npc_dialogues.tts_audio_id, tts_audio.id))
-		.where(
-			and(
-				eq(npc_dialogues.npc_id, npcId),
-				eq(npc_dialogues.user_id, userId),
-				isNotNull(tts_audio.file_url)
-			)
-		);
-
-	return {
-		status: 'success',
-		message: 'Audio URLs fetched successfully',
-		data: rows,
-	};
-};
-
-export const getDialogueTypes = async () => {
-	try {
-		const dialogueTypes = await db.select().from(npc_dialogue_types);
-		return dialogueTypes;
-	} catch (error) {
-		console.error('Error fetching dialogue types:', error);
-		throw new Error('An error occured while getting dialogue types');
 	}
 };

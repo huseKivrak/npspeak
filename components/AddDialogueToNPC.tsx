@@ -1,6 +1,6 @@
 'use client';
 import {useState} from 'react';
-import DialogueForm from '../forms/DialogueForm';
+import DialogueForm from './forms/DialogueForm';
 import {cn} from '@/utils/helpers/clsxMerge';
 
 export default function AddDialogueToNPC({npcId}: {npcId: number}) {

@@ -1,6 +1,7 @@
 'use server';
 
-import {createClient} from '@/utils/supabase/server';
+import {createClientOnServer} from '@/utils/supabase/server';
+import {createClientOnClient} from '@/utils/supabase/client';
 import {headers} from 'next/headers';
 import {redirect} from 'next/navigation';
 import {AuthError, User} from '@supabase/supabase-js';
@@ -18,7 +19,7 @@ export const signUpAction = async (
 		const {email, password, username} = signupSchema.parse(formData);
 
 		const cookieStore = cookies();
-		const supabase = createClient(cookieStore);
+		const supabase = createClientOnServer(cookieStore);
 
 		const {error} = await supabase.auth.signUp({
 			email,
@@ -60,9 +61,9 @@ export const signUpAction = async (
 export const signInAction = async (formData: FormData) => {
 	const email = formData.get('email') as string;
 	const password = formData.get('password') as string;
-
+	console.log('signing in user: ', email, password);
 	const cookieStore = cookies();
-	const supabase = createClient(cookieStore);
+	const supabase = createClientOnServer(cookieStore);
 
 	const {error} = await supabase.auth.signInWithPassword({
 		email,
@@ -70,6 +71,7 @@ export const signInAction = async (formData: FormData) => {
 	});
 
 	if (error) {
+		console.error('Supabase Auth Error - Login: ', error);
 		return redirect(
 			'/login?message=incorrect email/password. please try again'
 		);
@@ -80,7 +82,7 @@ export const signInAction = async (formData: FormData) => {
 
 export const logoutAction = async () => {
 	const cookieStore = cookies();
-	const supabase = createClient(cookieStore);
+	const supabase = createClientOnServer(cookieStore);
 
 	const {error} = await supabase.auth.signOut();
 	if (error) {
@@ -95,7 +97,7 @@ export const logoutAction = async () => {
 //! not for most up-to-date user (use supabase.auth.getUser() instead)
 export const old_getUserFromSession = async () => {
 	const cookieStore = cookies();
-	const supabase = createClient(cookieStore);
+	const supabase = createClientOnServer(cookieStore);
 	try {
 		const {
 			data: {session},
@@ -130,7 +132,7 @@ interface UserAuth {
 //streamlined method for returning up-to-date user info
 export const getUserInfo = async (): Promise<UserAuth> => {
 	const cookieStore = cookies();
-	const supabase = createClient(cookieStore);
+	const supabase = createClientOnServer(cookieStore);
 	try {
 		const {
 			data: {user},

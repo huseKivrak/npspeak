@@ -12,7 +12,7 @@ export type DetailedNPC = Tables<'npcs'> & {
 export type ActionStatus =
 	| {
 			status: 'success';
-			message: string;
+			message?: string;
 			data: any;
 	  }
 	| {
@@ -34,11 +34,16 @@ export type FormOptions =
 			label: string;
 	  }[];
 
+//todo
 export type DetailedDialogue = {
 	id: number;
+	npc_id: number | null;
+	user_id: string | null;
 	text: string;
-	dialogueType: string;
-	audioURL: string | null;
+	dialogueType: string | null;
+	audioFileKey?: string | null;
+	audioURL?: string | null;
+	audioDuration?: number | null;
 };
 
 export type ServerAction = (

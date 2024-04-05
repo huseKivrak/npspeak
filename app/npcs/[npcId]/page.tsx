@@ -1,9 +1,12 @@
 import {redirect} from 'next/navigation';
-import NPCTabListCard from '@/components/cards/NPCTabListCard';
 import {getUserInfo} from '@/actions/auth';
-import {getNPCById} from '@/database/drizzle/queries';
-import {createAllTabData} from '@/actions/npcTabData';
-import NPCDialogueTable from '@/components/NPCDialogueTable';
+import {
+	getDetailedDialogues,
+	getNPCsWithRelatedData,
+} from '@/database/drizzle/queries';
+import {getPresignedDownloadURL} from '@/actions/s3';
+import {DetailedNPC, DetailedDialogue} from '@/types/drizzle';
+import {NPCDetail} from '@/components/NPCDetail';
 export default async function NPCDetailPage({
 	params,
 }: {
@@ -14,11 +17,33 @@ export default async function NPCDetailPage({
 	const {user} = await getUserInfo();
 	if (!user) return redirect('/login');
 
-	const npc = await getNPCById(params.npcId);
-	if (!npc) return redirect('/404');
+	const npcResponse = await getNPCsWithRelatedData(params.npcId);
+	const npc: DetailedNPC =
+		npcResponse.status === 'success' ? npcResponse.data : [];
 	if (npc.user_id !== user.id) return <p>Unauthorized</p>;
+	if (!npc) return <p>NPC not found</p>;
 
-	const allTabData = await createAllTabData(npc);
-	// return <NPCTabListCard npc={npc} allTabData={allTabData} />;
-	return <NPCDialogueTable npc={npc} />;
+	const dialogueResponse = await getDetailedDialogues(npc.id);
+	const dialogues =
+		dialogueResponse.status === 'success' ? dialogueResponse.data : [];
+
+	await Promise.all(
+		dialogues.map(async (d: DetailedDialogue) => {
+			try {
+				const fileKey = d.audioFileKey;
+				if (!fileKey) return;
+
+				const response = await getPresignedDownloadURL(fileKey);
+				if (response.status === 'success') {
+					return (d.audioURL = response.data);
+				} else {
+					return (d.audioURL = null);
+				}
+			} catch (error) {
+				console.error(error);
+				return;
+			}
+		})
+	);
+	return <NPCDetail npc={npc} dialogues={dialogues} />;
 }

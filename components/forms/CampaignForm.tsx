@@ -9,7 +9,7 @@ import {campaignSchema} from '@/database/drizzle/validation';
 import {ActionStatus} from '@/types/drizzle';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {ErrorMessage} from '@hookform/error-message';
-import ErrorToast from '../ErrorToast';
+import {ErrorToast} from '../ErrorToast';
 import {FormOptions} from '@/types/drizzle';
 import {CheckboxSelections} from './CheckboxSelections';
 interface CampaignFormProps {

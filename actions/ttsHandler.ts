@@ -1,7 +1,7 @@
 'use server';
 import {getUserInfo} from './auth';
 import {createElevenLabsTTSAction} from './elevenLabs';
-import {createTTSAudioAction} from './db/dialogue';
+import {updateDialogueTTSAudioAction} from './db/dialogue';
 import {uploadAudioToS3} from './s3';
 import {ttsHandlerSchema} from '@/database/drizzle/validation';
 import {db} from '@/database/drizzle';
@@ -52,7 +52,10 @@ export default async function ttsHandler(
 	ttsAudioData.append('duration_seconds', duration);
 
 	//insert TTS audio into database
-	const audioAction = await createTTSAudioAction(prevState, ttsAudioData);
+	const audioAction = await updateDialogueTTSAudioAction(
+		prevState,
+		ttsAudioData
+	);
 	console.log('AUDIO ACTION:', audioAction);
 	if (audioAction.status !== 'success') {
 		return audioAction;

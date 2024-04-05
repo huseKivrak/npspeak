@@ -1,17 +1,27 @@
-import AuthButton from '../buttons/AuthButton';
+'use client';
+import {
+	Navbar,
+	NavbarBrand,
+	NavbarContent,
+	NavbarItem,
+} from '@nextui-org/react';
 import Link from 'next/link';
+import {ScrollEmoji} from '../icons/ScrollEmoji';
 
-export default function NavBar() {
+export const NavBar = ({children}: {children: React.ReactNode}) => {
 	return (
-		<div className='navbar bg-primary'>
-			<div className='navbar-start text-primary-content'>
-				<Link href='/' className='btn btn-ghost text-xl'>
-					npSpeak
-				</Link>
-			</div>
-			<div className='navbar-end'>
-				<AuthButton />
-			</div>
-		</div>
+		<Navbar maxWidth='xl' position='sticky'>
+			<NavbarContent className='basis-1/5 sm:basis-full' justify='start'>
+				<NavbarBrand className='gap-3 max-w-fit'>
+					<Link href='/'>
+						<ScrollEmoji />
+						<p className='font-bold text-inherit'>npSpeak</p>
+					</Link>
+				</NavbarBrand>
+			</NavbarContent>
+			<NavbarContent className='basis-1' justify='end'>
+				<NavbarItem>{children}</NavbarItem>
+			</NavbarContent>
+		</Navbar>
 	);
-}
+};

@@ -1,5 +1,5 @@
 'use client';
-import {DeleteModal} from '../forms/DeleteModal';
+import {DeleteModal} from './_DeleteModal';
 import {deleteNPCAction} from '@/actions/db/NPCs';
 import {PiSkullBold} from 'react-icons/pi';
 

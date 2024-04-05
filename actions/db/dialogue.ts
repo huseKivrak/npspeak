@@ -127,7 +127,7 @@ export const deleteDialogueAction = async (
 		`/npcs/${deletedDialogue.npc_id}?deleted=true&message=${deletedMessage}`
 	);
 };
-export async function createTTSAudioAction(
+export async function updateDialogueTTSAudioAction(
 	prevState: ActionStatus,
 	formData: FormData
 ): Promise<ActionStatus> {

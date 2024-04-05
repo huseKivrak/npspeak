@@ -1,44 +1,52 @@
-import {GeistSans} from 'geist/font/sans';
 import './globals.css';
-import NavBar from '@/components/layout/NavBar';
-import Footer from '@/components/layout/Footer';
-import Sidebar from '@/components/layout/Sidebar';
+import {Metadata} from 'next';
 import {Analytics} from '@vercel/analytics/react';
 import {SpeedInsights} from '@vercel/speed-insights/next';
-
+import {Providers} from './providers';
+import {siteConfig} from '@/config/site';
+import {fontSans} from '@/config/fonts';
 import clsx from 'clsx';
-
 const defaultUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
 	: 'http://localhost:3000';
 
-export const metadata = {
+export const metadata: Metadata = {
 	metadataBase: new URL(defaultUrl),
-	title: 'npSpeak',
+	title: {
+		default: siteConfig.name,
+		template: `%s | ${siteConfig.name}`,
+	},
+	description: siteConfig.description,
+	icons: {
+		icon: '/favicon.ico',
+	},
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
 	return (
-		<html
-			lang='en'
-			className={clsx(
-				'bg-gradient-to-b from-base-100 to-base-300',
-				GeistSans.className
-			)}
-		>
-			<head>
-				<link rel='icon' href='/favicon.ico' sizes='any' />
-			</head>
-			<body className='flex flex-col min-h-screen'>
-				<NavBar />
-				<Sidebar>
-					<main className='flex flex-col items-center justify-center mx-auto w-full sm:max-w-4/5 md:max-w-3/4 lg:max-w-5/6 pt-8 pb-36'>
-						{children}
-					</main>
-					<Analytics />
-					<SpeedInsights />
-					<Footer />
-				</Sidebar>
+		<html lang='en' suppressHydrationWarning>
+			<head />
+			<body
+				className={clsx(
+					'min-h-screen bg-background font-sans antialiased',
+					fontSans.variable
+				)}
+			>
+				{/* @ts-ignore */}
+				<Providers themeProps={{attribute: 'class', defaultTheme: 'dark'}}>
+					<div className='relative flex flex-col h-screen'>
+						<main className='container mx-auto max-w-7xl pt-16 px-6 flex-grow'>
+							{children}
+						</main>
+						<Analytics />
+						<SpeedInsights />
+						<footer className='w-full flex items-center justify-center py-3'>
+							<p className='text-default-600 text-small'>
+								Copyright © 2024 - All rights reserved by npSpeak
+							</p>
+						</footer>
+					</div>
+				</Providers>
 			</body>
 		</html>
 	);

@@ -1,46 +1,43 @@
 'use client';
+
+import {useForm} from 'react-hook-form';
 import Link from 'next/link';
 import {signInAction} from '@/actions/auth';
 import {SubmitButton} from '../buttons/SubmitButton';
+import {Input} from '@nextui-org/react';
+
+type Inputs = {
+	email: string;
+	password: string;
+};
 
 export default function LoginForm() {
+	const {register} = useForm<Inputs>();
 	return (
 		<div className='flex flex-col flex-1 w-full px-4 sm:max-w-md items-center'>
 			<h2 className='text-3xl font-thin tracking-widest mt-2'>login</h2>
-
-			<form
-				className='animate-in flex-1 flex flex-col w-full justify-items-center gap-2'
-				action={signInAction}
-			>
-				<label className='font-thin tracking-widest' htmlFor='email'>
-					email
-				</label>
-				<input
-					className='rounded-md px-4 py-2 bg-inherit border mb-1 font-thin tracking-widest'
-					name='email'
+			<form className='' action={signInAction}>
+				<Input
+					isRequired
+					type='email'
+					label='email'
 					placeholder='you@example.com'
-					autoFocus
-					required
+					variant='bordered'
+					className='max-w-xs'
+					{...register('email')}
 				/>
-				<label className='font-thin tracking-widest' htmlFor='password'>
-					password
-				</label>
-				<input
-					className='rounded-md px-4 py-2 bg-inherit border mb-1 font-thin tracking-widest'
+				<Input
+					isRequired
 					type='password'
-					name='password'
+					label='password'
 					placeholder='••••••••'
-					required
+					className='max-w-xs'
+					{...register('password')}
 				/>
-				<SubmitButton
-					className={
-						'btn btn-success font-light w-full rounded-md px-1 py-2 text-foreground mb-1'
-					}
-					text={'sign in'}
-				/>
-				<span className='font-thin text-sm  tracking-widest ml-1'>
+				<SubmitButton className='max-w-xs' text={'sign in'} />
+				<span className=''>
 					no account?
-					<Link href='signup' className='ml-2 text-secondary'>
+					<Link href='signup' className=''>
 						sign up here
 					</Link>
 				</span>

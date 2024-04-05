@@ -1,8 +1,8 @@
 import {getUserInfo} from '@/actions/auth';
 import {redirect} from 'next/navigation';
-import OpenScrollCard from '@/components/cards/OpenScrollCard';
+import OpenScrollCard from '@/components/_oldComponents/_OpenScrollCard';
 import {getCampaignsWithNPCs} from '@/database/drizzle/queries';
-import ErrorToast from '@/components/ErrorToast';
+import {ErrorToast} from '@/components/ErrorToast';
 
 export default async function CampaignDetailPage({
 	params,

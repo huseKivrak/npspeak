@@ -1,5 +1,5 @@
 'use client';
-import AddDialogueToNPC from './AddDialogueToNPC';
+import AddDialogueToNPC from '../AddDialogueToNPC';
 import {DetailedNPC, DetailedDialogue} from '@/types/drizzle';
 import {DialogueIcon} from '@/components/icons/DialogueIcon';
 
