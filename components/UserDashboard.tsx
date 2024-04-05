@@ -19,12 +19,12 @@ export function UserDashboard({
 				size='lg'
 				radius='sm'
 				variant='light'
-				color='default'
+				color='success'
 				classNames={{
 					tabList:
 						'gap-6 w-full relative rounded-none p-0 border-b border-divider',
 					cursor: 'w-full',
-					tab: 'max-w-fit px-2 h-12',
+					tab: ' px-2 h-12',
 					tabContent: '',
 				}}
 			>
