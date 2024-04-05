@@ -1,6 +1,6 @@
 import 'server-only';
 
-import {CampaignWithNPCs, DetailedNPC} from '@/types/drizzle';
+import {ActionStatus, CampaignWithNPCs, DetailedNPC} from '@/types/drizzle';
 import {
 	npcs,
 	campaigns,
@@ -20,9 +20,7 @@ import {PgSelect} from 'drizzle-orm/pg-core';
  */
 export const getCampaignsWithNPCs = async (
 	campaignId?: number
-): Promise<
-	CampaignWithNPCs | CampaignWithNPCs[] | {status: string; message: string}
-> => {
+): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
 	if (!user)
 		return {
@@ -49,7 +47,7 @@ export const getCampaignsWithNPCs = async (
 
 		const rows = await campaignQuery;
 
-		const campaignsWithNPCs: CampaignWithNPCs[] = rows.reduce((acc, row) => {
+		const campaignData: CampaignWithNPCs[] = rows.reduce((acc, row) => {
 			let campaign = acc.find((entry) => entry.id === row.campaigns.id);
 			if (!campaign) {
 				campaign = {
@@ -64,7 +62,13 @@ export const getCampaignsWithNPCs = async (
 			}
 			return acc;
 		}, [] as CampaignWithNPCs[]);
-		return campaignsWithNPCs;
+
+		const data =
+			campaignId && campaignData.length ? campaignData[0] : campaignData;
+		return {
+			status: 'success',
+			data,
+		};
 	} catch (error) {
 		console.error('Error fetching campaigns:', error);
 		return {
@@ -85,7 +89,7 @@ export const getCampaignsWithNPCs = async (
  */
 export const getNPCsWithRelatedData = async (
 	npcId?: number
-): Promise<DetailedNPC | DetailedNPC[] | {status: string; message: string}> => {
+): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
 	if (!user)
 		return {
@@ -117,7 +121,7 @@ export const getNPCsWithRelatedData = async (
 				message: 'NPC not found',
 			};
 
-		const npcData = rows.reduce((acc, row) => {
+		const npcData: DetailedNPC[] = rows.reduce((acc, row) => {
 			let npc = acc.find((entry) => entry.id === row.npcs.id);
 			if (!npc) {
 				npc = {
@@ -145,7 +149,11 @@ export const getNPCsWithRelatedData = async (
 			return acc;
 		}, [] as DetailedNPC[]);
 
-		return npcId && npcData.length ? npcData[0] : npcData;
+		const data = npcId && npcData.length ? npcData[0] : npcData;
+		return {
+			status: 'success',
+			data,
+		};
 	} catch (error) {
 		console.error('Error fetching NPC:', error);
 		return {
@@ -163,7 +171,7 @@ export const getNPCsWithRelatedData = async (
  */
 export const getDetailedDialogues = async (
 	npcId: number
-): Promise<DetailedDialogue[] | {status: 'error'; message: string}> => {
+): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
 	if (!user) {
 		return {
@@ -189,7 +197,10 @@ export const getDetailedDialogues = async (
 				eq(npc_dialogues.dialogue_type_id, npc_dialogue_types.id)
 			)
 			.where(eq(npc_dialogues.npc_id, npcId));
-		return rows;
+		return {
+			status: 'success',
+			data: rows,
+		};
 	} catch (error) {
 		console.error('Error fetching detailed dialogues: ', error);
 		return {
