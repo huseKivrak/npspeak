@@ -14,8 +14,15 @@ export default async function UserPage({
 	const {user} = await getUserInfo();
 	if (!user) return redirect('/login');
 
-	const campaigns = await getCampaignsWithNPCs();
-	const npcs = await getNPCsWithRelatedData();
+	const campaignResponse = await getCampaignsWithNPCs();
+	const campaigns =
+		campaignResponse.status === 'success' ? campaignResponse.data : [];
+	const npcsResponse = await getNPCsWithRelatedData();
+	const npcs = npcsResponse.status === 'success' ? npcsResponse.data : [];
 
-	return <UserDashboard campaigns={campaigns} npcs={npcs} />;
+	return (
+		<div>
+			<UserDashboard campaigns={campaigns} npcs={npcs} />
+		</div>
+	);
 }
