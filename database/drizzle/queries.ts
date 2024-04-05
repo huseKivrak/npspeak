@@ -180,14 +180,14 @@ export const getDetailedDialogues = async (
 		};
 	}
 	try {
-		const rows = await db
+		const rows: DetailedDialogue[] = await db
 			.select({
 				id: npc_dialogues.id,
 				npc_id: npc_dialogues.npc_id,
 				user_id: npc_dialogues.user_id,
 				text: npc_dialogues.text,
 				dialogueType: npc_dialogue_types.type_name,
-				audioURL: tts_audio.file_url,
+				audioFileKey: tts_audio.file_url,
 				audioDuration: tts_audio.duration_seconds,
 			})
 			.from(npc_dialogues)
