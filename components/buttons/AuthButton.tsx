@@ -1,26 +1,23 @@
 import Link from 'next/link';
-import LoginForm from '../forms/LoginForm';
 import {logoutAction} from '@/actions/auth';
-import {Button} from '@nextui-org/button';
+import {getUserInfo} from '@/actions/auth';
 
 /**
  * Login/logout button depending on user auth state
  */
 
-export default async function AuthButton({username}: {username?: string}) {
-	return (
+export default async function AuthButton() {
+	const {user} = await getUserInfo();
+
+	return user ? (
 		<div className='flex items-center gap-4 text-primary-content'>
-			{username ? (
-				<Button variant='flat' color='warning' formAction={logoutAction}>
-					logout
-				</Button>
-			) : (
-				<Link href='/login'>
-					<Button variant='flat' color='secondary'>
-						login
-					</Button>
-				</Link>
-			)}
+			<form action={logoutAction}>
+				<button className=''>logout</button>
+			</form>
 		</div>
+	) : (
+		<Link href='/login'>
+			<button>login</button>
+		</Link>
 	);
 }
