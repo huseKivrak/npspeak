@@ -1,17 +1,17 @@
 import {getNPCDialogueTabData} from '@/actions/npcTabData';
 import {DetailedDialogue, DetailedNPC} from '@/types/drizzle';
-import AddDialogueToNPC from './AddDialogueToNPC';
+import AddDialogueToNPC from '../AddDialogueToNPC';
 import Link from 'next/link';
-import {DialogueIcon} from './icons/DialogueIcon';
+import {DialogueIcon} from '../icons/DialogueIcon';
 
 import {
 	PiSkullBold,
 	PiMicrophoneBold,
 	PiMicrophoneSlashBold,
 } from 'react-icons/pi';
-import {DeleteModal} from './DeleteModal';
+import {DeleteModal} from '../DeleteModal';
 import {deleteDialogueAction} from '@/actions/db/dialogue';
-import {TTSModal} from './TTSModal';
+import {TTSModal} from '../TTSModal';
 export default async function NPCDialogueTable({npc}: {npc: DetailedNPC}) {
 	const dialogueData = await getNPCDialogueTabData(npc);
 	const detailedDialogues =
