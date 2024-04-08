@@ -1,6 +1,6 @@
 'use client';
 
-import TTSForm from '../forms/TTSForm';
+import TTSForm from './_TTSForm';
 import {createTTSFormOptions} from '@/utils/formatHelpers';
 import {DetailedNPC} from '@/types/drizzle';
 import {ElevenLabsVoice} from '@/types/elevenlabs';

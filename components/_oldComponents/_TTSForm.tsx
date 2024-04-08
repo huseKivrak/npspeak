@@ -1,7 +1,7 @@
 'use client';
 
 import {useState, useEffect} from 'react';
-import {useForm, FieldPath} from 'react-hook-form';
+import {useForm, FieldPath, Controller} from 'react-hook-form';
 import {useFormState} from 'react-dom';
 import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -12,10 +12,9 @@ import {ErrorMessage} from '@hookform/error-message';
 import {ErrorToast} from '@/components/ErrorToast';
 import {FormOptions} from '@/types/drizzle';
 import ttsHandler from '@/actions/ttsHandler';
-import {RadioSelections} from './RadioSelections';
-import {VoiceSelect} from './dropdown/VoiceSelect';
+import {VoiceSelect} from '../forms/dropdown/VoiceSelect';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
-import {cn} from '@/utils/helpers/clsxMerge';
+import {Radio, RadioGroup} from '@nextui-org/radio';
 
 type Inputs = z.infer<typeof ttsHandlerSchema>;
 export default function TTSForm({
@@ -67,16 +66,27 @@ export default function TTSForm({
 
 	return (
 		<div className='flex flex-col '>
-			<form action={formAction} className='flex flex-col gap-2 w-full max-w-sm'>
+			<form className='flex flex-col gap-2 w-full max-w-sm'>
 				<input type='hidden' name='npc_id' value={npc.id} />
 				{ttsDialogueOptions.length > 0 ? (
 					<>
 						<h2 className=''>Select Dialogue:</h2>
-						<RadioSelections
-							fieldName='dialogue_id'
-							options={ttsDialogueOptions}
-							register={register}
-							setValue={setValue}
+						<Controller
+							name='dialogue_id'
+							control={control}
+							render={({field}) => (
+								<RadioGroup
+									{...field}
+									onChange={(value) => field.onChange(value)}
+									value={field.value.toString()}
+								>
+									{ttsDialogueOptions.map((option) => (
+										<Radio key={option.label} value={option.value.toString()}>
+											{option.label}
+										</Radio>
+									))}
+								</RadioGroup>
+							)}
 						/>
 
 						<ErrorMessage
@@ -110,7 +120,13 @@ export default function TTSForm({
 							name='voice_id'
 							render={({message}) => <ErrorToast text={message} />}
 						/>
-						<SubmitButton text='create audio!' className='btn-accent mt-8' />
+						<SubmitButton
+							formAction={formAction}
+							pendingText='creating audio...'
+							className='btn-accent mt-8'
+						>
+							create audio!
+						</SubmitButton>
 					</>
 				) : (
 					<ErrorToast text='TTS Unavailable!' className='text-center'>
