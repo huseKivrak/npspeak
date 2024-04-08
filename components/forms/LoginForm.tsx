@@ -11,12 +11,16 @@ type Inputs = {
 	password: string;
 };
 
-export default function LoginForm() {
+export default function LoginForm({
+	searchParams,
+}: {
+	searchParams: {message: string};
+}) {
 	const {register} = useForm<Inputs>();
 	return (
 		<div className='flex flex-col flex-1 w-full px-4 sm:max-w-md items-center'>
 			<h2 className='text-3xl font-thin tracking-widest mt-2'>login</h2>
-			<form className='' action={signInAction}>
+			<form className=''>
 				<Input
 					isRequired
 					type='email'
@@ -34,13 +38,22 @@ export default function LoginForm() {
 					className='max-w-xs'
 					{...register('password')}
 				/>
-				<SubmitButton className='max-w-xs' text={'sign in'} />
+				<SubmitButton
+					formAction={signInAction}
+					className='max-w-xs'
+					pendingText='signing in...'
+				/>
 				<span className=''>
 					no account?
 					<Link href='signup' className=''>
 						sign up here
 					</Link>
 				</span>
+				{searchParams?.message && (
+					<p className='mt-4 p-4 bg-foreground/10 text-foreground text-center'>
+						{searchParams.message}
+					</p>
+				)}
 			</form>
 		</div>
 	);

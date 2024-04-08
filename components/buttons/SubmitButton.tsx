@@ -1,28 +1,18 @@
 'use client';
 
 import {useFormStatus} from 'react-dom';
-import {Button} from '@nextui-org/button';
-type SubmitButtonProps = {
-	text: string;
-	className?: string;
-	children?: React.ReactNode;
+import {type ComponentProps} from 'react';
+type Props = ComponentProps<'button'> & {
+	pendingText?: string;
 };
 
-export function SubmitButton({text, className, children}: SubmitButtonProps) {
-	const {pending} = useFormStatus();
-
-	const buttonClasses = ` ${className || ''}`;
+export function SubmitButton({pendingText, children, ...props}: Props) {
+	const {pending, action} = useFormStatus();
+	const isPending = pending && action === props.formAction;
 
 	return (
-		<Button
-			type='submit'
-			radius='sm'
-			aria-disabled={pending}
-			disabled={pending}
-			className={buttonClasses}
-		>
-			{text}
-			{children}
-		</Button>
+		<button type='submit' aria-disabled={pending} {...props}>
+			{isPending ? pendingText : children}
+		</button>
 	);
 }
