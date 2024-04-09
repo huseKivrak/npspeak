@@ -1,3 +1,8 @@
+import {Spinner} from '@nextui-org/spinner';
 export default function Loading() {
-	return <span className='loading loading-ring loading-lg'></span>;
+	return (
+		<div className='flex items-center justify-center h-3/5'>
+			<Spinner size='lg' color='warning' />
+		</div>
+	);
 }
