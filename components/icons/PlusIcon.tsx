@@ -1,8 +1,5 @@
-import {SVGProps} from 'react';
+import {IconSvgProps} from '@/types/types';
 
-type IconSvgProps = SVGProps<SVGSVGElement> & {
-	size?: number;
-};
 export const PlusIcon = ({
 	size = 24,
 	width,

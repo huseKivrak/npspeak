@@ -1,5 +1,18 @@
-export const ScrollEmoji = () => (
-	<svg id='emoji' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'>
+import {IconSvgProps} from '@/types/types';
+
+export const ScrollEmojiIcon = ({
+	size = 24,
+	width,
+	height,
+	...props
+}: IconSvgProps) => (
+	<svg
+		viewBox='0 0 72 72'
+		xmlns='http://www.w3.org/2000/svg'
+		width={size || width}
+		height={size || height}
+		{...props}
+	>
 		<g id='color'>
 			<rect
 				x='15.0229'
