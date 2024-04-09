@@ -2,15 +2,20 @@ import CampaignForm from '@/components/forms/CampaignForm';
 import {getUserInfo} from '@/actions/auth';
 import {redirect} from 'next/navigation';
 import {getNPCsWithRelatedData} from '@/database/drizzle/queries';
-import {transformNPCOptions} from '@/utils/helpers/formHelpers';
+import {DetailedNPC} from '@/types/drizzle';
 
 export default async function CreateCampaignPage() {
 	const {user} = await getUserInfo();
 	if (!user) {
 		redirect('/login');
 	}
-	const npcs = await getNPCsWithRelatedData();
-	const npcOptions = npcs ? transformNPCOptions(npcs) : [];
+	const npcsResponse = await getNPCsWithRelatedData();
+	const npcs: DetailedNPC[] =
+		npcsResponse.status === 'success' ? npcsResponse.data : [];
+	const npcOptions = npcs?.map((npc) => ({
+		label: npc.npc_name,
+		value: npc.id,
+	}));
 
 	return (
 		<div className='flex flex-col items-center'>
