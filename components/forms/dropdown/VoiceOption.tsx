@@ -1,6 +1,6 @@
 import {components, OptionProps} from 'react-select';
 import {getAccentEmoji} from '@/utils/helpers/formHelpers';
-import {GenderIcon} from '@/components/icons/GenderIcon';
+import {GenderIcon} from '@/components/icons';
 import {Chip} from '@nextui-org/chip';
 export interface VoiceOptionProps {
 	label: string;

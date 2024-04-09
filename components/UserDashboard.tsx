@@ -7,7 +7,7 @@ import {useState} from 'react';
 import NPCForm from './forms/NPCForm';
 import CampaignForm from './forms/CampaignForm';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
-import {PlusIcon} from './icons/PlusIcon';
+import {PlusIcon} from './icons';
 import {
 	transformNPCOptions,
 	transformCampaignOptions,

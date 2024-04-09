@@ -13,7 +13,7 @@ import {
 	Pagination,
 } from '@nextui-org/react';
 import {deleteCampaignAction} from '@/actions/db/campaigns';
-import {DeleteIcon} from './icons/DeleteIcon';
+import {DeleteIcon} from './icons';
 import Link from 'next/link';
 import {DeleteModal} from './DeleteModal';
 import {truncateText} from '@/utils/helpers/formHelpers';

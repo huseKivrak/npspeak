@@ -12,7 +12,7 @@ import {
 	Tooltip,
 	Pagination,
 } from '@nextui-org/react';
-import {DeleteIcon} from './icons/DeleteIcon';
+import {DeleteIcon} from './icons';
 import {DeleteModal} from './DeleteModal';
 import {deleteNPCAction} from '@/actions/db/NPCs';
 import Link from 'next/link';

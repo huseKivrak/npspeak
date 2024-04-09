@@ -11,7 +11,7 @@ import {
 import {ServerAction} from '@/types/drizzle';
 import {useFormState} from 'react-dom';
 import {DeleteModalMessages} from '@/lib/constants';
-import {DeleteIcon} from './icons/DeleteIcon';
+import {DeleteIcon} from './icons';
 import {SubmitButton} from './buttons/SubmitButton';
 
 export function DeleteModal({

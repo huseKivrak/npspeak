@@ -13,8 +13,8 @@ import {
 	Chip,
 	Tooltip,
 } from '@nextui-org/react';
-import {DeleteIcon} from './icons/DeleteIcon';
-import {DialogueIcon} from './icons/DialogueIcon';
+import {DeleteIcon} from './icons';
+import {DialogueIcon} from './icons';
 import {DeleteModal} from './DeleteModal';
 import {deleteDialogueAction} from '@/actions/db/dialogue';
 import {PiMicrophoneSlashBold} from 'react-icons/pi';

@@ -1,5 +1,5 @@
 import {components, SingleValueProps} from 'react-select';
-import {GenderIcon} from '@/components/icons/GenderIcon';
+import {GenderIcon} from '@/components/icons';
 import {getAccentEmoji} from '@/utils/helpers/formHelpers';
 import {VoiceOptionProps} from './VoiceOption';
 import {Chip} from '@nextui-org/chip';
