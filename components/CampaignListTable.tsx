@@ -1,5 +1,5 @@
 'use client';
-import {useCallback} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {CampaignWithNPCs} from '@/types/drizzle';
 import {
 	Table,
@@ -8,52 +8,58 @@ import {
 	TableColumn,
 	TableRow,
 	TableCell,
-	getKeyValue,
-	Button,
 	Chip,
 	Tooltip,
+	Pagination,
 } from '@nextui-org/react';
 import {deleteCampaignAction} from '@/actions/db/campaigns';
 import {DeleteIcon} from './icons/DeleteIcon';
 import Link from 'next/link';
 import {DeleteModal} from './DeleteModal';
+import {truncateText} from '@/utils/helpers/formHelpers';
+
 export function CampaignListTable({
 	campaigns,
 }: {
 	campaigns: CampaignWithNPCs[];
 }) {
-	const columns = [
-		{name: 'NAME', uid: 'name'},
-		{name: 'DESCRIPTION', uid: 'description'},
-		{name: 'NPCS', uid: 'npcs'},
-		{name: 'CREATED', uid: 'created_at'},
-		{name: 'ACTIONS', uid: 'actions'},
-	];
+	const [page, setPage] = useState(1);
 
-	const rows = campaigns.map((campaign) => ({
-		id: campaign.id,
-		name: campaign.campaign_name,
-		description: campaign.description,
-		npcs: campaign.npcs,
-		created_at: campaign.created_at,
-	}));
-	type Campaign = (typeof rows)[0];
+	const rowsPerPage = 5;
+	const pages = Math.ceil(campaigns.length / rowsPerPage);
+
+	const items = useMemo(() => {
+		const start = (page - 1) * rowsPerPage;
+		const end = start + rowsPerPage;
+		return campaigns.slice(start, end);
+	}, [page, campaigns]);
+
+	type Campaign = (typeof items)[0];
 	const renderCell = useCallback((campaign: Campaign, columnKey: React.Key) => {
 		switch (columnKey) {
 			case 'name':
 				return (
 					<div className='flex flex-col'>
-						<p className='font-semibold capitalize hover:underline'>
-							<Link href={`/campaigns/${campaign.id}`}>{campaign.name}</Link>
+						<p className='text-large font-semibold capitalize hover:underline'>
+							<Link href={`/campaigns/${campaign.id}`}>
+								{campaign.campaign_name}
+							</Link>
 						</p>
 					</div>
 				);
 			case 'description':
 				return (
 					<div className='flex flex-col'>
-						<p className='text-bold text-tiny capitalize'>
-							{campaign.description}
-						</p>
+						<Tooltip
+							delay={500}
+							closeDelay={0}
+							content={campaign.description}
+							className='max-w-sm'
+						>
+							<p className='text-small capitalize'>
+								{truncateText(campaign.description ?? '', 30)}
+							</p>
+						</Tooltip>
 					</div>
 				);
 			case 'npcs':
@@ -62,13 +68,13 @@ export function CampaignListTable({
 						{campaign.npcs.map((npc) => (
 							<Chip
 								key={npc.id}
-								size='sm'
+								size='md'
 								color='secondary'
 								variant='flat'
 								className='hover:underline hover:bg-secondary-200'
 							>
 								<Link key={npc.id} href={`/npcs/${npc.id}`}>
-									{npc.npc_name}
+									{truncateText(npc.npc_name ?? '', 40)}
 								</Link>
 							</Chip>
 						))}
@@ -106,21 +112,30 @@ export function CampaignListTable({
 			isStriped
 			aria-label='Campaigns Table'
 			classNames={{
-				wrapper: 'max-h-[382px] p-0 rounded-none',
+				wrapper: 'p-0 rounded-none',
 			}}
+			bottomContent={
+				<div className='flex w-full justify-center'>
+					<Pagination
+						showControls
+						showShadow
+						color='primary'
+						page={page}
+						total={pages}
+						onChange={(page) => setPage(page)}
+					/>
+				</div>
+			}
+			bottomContentPlacement='outside'
 		>
-			<TableHeader columns={columns}>
-				{(column) => (
-					<TableColumn
-						key={column.uid}
-						align={column.uid === 'actions' ? 'center' : 'start'}
-						className='bg-secondary text-lg tracking-widest text-white font-light'
-					>
-						{column.name}
-					</TableColumn>
-				)}
+			<TableHeader>
+				<TableColumn key='name'>Name</TableColumn>
+				<TableColumn key='description'>Description</TableColumn>
+				<TableColumn key='npcs'>NPCs</TableColumn>
+				<TableColumn key='created_at'>Created</TableColumn>
+				<TableColumn key='actions'>Actions</TableColumn>
 			</TableHeader>
-			<TableBody items={rows}>
+			<TableBody items={items} emptyContent={'No campaigns to display.'}>
 				{(item) => (
 					<TableRow key={item.id}>
 						{(columnKey) => (

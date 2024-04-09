@@ -1,5 +1,5 @@
 'use client';
-import {useCallback} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {DetailedNPC} from '@/types/drizzle';
 import {
 	Table,
@@ -8,48 +8,51 @@ import {
 	TableColumn,
 	TableRow,
 	TableCell,
-	getKeyValue,
-	Button,
 	Chip,
 	Tooltip,
+	Pagination,
 } from '@nextui-org/react';
 import {DeleteIcon} from './icons/DeleteIcon';
 import {DeleteModal} from './DeleteModal';
 import {deleteNPCAction} from '@/actions/db/NPCs';
 import Link from 'next/link';
+import {truncateText} from '@/utils/helpers/formHelpers';
 
 export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
-	const columns = [
-		{name: 'NAME', uid: 'name'},
-		{name: 'DESCRIPTION', uid: 'description'},
-		{name: 'CAMPAIGNS', uid: 'campaigns'},
-		{name: 'CREATED', uid: 'created_at'},
-		{name: 'ACTIONS', uid: 'actions'},
-	];
+	const [page, setPage] = useState(1);
+	const rowsPerPage = 5;
+	const pages = Math.ceil(npcs.length / rowsPerPage);
 
-	const rows = npcs.map((npc) => ({
-		id: npc.id,
-		name: npc.npc_name,
-		description: npc.description,
-		campaigns: npc.campaigns,
-		created_at: npc.created_at,
-	}));
+	const items = useMemo(() => {
+		const start = (page - 1) * rowsPerPage;
+		const end = start + rowsPerPage;
+		return npcs.slice(start, end);
+	}, [page, npcs]);
 
-	type NPC = (typeof rows)[0];
+	type NPC = (typeof npcs)[0];
 	const renderCell = useCallback((npc: NPC, columnKey: React.Key) => {
 		switch (columnKey) {
 			case 'name':
 				return (
 					<div className='flex flex-col'>
-						<p className='font-semibold capitalize hover:underline'>
-							<Link href={`/npcs/${npc.id}`}>{npc.name}</Link>
+						<p className='text-large font-semibold capitalize hover:underline'>
+							<Link href={`/npcs/${npc.id}`}>{npc.npc_name}</Link>
 						</p>
 					</div>
 				);
 			case 'description':
 				return (
 					<div className='flex flex-col'>
-						<p className='text-bold text-tiny capitalize'>{npc.description}</p>
+						<Tooltip
+							delay={500}
+							closeDelay={0}
+							content={npc.description}
+							className='max-w-sm'
+						>
+							<p className='text-small capitalize'>
+								{truncateText(npc.description ?? '', 30)}
+							</p>
+						</Tooltip>
 					</div>
 				);
 			case 'campaigns':
@@ -59,12 +62,12 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 							<Link key={campaign.id} href={`/campaigns/${campaign.id}`}>
 								<Chip
 									key={campaign.id}
-									size='sm'
+									size='md'
 									color='primary'
 									variant='flat'
 									className='hover:underline hover:bg-primary-200'
 								>
-									{campaign.campaign_name.slice(0, 12) + '...'}
+									{truncateText(campaign.campaign_name ?? '', 40)}
 								</Chip>
 							</Link>
 						))}
@@ -104,21 +107,30 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 			isStriped
 			aria-label='NPCs Table'
 			classNames={{
-				wrapper: 'max-h-[382px] p-0 rounded-none',
+				wrapper: 'p-0 rounded-none',
 			}}
+			bottomContent={
+				<div className='flex w-full justify-center'>
+					<Pagination
+						showControls
+						showShadow
+						color='secondary'
+						page={page}
+						total={pages}
+						onChange={(page) => setPage(page)}
+					/>
+				</div>
+			}
+			bottomContentPlacement='outside'
 		>
-			<TableHeader columns={columns}>
-				{(column) => (
-					<TableColumn
-						key={column.uid}
-						align={column.uid === 'actions' ? 'center' : 'start'}
-						className='bg-primary text-lg tracking-widest text-white font-light'
-					>
-						{column.name}
-					</TableColumn>
-				)}
+			<TableHeader>
+				<TableColumn key='name'>NAME</TableColumn>
+				<TableColumn key='description'>DESCRIPTION</TableColumn>
+				<TableColumn key='campaigns'> CAMPAIGNS </TableColumn>
+				<TableColumn key='created_at'> CREATED AT </TableColumn>
+				<TableColumn key='actions'> ACTIONS </TableColumn>
 			</TableHeader>
-			<TableBody items={rows} emptyContent={'No NPCs to display.'}>
+			<TableBody items={items} emptyContent={'No NPCs to display.'}>
 				{(item) => (
 					<TableRow key={item.id}>
 						{(columnKey) => (
