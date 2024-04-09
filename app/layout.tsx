@@ -6,7 +6,7 @@ import {Providers} from './providers';
 import {siteConfig} from '@/config/site';
 import {fontSans} from '@/config/fonts';
 import clsx from 'clsx';
-import {NavBar} from '@/components/layout/NavBar';
+import {Navbar} from '@/components/layout/Navbar';
 import AuthButton from '@/components/buttons/AuthButton';
 const defaultUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
@@ -36,9 +36,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 			>
 				<Providers>
 					<div className='relative flex flex-col h-screen'>
-						<NavBar>
+						<Navbar>
 							<AuthButton />
-						</NavBar>
+						</Navbar>
 						<main className='container mx-auto max-w-7xl pt-8 px-6 flex-grow'>
 							{children}
 						</main>
