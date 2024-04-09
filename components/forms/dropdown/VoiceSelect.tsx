@@ -31,6 +31,7 @@ export const VoiceSelect = ({
 			render={({field}) => (
 				<Select
 					{...field}
+					placeholder='Select a voice'
 					options={alphabetizedVoices.map((voice: ElevenLabsVoice) => ({
 						value: voice.voice_id,
 						label: voice.name,

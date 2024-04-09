@@ -1,8 +1,8 @@
 'use client';
 
 import {useFormStatus} from 'react-dom';
-import {type ComponentProps} from 'react';
-type Props = ComponentProps<'button'> & {
+import {Button, ButtonProps} from '@nextui-org/button';
+type Props = ButtonProps & {
 	pendingText?: string;
 };
 
@@ -11,8 +11,8 @@ export function SubmitButton({pendingText, children, ...props}: Props) {
 	const isPending = pending && action === props.formAction;
 
 	return (
-		<button type='submit' aria-disabled={pending} {...props}>
+		<Button type='submit' aria-disabled={pending} {...props}>
 			{isPending ? pendingText : children}
-		</button>
+		</Button>
 	);
 }

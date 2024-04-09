@@ -27,3 +27,10 @@ export const transformDialogueTypeOptions = (
 
 export const getAccentEmoji = (accent: string) =>
 	AccentEmojiMap[accent] || accent;
+
+export const truncateText = (text: string, length: number) => {
+	if (text.length > length) {
+		return `${text.substring(0, length)}...`;
+	}
+	return text;
+};

@@ -11,15 +11,13 @@ import {
 import {useFormState} from 'react-dom';
 import ttsHandler from '@/actions/ttsHandler';
 import {PiMicrophoneBold} from 'react-icons/pi';
+import {SubmitButton} from './buttons/SubmitButton';
 
 export function TTSModal({
 	dialogueId,
 	text,
 	voiceId,
 	npcId,
-	className,
-	children,
-	...props
 }: {
 	dialogueId: number;
 	text: string;
@@ -77,17 +75,22 @@ export function TTSModal({
 							</ModalHeader>
 							<ModalBody>Create audio for this dialogue?</ModalBody>
 							<ModalFooter>
-								<Button color='default' variant='light' onPress={onClose}>
-									Close
-								</Button>
-								<form action={formAction}>
+								<form>
 									<input type='hidden' name='dialogue_id' value={dialogueId} />
 									<input type='hidden' name='text' value={text} />
 									<input type='hidden' name='npc_id' value={npcId} />
 									<input type='hidden' name='voice_id' value={voiceId} />
-									<Button color='success' type='submit'>
-										Create!
+
+									<Button color='default' variant='light' onPress={onClose}>
+										Close
 									</Button>
+
+									<SubmitButton
+										formAction={formAction}
+										pendingText='creating audio...'
+									>
+										Create!
+									</SubmitButton>
 								</form>
 							</ModalFooter>
 						</>

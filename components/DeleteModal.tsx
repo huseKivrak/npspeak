@@ -12,13 +12,12 @@ import {ServerAction} from '@/types/drizzle';
 import {useFormState} from 'react-dom';
 import {DeleteModalMessages} from '@/lib/constants';
 import {DeleteIcon} from './icons/DeleteIcon';
+import {SubmitButton} from './buttons/SubmitButton';
+
 export function DeleteModal({
 	id,
 	idName,
 	serverAction,
-	className,
-	children,
-	...props
 }: {
 	id: number;
 	idName: 'npc_id' | 'dialogue_id' | 'campaign_id';
@@ -83,14 +82,17 @@ export function DeleteModal({
 							</ModalHeader>
 							<ModalBody>{modalMessage}</ModalBody>
 							<ModalFooter>
-								<Button color='default' variant='light' onPress={onClose}>
-									Close
-								</Button>
-								<form action={formAction}>
+								<form>
 									<input type='hidden' name={idName} value={id} />
-									<Button color='danger' type='submit'>
-										Delete
+									<Button color='default' variant='light' onPress={onClose}>
+										Close
 									</Button>
+									<SubmitButton
+										pendingText={`Deleting ${title}...`}
+										formAction={formAction}
+									>
+										Delete
+									</SubmitButton>
 								</form>
 							</ModalFooter>
 						</>

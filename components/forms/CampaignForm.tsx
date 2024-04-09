@@ -1,6 +1,6 @@
 'use client';
 import {useState, useEffect} from 'react';
-import {useForm, FieldPath} from 'react-hook-form';
+import {useForm, FieldPath, Controller} from 'react-hook-form';
 import {useFormState} from 'react-dom';
 import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -11,7 +11,13 @@ import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {ErrorMessage} from '@hookform/error-message';
 import {ErrorToast} from '../ErrorToast';
 import {FormOptions} from '@/types/drizzle';
-import {CheckboxSelections} from './CheckboxSelections';
+import {
+	CheckboxGroup,
+	Checkbox,
+	Input,
+	Textarea,
+	Button,
+} from '@nextui-org/react';
 interface CampaignFormProps {
 	npcOptions?: FormOptions;
 }
@@ -31,6 +37,7 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 		formState: {errors},
 		setError,
 		reset,
+		control,
 	} = useForm<Inputs>({
 		resolver: zodResolver(campaignSchema),
 	});
@@ -52,89 +59,94 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 	}, [state, setError, reset]);
 
 	return (
-		<div className='flex flex-col'>
-			<form action={formAction} className='w-full max-w-xs flex flex-col gap-2'>
-				<label htmlFor='campaign_name' className='form-control'>
-					campaign name
-				</label>
-				<input
+		<div className='flex flex-col items-start mb-8'>
+			<form className='flex flex-col w-full max-w-xs gap-2'>
+				<Input
 					{...register('campaign_name')}
 					id='campaign_name'
 					type='text'
+					variant='bordered'
 					name='campaign_name'
 					placeholder='name your campaign'
-					className='input input-bordered input-primary mb-4'
 				/>
 				<ErrorMessage
 					errors={errors}
 					name='campaign_name'
 					render={({message}) => <ErrorToast text={message} />}
 				/>
-				<label htmlFor='description' className='form-control'>
-					description
-				</label>
-				<textarea
+
+				<Textarea
 					{...register('description')}
 					id='description'
 					name='description'
 					placeholder='describe your campaign'
-					className='textarea textarea-primary w-full h-24'
+					variant='bordered'
 				/>
 				<ErrorMessage
 					errors={errors}
 					name='description'
 					render={({message}) => <ErrorToast text={message} />}
 				/>
-				<label htmlFor='start_date' className='form-control'>
-					start date
-				</label>
-				<input
+				<Input
 					{...register('start_date')}
 					id='start_date'
 					type='date'
 					name='start_date'
-					className='input input-bordered input-primary'
+					variant='bordered'
 				/>
 				<ErrorMessage
 					errors={errors}
 					name='start_date'
 					render={({message}) => <ErrorToast text={message} />}
 				/>
-				<label htmlFor='end_date' className='form-control'>
-					end date
-				</label>
-				<input
+				<Input
 					{...register('end_date')}
 					id='end_date'
 					type='date'
 					name='end_date'
-					className='input input-bordered input-primary'
+					variant='bordered'
 				/>
 				<ErrorMessage
 					errors={errors}
 					name='end_date'
 					render={({message}) => <ErrorToast text={message} />}
 				/>
-				<button
-					type='button'
-					className='btn btn-sm btn-secondary w-full mt-4'
+				<Button
 					onClick={() => setShowAddNpc(!showAddNpc)}
+					variant='flat'
+					color='secondary'
 				>
 					{showAddNpc ? 'cancel' : 'add NPC(s) to campaign'}
-				</button>
+				</Button>
 				{showAddNpc && npcOptions && npcOptions.length > 0 && (
-					<>
-						<label htmlFor='npc_ids' className='form-control'>
-							Which NPC(s) are part of this campaign?
-						</label>
-						<CheckboxSelections
-							fieldName='npc_ids'
-							options={npcOptions}
-							register={register}
-						/>
-					</>
+					<Controller
+						name='npc_ids'
+						control={control}
+						render={({field: {ref}}) => (
+							<CheckboxGroup
+								label='npcs'
+								name='npc_ids'
+								orientation='horizontal'
+								ref={ref}
+							>
+								{npcOptions.map((option) => (
+									<Checkbox key={option.label} value={option.value.toString()}>
+										{option.label}
+									</Checkbox>
+								))}
+							</CheckboxGroup>
+						)}
+					/>
 				)}
-				<SubmitButton text='submit' className={'flex mt-10'} />
+				<SubmitButton
+					formAction={formAction}
+					pendingText='creating campaign...'
+					variant='flat'
+					color='success'
+					className='mt-2 font-bold text-large'
+				>
+					create campaign!
+				</SubmitButton>
 			</form>
 		</div>
 	);

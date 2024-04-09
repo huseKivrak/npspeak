@@ -1,17 +1,17 @@
 'use client';
 import {useEffect} from 'react';
-import {useForm, FieldPath} from 'react-hook-form';
+import {useForm, Controller, FieldPath} from 'react-hook-form';
 import {useFormState} from 'react-dom';
 import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {createDialogueAction} from '@/actions/db/dialogue';
 import {dialogueSchema} from '@/database/drizzle/validation';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
-import {FormOptions, ActionStatus} from '@/types/drizzle';
+import {ActionStatus} from '@/types/drizzle';
 import {ErrorMessage} from '@hookform/error-message';
 import {ErrorToast} from '@/components/ErrorToast';
 import {DefaultDialogueTypes} from '@/lib/constants';
-
+import {RadioGroup, Radio, Textarea} from '@nextui-org/react';
 type Inputs = z.infer<typeof dialogueSchema>;
 export default function DialogueForm({npcId}: {npcId: number}) {
 	const [state, formAction] = useFormState<ActionStatus, FormData>(
@@ -21,6 +21,7 @@ export default function DialogueForm({npcId}: {npcId: number}) {
 
 	const {
 		register,
+		control,
 		formState: {errors},
 		setError,
 		reset,
@@ -45,42 +46,49 @@ export default function DialogueForm({npcId}: {npcId: number}) {
 
 	return (
 		<div className='flex flex-col items-start mt-4'>
-			<form action={formAction} className='flex flex-col gap-1 w-4/5 max-w-xs'>
+			<form className='flex flex-col gap-1 w-4/5 max-w-xs'>
 				<input type='hidden' {...register('npc_id')} value={npcId} />
-
-				<label
-					htmlFor='dialogue_type_id'
-					className='form-control text-primary font-semibold'
-				>
-					dialogue type
-				</label>
-				{DefaultDialogueTypes.map((option) => (
-					<label key={option.value} className='label cursor-pointer'>
-						<span className='label-text'>{option.label}</span>
-						<input
-							type='radio'
-							value={option.value}
-							{...register('dialogue_type_id')}
-							className='checkbox'
-							required
-						/>
-					</label>
-				))}
+				<Controller
+					name='dialogue_type_id'
+					control={control}
+					defaultValue={DefaultDialogueTypes[0].value}
+					render={({field: {ref}}) => (
+						<RadioGroup
+							label='type'
+							orientation='horizontal'
+							name='dialogue_type_id'
+							isRequired
+							ref={ref}
+						>
+							{DefaultDialogueTypes.map((option) => (
+								<Radio key={option.label} value={option.value.toString()}>
+									{option.label}
+								</Radio>
+							))}
+						</RadioGroup>
+					)}
+				/>
 				<ErrorMessage errors={errors} name='dialogue_type_id' />
 
-				<label htmlFor='text' className='form-control'>
-					Text
-				</label>
-				<textarea
-					{...register('text')}
-					id='text'
-					className='textarea textarea-secondary textarea-sm w-full max-w-xs'
-					rows={3}
-					cols={20}
+				<Controller
+					name='text'
+					control={control}
+					render={({field}) => (
+						<Textarea
+							{...field}
+							label='text'
+							className='max-w-xs mt-4'
+							variant='bordered'
+							labelPlacement='outside'
+							isRequired
+						/>
+					)}
 				/>
 				<ErrorMessage errors={errors} name='text' />
 
-				<SubmitButton text='add dialogue' />
+				<SubmitButton formAction={formAction} pendingText='adding dialogue...'>
+					add dialogue
+				</SubmitButton>
 			</form>
 			{state?.status === 'error' && <ErrorToast text={state.message} />}
 		</div>

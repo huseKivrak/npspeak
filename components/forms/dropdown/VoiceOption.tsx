@@ -1,8 +1,7 @@
 import {components, OptionProps} from 'react-select';
-import {FaMars, FaVenus, FaMarsAndVenus} from 'react-icons/fa6';
 import {getAccentEmoji} from '@/utils/helpers/formHelpers';
 import {GenderIcon} from '@/components/icons/GenderIcon';
-
+import {Chip} from '@nextui-org/chip';
 export interface VoiceOptionProps {
 	label: string;
 	value: string;
@@ -22,17 +21,19 @@ export const VoiceOption: React.FC<OptionProps<VoiceOptionProps, false>> = (
 
 	return (
 		<components.Option {...props}>
-			<div className='flex gap-3 items-center'>
-				<span className='text-primary'>{label}</span>
+			<div className='flex gap-5 items-center'>
+				<span className='text-primary text-xl'>{label}</span>
 				{genderIcon}
-				<span className='text-lg'>{accentEmoji}</span>
+				<span className='text-2xl'>{accentEmoji}</span>
 				{useCase && (
-					<div className='badge badge-sm badge-primary justify-start'>
+					<Chip color='primary' variant='flat'>
 						{useCase}
-					</div>
+					</Chip>
 				)}
 				{description && (
-					<div className='badge badge-sm badge-accent'>{description}</div>
+					<Chip color='secondary' variant='flat'>
+						{description}
+					</Chip>
 				)}
 			</div>
 		</components.Option>

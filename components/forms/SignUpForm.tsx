@@ -48,13 +48,7 @@ export default function SignUpForm() {
 	return (
 		<div className='flex flex-col w-full sm:max-w-md justify-center items-center gap-4'>
 			<h2 className='text-4xl font-extralight tracking-widest mt-24'>signup</h2>
-			<form
-				action={formAction}
-				className='flex flex-col max-w-fit justify-items-center gap-2'
-			>
-				<label className='font-thin tracking-widest' htmlFor='email'>
-					email
-				</label>
+			<form className='flex flex-col max-w-fit justify-items-center gap-2'>
 				<Input
 					isRequired
 					type='email'
@@ -65,9 +59,7 @@ export default function SignUpForm() {
 					{...register('email')}
 				/>
 				{errors.email && <ErrorToast text={errors.email} />}
-				<label className='font-thin tracking-widest' htmlFor='username'>
-					username
-				</label>
+
 				<Input
 					isRequired
 					label='username'
@@ -78,9 +70,6 @@ export default function SignUpForm() {
 				/>
 				{errors.username && <ErrorToast text={errors.username} />}
 
-				<label className='font-thin tracking-widest' htmlFor='password'>
-					password
-				</label>
 				<Input
 					isRequired
 					type='password'
@@ -92,9 +81,6 @@ export default function SignUpForm() {
 				/>
 				{errors.password && <ErrorToast text={errors.password} />}
 
-				<label className='font-thin tracking-widest' htmlFor='password2'>
-					confirm password
-				</label>
 				<Input
 					isRequired
 					type='password'
@@ -109,10 +95,11 @@ export default function SignUpForm() {
 				)}
 				<span className='flex flex-col items-center'>
 					<SubmitButton
-						text={'create account'}
-						className={'btn btn-secondary font-light w-4/5 rounded-md py-2'}
+						formAction={formAction}
+						pendingText='creating account...'
+						endContent={<SendEmailIcon width={24} />}
 					>
-						<SendEmailIcon className='w-12' />
+						create account
 					</SubmitButton>
 				</span>
 			</form>
