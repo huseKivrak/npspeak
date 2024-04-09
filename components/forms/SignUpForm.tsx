@@ -2,7 +2,7 @@
 import {useForm} from 'react-hook-form';
 import {signUpAction} from '@/actions/auth';
 import {useFormState} from 'react-dom';
-import SendEmailIcon from '@/components/icons/SendEmailIcon';
+import {SendEmailIcon} from '@/components/icons';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {ActionStatus} from '@/types/drizzle';
 import {useEffect, useState} from 'react';
