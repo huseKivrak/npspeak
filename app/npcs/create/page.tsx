@@ -9,8 +9,11 @@ export default async function CreateCampaignPage() {
 	if (!user) {
 		redirect('/login');
 	}
-	const campaigns = await getCampaignsWithNPCs();
+	const campaignsResponse = await getCampaignsWithNPCs();
+	const campaigns =
+		campaignsResponse.status === 'success' ? campaignsResponse.data : [];
 	const campaignOptions = campaigns ? transformCampaignOptions(campaigns) : [];
+
 	const voices = await getAllElevenLabsVoices();
 	const voiceOptions = voices.status === 'success' ? voices.data : [];
 	return (
