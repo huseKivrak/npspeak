@@ -36,7 +36,7 @@ export default function NPCForm({campaignOptions, voiceOptions}: NPCFormProps) {
 	);
 	const [showAddCampaign, setShowAddCampaign] = useState(false);
 	const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null);
-
+	const [autoplay, setAutoplay] = useState(false);
 	const {
 		register,
 		control,
@@ -104,14 +104,16 @@ export default function NPCForm({campaignOptions, voiceOptions}: NPCFormProps) {
 					<span className='text-secondary-600 font-semibold'>
 						Voice Preview:
 					</span>
-					{selectedVoiceURL ? (
-						<audio src={selectedVoiceURL} controls />
-					) : (
-						<span className='flex items-center gap-2'>
-							<PiMicrophoneSlashBold size={18} />
-							No voice selected
-						</span>
-					)}
+					<audio src={selectedVoiceURL ?? ''} controls autoPlay={autoplay} />
+					<Checkbox
+						isSelected={autoplay}
+						onValueChange={setAutoplay}
+						color='success'
+						radius='full'
+						size='lg'
+					>
+						Autoplay
+					</Checkbox>
 				</div>
 				<ErrorMessage
 					errors={errors}

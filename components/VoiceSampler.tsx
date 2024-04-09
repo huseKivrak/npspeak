@@ -8,7 +8,7 @@ import {Checkbox} from '@nextui-org/checkbox';
 
 export const VoiceSampler = ({voices}: {voices: ElevenLabsVoice[]}) => {
 	const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null);
-	const [autoPlay, setAutoPlay] = useState(false);
+	const [autoplay, setAutoplay] = useState(false);
 
 	const handleVoiceChange = (voiceURL: string) => {
 		setSelectedVoiceURL(voiceURL);
@@ -26,10 +26,10 @@ export const VoiceSampler = ({voices}: {voices: ElevenLabsVoice[]}) => {
 				onVoiceChange={handleVoiceChange}
 			/>
 			<div className='flex gap-2 mt-4'>
-				<audio src={selectedVoiceURL ?? ''} controls autoPlay={autoPlay} />
+				<audio src={selectedVoiceURL ?? ''} controls autoPlay={autoplay} />
 				<Checkbox
-					isSelected={autoPlay}
-					onValueChange={setAutoPlay}
+					isSelected={autoplay}
+					onValueChange={setAutoplay}
 					color='success'
 					radius='full'
 					size='lg'
