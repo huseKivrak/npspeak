@@ -1,7 +1,7 @@
 import React from 'react';
 import {GenderIconMap} from '@/lib/constants';
-export const GenderIcon = (gender: string) => {
+export const GenderIcon = (gender: string, size = 24) => {
 	const {icon: GenderIcon, props} =
 		GenderIconMap[gender] || GenderIconMap.default;
-	return <GenderIcon {...props} />;
+	return <GenderIcon {...props} size={size} />;
 };
