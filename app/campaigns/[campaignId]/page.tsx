@@ -3,6 +3,7 @@ import {redirect} from 'next/navigation';
 import OpenScrollCard from '@/components/_oldComponents/_OpenScrollCard';
 import {getCampaignsWithNPCs} from '@/database/drizzle/queries';
 import {ErrorToast} from '@/components/ErrorToast';
+import {CampaignWithNPCs} from '@/types/drizzle';
 
 export default async function CampaignDetailPage({
 	params,
@@ -15,14 +16,9 @@ export default async function CampaignDetailPage({
 	if (!user) return redirect('/login');
 
 	const campaignId = params.campaignId;
-	const userCampaigns = await getCampaignsWithNPCs();
-	if (!userCampaigns) return <ErrorToast text='No campaigns found' />;
-	const campaign = userCampaigns.find((c) => c.id === campaignId);
-	if (!campaign) return <ErrorToast text='Campaign not found' />;
+	const campaignResponse = await getCampaignsWithNPCs(campaignId);
+	const campaign: CampaignWithNPCs =
+		campaignResponse.status === 'success' ? campaignResponse.data : null;
 
-	return (
-		<div>
-			<OpenScrollCard campaign={campaign} />
-		</div>
-	);
+	return <div></div>;
 }
