@@ -1,30 +1,48 @@
-import {DialogueListTable} from '@/components/DialogueListTable';
-import {DetailedDialogue, DetailedNPC} from '@/types/drizzle';
+'use client';
+
+import {useState} from 'react';
+import {DialogueListTable} from '@/components/tables/DialogueListTable';
+import {DialogueForm} from './forms/DialogueForm';
 import {Divider} from '@nextui-org/divider';
-import AddDialogueToNPC from './AddDialogueToNPC';
-export function NPCDetail({
+import {Button} from '@nextui-org/button';
+import {PlusIcon} from './icons';
+import {DetailedDialogue, DetailedNPC} from '@/types/drizzle';
+export const NPCDetail = ({
 	npc,
 	dialogues,
 }: {
 	npc: DetailedNPC;
 	dialogues?: DetailedDialogue[];
-}) {
-	console.log('NPC DETAILED : ', npc);
-	console.log('DIALOGUES : ', dialogues);
+}) => {
+	const [showDialogueForm, setShowDialogueForm] = useState(false);
+
 	return (
-		<div className='flex w-full flex-col'>
-			<div>
-				<h1 className='text-white text-xl'>{npc.npc_name}</h1>
-				<p className='text-white text-sm'>{npc.description}</p>
+		<div className='flex flex-col w-full'>
+			<div className='flex gap-2 w-5/6'>
+				<h1 className='text-4xl lg:text-6xl text-primary'>{npc.npc_name}</h1>
+				<Divider orientation='vertical' className='mx-4' />
+				<p className='lg:text-xl'>{npc.description}</p>
 			</div>
 			<Divider className='my-4' />
-			<div className='flex flex-col gap-4 w-fit'>
-				<h2 className='text-white text-xl'>Dialogues</h2>
-				<AddDialogueToNPC npcId={npc.id} />
+			<div className='flex flex-col gap-4'>
+				<div className='flex gap-4'>
+					<h2 className='text-xl'>{`${npc.npc_name}'s Dialogue`}</h2>
+					<Button
+						variant='flat'
+						color='success'
+						size='sm'
+						onClick={() => setShowDialogueForm(!showDialogueForm)}
+						startContent={showDialogueForm ? '' : <PlusIcon />}
+						className='w-fit'
+					>
+						{showDialogueForm ? 'cancel' : 'dialogue'}
+					</Button>
+				</div>
+				{showDialogueForm && <DialogueForm npcId={npc.id} />}
 				{dialogues && (
 					<DialogueListTable dialogues={dialogues} voiceId={npc.voice_id!} />
 				)}
 			</div>
 		</div>
 	);
-}
+};
