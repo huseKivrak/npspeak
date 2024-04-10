@@ -1,10 +1,16 @@
 'use client';
 
-import {useForm} from 'react-hook-form';
-import Link from 'next/link';
+import {useEffect} from 'react';
+import {useForm, FieldPath} from 'react-hook-form';
+import {useFormState} from 'react-dom';
 import {signInAction} from '@/actions/auth';
 import {SubmitButton} from '../buttons/SubmitButton';
-import {Button, Input} from '@nextui-org/react';
+import {Input} from '@nextui-org/react';
+import {ActionStatus} from '@/types/drizzle';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {loginSchema} from '@/database/drizzle/validation';
+import {ErrorToast} from '../ErrorToast';
+import {ErrorMessage} from '@hookform/error-message';
 
 type Inputs = {
 	email: string;
@@ -12,37 +18,57 @@ type Inputs = {
 };
 
 export default function LoginForm() {
-	const {register} = useForm<Inputs>();
+	const [state, formAction] = useFormState<ActionStatus, FormData>(
+		signInAction,
+		{
+			status: 'idle',
+			message: '',
+		}
+	);
+	const {
+		register,
+		formState: {errors},
+		setError,
+	} = useForm<Inputs>({resolver: zodResolver(loginSchema)});
+
+	useEffect(() => {
+		if (state.status === 'idle') return;
+		if (state.status === 'error') {
+			state.errors?.forEach((error) => {
+				setError(error.path as FieldPath<Inputs>, {
+					message: error.message,
+				});
+			});
+		}
+	}, [state, setError]);
+
 	return (
-		<div className='flex flex-col flex-1 w-full px-4 sm:max-w-md items-center gap'>
-			<h2 className='text-3xl font-thin tracking-widest mt-2'>login</h2>
-			<form>
-				<Input
-					isRequired
-					type='email'
-					label='email'
-					placeholder='you@example.com'
-					variant='bordered'
-					{...register('email')}
-				/>
-				<Input
-					isRequired
-					type='password'
-					label='password'
-					variant='bordered'
-					placeholder='••••••••'
-					{...register('password')}
-				/>
-				<SubmitButton formAction={signInAction} pendingText='signing in...'>
-					login
-				</SubmitButton>
-			</form>
-			<div className=''>
-				<p>no account?</p>
-				<Button>
-					<Link href='signup'>sign up here</Link>
-				</Button>
-			</div>
-		</div>
+		<form className='flex flex-col max-w-fit items-center gap-2'>
+			{state.status === 'error' && <ErrorToast text={state.message} />}
+			<Input
+				isRequired
+				type='email'
+				label='email'
+				placeholder='you@example.com'
+				variant='bordered'
+				{...register('email')}
+			/>
+			<ErrorMessage
+				errors={errors}
+				name='email'
+				render={({message}) => <ErrorToast text={message} />}
+			/>
+			<Input
+				isRequired
+				type='password'
+				label='password'
+				variant='bordered'
+				placeholder='••••••••'
+				{...register('password')}
+			/>
+			<SubmitButton formAction={formAction} pendingText='signing in...'>
+				login
+			</SubmitButton>
+		</form>
 	);
 }
