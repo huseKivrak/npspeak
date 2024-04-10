@@ -17,9 +17,11 @@ export const VoiceSampler = ({voices}: {voices: ElevenLabsVoice[]}) => {
 
 	return (
 		<div className='flex flex-col w-full'>
-			<h2 className='text-xl font-bold tracking-wide self-start'>
-				Sample some voices:
+			<h2 className='text-2xl font-bold tracking-wide text-primary'>
+				More than 50 voices to choose from.
 			</h2>
+
+			<p className='text-xl self-start mt-4'>Listen to some samples:</p>
 			<VoiceSelect
 				control={control}
 				voiceOptions={voices}
