@@ -3,7 +3,7 @@ import {zfd} from 'zod-form-data';
 
 //Auth
 export const loginSchema = zfd.formData({
-	username: zfd.text(z.string()),
+	email: zfd.text(z.string().email()),
 	password: zfd.text(z.string()),
 });
 
