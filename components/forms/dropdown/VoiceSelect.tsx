@@ -32,6 +32,7 @@ export const VoiceSelect = ({
 				<Select
 					{...field}
 					placeholder='Select a voice'
+					isSearchable={false}
 					options={alphabetizedVoices.map((voice: ElevenLabsVoice) => ({
 						value: voice.voice_id,
 						label: voice.name,
