@@ -428,6 +428,17 @@ export interface Database {
 	};
 }
 
+interface BasicUserInfo {
+	id: string;
+	username: string;
+	lastSignIn: string | null;
+}
+
+export interface UserAuth {
+	user: BasicUserInfo | null;
+	error: string | null;
+}
+
 export type Tables<
 	PublicTableNameOrOptions extends
 		| keyof (Database['public']['Tables'] & Database['public']['Views'])

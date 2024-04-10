@@ -9,6 +9,8 @@ import {cookies} from 'next/headers';
 import {signupSchema, loginSchema} from '@/database/drizzle/validation';
 import {ZodError} from 'zod';
 import {ActionStatus} from '@/types/drizzle';
+import {UserAuth} from '@/types/supabase';
+
 export const signUpAction = async (
 	prevState: ActionStatus,
 	formData: FormData
@@ -58,26 +60,47 @@ export const signUpAction = async (
 	redirect('/signup/success');
 };
 
-export const signInAction = async (formData: FormData) => {
-	const email = formData.get('email') as string;
-	const password = formData.get('password') as string;
-	console.log('signing in user: ', email, password);
-	const cookieStore = cookies();
-	const supabase = createClientOnServer(cookieStore);
+export const signInAction = async (
+	prevState: ActionStatus,
+	formData: FormData
+): Promise<ActionStatus> => {
+	try {
+		const {email, password} = loginSchema.parse(formData);
 
-	const {error} = await supabase.auth.signInWithPassword({
-		email,
-		password,
-	});
+		const cookieStore = cookies();
+		const supabase = createClientOnServer(cookieStore);
 
-	if (error) {
-		console.error('Supabase Auth Error - Login: ', error);
-		return redirect(
-			'/login?message=incorrect email/password. please try again'
-		);
-		// return redirect('/error');
+		const {error} = await supabase.auth.signInWithPassword({
+			email,
+			password,
+		});
+		if (error) {
+			return {
+				status: 'error',
+				message: 'Invalid email/password',
+				errors: [
+					{
+						path: 'email',
+						message: 'Incorrect email/password. Please try again',
+					},
+				],
+			};
+		}
+	} catch (error) {
+		if (error instanceof ZodError) {
+			console.log('zod error: ', error);
+			return {
+				status: 'error',
+				message: 'Invalid form data',
+				errors: error.issues.map((issue) => ({
+					path: issue.path.join('.'),
+					message: `${issue.message}`,
+				})),
+			};
+		}
 	}
-	return redirect(`/`);
+
+	redirect(`/`);
 };
 
 export const logoutAction = async () => {
@@ -90,45 +113,9 @@ export const logoutAction = async () => {
 		return redirect('/error'); //todo: handle logout error
 	}
 
-	return redirect('/?message=logout');
+	redirect('/?message=logout');
 };
 
-//returns a user from sessions saved in cookies
-//! not for most up-to-date user (use supabase.auth.getUser() instead)
-export const old_getUserFromSession = async () => {
-	const cookieStore = cookies();
-	const supabase = createClientOnServer(cookieStore);
-	try {
-		const {
-			data: {session},
-		} = await supabase.auth.getSession();
-		return session?.user;
-	} catch (error) {
-		console.error('Error:', error);
-		return null;
-	}
-};
-
-//simple helper for getting nested username value for now
-//todo: integrate profiles table in lieu of auth:
-//'db.select(username).from(profiles).where(eq(profiles.id, user.id))'
-export const old_getUsername = async (user?: User) => {
-	if (user) return user.user_metadata.username;
-
-	const sessionUser = await old_getUserFromSession();
-	return sessionUser?.user_metadata.username;
-};
-
-export interface BasicUserInfo {
-	id: string;
-	username: string;
-	lastSignIn: string | null;
-}
-
-interface UserAuth {
-	user: BasicUserInfo | null;
-	error: string | null;
-}
 //streamlined method for returning up-to-date user info
 export const getUserInfo = async (): Promise<UserAuth> => {
 	const cookieStore = cookies();
