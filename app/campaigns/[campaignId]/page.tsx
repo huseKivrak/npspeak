@@ -1,8 +1,6 @@
 import {getUserInfo} from '@/actions/auth';
 import {redirect} from 'next/navigation';
-import OpenScrollCard from '@/components/_oldComponents/_OpenScrollCard';
 import {getCampaignsWithNPCs} from '@/database/drizzle/queries';
-import {ErrorToast} from '@/components/ErrorToast';
 import {CampaignWithNPCs} from '@/types/drizzle';
 
 export default async function CampaignDetailPage({
@@ -20,5 +18,11 @@ export default async function CampaignDetailPage({
 	const campaign: CampaignWithNPCs =
 		campaignResponse.status === 'success' ? campaignResponse.data : null;
 
-	return <div></div>;
+	if (campaign.user_id !== user.id) return <div>Unauthorized</div>;
+
+	return (
+		<div>
+			<h1>{campaign.campaign_name}</h1>
+		</div>
+	);
 }
