@@ -32,7 +32,11 @@ export default function SignUpForm() {
 		register,
 		formState: {errors},
 		setError,
-	} = useForm<Inputs>({resolver: zodResolver(signupSchema)});
+	} = useForm<Inputs>({
+		mode: 'onBlur',
+		criteriaMode: 'all',
+		resolver: zodResolver(signupSchema),
+	});
 
 	useEffect(() => {
 		if (state.status === 'idle') return;

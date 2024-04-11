@@ -21,6 +21,7 @@ import {
 } from '@nextui-org/react';
 import {VoiceSelect} from './dropdown/VoiceSelect';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
+import {PlusIcon} from '../icons';
 
 interface NPCFormProps {
 	campaignOptions?: FormOptions;
@@ -41,8 +42,9 @@ export const NPCForm = ({campaignOptions, voiceOptions}: NPCFormProps) => {
 		control,
 		formState: {errors},
 		setError,
-		reset,
 	} = useForm<Inputs>({
+		mode: 'all',
+		criteriaMode: 'all',
 		resolver: zodResolver(npcSchema),
 	});
 
@@ -60,11 +62,9 @@ export const NPCForm = ({campaignOptions, voiceOptions}: NPCFormProps) => {
 				});
 			});
 		}
-		if (state.status === 'success') {
-			alert(state.message);
-			reset();
-		}
-	}, [state, setError, reset]);
+	}, [state, setError]);
+
+	const hasCampaigns = campaignOptions && campaignOptions.length > 0;
 
 	return (
 		<div className='flex flex-col items-start mb-8'>
@@ -114,19 +114,17 @@ export const NPCForm = ({campaignOptions, voiceOptions}: NPCFormProps) => {
 						Autoplay
 					</Checkbox>
 				</div>
-				<ErrorMessage
-					errors={errors}
-					name='voice_id'
-					render={({message}) => <ErrorToast text={message} />}
-				/>
-				<Button
-					onClick={() => setShowAddCampaign(!showAddCampaign)}
-					variant='flat'
-					color='primary'
-				>
-					{showAddCampaign ? 'cancel' : 'add to campaign(s)'}
-				</Button>
-				{showAddCampaign && campaignOptions && campaignOptions.length > 0 && (
+				{hasCampaigns && (
+					<Button
+						onClick={() => setShowAddCampaign(!showAddCampaign)}
+						variant='flat'
+						color='primary'
+						startContent={showAddCampaign ? '' : <PlusIcon />}
+					>
+						{showAddCampaign ? 'cancel' : 'campaign(s)'}
+					</Button>
+				)}
+				{showAddCampaign && hasCampaigns && (
 					<Controller
 						name='campaign_ids'
 						control={control}

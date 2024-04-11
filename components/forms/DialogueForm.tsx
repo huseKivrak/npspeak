@@ -27,11 +27,13 @@ export const DialogueForm = ({npcId}: {npcId: number}) => {
 		setError,
 		reset,
 	} = useForm<Inputs>({
+		mode: 'all',
+		criteriaMode: 'all',
 		resolver: zodResolver(dialogueSchema),
 	});
 
 	useEffect(() => {
-		if (!state) return;
+		if (state.status === 'idle') return;
 		if (state?.status === 'error') {
 			console.log('errors:', state.errors);
 			state.errors?.forEach((error) => {

@@ -10,6 +10,7 @@ import {ActionStatus} from '@/types/drizzle';
 import {SubmitButton} from '@/components/buttons/SubmitButton';
 import {ErrorMessage} from '@hookform/error-message';
 import {ErrorToast} from '../ErrorToast';
+import {PlusIcon} from '../icons';
 import {FormOptions} from '@/types/drizzle';
 import {
 	CheckboxGroup,
@@ -36,9 +37,11 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 		register,
 		formState: {errors},
 		setError,
-		reset,
 		control,
+		trigger,
 	} = useForm<Inputs>({
+		mode: 'all',
+		criteriaMode: 'all',
 		resolver: zodResolver(campaignSchema),
 	});
 
@@ -52,11 +55,9 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 				});
 			});
 		}
-		if (state.status === 'success') {
-			alert(state.message);
-			reset();
-		}
-	}, [state, setError, reset]);
+	}, [state, setError]);
+
+	const hasNPCs = npcOptions && npcOptions.length > 0;
 
 	return (
 		<div className='flex flex-col items-start mb-8'>
@@ -87,6 +88,7 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 					name='description'
 					render={({message}) => <ErrorToast text={message} />}
 				/>
+
 				<Input
 					{...register('start_date')}
 					id='start_date'
@@ -99,26 +101,32 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 					name='start_date'
 					render={({message}) => <ErrorToast text={message} />}
 				/>
+
 				<Input
 					{...register('end_date')}
 					id='end_date'
 					type='date'
 					name='end_date'
 					variant='bordered'
+					onChange={() => trigger('end_date')}
 				/>
 				<ErrorMessage
 					errors={errors}
 					name='end_date'
 					render={({message}) => <ErrorToast text={message} />}
 				/>
-				<Button
-					onClick={() => setShowAddNpc(!showAddNpc)}
-					variant='flat'
-					color='secondary'
-				>
-					{showAddNpc ? 'cancel' : 'add NPC(s) to campaign'}
-				</Button>
-				{showAddNpc && npcOptions && npcOptions.length > 0 && (
+
+				{hasNPCs && (
+					<Button
+						onClick={() => setShowAddNpc(!showAddNpc)}
+						variant='flat'
+						color='secondary'
+						startContent={showAddNpc ? '' : <PlusIcon />}
+					>
+						{showAddNpc ? 'cancel' : 'NPC(s)'}
+					</Button>
+				)}
+				{showAddNpc && hasNPCs && (
 					<Controller
 						name='npc_ids'
 						control={control}
