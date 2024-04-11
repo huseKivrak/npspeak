@@ -1,6 +1,8 @@
 'use client';
 import {useCallback, useMemo, useState} from 'react';
-import {DetailedNPC} from '@/types/drizzle';
+import {deleteNPCAction} from '@/actions/db/NPCs';
+import {DeleteModal} from '../DeleteModal';
+import Link from 'next/link';
 import {
 	Table,
 	TableHeader,
@@ -11,28 +13,74 @@ import {
 	Chip,
 	Tooltip,
 	Pagination,
+	SortDescriptor,
+	Input,
 } from '@nextui-org/react';
-import {DeleteIcon} from '../icons';
-import {DeleteModal} from '../DeleteModal';
-import {deleteNPCAction} from '@/actions/db/NPCs';
-import Link from 'next/link';
+import {DeleteIcon, SearchIcon} from '../icons';
 import {truncateText} from '@/utils/helpers/formHelpers';
+import {DetailedNPC} from '@/types/drizzle';
 
 export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
+	const [filterValue, setFilterValue] = useState('');
+	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+		column: 'npc_name',
+		direction: 'ascending',
+	});
 	const [page, setPage] = useState(1);
+
 	const rowsPerPage = 5;
 	const pages = Math.ceil(npcs.length / rowsPerPage);
 
+	const hasSearchFilter = Boolean(filterValue);
+
+	//Items filtered by search value
+	const filteredItems = useMemo(() => {
+		let filteredNPCs = [...npcs];
+
+		if (hasSearchFilter) {
+			filteredNPCs = filteredNPCs.filter((npc) =>
+				npc.npc_name.toLowerCase().includes(filterValue.toLowerCase())
+			);
+		}
+		return filteredNPCs;
+	}, [npcs, filterValue]);
+
+	//Paginated Items
 	const items = useMemo(() => {
 		const start = (page - 1) * rowsPerPage;
 		const end = start + rowsPerPage;
-		return npcs.slice(start, end);
-	}, [page, npcs]);
 
-	type NPC = (typeof npcs)[0];
-	const renderCell = useCallback((npc: NPC, columnKey: React.Key) => {
+		return filteredItems.slice(start, end);
+	}, [page, filteredItems]);
+
+	//Sorted Items
+	const sortedItems = useMemo(() => {
+		return [...items].sort((a: DetailedNPC, b: DetailedNPC) => {
+			const first = a[sortDescriptor.column as keyof DetailedNPC] as number;
+			const second = b[sortDescriptor.column as keyof DetailedNPC] as number;
+			const cmp = first < second ? -1 : first > second ? 1 : 0;
+
+			return sortDescriptor.direction === 'descending' ? -cmp : cmp;
+		});
+	}, [sortDescriptor, items]);
+
+	const onSearchChange = useCallback((value?: string) => {
+		if (value) {
+			setFilterValue(value);
+			setPage(1);
+		} else {
+			setFilterValue('');
+		}
+	}, []);
+
+	const onClear = useCallback(() => {
+		setFilterValue('');
+		setPage(1);
+	}, []);
+
+	const renderCell = useCallback((npc: DetailedNPC, columnKey: React.Key) => {
 		switch (columnKey) {
-			case 'name':
+			case 'npc_name':
 				return (
 					<div className='flex flex-col'>
 						<p className='text-large font-semibold capitalize hover:underline'>
@@ -101,6 +149,42 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 		}
 	}, []);
 
+	//Search bar
+	const topContent = useMemo(() => {
+		return (
+			<div className='flex flex-col gap-4'>
+				<div className='flex justify-between gap-3 items-end'>
+					<Input
+						isClearable
+						className='w-full sm:max-w-[44%]'
+						placeholder='Search by name...'
+						startContent={<SearchIcon />}
+						value={filterValue}
+						onClear={() => onClear()}
+						onValueChange={onSearchChange}
+					/>
+				</div>
+			</div>
+		);
+	}, [filterValue, onSearchChange, npcs.length, hasSearchFilter]);
+
+	//Pagination UI
+	const bottomContent = useMemo(() => {
+		return (
+			<div className='flex w-full justify-center'>
+				<Pagination
+					showControls
+					showShadow
+					color='secondary'
+					page={page}
+					total={pages}
+					onChange={setPage}
+				/>
+			</div>
+		);
+	}, [page, pages, items.length, hasSearchFilter]);
+
+	console.log('SORTED ITEMS:', sortedItems);
 	return (
 		<Table
 			isHeaderSticky
@@ -109,28 +193,25 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 			classNames={{
 				wrapper: 'p-0 rounded-none',
 			}}
-			bottomContent={
-				<div className='flex w-full justify-center'>
-					<Pagination
-						showControls
-						showShadow
-						color='secondary'
-						page={page}
-						total={pages}
-						onChange={(page) => setPage(page)}
-					/>
-				</div>
-			}
+			sortDescriptor={sortDescriptor}
+			topContent={topContent}
+			topContentPlacement='outside'
+			bottomContent={bottomContent}
 			bottomContentPlacement='outside'
+			onSortChange={setSortDescriptor}
 		>
 			<TableHeader>
-				<TableColumn key='name'>NAME</TableColumn>
+				<TableColumn allowsSorting key='npc_name'>
+					NAME
+				</TableColumn>
 				<TableColumn key='description'>DESCRIPTION</TableColumn>
-				<TableColumn key='campaigns'> CAMPAIGNS </TableColumn>
-				<TableColumn key='created_at'> CREATED AT </TableColumn>
+				<TableColumn key='campaigns'>CAMPAIGNS</TableColumn>
+				<TableColumn allowsSorting key='created_at'>
+					CREATED AT
+				</TableColumn>
 				<TableColumn key='actions'> ACTIONS </TableColumn>
 			</TableHeader>
-			<TableBody items={items} emptyContent={'No NPCs to display.'}>
+			<TableBody items={sortedItems} emptyContent={'No NPCs to display.'}>
 				{(item) => (
 					<TableRow key={item.id}>
 						{(columnKey) => (
