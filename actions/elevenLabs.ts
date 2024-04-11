@@ -48,32 +48,6 @@ export async function getElevenLabsVoiceInfo(
 	}
 }
 
-export async function createElevenLabsVoiceAction(
-	prevState: any,
-	formData: FormData
-): Promise<ActionStatus> {
-	console.log('formData: ', formData);
-
-	try {
-		const response = await fetch(`${ELEVENLABS_BASE_URL}/voices/add`, {
-			method: 'POST',
-			headers: ELEVENLABS_API_HEADERS,
-			body: formData,
-		});
-
-		const data = await response.json();
-		console.log('voice:', data.voice_id);
-		return {
-			status: 'success',
-			message: `Voice created`,
-			data: {voice_id: data.voice_id},
-		};
-	} catch (error) {
-		console.error(error);
-		return {status: 'error', message: `Error: ${error}`};
-	}
-}
-
 export async function createElevenLabsTTSAction(
 	prevState: any,
 	formData: FormData
@@ -112,6 +86,33 @@ export async function createElevenLabsTTSAction(
 		const message =
 			response.status === 400 ? 'Error: Bad request' : 'Error: Unknown error';
 		return {status: 'error', message: message};
+	} catch (error) {
+		console.error(error);
+		return {status: 'error', message: `Error: ${error}`};
+	}
+}
+
+//Currently unused
+export async function createElevenLabsVoiceAction(
+	prevState: any,
+	formData: FormData
+): Promise<ActionStatus> {
+	console.log('formData: ', formData);
+
+	try {
+		const response = await fetch(`${ELEVENLABS_BASE_URL}/voices/add`, {
+			method: 'POST',
+			headers: ELEVENLABS_API_HEADERS,
+			body: formData,
+		});
+
+		const data = await response.json();
+		console.log('voice:', data.voice_id);
+		return {
+			status: 'success',
+			message: `Voice created`,
+			data: {voice_id: data.voice_id},
+		};
 	} catch (error) {
 		console.error(error);
 		return {status: 'error', message: `Error: ${error}`};
