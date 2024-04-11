@@ -1,9 +1,12 @@
 'use server';
+
 import {db} from '@/database/drizzle';
+import {redirect} from 'next/navigation';
+import {revalidatePath} from 'next/cache';
 import {eq, and} from 'drizzle-orm';
 import {getUserInfo} from '../auth';
-import {npc_dialogues, tts_audio} from '@/database/drizzle/schema';
 import {deleteAudioFromS3} from '../s3';
+import {npc_dialogues, tts_audio} from '@/database/drizzle/schema';
 import {Tables} from '@/types/supabase';
 import {ActionStatus} from '@/types/drizzle';
 import {
@@ -12,8 +15,6 @@ import {
 	deleteDialogueSchema,
 } from '@/database/drizzle/validation';
 import {ZodError} from 'zod';
-import {revalidatePath} from 'next/cache';
-import {redirect} from 'next/navigation';
 
 export const createDialogueAction = async (
 	prevState: ActionStatus,
@@ -41,7 +42,6 @@ export const createDialogueAction = async (
 			.returning();
 		console.log('insertedDialogue', insertedDialogue[0]);
 		revalidatePath('/');
-		// redirect(`/${user.username}/npcs/${formData.get('npc_id')}`);
 		return {
 			status: 'success',
 			message: 'Dialogue added successfully',
@@ -84,7 +84,12 @@ export const deleteDialogueAction = async (
 		const dialogueAudioIdRows = await db
 			.select({tts_audio_id: npc_dialogues.tts_audio_id})
 			.from(npc_dialogues)
-			.where(eq(npc_dialogues.id, dialogue_id));
+			.where(
+				and(
+					eq(npc_dialogues.id, dialogue_id),
+					eq(npc_dialogues.user_id, user.id)
+				)
+			);
 		const dialogueAudioId = dialogueAudioIdRows[0].tts_audio_id;
 
 		//If it does, get the file name and delete it from S3
@@ -120,9 +125,9 @@ export const deleteDialogueAction = async (
 			message: 'An error occured while deleting dialogue.',
 		};
 	}
-	revalidatePath('/');
 	const deletedDialogueTextSnippet = deletedDialogue?.text.slice(0, 10) + '...';
 	const deletedMessage = encodeURIComponent(deletedDialogueTextSnippet);
+	revalidatePath('/');
 	redirect(
 		`/npcs/${deletedDialogue.npc_id}?deleted=true&message=${deletedMessage}`
 	);

@@ -1,10 +1,8 @@
 'use server';
 
 import {createClientOnServer} from '@/utils/supabase/server';
-import {createClientOnClient} from '@/utils/supabase/client';
 import {headers} from 'next/headers';
 import {redirect} from 'next/navigation';
-import {AuthError, User} from '@supabase/supabase-js';
 import {cookies} from 'next/headers';
 import {signupSchema, loginSchema} from '@/database/drizzle/validation';
 import {ZodError} from 'zod';
@@ -18,7 +16,7 @@ export const signUpAction = async (
 	const origin = headers().get('origin');
 
 	try {
-		const {email, password, username} = signupSchema.parse(formData);
+		const {email, username, password} = signupSchema.parse(formData);
 
 		const cookieStore = cookies();
 		const supabase = createClientOnServer(cookieStore);
@@ -34,12 +32,16 @@ export const signUpAction = async (
 			},
 		});
 		if (error) {
-			if (error instanceof AuthError) {
-				return {
-					status: 'error',
-					message: `Auth error: ${error.message}`,
-				};
-			}
+			return {
+				status: 'error',
+				message: 'Oops! Something went wrong. Please try again',
+				errors: [
+					{
+						path: 'confirm_password',
+						message: 'Oops! Something went wrong. Please try again',
+					},
+				],
+			};
 		}
 	} catch (error) {
 		if (error instanceof ZodError) {
@@ -54,7 +56,16 @@ export const signUpAction = async (
 			};
 		} else {
 			console.error('Error during signup: ', error);
-			return redirect('/error');
+			return {
+				status: 'error',
+				message: 'Oops! Something went wrong. Please try again',
+				errors: [
+					{
+						path: 'confirm_password',
+						message: 'Oops! Something went wrong. Please try again',
+					},
+				],
+			};
 		}
 	}
 	redirect('/signup/success');
@@ -80,7 +91,7 @@ export const signInAction = async (
 				message: 'Invalid email/password',
 				errors: [
 					{
-						path: 'email',
+						path: 'password',
 						message: 'Incorrect email/password. Please try again',
 					},
 				],
@@ -88,7 +99,7 @@ export const signInAction = async (
 		}
 	} catch (error) {
 		if (error instanceof ZodError) {
-			console.log('zod error: ', error);
+			console.error('zod error: ', error);
 			return {
 				status: 'error',
 				message: 'Invalid form data',
@@ -98,6 +109,10 @@ export const signInAction = async (
 				})),
 			};
 		}
+		return {
+			status: 'error',
+			message: 'Unexpected error',
+		};
 	}
 
 	redirect(`/`);
@@ -109,8 +124,8 @@ export const logoutAction = async () => {
 
 	const {error} = await supabase.auth.signOut();
 	if (error) {
-		console.error('Error:', error);
-		return redirect('/error'); //todo: handle logout error
+		console.error('Logout Error:', error);
+		redirect('/?message=error');
 	}
 
 	redirect('/?message=logout');
