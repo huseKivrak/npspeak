@@ -19,7 +19,6 @@ import {
 	Button,
 	Input,
 } from '@nextui-org/react';
-import {PiMicrophoneSlashBold} from 'react-icons/pi';
 import {VoiceSelect} from './dropdown/VoiceSelect';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
 
@@ -29,7 +28,7 @@ interface NPCFormProps {
 }
 
 type Inputs = z.infer<typeof npcSchema>;
-export default function NPCForm({campaignOptions, voiceOptions}: NPCFormProps) {
+export const NPCForm = ({campaignOptions, voiceOptions}: NPCFormProps) => {
 	const [state, formAction] = useFormState<ActionStatus, FormData>(
 		createNPCAction,
 		{status: 'idle', message: ''}
@@ -52,8 +51,8 @@ export default function NPCForm({campaignOptions, voiceOptions}: NPCFormProps) {
 	};
 
 	useEffect(() => {
-		if (!state) return;
-		if (state?.status === 'error') {
+		if (state.status === 'idle') return;
+		if (state.status === 'error') {
 			console.log('errors:', state.errors);
 			state.errors?.forEach((error) => {
 				setError(error.path as FieldPath<Inputs>, {
@@ -159,4 +158,4 @@ export default function NPCForm({campaignOptions, voiceOptions}: NPCFormProps) {
 			</form>
 		</div>
 	);
-}
+};
