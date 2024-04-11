@@ -1,10 +1,9 @@
 import {getNPCsWithRelatedData} from '@/database/drizzle/queries';
-import {createAllTabData} from '@/actions/npcTabData';
-import NPCListTable from '@/components/NPCListTable';
+import {NPCListTable} from '@/components/tables/NPCListTable';
 
 export default async function NPCsPage() {
-	const npcs = await getNPCsWithRelatedData();
-	if (!npcs) return <p>no npcs!</p>;
+	const npcResponse = await getNPCsWithRelatedData();
+	const npcs = npcResponse.status === 'success' ? npcResponse.data : [];
 
 	return (
 		<div>

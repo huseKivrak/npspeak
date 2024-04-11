@@ -1,19 +1,15 @@
 import {getCampaignsWithNPCs} from '@/database/drizzle/queries';
-import CampaignListTable from '@/components/CampaignListTable';
-import Link from 'next/link';
+import {CampaignListTable} from '@/components/tables/CampaignListTable';
+import {CampaignWithNPCs} from '@/types/drizzle';
+
 export default async function UserCampaignsPage() {
-	const campaigns = await getCampaignsWithNPCs();
+	const campaignResponse = await getCampaignsWithNPCs();
+	const campaigns: CampaignWithNPCs[] =
+		campaignResponse.status === 'success' ? campaignResponse.data : [];
 
 	return (
 		<div className='flex flex-col items-center'>
-			{campaigns ? (
-				<CampaignListTable campaigns={campaigns} />
-			) : (
-				<p>
-					You have no campaigns!{' '}
-					<Link href='/campaigns/create'>Create a campaign</Link>
-				</p>
-			)}
+			<CampaignListTable campaigns={campaigns} />
 		</div>
 	);
 }
