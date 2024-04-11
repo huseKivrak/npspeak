@@ -9,8 +9,8 @@ import {Input} from '@nextui-org/react';
 import {ActionStatus} from '@/types/drizzle';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {loginSchema} from '@/database/drizzle/validation';
-import {ErrorToast} from '../ErrorToast';
 import {ErrorMessage} from '@hookform/error-message';
+import {ErrorToast} from '../ErrorToast';
 
 type Inputs = {
 	email: string;
@@ -29,11 +29,16 @@ export default function LoginForm() {
 		register,
 		formState: {errors},
 		setError,
-	} = useForm<Inputs>({resolver: zodResolver(loginSchema)});
+	} = useForm<Inputs>({
+		mode: 'onBlur',
+		criteriaMode: 'all',
+		resolver: zodResolver(loginSchema),
+	});
 
 	useEffect(() => {
 		if (state.status === 'idle') return;
 		if (state.status === 'error') {
+			console.error(state.errors);
 			state.errors?.forEach((error) => {
 				setError(error.path as FieldPath<Inputs>, {
 					message: error.message,
@@ -44,7 +49,6 @@ export default function LoginForm() {
 
 	return (
 		<form className='flex flex-col max-w-fit items-center gap-2'>
-			{state.status === 'error' && <ErrorToast text={state.message} />}
 			<Input
 				isRequired
 				type='email'
@@ -54,8 +58,8 @@ export default function LoginForm() {
 				{...register('email')}
 			/>
 			<ErrorMessage
-				errors={errors}
 				name='email'
+				errors={errors}
 				render={({message}) => <ErrorToast text={message} />}
 			/>
 			<Input
@@ -66,7 +70,16 @@ export default function LoginForm() {
 				placeholder='••••••••'
 				{...register('password')}
 			/>
-			<SubmitButton formAction={formAction} pendingText='signing in...'>
+			<ErrorMessage
+				name='password'
+				errors={errors}
+				render={({message}) => <ErrorToast text={message} />}
+			/>
+			<SubmitButton
+				formAction={formAction}
+				pendingText='signing in...'
+				color='success'
+			>
 				login
 			</SubmitButton>
 		</form>

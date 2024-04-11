@@ -1,5 +1,6 @@
 import {DialogueIconMap, GenderIconMap} from '@/lib/constants';
 import {IconSvgProps} from '@/types/types';
+import {Icon} from 'next/dist/lib/metadata/types/metadata-types';
 
 export const DialogueIcon = ({dialogueType}: {dialogueType: string}) => {
 	const {icon: DialogueIcon, props} =
@@ -23,23 +24,45 @@ export const SendEmailIcon = ({
 		xmlns='http://www.w3.org/2000/svg'
 		xmlSpace='preserve'
 		fill='none'
+		stroke='currentColor'
+		strokeLinecap='round'
+		strokeLinejoin='round'
+		strokeWidth='1'
 		viewBox='0 0 32 32'
 		width={width || size}
 		height={size || height}
 		{...props}
 	>
-		<g id='SVGRepo_iconCarrier'>
-			<style>
-				{
-					'.st0{fill:none;stroke:#000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10}'
-				}
-			</style>
-			<path d='m11 12 10 6 10-6M4 12h7M1 16h11M4 20h7' className='st0' />
-			<path
-				d='M11 12v-1c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v10c0 2.2-1.8 4-4 4H15c-2.2 0-4-1.8-4-4v-1'
-				className='st0'
-			/>
-		</g>
+		<path d='m11 12 10 6 10-6M4 12h7M1 16h11M4 20h7' className='st0' />
+		<path
+			d='M11 12v-1c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v10c0 2.2-1.8 4-4 4H15c-2.2 0-4-1.8-4-4v-1'
+			className='st0'
+		/>
+	</svg>
+);
+
+export const ErrorIcon = ({
+	size = 24,
+	width,
+	height,
+	...props
+}: IconSvgProps) => (
+	<svg
+		xmlns='http://www.w3.org/2000/svg'
+		width={size || width}
+		height={size || height}
+		viewBox='0 0 24 24'
+		stroke-width='1.5'
+		stroke='currentColor'
+		fill='none'
+		stroke-linecap='round'
+		stroke-linejoin='round'
+		{...props}
+	>
+		<path stroke='none' d='M0 0h24v24H0z' fill='none' />
+		<path d='M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0' />
+		<path d='M12 9v4' />
+		<path d='M12 16v.01' />
 	</svg>
 );
 

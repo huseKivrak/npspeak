@@ -3,13 +3,21 @@ import {zfd} from 'zod-form-data';
 
 //Auth
 export const loginSchema = zfd.formData({
-	email: zfd.text(z.string().email()),
-	password: zfd.text(z.string()),
+	email: zfd.text(
+		z.string({required_error: 'Oops! Please enter your email'}).email({
+			message: 'Please enter a valid email address',
+		})
+	),
+	password: zfd.text(
+		z.string({required_error: 'Oops! Please enter your password'})
+	),
 });
 
 export const signupSchema = zfd
 	.formData({
-		email: zfd.text(z.string().email()),
+		email: zfd.text(
+			z.string().email({message: 'Please enter a valid email address'})
+		),
 		username: zfd.text(
 			z.string().min(4, 'Username must be at least 4 characters long')
 		),
@@ -26,7 +34,7 @@ export const signupSchema = zfd
 			ctx.addIssue({
 				code: 'custom',
 				path: ['password', 'confirm_password'],
-				message: 'Passwords do not match',
+				message: 'Passwords do not match; please try again',
 			});
 		}
 	});
