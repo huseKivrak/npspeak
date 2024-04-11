@@ -1,4 +1,4 @@
-import NPCForm from '@/components/forms/NPCForm';
+import {NPCForm} from '@/components/forms/NPCForm';
 import {getUserInfo} from '@/actions/auth';
 import {redirect} from 'next/navigation';
 import {getCampaignsWithNPCs} from '@/database/drizzle/queries';
