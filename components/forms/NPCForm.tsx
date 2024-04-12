@@ -71,8 +71,8 @@ export const NPCForm = ({campaignOptions, voiceOptions}: NPCFormProps) => {
 			<form className='flex flex-col gap-2 w-full max-w-xs'>
 				<Input
 					{...register('npc_name')}
-					id='npc_name'
 					type='text'
+					label='Name'
 					name='npc_name'
 					placeholder='what are they called?'
 					variant='bordered'
@@ -84,8 +84,8 @@ export const NPCForm = ({campaignOptions, voiceOptions}: NPCFormProps) => {
 				/>
 				<Textarea
 					{...register('description')}
-					id='description'
 					name='description'
+					label='Description (optional)'
 					placeholder='describe your NPC'
 					variant='bordered'
 				/>

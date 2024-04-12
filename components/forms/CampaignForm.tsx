@@ -63,9 +63,10 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 		<div className='flex flex-col items-start mb-8'>
 			<form className='flex flex-col w-full max-w-xs gap-2'>
 				<Input
+					isRequired
 					{...register('campaign_name')}
-					id='campaign_name'
 					type='text'
+					label='Name'
 					variant='bordered'
 					name='campaign_name'
 					placeholder='name your campaign'
@@ -78,8 +79,8 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 
 				<Textarea
 					{...register('description')}
-					id='description'
 					name='description'
+					label='Description (optional)'
 					placeholder='describe your campaign'
 					variant='bordered'
 				/>
@@ -91,8 +92,8 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 
 				<Input
 					{...register('start_date')}
-					id='start_date'
 					type='date'
+					label='Start Date (optional)'
 					name='start_date'
 					variant='bordered'
 				/>
@@ -104,8 +105,8 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 
 				<Input
 					{...register('end_date')}
-					id='end_date'
 					type='date'
+					label='End date (optional)'
 					name='end_date'
 					variant='bordered'
 					onChange={() => trigger('end_date')}

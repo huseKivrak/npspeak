@@ -56,7 +56,7 @@ export const DialogueForm = ({npcId}: {npcId: number}) => {
 				defaultValue={DefaultDialogueTypes[0].value}
 				render={({field: {ref}}) => (
 					<RadioGroup
-						label='type'
+						label='Dialogue Type'
 						orientation='horizontal'
 						name='dialogue_type_id'
 						size='sm'
@@ -79,7 +79,7 @@ export const DialogueForm = ({npcId}: {npcId: number}) => {
 				render={({field}) => (
 					<Textarea
 						{...field}
-						label='text'
+						label='Text'
 						className='max-w-xs mt-4'
 						variant='bordered'
 						labelPlacement='outside'
