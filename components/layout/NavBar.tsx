@@ -10,16 +10,18 @@ import {ThemeSwitcher} from '../buttons/ThemeSwitcher';
 
 export const Navbar = ({children}: {children: React.ReactNode}) => {
 	return (
-		<NextUINavbar maxWidth='xl' position='sticky'>
-			<NavbarContent className='basis-1/5 sm:basis-full' justify='start'>
-				<NavbarBrand as='li' className='gap-3 max-w-fit'>
+		<NextUINavbar shouldHideOnScroll maxWidth='lg' position='sticky'>
+			<NavbarContent justify='start'>
+				<NavbarBrand as='li' className='gap-3'>
 					<Link href='/' className='flex justify-start items-center'>
-						<ScrollEmojiIcon size={30} />
-						<p className='font-bold text-2xl text-inherit'>npSpeak</p>
+						<ScrollEmojiIcon />
+						<p className='text-secondary tracking-widest font-thin font-alagard'>
+							npSpeak
+						</p>
 					</Link>
 				</NavbarBrand>
 			</NavbarContent>
-			<NavbarContent className='basis-1 pl-4' justify='end'>
+			<NavbarContent justify='end'>
 				{children}
 				<ThemeSwitcher />
 			</NavbarContent>

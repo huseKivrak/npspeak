@@ -32,32 +32,32 @@ export function UserDashboard({
 				aria-label='Options'
 				size='lg'
 				radius='sm'
-				variant='light'
+				variant='solid'
 				color='success'
 				classNames={{
 					tabList:
 						'gap-3 w-full relative rounded-none p-0 border-b border-divider',
 					cursor: 'w-full',
 					tab: 'max-w-full px-0 h-12',
-					tabContent: '',
+					tabContent: 'text-2xl',
 				}}
 			>
 				<Tab
 					key='campaigns'
 					title={
 						<div className='flex items-center space-x-2'>
-							<span>Campaigns</span>
-							<Chip size='sm' variant='flat'>
+							<span>CAMPAIGN</span>
+							<Chip size='lg' variant='flat'>
 								{campaigns?.length}
 							</Chip>
 						</div>
 					}
 				>
 					<Button
-						size='lg'
+						size='sm'
 						variant='flat'
 						color='secondary'
-						className='mb-4 justify-end'
+						className='mb-2'
 						startContent={!showCampaignForm && <PlusIcon />}
 						onClick={() => setShowCampaignForm(!showCampaignForm)}
 					>
@@ -70,18 +70,18 @@ export function UserDashboard({
 					key='npcs'
 					title={
 						<div className='flex items-center space-x-2'>
-							<span>NPCs</span>
-							<Chip size='sm' variant='flat'>
+							<span>NPC</span>
+							<Chip size='lg' variant='flat'>
 								{npcs?.length}
 							</Chip>
 						</div>
 					}
 				>
 					<Button
-						size='lg'
+						size='sm'
 						variant='flat'
 						color='primary'
-						className='mb-4'
+						className='mb-2'
 						startContent={!showNPCForm && <PlusIcon />}
 						onClick={() => setShowNPCForm(!showNPCForm)}
 					>

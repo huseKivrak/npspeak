@@ -16,25 +16,23 @@ export const VoiceSampler = ({voices}: {voices: ElevenLabsVoice[]}) => {
 	const {control} = useForm(); //just needed for VoiceSelect props
 
 	return (
-		<div className='flex flex-col w-full'>
-			<h2 className='text-2xl font-bold tracking-wide text-primary'>
-				More than 50 voices to choose from.
-			</h2>
+		<div className='flex flex-col max-w-sm px-4 items-start'>
+			<h2>More than 50 voices to choose from.</h2>
 
-			<p className='text-xl self-start mt-4'>Listen to some samples:</p>
+			<p className='text-xl mt-4'>Listen to some samples:</p>
 			<VoiceSelect
 				control={control}
 				voiceOptions={voices}
 				onVoiceChange={handleVoiceChange}
 			/>
-			<div className='flex gap-2 mt-4'>
+			<div className='flex mt-2'>
 				<audio src={selectedVoiceURL ?? ''} controls autoPlay={autoplay} />
 				<Checkbox
 					isSelected={autoplay}
 					onValueChange={setAutoplay}
-					color='success'
-					radius='full'
-					size='lg'
+					color='danger'
+					radius='lg'
+					size='sm'
 				>
 					Autoplay
 				</Checkbox>
