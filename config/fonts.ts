@@ -1,11 +1,14 @@
-import {Fira_Code as FontMono, Inter as FontSans} from 'next/font/google';
+import {Grenze as FontGrenze} from 'next/font/google';
+import localFont from 'next/font/local';
 
-export const fontSans = FontSans({
+export const fontGrenze = FontGrenze({
+	weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+	style: ['normal', 'italic'],
 	subsets: ['latin'],
-	variable: '--font-sans',
+	variable: '--font-grenze',
 });
 
-export const fontMono = FontMono({
-	subsets: ['latin'],
-	variable: '--font-mono',
+export const fontAlagard = localFont({
+	src: '../public/fonts/alagard12.otf',
+	variable: '--font-alagard',
 });
