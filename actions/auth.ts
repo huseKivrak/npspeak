@@ -141,7 +141,7 @@ export const getUserInfo = async (): Promise<UserAuth> => {
 			error,
 		} = await supabase.auth.getUser();
 		if (!user) {
-			console.error('Auth Error:', error);
+			console.error(`getUserInfo error ${error?.status}`);
 			return {user: null, error: `Auth Error: ${error?.message}`};
 		}
 		const username = user.user_metadata.username;
