@@ -43,7 +43,7 @@ export const NPCForm = ({campaignOptions, voiceOptions}: NPCFormProps) => {
 		formState: {errors},
 		setError,
 	} = useForm<Inputs>({
-		mode: 'all',
+		mode: 'onSubmit',
 		criteriaMode: 'all',
 		resolver: zodResolver(npcSchema),
 	});
@@ -67,93 +67,90 @@ export const NPCForm = ({campaignOptions, voiceOptions}: NPCFormProps) => {
 	const hasCampaigns = campaignOptions && campaignOptions.length > 0;
 
 	return (
-		<div className='flex flex-col items-start mb-8'>
-			<form className='flex flex-col gap-2 w-full max-w-xs'>
-				<Input
-					{...register('npc_name')}
-					type='text'
-					label='Name'
-					name='npc_name'
-					placeholder='what are they called?'
-					variant='bordered'
-				/>
-				<ErrorMessage
-					errors={errors}
-					name='npc_name'
-					render={({message}) => <ErrorToast text={message} />}
-				/>
-				<Textarea
-					{...register('description')}
-					name='description'
-					label='Description (optional)'
-					placeholder='describe your NPC'
-					variant='bordered'
-				/>
-				<ErrorMessage
-					errors={errors}
-					name='description'
-					render={({message}) => <ErrorToast text={message} />}
-				/>
-				<VoiceSelect
-					control={control}
-					voiceOptions={voiceOptions}
-					onVoiceChange={handleVoiceChange}
-				/>
-				<div className='flex items-center my-4 gap-6'>
-					<span className='text-secondary-600 font-semibold'>
-						Voice Preview:
-					</span>
-					<audio src={selectedVoiceURL ?? ''} controls autoPlay={autoplay} />
-					<Checkbox
-						isSelected={autoplay}
-						onValueChange={setAutoplay}
-						color='success'
-						radius='full'
-						size='lg'
-					>
-						Autoplay
-					</Checkbox>
-				</div>
-				{hasCampaigns && (
-					<Button
-						onClick={() => setShowAddCampaign(!showAddCampaign)}
-						variant='flat'
-						color='primary'
-						startContent={showAddCampaign ? '' : <PlusIcon />}
-					>
-						{showAddCampaign ? 'cancel' : 'campaign(s)'}
-					</Button>
-				)}
-				{showAddCampaign && hasCampaigns && (
-					<Controller
-						name='campaign_ids'
-						control={control}
-						render={({field: {ref}}) => (
-							<CheckboxGroup
-								label='campaigns'
-								name='campaign_ids'
-								orientation='horizontal'
-								ref={ref}
-							>
-								{campaignOptions.map((option) => (
-									<Checkbox key={option.label} value={option.value.toString()}>
-										{option.label}
-									</Checkbox>
-								))}
-							</CheckboxGroup>
-						)}
-					/>
-				)}
-				<SubmitButton
-					formAction={formAction}
-					pendingText='creating NPC...'
-					variant='flat'
+		<form className='flex flex-col gap-2 w-full max-w-xs'>
+			<Input
+				isRequired
+				{...register('npc_name')}
+				type='text'
+				label='Name'
+				name='npc_name'
+				placeholder='what are they called?'
+				variant='bordered'
+			/>
+			<ErrorMessage
+				errors={errors}
+				name='npc_name'
+				render={({message}) => <ErrorToast text={message} />}
+			/>
+			<Textarea
+				{...register('description')}
+				name='description'
+				label='Description (optional)'
+				placeholder='describe your NPC'
+				variant='bordered'
+			/>
+			<ErrorMessage
+				errors={errors}
+				name='description'
+				render={({message}) => <ErrorToast text={message} />}
+			/>
+			<VoiceSelect
+				control={control}
+				voiceOptions={voiceOptions}
+				onVoiceChange={handleVoiceChange}
+			/>
+			<div className='flex items-center my-4 gap-6'>
+				<span className='text-secondary font-semibold'>Voice Preview:</span>
+				<audio src={selectedVoiceURL ?? ''} controls autoPlay={autoplay} />
+				<Checkbox
+					isSelected={autoplay}
+					onValueChange={setAutoplay}
 					color='success'
-					className='mt-2 font-bold text-large'
+					radius='full'
+					size='lg'
 				>
-					create NPC!
-				</SubmitButton>
-			</form>
-		</div>
+					Autoplay
+				</Checkbox>
+			</div>
+			{hasCampaigns && (
+				<Button
+					onClick={() => setShowAddCampaign(!showAddCampaign)}
+					variant='flat'
+					color='primary'
+					startContent={showAddCampaign ? '' : <PlusIcon />}
+				>
+					{showAddCampaign ? 'cancel' : 'campaign(s)'}
+				</Button>
+			)}
+			{showAddCampaign && hasCampaigns && (
+				<Controller
+					name='campaign_ids'
+					control={control}
+					render={({field: {ref}}) => (
+						<CheckboxGroup
+							label='campaigns'
+							name='campaign_ids'
+							orientation='horizontal'
+							ref={ref}
+						>
+							{campaignOptions.map((option) => (
+								<Checkbox key={option.label} value={option.value.toString()}>
+									{option.label}
+								</Checkbox>
+							))}
+						</CheckboxGroup>
+					)}
+				/>
+			)}
+			<SubmitButton
+				formAction={formAction}
+				pendingText='creating NPC...'
+				variant='flat'
+				color='success'
+				className='mt-2 font-bold text-large'
+			>
+				create
+			</SubmitButton>
+		</form>
 	);
 };

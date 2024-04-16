@@ -27,7 +27,7 @@ export const DialogueForm = ({npcId}: {npcId: number}) => {
 		setError,
 		reset,
 	} = useForm<Inputs>({
-		mode: 'all',
+		mode: 'onSubmit',
 		criteriaMode: 'all',
 		resolver: zodResolver(dialogueSchema),
 	});

@@ -33,7 +33,7 @@ export default function SignUpForm() {
 		formState: {errors},
 		setError,
 	} = useForm<Inputs>({
-		mode: 'onBlur',
+		mode: 'onSubmit',
 		criteriaMode: 'all',
 		resolver: zodResolver(signupSchema),
 	});
