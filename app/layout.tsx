@@ -1,13 +1,14 @@
-import './globals.css';
+import '@/styles/globals.css';
 import {Metadata} from 'next';
 import {Analytics} from '@vercel/analytics/react';
 import {SpeedInsights} from '@vercel/speed-insights/next';
 import {Providers} from './providers';
 import {siteConfig} from '@/config/site';
-import {fontSans} from '@/config/fonts';
+import {fontAlagard, fontGrenze} from '@/config/fonts';
 import clsx from 'clsx';
 import {Navbar} from '@/components/layout/Navbar';
 import AuthButton from '@/components/buttons/AuthButton';
+
 const defaultUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
 	: 'http://localhost:3000';
@@ -30,8 +31,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 			<head />
 			<body
 				className={clsx(
-					'min-h-screen bg-background font-sans antialiased',
-					fontSans.variable
+					'min-h-screen bg-background font-grenze antialiased',
+					fontGrenze.variable,
+					fontAlagard.variable
 				)}
 			>
 				<Providers>
@@ -39,13 +41,13 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 						<Navbar>
 							<AuthButton />
 						</Navbar>
-						<main className='container mx-auto max-w-7xl pt-8 px-6 flex-grow'>
+						<main className='container mx-auto max-w-7xl sm:px-4 pt-8 flex-grow'>
 							{children}
 						</main>
 						<Analytics />
 						<SpeedInsights />
-						<footer className='w-full flex items-center justify-center py-3'>
-							<p className='text-default-600 text-small'>
+						<footer className='w-full flex items-center justify-center py-4'>
+							<p className='text-tiny sm:text-small text-white'>
 								Copyright © 2024 - All rights reserved by npSpeak
 							</p>
 						</footer>
