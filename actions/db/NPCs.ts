@@ -5,13 +5,17 @@ import {npcs, campaign_npcs} from '@/database/drizzle/schema';
 import {eq, and} from 'drizzle-orm';
 import {Tables} from '@/types/supabase';
 import {ActionStatus} from '@/types/drizzle';
-import {deleteNPCSchema, npcSchema} from '@/database/drizzle/validation';
+import {
+	npcSchema,
+	updateNPCSchema,
+	deleteNPCSchema,
+} from '@/database/drizzle/validation';
 import {ZodError} from 'zod';
 import {redirect} from 'next/navigation';
 import {revalidatePath} from 'next/cache';
 
 export const createNPCAction = async (
-	prevState: ActionStatus,
+	prevState: ActionStatus | null,
 	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
@@ -65,8 +69,68 @@ export const createNPCAction = async (
 	redirect(`/npcs/${newNPCId}`);
 };
 
+export const updateNPCAction = async (
+	prevState: ActionStatus | null,
+	formData: FormData
+): Promise<ActionStatus> => {
+	const {user} = await getUserInfo();
+	if (!user) throw new Error('You must be logged in to update NPCs.');
+
+	//accessing id outside of try/catch for redirect after successful update
+	const npcId = formData.get('npc_id');
+
+	try {
+		const {npc_id, ...fieldsToUpdate} = updateNPCSchema.parse(formData);
+
+		//filtering for partial update values
+		const updates = Object.keys(fieldsToUpdate).reduce<Record<string, any>>(
+			(acc, key) => {
+				const value = fieldsToUpdate[key as keyof typeof fieldsToUpdate];
+				if (value !== undefined) {
+					acc[key] = value;
+				}
+				return acc;
+			},
+			{}
+		);
+
+		if (Object.keys(updates).length === 0) {
+			return {
+				status: 'error',
+				message: 'No fields to update',
+			};
+		}
+
+		const updatedNPC = await db
+			.update(npcs)
+			.set(updates)
+			.where(and(eq(npcs.id, npc_id), eq(npcs.user_id, user.id)))
+			.returning();
+
+		console.log('NPC Updated:', updatedNPC);
+	} catch (error) {
+		console.error('Error updating NPC:', error);
+		if (error instanceof ZodError) {
+			return {
+				status: 'error',
+				message: 'Invalid form data',
+				errors: error.issues.map((issue) => ({
+					path: issue.path.join('.'),
+					message: `${issue.message}`,
+				})),
+			};
+		}
+		return {
+			status: 'error',
+			message: 'An error occured while updating NPC.',
+		};
+	}
+	revalidatePath('/');
+	redirect(`/npcs/${npcId}`);
+};
+
 export const deleteNPCAction = async (
-	prevState: ActionStatus,
+	prevState: ActionStatus | null,
 	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
@@ -95,7 +159,7 @@ export const deleteNPCAction = async (
 };
 
 export const addVoiceToNPC = async (
-	prevState: any,
+	prevState: ActionStatus | null,
 	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();

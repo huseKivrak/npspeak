@@ -109,6 +109,26 @@ export const npcSchema = zfd.formData({
 	voice_id: zfd.text(z.string()),
 });
 
+export const updateNPCSchema = zfd.formData({
+	npc_id: zfd.numeric(),
+	npc_name: zfd.text(
+		z
+			.string()
+			.min(2, 'Name must be at least 2 characters long')
+			.max(50, 'Name must be at most 50 characters long')
+			.optional()
+	),
+	description: zfd.text(
+		z
+			.string()
+			.min(2, 'Description must be at least 2 characters long')
+			.max(255, 'Description must be at most 255 characters long')
+			.optional()
+	),
+	campaign_ids: zfd.repeatableOfType(zfd.numeric().optional()),
+	voice_id: zfd.text(z.string().optional()),
+});
+
 export const deleteNPCSchema = zfd.formData({
 	npc_id: zfd.numeric(),
 });
