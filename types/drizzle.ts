@@ -9,6 +9,14 @@ export type DetailedNPC = Tables<'npcs'> & {
 	dialogues: Tables<'npc_dialogues'>[];
 };
 
+export type UpdateNPC = {
+	npc_id: number;
+	npc_name: string;
+	description: string | undefined; //todo: ts fix
+	campaign_ids: number[];
+	voice_id: string;
+};
+
 export type ActionStatus =
 	| {
 			status: 'success';
@@ -47,6 +55,6 @@ export type DetailedDialogue = {
 };
 
 export type ServerAction = (
-	prevState: ActionStatus,
-	formData: FormData
+	formData: FormData,
+	prevState: ActionStatus | null
 ) => Promise<ActionStatus>;
