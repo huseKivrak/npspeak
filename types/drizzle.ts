@@ -55,6 +55,6 @@ export type DetailedDialogue = {
 };
 
 export type ServerAction = (
-	formData: FormData,
-	prevState: ActionStatus | null
+	prevState: ActionStatus | null,
+	formData: FormData
 ) => Promise<ActionStatus>;
