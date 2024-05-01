@@ -1,5 +1,6 @@
 'use client';
 import {Accordion, AccordionItem} from '@nextui-org/accordion';
+import {Divider} from '@nextui-org/react';
 import {
 	PiMicrophoneBold,
 	PiNotePencilBold,
@@ -7,64 +8,110 @@ import {
 } from 'react-icons/pi';
 export const WorkflowAccordian = () => {
 	const itemClasses = {
-		base: 'py-4 w-full',
-		title: 'tracking-widest text-xl',
-		trigger: 'px-2 py-2 rounded-sm h-18 flex items-center',
-		indicator: 'text-3xl',
-		content: 'px-2 text-large text-start',
+		base: 'py-3 max-w-md sm:max-w-lg w-full',
+		title:
+			'text-3xl sm:text-4xl text-default-200 tracking-wider sm:tracking-widest font-semibold',
+		trigger: 'px-1 py-1 rounded-sm h-12 flex items-center',
+		indicator: 'text-4xl text-default-400',
+		content: 'sm:text-[20px] text-start pl-2 sm:pl-4 pr-0',
 	};
 
 	return (
-		<div className='flex flex-col items-start'>
-			<h2 className='text-2xl sm:text-4xl text-foreground'>
-				Character audio in 3 easy steps
+		<div className='flex flex-col flex-grow gap-4'>
+			<h2 className='text-3xl md:text-5xl lg:text-6xl font-bold'>
+				Character audio in seconds
 			</h2>
 
 			<Accordion
-				keepContentMounted
 				selectionMode='multiple'
 				variant='splitted'
-				className='p-2 flex flex-col gap-2 w-full max-w-lg'
+				className='py-2 px-0 flex flex-col gap-2 items-center w-full '
 				itemClasses={itemClasses}
+				motionProps={{
+					variants: {
+						enter: {
+							y: 0,
+							opacity: 1,
+							height: 'auto',
+							transition: {
+								height: {
+									type: 'spring',
+									stiffness: 500,
+									damping: 30,
+									duration: 1,
+								},
+								opacity: {
+									easings: 'ease',
+									duration: 1,
+								},
+							},
+						},
+						exit: {
+							y: -10,
+							opacity: 0,
+							height: 0,
+							transition: {
+								height: {
+									easings: 'ease',
+									duration: 0.25,
+								},
+								opacity: {
+									easings: 'ease',
+									duration: 0.3,
+								},
+							},
+						},
+					},
+				}}
 			>
 				<AccordionItem
+					isCompact
 					key='1'
 					aria-label='Create NPC'
 					title='1. Create NPC'
 					startContent={
-						<PiAddressBookBold size={24} className='text-primary' />
+						<PiAddressBookBold size={36} color='#019cfd' className='mt-2' />
 					}
-					className='!bg-warning tracking-widest'
+					className='!bg-secondary'
 				>
-					<ul className='gap-y-8'>
+					<ul className='flex flex-col gap-2'>
 						<li>
-							<strong>Hassle-free setup</strong>: Leave the details for your
-							character sheet
+							<strong className='text-warning-300 underline'>
+								Hassle-free setup:
+							</strong>{' '}
+							Save the details for your character sheet
 						</li>
 						<li>
-							<strong>Voice selection</strong>: Find the perfect voice from 50+
-							unique models
+							<strong className='text-warning-300 underline'>
+								Voice Selection:
+							</strong>{' '}
+							Find the perfect voice from over 50 options
 						</li>
 					</ul>
 				</AccordionItem>
 				<AccordionItem
+					isCompact
 					key='2'
 					aria-label='Add Dialogue'
 					title='2. Add Dialogue'
-					startContent={<PiNotePencilBold size={24} className='text-primary' />}
-					className='!bg-warning'
-				>
-					<p>Just select the dialogue type and add your text. Simple.</p>
-				</AccordionItem>
+					startContent={
+						<PiNotePencilBold size={36} color='#eeac33' className='mt-2' />
+					}
+					className='!bg-secondary'
+				></AccordionItem>
 
 				<AccordionItem
+					isCompact
 					key='3'
 					aria-label='Generate Audio'
 					title='3. Generate Audio'
-					startContent={<PiMicrophoneBold size={24} className='text-primary' />}
-					className='!bg-warning'
+					startContent={
+						<PiMicrophoneBold size={36} color='#56a787' className='mt-2' />
+					}
+					className='!bg-secondary'
 				></AccordionItem>
 			</Accordion>
+			<Divider className='my-4' />
 		</div>
 	);
 };
