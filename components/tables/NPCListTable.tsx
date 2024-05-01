@@ -2,6 +2,7 @@
 import {useCallback, useMemo, useState} from 'react';
 import {deleteNPCAction} from '@/actions/db/NPCs';
 import {DeleteModal} from '../DeleteModal';
+import {SearchBar} from './SearchBar';
 import Link from 'next/link';
 import {
 	Table,
@@ -14,9 +15,8 @@ import {
 	Tooltip,
 	Pagination,
 	SortDescriptor,
-	Input,
 } from '@nextui-org/react';
-import {DeleteIcon, SearchIcon} from '../icons';
+import {DeleteIcon} from '../icons';
 import {truncateText} from '@/utils/helpers/formHelpers';
 import {DetailedNPC} from '@/types/drizzle';
 
@@ -43,7 +43,7 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 			);
 		}
 		return filteredNPCs;
-	}, [npcs, filterValue]);
+	}, [npcs, filterValue, hasSearchFilter]);
 
 	//Paginated Items
 	const items = useMemo(() => {
@@ -83,7 +83,7 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 			case 'npc_name':
 				return (
 					<div className='flex flex-col'>
-						<p className='text-large font-semibold capitalize hover:underline'>
+						<p className=' capitalize hover:underline'>
 							<Link href={`/npcs/${npc.id}`}>{npc.npc_name}</Link>
 						</p>
 					</div>
@@ -97,34 +97,42 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 							content={npc.description}
 							className='max-w-sm'
 						>
-							<p className='text-small capitalize'>
-								{truncateText(npc.description ?? '', 30)}
+							<p className='text-tiny capitalize truncate max-w-xs h-8'>
+								{npc.description}
 							</p>
 						</Tooltip>
 					</div>
 				);
 			case 'campaigns':
 				return (
-					<div className='flex flex-col'>
-						{npc.campaigns.map((campaign) => (
-							<Link key={campaign.id} href={`/campaigns/${campaign.id}`}>
+					<div className='flex flex-col gap-1 max-h-[100px]'>
+						{npc.campaigns.length > 0 ? (
+							npc.campaigns.map((campaign) => (
 								<Chip
 									key={campaign.id}
-									size='md'
-									color='primary'
+									size='sm'
+									color='secondary'
 									variant='flat'
-									className='hover:underline hover:bg-primary-200'
+									className='hover:underline'
 								>
-									{truncateText(campaign.campaign_name ?? '', 40)}
+									<Link
+										key={campaign.id}
+										href={`/campaigns/${campaign.id}`}
+										className='text-tiny'
+									>
+										{truncateText(campaign.campaign_name, 15)}
+									</Link>
 								</Chip>
-							</Link>
-						))}
+							))
+						) : (
+							<p className='text-tiny'>No campaigns</p>
+						)}
 					</div>
 				);
 			case 'created_at':
 				return (
 					<div className='flex flex-col'>
-						<p className='text-bold text-sm capitalize'>
+						<p className='text-tiny capitalize'>
 							{new Date(npc.created_at).toLocaleDateString()}
 						</p>
 					</div>
@@ -136,7 +144,6 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 							idName='npc_id'
 							serverAction={deleteNPCAction}
 							id={npc.id}
-							className=''
 						>
 							<Tooltip color='danger' content='Delete NPC'>
 								<DeleteIcon className='text-danger' />
@@ -152,46 +159,50 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 	//Search bar
 	const topContent = useMemo(() => {
 		return (
-			<div className='flex flex-col gap-4'>
-				<div className='flex justify-between gap-3 items-end'>
-					<Input
-						isClearable
-						className='w-full sm:max-w-[44%]'
-						placeholder='Search by name...'
-						startContent={<SearchIcon />}
-						value={filterValue}
-						onClear={() => onClear()}
-						onValueChange={onSearchChange}
-					/>
-				</div>
+			<div className='flex flex-col gap-2'>
+				<SearchBar
+					filterValue={filterValue}
+					onValueChange={onSearchChange}
+					onClear={onClear}
+				/>
 			</div>
 		);
-	}, [filterValue, onSearchChange, npcs.length, hasSearchFilter]);
+	}, [filterValue, onSearchChange, onClear]);
 
 	//Pagination UI
 	const bottomContent = useMemo(() => {
 		return (
-			<div className='flex w-full justify-center'>
+			<div className='flex w-full justify-center bg-transparent'>
 				<Pagination
-					showControls
-					showShadow
-					color='secondary'
 					page={page}
 					total={pages}
 					onChange={setPage}
+					classNames={{
+						wrapper: 'gap-2 bg-transparent',
+						item: 'bg-transparent text-large',
+						cursor: 'text-large',
+					}}
 				/>
 			</div>
 		);
-	}, [page, pages, items.length, hasSearchFilter]);
+	}, [page, pages]);
 
-	console.log('SORTED ITEMS:', sortedItems);
 	return (
 		<Table
 			isHeaderSticky
-			isStriped
 			aria-label='NPCs Table'
 			classNames={{
-				wrapper: 'p-0 rounded-none',
+				wrapper: 'p-0 rounded-sm min-h-[382px] max-h-[382px] max-w-screen',
+				th: ['bg-primary', 'text-foreground', 'border-b', 'border-divider'],
+				td: [
+					'group-data-[first=true]:first:before:rounded-none',
+					'group-data-[first=true]:last:before:rounded-none',
+
+					'group-data-[middle=true]:before:rounded-none',
+
+					'group-data-[last=true]:first:before:rounded-none',
+					'group-data-[last=true]:last:before:rounded-none',
+				],
 			}}
 			sortDescriptor={sortDescriptor}
 			topContent={topContent}
@@ -200,16 +211,20 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 			bottomContentPlacement='outside'
 			onSortChange={setSortDescriptor}
 		>
-			<TableHeader>
-				<TableColumn allowsSorting key='npc_name'>
-					NAME
+			<TableHeader className=''>
+				<TableColumn allowsSorting align='center' key='npc_name' maxWidth={48}>
+					Name
 				</TableColumn>
-				<TableColumn key='description'>DESCRIPTION</TableColumn>
-				<TableColumn key='campaigns'>CAMPAIGNS</TableColumn>
-				<TableColumn allowsSorting key='created_at'>
-					CREATED AT
+				<TableColumn key='description' align='center' maxWidth={48}>
+					Description
 				</TableColumn>
-				<TableColumn key='actions'> ACTIONS </TableColumn>
+				<TableColumn key='campaigns' align='center' maxWidth={48}>
+					Campaigns
+				</TableColumn>
+				<TableColumn allowsSorting align='center' key='created_at'>
+					Created
+				</TableColumn>
+				<TableColumn key='actions'> Actions </TableColumn>
 			</TableHeader>
 			<TableBody items={sortedItems} emptyContent={'No NPCs to display.'}>
 				{(item) => (
