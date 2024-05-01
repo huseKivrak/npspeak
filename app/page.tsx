@@ -20,7 +20,7 @@ export default async function Index({
 	const voiceSample = voices.slice(0, 12);
 
 	return (
-		<div className='flex flex-col items-center text-center gap-4'>
+		<div className='flex flex-col items-center text-center gap-12'>
 			{searchParams?.message === 'logout' && (
 				<div className='bg-success text-white text-small p-2 rounded-small w-fit'>
 					You have been logged out.

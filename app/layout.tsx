@@ -31,7 +31,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 			<head />
 			<body
 				className={clsx(
-					'min-h-screen bg-background font-grenze antialiased',
+					'min-h-screen custom text-foreground bg-background font-grenze antialiased',
 					fontGrenze.variable,
 					fontAlagard.variable
 				)}

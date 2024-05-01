@@ -1,21 +1,41 @@
 import {Button} from '@nextui-org/button';
+import {Divider} from '@nextui-org/react';
 import Link from 'next/link';
 
 export const Hero = () => {
 	return (
-		<div className='flex flex-col gap-2 items-center justify-center'>
-			<h1 className='text-6xl lg:text-8xl font-bold text-secondary-500'>
+		<div className='flex flex-col gap-8 '>
+			<h1 className='text-6xl md:text-8xl lg:text-9xl font-bold font-alagard text-warning tracking-wider'>
 				npSpeak
 			</h1>
-			<p className='text-xl lg:text-2xl'>Give your character a voice</p>
-			<div className='flex gap-4 py-2'>
-				<Button variant='flat' color='success'>
-					<Link href='/signup'>Get started</Link>
-				</Button>
-				<Button variant='flat' color='primary'>
-					<Link href='/about'>Learn more</Link>
-				</Button>
+			<p className='mt-[-24px] text-3xl md:text-5xl lg:text-6xl text-danger font-extrabold'>
+				Give your character a voice.
+			</p>
+			<div className='flex gap-4 w-full justify-center tracking-widest font-semibold'>
+				<Link href='/signup'>
+					<Button
+						variant='shadow'
+						color='success'
+						size='lg'
+						radius='sm'
+						className='text-large h-16 font-semibold'
+					>
+						Get started
+					</Button>
+				</Link>
+				<Link href='/about'>
+					<Button
+						variant='shadow'
+						color='primary'
+						size='lg'
+						radius='sm'
+						className='text-large h-16 font-semibold'
+					>
+						Learn more
+					</Button>
+				</Link>
 			</div>
+			<Divider className='mt-4' />
 		</div>
 	);
 };
