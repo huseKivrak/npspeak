@@ -1,6 +1,18 @@
 import {CampaignWithNPCs, DetailedNPC} from '@/types/drizzle';
 import {Tables} from '@/types/supabase';
 import {AccentEmojiMap} from '@/lib/constants';
+import {FieldValues} from 'react-hook-form';
+import {ElevenLabsVoice} from '@/types/elevenlabs';
+
+export const getDirtyValues = (data: FieldValues, allValues: FieldValues) => {
+	const dirtyValues = Object.keys(data).reduce((acc, key) => {
+		if (data[key] !== allValues[key]) {
+			acc[key] = data[key];
+		}
+		return acc;
+	}, {} as FieldValues);
+	return dirtyValues;
+};
 
 export const transformCampaignOptions = (campaigns: CampaignWithNPCs[]) => {
 	return campaigns.map((campaign) => ({
@@ -33,4 +45,30 @@ export const truncateText = (text: string, length: number) => {
 		return `${text.substring(0, length)}...`;
 	}
 	return text;
+};
+
+export type VoiceOptionProps = {
+	label: string;
+	value: string;
+	gender: string;
+	accent: string;
+	description: string;
+	useCase: string | undefined;
+	preview_url: string;
+};
+
+export const transformVoiceOptions = (
+	voiceOptions: ElevenLabsVoice[]
+): VoiceOptionProps[] => {
+	return voiceOptions
+		.map((voice) => ({
+			label: voice.name,
+			value: voice.voice_id,
+			gender: voice.labels.gender,
+			accent: voice.labels.accent,
+			description: voice.labels.description,
+			useCase: voice.labels.use_case || undefined, //todo: fix ts error (removes null possibility)
+			preview_url: voice.preview_url,
+		}))
+		.sort((a, b) => a.label.localeCompare(b.label));
 };

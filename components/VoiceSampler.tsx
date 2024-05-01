@@ -1,38 +1,53 @@
 'use client';
 
 import {useState} from 'react';
-import {VoiceSelect} from './forms/dropdown/VoiceSelect';
-import {useForm} from 'react-hook-form';
+import {useForm, Controller} from 'react-hook-form';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
 import {Checkbox} from '@nextui-org/checkbox';
+import ReactSelect from 'react-select';
+import {transformVoiceOptions} from '@/utils/helpers/formHelpers';
+import {VoiceOption} from './forms/dropdown/VoiceOption';
+import {VoiceSingleValue} from './forms/dropdown/VoiceSingleValue';
 
 export const VoiceSampler = ({voices}: {voices: ElevenLabsVoice[]}) => {
 	const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null);
 	const [autoplay, setAutoplay] = useState(false);
 
-	const handleVoiceChange = (voiceURL: string) => {
-		setSelectedVoiceURL(voiceURL);
-	};
 	const {control} = useForm(); //just needed for VoiceSelect props
+	const selectOptions = transformVoiceOptions(voices);
 
 	return (
-		<div className='flex flex-col max-w-sm px-4 items-start'>
-			<h2>More than 50 voices to choose from.</h2>
+		<div className='flex flex-col gap-2 max-w-lg'>
+			<h2 className='text-2xl sm:text-4xl'>Over 50 voices to choose from!</h2>
 
-			<p className='text-xl mt-4'>Listen to some samples:</p>
-			<VoiceSelect
+			<p className='text-xl sm:text-2xl self-start'>Listen to some samples:</p>
+			<Controller
+				name='voice_id'
 				control={control}
-				voiceOptions={voices}
-				onVoiceChange={handleVoiceChange}
+				rules={{required: true}}
+				render={({field: {name, ref}}) => (
+					<ReactSelect
+						name={name}
+						ref={ref}
+						options={selectOptions}
+						onChange={(value) => {
+							setSelectedVoiceURL(value?.preview_url ?? '');
+						}}
+						components={{Option: VoiceOption, SingleValue: VoiceSingleValue}}
+						placeholder='Select a voice'
+						isSearchable={false}
+					/>
+				)}
 			/>
-			<div className='flex mt-2'>
+
+			<div className='flex mt-2 space-x-4'>
 				<audio src={selectedVoiceURL ?? ''} controls autoPlay={autoplay} />
 				<Checkbox
 					isSelected={autoplay}
 					onValueChange={setAutoplay}
-					color='danger'
-					radius='lg'
-					size='sm'
+					color='secondary'
+					radius='sm'
+					size='lg'
 				>
 					Autoplay
 				</Checkbox>
