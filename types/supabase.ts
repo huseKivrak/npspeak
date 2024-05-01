@@ -233,12 +233,12 @@ export interface Database {
 					voice_id?: string | null;
 				};
 				Update: {
-					created_at?: string;
+					created_at?: never;
 					description?: string | null;
 					id?: never;
-					is_default?: boolean;
+					is_default?: never;
 					npc_name?: string;
-					user_id?: string | null;
+					user_id?: never;
 					voice_id?: string | null;
 				};
 				Relationships: [
