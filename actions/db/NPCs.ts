@@ -15,7 +15,7 @@ import {redirect} from 'next/navigation';
 import {revalidatePath} from 'next/cache';
 
 export const createNPCAction = async (
-	prevState: ActionStatus | null,
+	prevState: ActionStatus | null = null,
 	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
@@ -70,7 +70,7 @@ export const createNPCAction = async (
 };
 
 export const updateNPCAction = async (
-	prevState: ActionStatus | null,
+	prevState: ActionStatus | null = null,
 	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
@@ -130,7 +130,7 @@ export const updateNPCAction = async (
 };
 
 export const deleteNPCAction = async (
-	prevState: ActionStatus | null,
+	prevState: ActionStatus | null = null,
 	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
@@ -159,7 +159,7 @@ export const deleteNPCAction = async (
 };
 
 export const addVoiceToNPC = async (
-	prevState: ActionStatus | null,
+	prevState: ActionStatus | null = null,
 	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
