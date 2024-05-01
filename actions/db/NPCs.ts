@@ -15,8 +15,8 @@ import {redirect} from 'next/navigation';
 import {revalidatePath} from 'next/cache';
 
 export const createNPCAction = async (
-	formData: FormData,
-	prevState: ActionStatus | null = null
+	prevState: ActionStatus | null = null,
+	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
 	if (!user) throw new Error('You must be logged in to create NPCs.');
@@ -70,8 +70,8 @@ export const createNPCAction = async (
 };
 
 export const updateNPCAction = async (
-	formData: FormData,
-	prevState: ActionStatus | null = null
+	prevState: ActionStatus | null,
+	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
 	if (!user) throw new Error('You must be logged in to update NPCs.');
@@ -130,8 +130,8 @@ export const updateNPCAction = async (
 };
 
 export const deleteNPCAction = async (
-	formData: FormData,
-	prevState: ActionStatus | null = null
+	prevState: ActionStatus | null,
+	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
 	if (!user) throw new Error('You must be logged in to delete NPCs.');
@@ -159,8 +159,8 @@ export const deleteNPCAction = async (
 };
 
 export const addVoiceToNPC = async (
-	formData: FormData,
-	prevState: ActionStatus | null = null
+	prevState: ActionStatus | null,
+	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
 	if (!user)
