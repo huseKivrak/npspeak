@@ -1,18 +1,7 @@
 import {CampaignWithNPCs, DetailedNPC} from '@/types/drizzle';
 import {Tables} from '@/types/supabase';
 import {AccentEmojiMap} from '@/lib/constants';
-import {FieldValues} from 'react-hook-form';
 import {ElevenLabsVoice} from '@/types/elevenlabs';
-
-export const getDirtyValues = (data: FieldValues, allValues: FieldValues) => {
-	const dirtyValues = Object.keys(data).reduce((acc, key) => {
-		if (data[key] !== allValues[key]) {
-			acc[key] = data[key];
-		}
-		return acc;
-	}, {} as FieldValues);
-	return dirtyValues;
-};
 
 export const transformCampaignOptions = (campaigns: CampaignWithNPCs[]) => {
 	return campaigns.map((campaign) => ({
