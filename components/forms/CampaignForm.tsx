@@ -19,6 +19,7 @@ import {
 	Textarea,
 	Button,
 } from '@nextui-org/react';
+import {FormInput} from './FormInput';
 interface CampaignFormProps {
 	npcOptions?: FormOptions;
 }
@@ -61,7 +62,7 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 
 	return (
 		<form className='flex flex-col w-full max-w-xs gap-2'>
-			<Input
+			<FormInput
 				isRequired
 				{...register('campaign_name')}
 				type='text'
@@ -102,7 +103,7 @@ export default function CampaignForm({npcOptions}: CampaignFormProps) {
 				render={({message}) => <ErrorToast text={message} />}
 			/>
 
-			<Input
+			<FormInput
 				{...register('end_date')}
 				type='date'
 				label='End date (optional)'
