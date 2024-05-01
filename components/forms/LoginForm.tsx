@@ -1,22 +1,21 @@
 'use client';
 
+import {signInAction} from '@/actions/auth';
 import {useEffect} from 'react';
 import {useForm, FieldPath} from 'react-hook-form';
 import {useFormState} from 'react-dom';
-import {signInAction} from '@/actions/auth';
+import Link from 'next/link';
+import {FormInput} from './FormInput';
 import {SubmitButton} from '../buttons/SubmitButton';
-import {Input} from '@nextui-org/react';
-import {ActionStatus} from '@/types/drizzle';
+import {Button} from '@nextui-org/react';
+import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {loginSchema} from '@/database/drizzle/validation';
 import {ErrorMessage} from '@hookform/error-message';
 import {ErrorToast} from '../ErrorToast';
+import {ActionStatus} from '@/types/drizzle';
 
-type Inputs = {
-	email: string;
-	password: string;
-};
-
+type Inputs = z.infer<typeof loginSchema>;
 export default function LoginForm() {
 	const [state, formAction] = useFormState<ActionStatus, FormData>(
 		signInAction,
@@ -48,13 +47,14 @@ export default function LoginForm() {
 	}, [state, setError]);
 
 	return (
-		<form className='flex flex-col max-w-fit items-center gap-2'>
-			<Input
+		<form className='flex flex-col items-center gap-4'>
+			<FormInput
 				isRequired
 				type='email'
 				label='email'
 				placeholder='you@example.com'
-				variant='bordered'
+				variant='flat'
+				size='lg'
 				{...register('email')}
 			/>
 			<ErrorMessage
@@ -62,11 +62,12 @@ export default function LoginForm() {
 				errors={errors}
 				render={({message}) => <ErrorToast text={message} />}
 			/>
-			<Input
+			<FormInput
 				isRequired
 				type='password'
 				label='password'
-				variant='bordered'
+				variant='flat'
+				size='lg'
 				placeholder='••••••••'
 				{...register('password')}
 			/>
@@ -75,13 +76,30 @@ export default function LoginForm() {
 				errors={errors}
 				render={({message}) => <ErrorToast text={message} />}
 			/>
-			<SubmitButton
-				formAction={formAction}
-				pendingText='signing in...'
-				color='success'
-			>
-				login
-			</SubmitButton>
+			<div className='flex items-center gap-4'>
+				<SubmitButton
+					formAction={formAction}
+					pendingText='signing in...'
+					color='success'
+					className='text-foreground text-large tracking-wider'
+					radius='sm'
+					size='lg'
+					variant='shadow'
+				>
+					login
+				</SubmitButton>
+				<Link href='/signup'>
+					<Button
+						variant='shadow'
+						className='text-foreground text-large tracking-wider'
+						radius='sm'
+						size='lg'
+						color='primary'
+					>
+						sign up
+					</Button>
+				</Link>
+			</div>
 		</form>
 	);
 }

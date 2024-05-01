@@ -1,24 +1,21 @@
 'use client';
-import {useForm, FieldPath} from 'react-hook-form';
+
 import {signUpAction} from '@/actions/auth';
+import {useForm, FieldPath} from 'react-hook-form';
 import {useFormState} from 'react-dom';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {SendEmailIcon} from '@/components/icons';
-import {SubmitButton} from '@/components/buttons/SubmitButton';
-import {ActionStatus} from '@/types/drizzle';
 import {useEffect} from 'react';
-import {ErrorToast} from '../ErrorToast';
-import {Input} from '@nextui-org/react';
-import {ErrorMessage} from '@hookform/error-message';
+import Link from 'next/link';
+import {z} from 'zod';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {FormInput} from './FormInput';
 import {signupSchema} from '@/database/drizzle/validation';
-
-type Inputs = {
-	email: string;
-	username: string;
-	password: string;
-	confirm_password: string;
-};
-
+import {SubmitButton} from '@/components/buttons/SubmitButton';
+import {Button} from '@nextui-org/react';
+import {SendEmailIcon} from '@/components/icons';
+import {ErrorToast} from '../ErrorToast';
+import {ErrorMessage} from '@hookform/error-message';
+import {ActionStatus} from '@/types/drizzle';
+type Inputs = z.infer<typeof signupSchema>;
 export default function SignUpForm() {
 	const [state, formAction] = useFormState<ActionStatus, FormData>(
 		signUpAction,
@@ -33,7 +30,7 @@ export default function SignUpForm() {
 		formState: {errors},
 		setError,
 	} = useForm<Inputs>({
-		mode: 'onSubmit',
+		mode: 'onBlur',
 		criteriaMode: 'all',
 		resolver: zodResolver(signupSchema),
 	});
@@ -48,15 +45,16 @@ export default function SignUpForm() {
 			});
 		}
 	}, [state, setError]);
+
 	return (
-		<form className='flex flex-col max-w-fit items-center gap-2'>
-			<Input
+		<form className='flex flex-col items-center gap-2'>
+			<FormInput
 				isRequired
 				type='email'
 				label='email'
 				placeholder='you@example.com'
-				variant='bordered'
-				className='max-w-xs'
+				variant='flat'
+				size='lg'
 				{...register('email')}
 			/>
 			<ErrorMessage
@@ -65,12 +63,12 @@ export default function SignUpForm() {
 				render={({message}) => <ErrorToast text={message} />}
 			/>
 
-			<Input
+			<FormInput
 				isRequired
 				label='username'
 				placeholder='your username'
-				variant='bordered'
-				className='max-w-xs'
+				variant='flat'
+				size='lg'
 				{...register('username')}
 			/>
 			<ErrorMessage
@@ -79,13 +77,13 @@ export default function SignUpForm() {
 				render={({message}) => <ErrorToast text={message} />}
 			/>
 
-			<Input
+			<FormInput
 				isRequired
 				type='password'
 				label='password'
 				placeholder='••••••••'
-				variant='bordered'
-				className='max-w-xs'
+				variant='flat'
+				size='lg'
 				{...register('password')}
 			/>
 			<ErrorMessage
@@ -94,13 +92,13 @@ export default function SignUpForm() {
 				render={({message}) => <ErrorToast text={message} />}
 			/>
 
-			<Input
+			<FormInput
 				isRequired
 				type='password'
 				label='confirm password'
-				placeholder='••••••••'
-				variant='bordered'
-				className='max-w-xs'
+				placeholder='•••••••'
+				variant='flat'
+				size='lg'
 				{...register('confirm_password')}
 			/>
 			<ErrorMessage
@@ -108,16 +106,30 @@ export default function SignUpForm() {
 				name='confirm_password'
 				render={({message}) => <ErrorToast text={message} />}
 			/>
-			<span className='flex flex-col items-center'>
+			<div className='flex items-center gap-4'>
 				<SubmitButton
 					formAction={formAction}
 					pendingText='creating account...'
-					endContent={<SendEmailIcon width={24} />}
+					endContent={<SendEmailIcon width={24} color='white' />}
 					color='success'
+					className='text-foreground text-large tracking-wider'
+					radius='sm'
+					size='lg'
 				>
-					create account
+					create
 				</SubmitButton>
-			</span>
+				<Link href='/login'>
+					<Button
+						variant='shadow'
+						className='text-foreground text-large tracking-wider'
+						radius='sm'
+						size='lg'
+						color='primary'
+					>
+						login
+					</Button>
+				</Link>
+			</div>
 		</form>
 	);
 }
