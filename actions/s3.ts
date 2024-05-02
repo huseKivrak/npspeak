@@ -63,8 +63,8 @@ export async function uploadAudioToS3(
 		const response = await getPresignedUploadURL();
 		if (response.status !== 'success') return response;
 		const {message, data} = response;
-
-		const uploadResponse = await fetch(message, {
+		console.log('message:', message, 'data:', data);
+		const uploadResponse = await fetch(message!, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'audio/mpeg',
