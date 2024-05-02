@@ -11,7 +11,7 @@ import {redirect} from 'next/navigation';
 import {revalidatePath} from 'next/cache';
 
 export const createNPCAction = async (
-	prevState: ActionStatus | null = null,
+	prevState: ActionStatus | null,
 	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
