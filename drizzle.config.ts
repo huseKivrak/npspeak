@@ -16,6 +16,7 @@ export default {
 		user: dbUser,
 		password: pw,
 		host: dbHost,
+		port: 6543,
 		database: 'postgres',
 	},
 	introspect: {
