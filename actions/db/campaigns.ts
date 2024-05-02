@@ -14,7 +14,7 @@ import {revalidatePath} from 'next/cache';
 import {redirect} from 'next/navigation';
 
 export const createCampaignAction = async (
-	prevState: ActionStatus,
+	prevState: ActionStatus | null,
 	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
@@ -67,7 +67,7 @@ export const createCampaignAction = async (
 };
 
 export const deleteCampaignAction = async (
-	prevState: ActionStatus,
+	prevState: ActionStatus | null,
 	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
