@@ -5,7 +5,6 @@ import {loadEnvConfig} from '@next/env';
 
 loadEnvConfig(cwd());
 
-// const connectionString = process.env.SUPABASE_POOLING_STRING || '';
 const connectionString = process.env.DATABASE_URL || '';
 
 const client = postgres(connectionString, {
