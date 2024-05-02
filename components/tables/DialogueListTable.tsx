@@ -40,72 +40,75 @@ export const DialogueListTable = ({
 	}));
 
 	type Dialogue = (typeof rows)[0];
-	const renderCell = useCallback((dialogue: Dialogue, columnKey: React.Key) => {
-		switch (columnKey) {
-			case 'type':
-				return (
-					<div className='flex flex-col items-center'>
-						<Tooltip
-							content={dialogue.type}
-							color='success'
-							delay={200}
-							closeDelay={200}
-						>
-							<DialogueIcon dialogueType={dialogue.type} />
-						</Tooltip>
-					</div>
-				);
-			case 'text':
-				return (
-					<div className='flex flex-col'>
-						<p className='text-bold text-tiny capitalize'>{dialogue.text}</p>
-					</div>
-				);
-			case 'audio':
-				return (
-					<div className='flex flex-col'>
-						{dialogue.audio ? (
-							<audio src={dialogue.audio} controls />
-						) : (
-							<div className=''>
-								<div className='flex justify-center items-center gap-2 text-default-400'>
-									<PiMicrophoneSlashBold />
-									<p className='text-tiny'>This dialogue has no audio.</p>
-								</div>
-							</div>
-						)}
-					</div>
-				);
-			case 'actions':
-				return (
-					<div className='relative flex justify-center gap-2'>
-						{!dialogue.audio && (
-							<TTSModal
-								voiceId={voiceId}
-								npcId={dialogue.npc_id!}
-								dialogueId={dialogue.id}
-								text={dialogue.text}
+	const renderCell = useCallback(
+		(dialogue: Dialogue, columnKey: React.Key) => {
+			switch (columnKey) {
+				case 'type':
+					return (
+						<div className='flex flex-col items-center'>
+							<Tooltip
+								content={dialogue.type}
+								color='success'
+								delay={200}
+								closeDelay={200}
 							>
-								<Tooltip color='success' content='Create Audio' />
-							</TTSModal>
-						)}
-
-						<DeleteModal
-							idName='dialogue_id'
-							serverAction={deleteDialogueAction}
-							id={dialogue.id}
-							className=''
-						>
-							<Tooltip color='danger' content='Delete Dialogue'>
-								<DeleteIcon className='text-danger' />
+								<DialogueIcon dialogueType={dialogue.type} />
 							</Tooltip>
-						</DeleteModal>
-					</div>
-				);
-			default:
-				return null;
-		}
-	}, []);
+						</div>
+					);
+				case 'text':
+					return (
+						<div className='flex flex-col'>
+							<p className='text-bold text-tiny capitalize'>{dialogue.text}</p>
+						</div>
+					);
+				case 'audio':
+					return (
+						<div className='flex flex-col'>
+							{dialogue.audio ? (
+								<audio src={dialogue.audio} controls />
+							) : (
+								<div className=''>
+									<div className='flex justify-center items-center gap-2 text-default-400'>
+										<PiMicrophoneSlashBold />
+										<p className='text-tiny'>This dialogue has no audio.</p>
+									</div>
+								</div>
+							)}
+						</div>
+					);
+				case 'actions':
+					return (
+						<div className='relative flex justify-center gap-2'>
+							{!dialogue.audio && (
+								<TTSModal
+									voiceId={voiceId}
+									npcId={dialogue.npc_id!}
+									dialogueId={dialogue.id}
+									text={dialogue.text}
+								>
+									<Tooltip color='success' content='Create Audio' />
+								</TTSModal>
+							)}
+
+							<DeleteModal
+								idName='dialogue_id'
+								serverAction={deleteDialogueAction}
+								id={dialogue.id}
+								className=''
+							>
+								<Tooltip color='danger' content='Delete Dialogue'>
+									<DeleteIcon className='text-danger' />
+								</Tooltip>
+							</DeleteModal>
+						</div>
+					);
+				default:
+					return null;
+			}
+		},
+		[voiceId]
+	);
 
 	return (
 		<Table
