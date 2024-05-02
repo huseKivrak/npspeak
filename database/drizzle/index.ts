@@ -1,9 +1,10 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
+import {drizzle} from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
-const connectionString = process.env.SUPABASE_POOLING_STRING || '';
+// const connectionString = process.env.SUPABASE_POOLING_STRING || '';
+const connectionString = process.env.DATABASE_URL || '';
 
 const client = postgres(connectionString, {
-  prepare: false,
+	prepare: false,
 });
 export const db = drizzle(client);
