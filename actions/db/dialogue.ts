@@ -17,7 +17,7 @@ import {
 import {ZodError} from 'zod';
 
 export const createDialogueAction = async (
-	prevState: ActionStatus,
+	prevState: ActionStatus | null,
 	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
@@ -67,7 +67,7 @@ export const createDialogueAction = async (
 };
 
 export const deleteDialogueAction = async (
-	prevState: ActionStatus,
+	prevState: ActionStatus | null,
 	formData: FormData
 ): Promise<ActionStatus> => {
 	const {user} = await getUserInfo();
@@ -133,7 +133,7 @@ export const deleteDialogueAction = async (
 	);
 };
 export async function updateDialogueTTSAudioAction(
-	prevState: ActionStatus,
+	prevState: ActionStatus | null,
 	formData: FormData
 ): Promise<ActionStatus> {
 	const {user} = await getUserInfo();
