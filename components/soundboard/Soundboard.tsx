@@ -14,14 +14,18 @@ import {
 	arrayMove,
 	SortableContext,
 	sortableKeyboardCoordinates,
-	verticalListSortingStrategy,
+	horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import {AudioCard} from './AudioCard';
 import {SoundboardDialogue} from '@/types/drizzle';
 export const Soundboard = ({dialogues}: {dialogues: SoundboardDialogue[]}) => {
 	const [items, setItems] = useState(dialogues);
 	const sensors = useSensors(
-		useSensor(PointerSensor),
+		useSensor(PointerSensor, {
+			activationConstraint: {
+				distance: 8,
+			},
+		}),
 		useSensor(KeyboardSensor, {
 			coordinateGetter: sortableKeyboardCoordinates,
 		})
@@ -44,10 +48,12 @@ export const Soundboard = ({dialogues}: {dialogues: SoundboardDialogue[]}) => {
 			collisionDetection={closestCenter}
 			onDragEnd={handleDragEnd}
 		>
-			<SortableContext items={items} strategy={verticalListSortingStrategy}>
-				{items.map(
-					(i) => i.audio && <AudioCard key={i.id} id={i.id} dialogue={i} />
-				)}
+			<SortableContext items={items} strategy={horizontalListSortingStrategy}>
+				<div className='grid grid-cols-3 gap-3 place-items-center'>
+					{items.map(
+						(i) => i.audio && <AudioCard key={i.id} id={i.id} dialogue={i} />
+					)}
+				</div>
 			</SortableContext>
 		</DndContext>
 	);
