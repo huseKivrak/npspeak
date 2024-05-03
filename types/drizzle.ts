@@ -58,3 +58,11 @@ export type ServerAction = (
 	prevState: ActionStatus | null,
 	formData: FormData
 ) => Promise<ActionStatus>;
+
+export type SoundboardDialogue = {
+	id: number;
+	type: string;
+	text: string;
+	audio: string;
+	npc_id: number;
+};

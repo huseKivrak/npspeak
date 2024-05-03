@@ -1,4 +1,9 @@
-import {DetailedNPC, FormOptions} from '@/types/drizzle';
+import {
+	DetailedDialogue,
+	DetailedNPC,
+	FormOptions,
+	SoundboardDialogue,
+} from '@/types/drizzle';
 import {Tables} from '@/types/supabase';
 
 export const createNPCStats = (npc: DetailedNPC) => {
@@ -27,4 +32,18 @@ export const createTTSFormOptions = (dialogues: Tables<'npc_dialogues'>[]) => {
 		}
 		return acc;
 	}, []);
+};
+
+export const formatDialoguesForSoundboard = (
+	dialogues: DetailedDialogue[]
+): SoundboardDialogue[] => {
+	const formattedDialogues = dialogues.map((dialogue) => ({
+		id: dialogue.id,
+		type: dialogue.dialogueType || 'other',
+		text: dialogue.text,
+		audio: dialogue.audioURL || '',
+		npc_id: dialogue.npc_id!,
+	}));
+
+	return formattedDialogues;
 };
