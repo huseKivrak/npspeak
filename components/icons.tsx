@@ -1,11 +1,16 @@
 import {DialogueIconMap, GenderIconMap} from '@/lib/constants';
 import {IconSvgProps} from '@/types/types';
-import {Icon} from 'next/dist/lib/metadata/types/metadata-types';
 
-export const DialogueIcon = ({dialogueType}: {dialogueType: string}) => {
+export const DialogueIcon = ({
+	dialogueType,
+	size = 24,
+}: {
+	dialogueType: string;
+	size?: number;
+}) => {
 	const {icon: DialogueIcon, props} =
 		DialogueIconMap[dialogueType] || DialogueIconMap.other;
-	return <DialogueIcon {...props} />;
+	return <DialogueIcon {...props} size={size} />;
 };
 
 export const GenderIcon = (gender: string, size = 24) => {
