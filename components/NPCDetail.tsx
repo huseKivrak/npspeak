@@ -1,12 +1,14 @@
 'use client';
 
-import {useState} from 'react';
-import {DialogueListTable} from '@/components/tables/DialogueListTable';
-import {DialogueForm} from './forms/DialogueForm';
-import {Divider} from '@nextui-org/divider';
-import {Button} from '@nextui-org/button';
-import {PlusIcon} from './icons';
-import {DetailedDialogue, DetailedNPC} from '@/types/drizzle';
+import { useState } from 'react';
+import { DialogueListTable } from '@/components/tables/DialogueListTable';
+import { DialogueForm } from './forms/DialogueForm';
+import { Divider } from '@nextui-org/divider';
+import { Button } from '@nextui-org/button';
+import { PlusIcon } from './icons';
+import { DetailedDialogue, DetailedNPC, SoundboardDialogue } from '@/types/drizzle';
+import { formatDialoguesForSoundboard } from '@/utils/formatHelpers';
+import { Soundboard } from './soundboard/Soundboard';
 export const NPCDetail = ({
 	npc,
 	dialogues,
@@ -16,6 +18,10 @@ export const NPCDetail = ({
 }) => {
 	const [showDialogueForm, setShowDialogueForm] = useState(false);
 
+	const soundboardDialogues = dialogues ? formatDialoguesForSoundboard(dialogues) : [];
+
+	console.log('dialogues:', dialogues);
+	console.log('soundboardDialogues:', soundboardDialogues);
 	return (
 		<div className='flex flex-col w-full'>
 			<div className='flex gap-2 w-5/6'>
@@ -23,6 +29,8 @@ export const NPCDetail = ({
 				<Divider orientation='vertical' className='mx-4' />
 				<p className='lg:text-xl'>{npc.description}</p>
 			</div>
+			<Divider className='my-4' />
+			<Soundboard dialogues={soundboardDialogues} />
 			<Divider className='my-4' />
 			<div className='flex flex-col gap-4'>
 				<div className='flex gap-4'>
@@ -39,9 +47,7 @@ export const NPCDetail = ({
 					</Button>
 				</div>
 				{showDialogueForm && <DialogueForm npcId={npc.id} />}
-				{dialogues && (
-					<DialogueListTable dialogues={dialogues} voiceId={npc.voice_id!} />
-				)}
+				{dialogues && <DialogueListTable dialogues={dialogues} voiceId={npc.voice_id!} />}
 			</div>
 		</div>
 	);
