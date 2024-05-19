@@ -81,13 +81,14 @@ export function TTSModal({
 									<input type='hidden' name='npc_id' value={npcId} />
 									<input type='hidden' name='voice_id' value={voiceId} />
 
-									<Button color='default' variant='light' onPress={onClose}>
+									<Button color='success' variant='light' onPress={onClose}>
 										Close
 									</Button>
 
 									<SubmitButton
 										formAction={formAction}
 										pendingText='creating audio...'
+										className='bg-success-700 hover:bg-success-800'
 									>
 										Create!
 									</SubmitButton>
