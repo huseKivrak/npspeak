@@ -43,49 +43,49 @@ export const DialogueIconMap: {[key: string]: IconProps} = {
 		icon: FaRegSmile,
 		props: {
 			size: 20,
-			color: '#60a5fa',
+			color: '#f7d599',
 		},
 	},
 	farewell: {
 		icon: FaRegSadCry,
 		props: {
 			size: 20,
-			color: '#f472b6',
+			color: '#fd7e76',
 		},
 	},
 	story: {
 		icon: FaBook,
 		props: {
 			size: 20,
-			color: '#a78bfa',
+			color: '#56a787',
 		},
 	},
 	question: {
 		icon: FaQuestion,
 		props: {
 			size: 20,
-			color: '#f59e0b',
+			color: '#99d7fe',
 		},
 	},
 	answer: {
 		icon: FaRegCheckCircle,
 		props: {
 			size: 20,
-			color: '#16a34a',
+			color: '#019cfd',
 		},
 	},
 	exclamation: {
 		icon: FaExclamation,
 		props: {
 			size: 20,
-			color: '#f59e0b',
+			color: '#ea9700',
 		},
 	},
 	other: {
 		icon: FaQuestion,
 		props: {
 			size: 20,
-			color: '#a78bfa',
+			color: '#efefef',
 		},
 	},
 };
@@ -99,6 +99,16 @@ export const DefaultDialogueTypes: FormOptions = [
 	{label: 'answer', value: 6},
 	{label: 'exclamation', value: 7},
 ];
+
+export const AudioCardColors: {[key: string]: string} = {
+	greeting: 'bg-primary',
+	farewell: 'bg-danger',
+	story: 'bg-secondary',
+	question: 'bg-warning',
+	answer: 'bg-primary',
+	exclamation: 'bg-warning',
+	other: 'bg-default',
+};
 
 export const AccentEmojiMap: {[key: string]: string} = {
 	american: '🇺🇸',
