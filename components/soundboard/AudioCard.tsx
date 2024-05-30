@@ -1,7 +1,9 @@
 'use client';
-import {useState, useEffect, useRef, useCallback} from 'react';
-import {useSortable} from '@dnd-kit/sortable';
-import {CSS} from '@dnd-kit/utilities';
+
+//todo: skeletons for loading
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import {
 	Card,
 	CardBody,
@@ -14,19 +16,13 @@ import {
 	Chip,
 	Skeleton,
 } from '@nextui-org/react';
-import {cn} from '@/utils/helpers/clsxMerge';
-import {PiPlayBold as PlayIcon, PiPauseBold as PauseIcon} from 'react-icons/pi';
-import {DialogueIcon} from '../icons';
-import {SoundboardDialogue} from '@/types/drizzle';
-import {formatTimer} from '@/utils/formatHelpers';
+import { cn } from '@/utils/helpers/clsxMerge';
+import { PiPlayBold as PlayIcon, PiPauseBold as PauseIcon } from 'react-icons/pi';
+import { DialogueIcon } from '../icons';
+import { SoundboardDialogue } from '@/types/drizzle';
+import { formatTimer } from '@/utils/formatHelpers';
 
-export const AudioCard = ({
-	dialogue,
-	id,
-}: {
-	dialogue: SoundboardDialogue;
-	id: number;
-}) => {
+export const AudioCard = ({ dialogue, id }: { dialogue: SoundboardDialogue; id: number }) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [isCompleted, setIsCompleted] = useState(false);
@@ -36,8 +32,10 @@ export const AudioCard = ({
 
 	const audioRef = useRef<HTMLAudioElement>(null);
 
-	const {attributes, listeners, setNodeRef, transform, transition} =
-		useSortable({id, data: {dialogue}});
+	const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+		id,
+		data: { dialogue },
+	});
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
@@ -96,13 +94,12 @@ export const AudioCard = ({
 		}
 	}, [isPlaying]);
 
-	const timeRemaining =
-		duration !== null ? formatTimer(duration - currentTime) : '--:--';
+	const timeRemaining = duration !== null ? formatTimer(duration - currentTime) : '--:--';
 	const isPaused = currentTime > 0 && !isPlaying;
 	const cardStyles = {
 		base: 'flex flex-col justify-center bg-secondary-300/60 w-[200px] h-[200px] transition-all ease-in-out duration-300',
-		playing: 'bg-warning-300/60 w-[225px] h-[225px] transform',
-		paused: 'bg-warning-300/60 w-[225px] h-[225px]',
+		playing: 'bg-warning-300/60 scale-105',
+		paused: 'bg-warning-300/60 scale-105 animate-pulse',
 		completed: 'bg-success',
 	};
 
@@ -128,23 +125,16 @@ export const AudioCard = ({
 			style={style}
 			{...attributes}
 			{...listeners}
-			className={cn('z-0 list-none', currentStyle)}
+			className='z-0 list-none'
 			onClick={togglePlayPause}
 		>
-			<Card
-				className={cn(cardStyles.base, currentStyle)}
-				shadow='lg'
-				radius='sm'
-			>
+			<Card className={cn(cardStyles.base, currentStyle)} shadow='lg' radius='sm'>
 				<CardHeader className=' z-10 h-5 justify-end p-1 pb-0'>
 					<Tooltip
 						content={dialogue.type}
 						placement='top'
 						classNames={{
-							content: [
-								'px-2 shadow-none',
-								'text-foreground text-lg bg-transparent',
-							],
+							content: ['px-2 shadow-none', 'text-foreground text-lg bg-transparent'],
 						}}
 					>
 						<div className='m-2'>
@@ -161,9 +151,7 @@ export const AudioCard = ({
 				/>
 
 				<CardBody className='z-10 px-1 overflow-hidden items-center justify-center max-h-24'>
-					<p className='text-center text-balance text-lg text-foreground'>
-						{dialogue.text}
-					</p>
+					<p className='text-center text-balance text-lg text-foreground'>{dialogue.text}</p>
 				</CardBody>
 
 				<CardFooter className='z-10 bottom-0 gap-1 px-1 my-1'>
