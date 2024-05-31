@@ -9,7 +9,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
 	return (
 		<NextUIProvider navigate={router.push}>
-			<NextThemesProvider attribute='class' defaultTheme='dark'>
+			<NextThemesProvider attribute='class' defaultTheme='custom'>
 				{children}
 			</NextThemesProvider>
 		</NextUIProvider>
