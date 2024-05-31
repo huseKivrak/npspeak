@@ -113,7 +113,6 @@ export const DialogueListTable = ({
 	return (
 		<Table
 			isHeaderSticky
-			isStriped
 			aria-label='Dialogue Table'
 			classNames={{
 				wrapper: 'max-h-[382px] p-0 rounded-none',
