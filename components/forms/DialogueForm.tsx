@@ -11,8 +11,7 @@ import { ActionStatus } from '@/types/drizzle';
 import { ErrorMessage } from '@hookform/error-message';
 import { ErrorToast } from '@/components/ErrorToast';
 import { DefaultDialogueTypes } from '@/lib/constants';
-import { RadioGroup, Radio, Textarea } from '@nextui-org/react';
-import { Select, SelectItem } from '@nextui-org/react';
+import { Select, SelectItem, Textarea } from '@nextui-org/react';
 
 type Inputs = z.infer<typeof dialogueSchema>;
 export const DialogueForm = ({ npcId }: { npcId: number }) => {
