@@ -1,35 +1,25 @@
-import {z} from 'zod';
-import {zfd} from 'zod-form-data';
+import { z } from 'zod';
+import { zfd } from 'zod-form-data';
 
 //Auth
 export const loginSchema = zfd.formData({
 	email: zfd.text(
-		z.string({required_error: 'Oops! Please enter your email'}).email({
+		z.string({ required_error: 'Oops! Please enter your email' }).email({
 			message: 'Please enter a valid email address',
 		})
 	),
-	password: zfd.text(
-		z.string({required_error: 'Oops! Please enter your password'})
-	),
+	password: zfd.text(z.string({ required_error: 'Oops! Please enter your password' })),
 });
 
 export const signupSchema = zfd
 	.formData({
-		email: zfd.text(
-			z.string().email({message: 'Please enter a valid email address'})
-		),
-		username: zfd.text(
-			z.string().min(4, 'Username must be at least 4 characters long')
-		),
-		password: zfd.text(
-			z.string().min(7, 'Password must be at least 7 characters long')
-		),
-		confirm_password: zfd.text(
-			z.string().min(7, 'Password must be at least 7 characters long')
-		),
+		email: zfd.text(z.string().email({ message: 'Please enter a valid email address' })),
+		username: zfd.text(z.string().min(4, 'Username must be at least 4 characters long')),
+		password: zfd.text(z.string().min(7, 'Password must be at least 7 characters long')),
+		confirm_password: zfd.text(z.string().min(7, 'Password must be at least 7 characters long')),
 	})
 	.superRefine((data, ctx) => {
-		const {password, confirm_password} = data;
+		const { password, confirm_password } = data;
 		if (password !== confirm_password) {
 			ctx.addIssue({
 				code: 'custom',
@@ -52,7 +42,7 @@ export const campaignSchema = zfd
 			z
 				.string()
 				.min(5, 'Description must be at least 5 characters long')
-				.max(255, 'Description must be at most 255 characters long')
+				.max(500, 'Description must be at most 500 characters long')
 				.optional()
 		),
 		npc_ids: zfd.repeatableOfType(zfd.numeric().optional()),
@@ -60,7 +50,7 @@ export const campaignSchema = zfd
 		end_date: zfd.text(z.string().optional()),
 	})
 	.superRefine((data, ctx) => {
-		const {start_date, end_date} = data;
+		const { start_date, end_date } = data;
 		if (start_date) {
 			const startDate = new Date(start_date);
 			const today = new Date();
@@ -102,7 +92,7 @@ export const npcSchema = zfd.formData({
 		z
 			.string()
 			.min(2, 'Description must be at least 2 characters long')
-			.max(255, 'Description must be at most 255 characters long')
+			.max(500, 'Description must be at most 500 characters long')
 			.optional()
 	),
 	campaign_ids: zfd.repeatableOfType(zfd.numeric().optional()),
@@ -121,7 +111,7 @@ export const dialogueSchema = zfd.formData({
 		z
 			.string()
 			.min(2, 'Dialogue must be at least 2 characters long')
-			.max(255, 'Dialogue must be at most 255 characters long')
+			.max(500, 'Dialogue must be at most 500 characters long')
 	),
 	tts_audio_id: zfd.numeric().optional(),
 });
