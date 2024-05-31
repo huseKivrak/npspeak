@@ -1,8 +1,8 @@
 'use client';
-import {useCallback, useMemo, useState} from 'react';
-import {deleteNPCAction} from '@/actions/db/NPCs';
-import {DeleteModal} from '../DeleteModal';
-import {SearchBar} from './SearchBar';
+import { useCallback, useMemo, useState } from 'react';
+import { deleteNPCAction } from '@/actions/db/NPCs';
+import { DeleteModal } from '../DeleteModal';
+import { SearchBar } from './SearchBar';
 import Link from 'next/link';
 import {
 	Table,
@@ -16,11 +16,11 @@ import {
 	Pagination,
 	SortDescriptor,
 } from '@nextui-org/react';
-import {DeleteIcon} from '../icons';
-import {truncateText} from '@/utils/helpers/formHelpers';
-import {DetailedNPC} from '@/types/drizzle';
+import { DeleteIcon } from '../icons';
+import { truncateText } from '@/utils/helpers/formHelpers';
+import { DetailedNPC } from '@/types/drizzle';
 
-export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
+export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
 	const [filterValue, setFilterValue] = useState('');
 	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
 		column: 'npc_name',
@@ -91,15 +91,8 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 			case 'description':
 				return (
 					<div className='flex flex-col'>
-						<Tooltip
-							delay={500}
-							closeDelay={0}
-							content={npc.description}
-							className='max-w-sm'
-						>
-							<p className='text-tiny capitalize truncate max-w-xs h-8'>
-								{npc.description}
-							</p>
+						<Tooltip delay={500} closeDelay={0} content={npc.description} className='max-w-sm'>
+							<p className='text-tiny capitalize truncate max-w-xs h-8'>{npc.description}</p>
 						</Tooltip>
 					</div>
 				);
@@ -111,15 +104,11 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 								<Chip
 									key={campaign.id}
 									size='sm'
-									color='secondary'
+									color='primary'
 									variant='flat'
 									className='hover:underline'
 								>
-									<Link
-										key={campaign.id}
-										href={`/campaigns/${campaign.id}`}
-										className='text-tiny'
-									>
+									<Link key={campaign.id} href={`/campaigns/${campaign.id}`} className='text-tiny'>
 										{truncateText(campaign.campaign_name, 15)}
 									</Link>
 								</Chip>
@@ -132,19 +121,13 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 			case 'created_at':
 				return (
 					<div className='flex flex-col'>
-						<p className='text-tiny capitalize'>
-							{new Date(npc.created_at).toLocaleDateString()}
-						</p>
+						<p className='text-tiny capitalize'>{new Date(npc.created_at).toLocaleDateString()}</p>
 					</div>
 				);
 			case 'actions':
 				return (
 					<div className='relative flex justify-center gap-2'>
-						<DeleteModal
-							idName='npc_id'
-							serverAction={deleteNPCAction}
-							id={npc.id}
-						>
+						<DeleteModal idName='npc_id' serverAction={deleteNPCAction} id={npc.id}>
 							<Tooltip color='danger' content='Delete NPC'>
 								<DeleteIcon className='text-danger' />
 							</Tooltip>
@@ -160,11 +143,7 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 	const topContent = useMemo(() => {
 		return (
 			<div className='flex flex-col gap-2'>
-				<SearchBar
-					filterValue={filterValue}
-					onValueChange={onSearchChange}
-					onClear={onClear}
-				/>
+				<SearchBar filterValue={filterValue} onValueChange={onSearchChange} onClear={onClear} />
 			</div>
 		);
 	}, [filterValue, onSearchChange, onClear]);
@@ -193,7 +172,7 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 			aria-label='NPCs Table'
 			classNames={{
 				wrapper: 'p-0 rounded-sm min-h-[382px] max-h-[382px] max-w-screen',
-				th: ['bg-primary', 'text-foreground', 'border-b', 'border-divider'],
+				th: ['bg-success', 'text-foreground', 'border-b', 'border-divider'],
 				td: [
 					'group-data-[first=true]:first:before:rounded-none',
 					'group-data-[first=true]:last:before:rounded-none',
@@ -229,9 +208,7 @@ export const NPCListTable = ({npcs}: {npcs: DetailedNPC[]}) => {
 			<TableBody items={sortedItems} emptyContent={'No NPCs to display.'}>
 				{(item) => (
 					<TableRow key={item.id}>
-						{(columnKey) => (
-							<TableCell>{renderCell(item, columnKey)}</TableCell>
-						)}
+						{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
 					</TableRow>
 				)}
 			</TableBody>
