@@ -1,12 +1,12 @@
 import '@/styles/globals.css';
-import {Metadata} from 'next';
-import {Analytics} from '@vercel/analytics/react';
-import {SpeedInsights} from '@vercel/speed-insights/next';
-import {Providers} from './providers';
-import {siteConfig} from '@/config/site';
-import {fontAlagard, fontGrenze} from '@/config/fonts';
+import { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Providers } from './providers';
+import { siteConfig } from '@/config/site';
+import { fontAlagard, fontGrenze } from '@/config/fonts';
 import clsx from 'clsx';
-import {Navbar} from '@/components/layout/Navbar';
+import { Navbar } from '@/components/layout/Navbar';
 import AuthButton from '@/components/buttons/AuthButton';
 
 const defaultUrl = process.env.VERCEL_URL
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang='en' suppressHydrationWarning>
 			<head />
@@ -41,9 +41,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 						<Navbar>
 							<AuthButton />
 						</Navbar>
-						<main className='container mx-auto max-w-7xl sm:px-4 pt-8 flex-grow'>
-							{children}
-						</main>
+						<main className='container mx-auto max-w-7xl sm:px-4 pt-8 flex-grow'>{children}</main>
 						<Analytics />
 						<SpeedInsights />
 						<footer className='w-full flex items-center justify-center py-4'>
