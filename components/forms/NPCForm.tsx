@@ -1,25 +1,22 @@
 'use client';
-import {useState} from 'react';
-import {useForm, Controller, FieldPath} from 'react-hook-form';
-import {z} from 'zod';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {createNPCAction, updateNPCAction} from '@/actions/db/NPCs';
-import {npcSchema} from '@/database/drizzle/validation';
-import {CheckboxGroup, Checkbox, Textarea, Button} from '@nextui-org/react';
-import {SubmitButton} from '@/components/buttons/SubmitButton';
+import { useState } from 'react';
+import { useForm, Controller, FieldPath } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createNPCAction, updateNPCAction } from '@/actions/db/NPCs';
+import { npcSchema } from '@/database/drizzle/validation';
+import { CheckboxGroup, Checkbox, Textarea, Button } from '@nextui-org/react';
+import { SubmitButton } from '@/components/buttons/SubmitButton';
 import ReactSelect from 'react-select';
-import {VoiceOption} from './dropdown/VoiceOption';
-import {VoiceSingleValue} from './dropdown/VoiceSingleValue';
-import {PlusIcon} from '../icons';
-import {ErrorMessage} from '@hookform/error-message';
-import {ErrorToast} from '@/components/ErrorToast';
-import {FormOptions, UpdateNPC} from '@/types/drizzle';
-import {ElevenLabsVoice} from '@/types/elevenlabs';
-import {FormInput} from './FormInput';
-import {
-	transformVoiceOptions,
-	VoiceOptionProps,
-} from '@/utils/helpers/formHelpers';
+import { VoiceOption } from './dropdown/VoiceOption';
+import { VoiceSingleValue } from './dropdown/VoiceSingleValue';
+import { PlusIcon } from '../icons';
+import { ErrorMessage } from '@hookform/error-message';
+import { ErrorToast } from '@/components/ErrorToast';
+import { FormOptions, UpdateNPC } from '@/types/drizzle';
+import { ElevenLabsVoice } from '@/types/elevenlabs';
+import { FormInput } from './FormInput';
+import { transformVoiceOptions, VoiceOptionProps } from '@/utils/helpers/formHelpers';
 
 type Inputs = z.infer<typeof npcSchema>;
 
@@ -29,11 +26,7 @@ interface NPCFormProps {
 	npcToUpdate?: UpdateNPC;
 }
 
-export const NPCForm = ({
-	campaignOptions,
-	voiceOptions,
-	npcToUpdate,
-}: NPCFormProps) => {
+export const NPCForm = ({ campaignOptions, voiceOptions, npcToUpdate }: NPCFormProps) => {
 	const isEditing = Boolean(npcToUpdate);
 	const [showAddCampaign, setShowAddCampaign] = useState(false);
 	const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null);
@@ -42,7 +35,7 @@ export const NPCForm = ({
 	const {
 		register,
 		control,
-		formState: {errors},
+		formState: { errors },
 		setError,
 		reset,
 		getValues,
@@ -98,11 +91,9 @@ export const NPCForm = ({
 		<form
 			id='npc-form'
 			onSubmit={handleSubmit(onSubmit, onInvalid)}
-			className='flex flex-col gap-2 w-full max-w-xs'
+			className='flex flex-col gap-2 w-full max-w-md'
 		>
-			{errors.root?.serverError && (
-				<ErrorToast text={errors.root.serverError.message!} />
-			)}
+			{errors.root?.serverError && <ErrorToast text={errors.root.serverError.message!} />}
 
 			<button onClick={() => console.log('values', getValues())}>Log</button>
 
@@ -118,7 +109,7 @@ export const NPCForm = ({
 			<ErrorMessage
 				errors={errors}
 				name='npc_name'
-				render={({message}) => <ErrorToast text={message} />}
+				render={({ message }) => <ErrorToast text={message} />}
 			/>
 			<Textarea
 				{...register('description')}
@@ -127,18 +118,19 @@ export const NPCForm = ({
 				defaultValue={npcToUpdate?.description}
 				placeholder='describe your NPC'
 				variant='bordered'
+				className='text-foreground text-2xl'
 			/>
 			<ErrorMessage
 				errors={errors}
 				name='description'
-				render={({message}) => <ErrorToast text={message} />}
+				render={({ message }) => <ErrorToast text={message} />}
 			/>
 
 			<Controller
 				name='voice_id'
 				control={control}
-				rules={{required: true}}
-				render={({field: {name, ref, onChange}}) => (
+				rules={{ required: true }}
+				render={({ field: { name, ref, onChange } }) => (
 					<ReactSelect
 						name={name}
 						ref={ref}
@@ -146,15 +138,13 @@ export const NPCForm = ({
 							onChange(value?.value);
 							setSelectedVoiceURL(value?.preview_url ?? '');
 						}}
-						components={{Option: VoiceOption, SingleValue: VoiceSingleValue}}
+						components={{ Option: VoiceOption, SingleValue: VoiceSingleValue }}
 						placeholder='Select a voice'
 						isSearchable={false}
 						options={selectOptions}
 						defaultValue={
 							isEditing
-								? selectOptions.find(
-										(option) => npcToUpdate?.voice_id === option.value
-								  )
+								? selectOptions.find((option) => npcToUpdate?.voice_id === option.value)
 								: null
 						}
 					/>
@@ -188,13 +178,8 @@ export const NPCForm = ({
 				<Controller
 					name='campaign_ids'
 					control={control}
-					render={({field: {ref}}) => (
-						<CheckboxGroup
-							label='campaigns'
-							name='campaign_ids'
-							orientation='horizontal'
-							ref={ref}
-						>
+					render={({ field: { ref } }) => (
+						<CheckboxGroup label='campaigns' name='campaign_ids' orientation='horizontal' ref={ref}>
 							{campaignOptions.map((option) => (
 								<Checkbox
 									key={option.label}
