@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import { useState } from 'react';
 import {
 	DndContext,
 	closestCenter,
@@ -16,9 +16,9 @@ import {
 	sortableKeyboardCoordinates,
 	horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import {AudioCard} from './AudioCard';
-import {SoundboardDialogue} from '@/types/drizzle';
-export const Soundboard = ({dialogues}: {dialogues: SoundboardDialogue[]}) => {
+import { AudioCard } from './AudioCard';
+import { SoundboardDialogue } from '@/types/drizzle';
+export const Soundboard = ({ dialogues }: { dialogues: SoundboardDialogue[] }) => {
 	const [items, setItems] = useState(dialogues);
 	const sensors = useSensors(
 		useSensor(PointerSensor, {
@@ -32,7 +32,7 @@ export const Soundboard = ({dialogues}: {dialogues: SoundboardDialogue[]}) => {
 	);
 
 	const handleDragEnd = (event: DragEndEvent) => {
-		const {active, over} = event;
+		const { active, over } = event;
 
 		if (over && active.id !== over.id) {
 			setItems((items) => {
@@ -43,16 +43,10 @@ export const Soundboard = ({dialogues}: {dialogues: SoundboardDialogue[]}) => {
 		}
 	};
 	return (
-		<DndContext
-			sensors={sensors}
-			collisionDetection={closestCenter}
-			onDragEnd={handleDragEnd}
-		>
+		<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
 			<SortableContext items={items} strategy={horizontalListSortingStrategy}>
 				<div className='grid grid-cols-3 gap-3 place-items-center'>
-					{items.map(
-						(i) => i.audio && <AudioCard key={i.id} id={i.id} dialogue={i} />
-					)}
+					{items.map((i) => i.audio && <AudioCard key={i.id} id={i.id} dialogue={i} />)}
 				</div>
 			</SortableContext>
 		</DndContext>
