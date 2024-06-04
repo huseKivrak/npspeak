@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "prettier:format": "prettier --write .",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.514.0",
@@ -46,8 +47,8 @@
   "devDependencies": {
     "@playwright/test": "^1.41.2",
     "@tailwindcss/typography": "^0.5.10",
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.2.1",
+    "@testing-library/jest-dom": "^6.4.5",
+    "@testing-library/react": "^14.3.1",
     "@types/jest": "^29.5.12",
     "@types/node": "^20",
     "@types/react": "^18.2.78",
