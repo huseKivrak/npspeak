@@ -4,11 +4,6 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": [
-    "drizzle"
-  ],
-  "extends": [
-    "plugin:drizzle/recommended",
-    "next/core-web-vitals"
-  ]
+  "plugins": ["drizzle"],
+  "extends": ["plugin:drizzle/recommended", "next/core-web-vitals"]
 }
