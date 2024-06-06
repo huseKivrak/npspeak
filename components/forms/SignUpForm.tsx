@@ -112,7 +112,7 @@ export default function SignUpForm() {
           pendingText="creating account..."
           endContent={<SendEmailIcon width={24} color="white" />}
           color="success"
-          className="text-foreground text-large tracking-wider"
+          className=" text-large tracking-wider"
           radius="sm"
           size="lg"
         >
@@ -121,7 +121,7 @@ export default function SignUpForm() {
         <Link href="/login">
           <Button
             variant="shadow"
-            className="text-foreground text-large tracking-wider"
+            className=" text-large tracking-wider"
             radius="sm"
             size="lg"
             color="primary"

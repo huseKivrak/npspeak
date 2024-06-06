@@ -10,7 +10,7 @@ export default async function AuthButton() {
   const { user } = await getUserInfo()
 
   return user ? (
-    <div className="flex items-center gap-4 text-primary-content">
+    <div className="flex items-center gap-4 ">
       <form action={logoutAction}>
         <button className="text-4xl">logout</button>
       </form>

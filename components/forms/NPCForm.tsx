@@ -127,7 +127,7 @@ export const NPCForm = ({
         defaultValue={npcToUpdate?.description}
         placeholder="describe your NPC"
         variant="bordered"
-        className="text-foreground text-2xl"
+        className=" text-2xl"
       />
       <ErrorMessage
         errors={errors}

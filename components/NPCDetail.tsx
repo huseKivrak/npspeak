@@ -47,7 +47,7 @@ export const NPCDetail = ({
             size="sm"
             onClick={() => setShowDialogueForm(!showDialogueForm)}
             startContent={showDialogueForm ? '' : <PlusIcon />}
-            className="w-fit text-white hover:text-white/50"
+            className="w-fit "
           >
             {showDialogueForm ? 'cancel' : 'dialogue'}
           </Button>

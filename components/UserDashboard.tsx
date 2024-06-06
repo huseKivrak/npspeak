@@ -38,8 +38,7 @@ export function UserDashboard({
             'gap-3 w-full relative rounded-none p-0 border-b border-divider bg-transparent',
           cursor: 'w-full bg-danger',
           tab: 'max-w-full px-0 h-12',
-          tabContent:
-            'text-3xl tracking-widest group-data-[selected=true]:text-default',
+          tabContent: 'text-3xl tracking-widest group-data-[selected=true]:',
         }}
       >
         <Tab
@@ -57,7 +56,7 @@ export function UserDashboard({
             size="lg"
             variant="flat"
             color="success"
-            className="mb-2 text-white hover:text-white/50"
+            className="mb-2 "
             startContent={!showNPCForm && <PlusIcon />}
             onClick={() => setShowNPCForm(!showNPCForm)}
           >
@@ -83,7 +82,7 @@ export function UserDashboard({
             size="lg"
             variant="flat"
             color="success"
-            className="mb-2 text-white hover:text-white/50"
+            className="mb-2 "
             startContent={!showCampaignForm && <PlusIcon />}
             onClick={() => setShowCampaignForm(!showCampaignForm)}
           >

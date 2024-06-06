@@ -5,17 +5,17 @@ export const FormInput = extendVariants(Input, {
   variants: {
     color: {
       form: {
-        label: 'text-foreground text-2xl',
+        label: ' text-2xl',
         inputWrapper: [
           'shadow-xl',
-          'bg-transparent',
+          'bg-default',
           'backdrop-blur-xl',
           'backdrop-saturate-200',
-          'hover:bg-danger-400/50',
-          'data-[hover=true]:bg-danger-400',
-          'group-data-[focus=true]:bg-danger-300',
+          '',
+          'data-[hover=true]:bg-transparent',
+          'group-data-[focus=true]:',
         ],
-        input: ['text-default', 'placeholder:text-foreground tracking-wider'],
+        input: ['', 'placeholder: tracking-wider'],
       },
     },
     size: {

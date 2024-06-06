@@ -8,7 +8,7 @@ import { ErrorIcon } from './icons'
 
 export function ErrorToast({ text, className, children }: ErrorToastProps) {
   return (
-    <div className={cn('text-danger text-small', className)}>
+    <div className={cn('text-secondary text-small', className)}>
       <div className="flex items-center">
         <ErrorIcon size={16} />
         <span className="ml-1">{text}</span>

@@ -10,9 +10,9 @@ export const WorkflowAccordian = () => {
   const itemClasses = {
     base: 'py-3 max-w-md sm:max-w-lg w-full',
     title:
-      'text-3xl sm:text-4xl text-default-200 tracking-wider sm:tracking-widest font-semibold',
+      'text-3xl sm:text-4xl  tracking-wider sm:tracking-widest font-semibold',
     trigger: 'px-1 py-1 rounded-sm h-12 flex items-center',
-    indicator: 'text-4xl text-default-400',
+    indicator: 'text-4xl ',
     content: 'sm:text-[20px] text-start pl-2 sm:pl-4 pr-0',
   }
 
@@ -72,17 +72,17 @@ export const WorkflowAccordian = () => {
           startContent={
             <PiAddressBookBold size={36} color="#019cfd" className="mt-2" />
           }
-          className="!bg-secondary"
+          className=""
         >
           <ul className="flex flex-col gap-2">
             <li>
-              <strong className="text-warning-300 underline">
+              <strong className="text-secondary underline">
                 Hassle-free setup:
               </strong>{' '}
               Save the details for your character sheet
             </li>
             <li>
-              <strong className="text-warning-300 underline">
+              <strong className="text-secondary underline">
                 Voice Selection:
               </strong>{' '}
               Find the perfect voice from over 50 options
@@ -97,7 +97,7 @@ export const WorkflowAccordian = () => {
           startContent={
             <PiNotePencilBold size={36} color="#eeac33" className="mt-2" />
           }
-          className="!bg-secondary"
+          className=""
         ></AccordionItem>
 
         <AccordionItem
@@ -108,7 +108,7 @@ export const WorkflowAccordian = () => {
           startContent={
             <PiMicrophoneBold size={36} color="#56a787" className="mt-2" />
           }
-          className="!bg-secondary"
+          className=""
         ></AccordionItem>
       </Accordion>
       <Divider className="my-4" />

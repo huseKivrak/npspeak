@@ -40,7 +40,7 @@ export function TTSModal({
         onPress={onOpen}
         aria-label="Create Dialogue Audio"
       >
-        <PiMicrophoneBold className="text-xl text-primary-600" />
+        <PiMicrophoneBold className="text-xl text-primary" />
       </Button>
       <Modal
         backdrop="opaque"
@@ -88,7 +88,7 @@ export function TTSModal({
                   <SubmitButton
                     formAction={formAction}
                     pendingText="creating audio..."
-                    className="bg-success-700 hover:bg-success-800"
+                    className="bg-success "
                   >
                     Create!
                   </SubmitButton>

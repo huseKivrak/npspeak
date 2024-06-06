@@ -108,18 +108,18 @@ export const AudioCard = ({
     duration !== null ? formatTimer(duration - currentTime) : '--:--'
   const isPaused = currentTime > 0 && !isPlaying
   const cardStyles = {
-    base: 'flex flex-col justify-center bg-secondary-300/60 w-[200px] h-[200px] transition-all ease-in-out duration-300',
-    playing: 'bg-warning-300/60 scale-105',
-    paused: 'bg-warning-300/60 scale-105 animate-pulse',
-    completed: 'bg-success',
+    base: 'flex flex-col justify-center  w-[200px] h-[200px] transition-all ease-in-out duration-300',
+    playing: ' scale-105',
+    paused: ' scale-105 animate-pulse',
+    completed: '',
   }
 
   const progressStyles = {
     base: 'max-w-md',
     track: 'drop-shadow-md border border-default',
-    indicator: 'bg-gradient-to-r from-pink-500 to-yellow-500',
-    label: 'tracking-wider font-medium text-default-600',
-    value: 'text-foreground/60',
+    indicator: '',
+    label: 'tracking-wider font-medium ',
+    value: '',
   }
 
   const currentStyle = isPlaying
@@ -149,10 +149,7 @@ export const AudioCard = ({
             content={dialogue.type}
             placement="top"
             classNames={{
-              content: [
-                'px-2 shadow-none',
-                'text-foreground text-lg bg-transparent',
-              ],
+              content: ['px-2 shadow-none', ' text-lg bg-transparent'],
             }}
           >
             <div className="m-2">
@@ -169,9 +166,7 @@ export const AudioCard = ({
         />
 
         <CardBody className="z-10 px-1 overflow-hidden items-center justify-center max-h-24">
-          <p className="text-center text-balance text-lg text-foreground">
-            {dialogue.text}
-          </p>
+          <p className="text-center text-balance text-lg ">{dialogue.text}</p>
         </CardBody>
 
         <CardFooter className="z-10 bottom-0 gap-1 px-1 my-1">
@@ -179,7 +174,7 @@ export const AudioCard = ({
           <Button
             isIconOnly
             aria-label="play/pause"
-            className="bg-secondary-700 h-6 my-1"
+            className=" h-6 my-1"
             size="sm"
           >
             {isPlaying ? <PauseIcon /> : <PlayIcon />}
@@ -191,7 +186,7 @@ export const AudioCard = ({
             classNames={progressStyles}
           />
           <Chip variant="light">
-            <p className="text-secondary-200">{timeRemaining}</p>
+            <p className="text-secondary">{timeRemaining}</p>
           </Chip>
         </CardFooter>
       </Card>

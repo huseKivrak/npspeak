@@ -17,10 +17,10 @@ export const VoiceSampler = ({ voices }: { voices: ElevenLabsVoice[] }) => {
   const selectOptions = transformVoiceOptions(voices)
 
   return (
-    <div className="flex flex-col gap-2 max-w-lg">
+    <div className="flex flex-col gap-2 max-w-xl text-start">
       <h2 className="text-2xl sm:text-4xl">Over 50 voices to choose from!</h2>
 
-      <p className="text-xl sm:text-2xl self-start">Listen to some samples:</p>
+      <p className="text-xl sm:text-2xl">Listen to some samples:</p>
       <Controller
         name="voice_id"
         control={control}
@@ -48,7 +48,7 @@ export const VoiceSampler = ({ voices }: { voices: ElevenLabsVoice[] }) => {
         <Checkbox
           isSelected={autoplay}
           onValueChange={setAutoplay}
-          color="secondary"
+          color="warning"
           radius="sm"
           size="lg"
         >

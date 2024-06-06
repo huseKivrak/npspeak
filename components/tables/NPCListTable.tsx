@@ -146,7 +146,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
               id={npc.id}
             >
               <Tooltip color="danger" content="Delete NPC">
-                <DeleteIcon className="text-danger" />
+                <DeleteIcon className="text-secondary" />
               </Tooltip>
             </DeleteModal>
           </div>
@@ -193,7 +193,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
       aria-label="NPCs Table"
       classNames={{
         wrapper: 'p-0 rounded-sm min-h-[382px] max-h-[382px] max-w-screen',
-        th: ['bg-success', 'text-foreground', 'border-b', 'border-divider'],
+        th: ['bg-success', '', 'border-b', 'border-divider'],
         td: [
           'group-data-[first=true]:first:before:rounded-none',
           'group-data-[first=true]:last:before:rounded-none',

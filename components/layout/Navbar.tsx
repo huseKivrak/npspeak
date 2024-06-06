@@ -20,7 +20,7 @@ export const Navbar = ({ children }: { children: React.ReactNode }) => {
         <NavbarBrand as="li" className="gap-3">
           <Link href="/" className="flex justify-start items-center">
             <ScrollEmojiIcon size={48} />
-            <p className="text-4xl text-warning tracking-widest font-thin font-alagard">
+            <p className="text-4xl tracking-widest font-thin font-alagard">
               npSpeak
             </p>
           </Link>

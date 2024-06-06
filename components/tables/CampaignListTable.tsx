@@ -201,7 +201,7 @@ export function CampaignListTable({
       aria-label="Campaigns Table"
       classNames={{
         wrapper: 'p-0 rounded-sm min-h-[382px] max-h-[382px]',
-        th: ['bg-primary', 'text-foreground', 'border-b', 'border-divider'],
+        th: ['bg-primary', '', 'border-b', 'border-divider'],
         td: [
           'group-data-[first=true]:first:before:rounded-none',
           'group-data-[first=true]:last:before:rounded-none',

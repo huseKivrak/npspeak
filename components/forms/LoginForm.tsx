@@ -29,7 +29,7 @@ export default function LoginForm() {
     formState: { errors },
     setError,
   } = useForm<Inputs>({
-    mode: 'onBlur',
+    mode: 'onSubmit',
     criteriaMode: 'all',
     resolver: zodResolver(loginSchema),
   })
@@ -78,23 +78,21 @@ export default function LoginForm() {
       />
       <div className="flex items-center gap-4">
         <SubmitButton
+          variant="shadow"
           formAction={formAction}
           pendingText="signing in..."
-          color="success"
-          className="text-foreground text-large tracking-wider"
+          className=" text-large tracking-wider"
           radius="sm"
           size="lg"
-          variant="shadow"
         >
           login
         </SubmitButton>
         <Link href="/signup">
           <Button
             variant="shadow"
-            className="text-foreground text-large tracking-wider"
+            className=" text-large tracking-wider"
             radius="sm"
             size="lg"
-            color="primary"
           >
             sign up
           </Button>

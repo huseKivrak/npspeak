@@ -46,12 +46,7 @@ export const DialogueListTable = ({
         case 'type':
           return (
             <div className="flex flex-col items-center">
-              <Tooltip
-                content={dialogue.type}
-                color="success"
-                delay={200}
-                closeDelay={200}
-              >
+              <Tooltip content={dialogue.type} delay={200} closeDelay={200}>
                 <DialogueIcon dialogueType={dialogue.type} />
               </Tooltip>
             </div>
@@ -69,7 +64,7 @@ export const DialogueListTable = ({
                 <audio src={dialogue.audio} controls />
               ) : (
                 <div className="">
-                  <div className="flex justify-center items-center gap-2 text-default-400">
+                  <div className="flex justify-center items-center gap-2 ">
                     <PiMicrophoneSlashBold />
                     <p className="text-tiny">This dialogue has no audio.</p>
                   </div>
@@ -98,7 +93,7 @@ export const DialogueListTable = ({
                 className=""
               >
                 <Tooltip color="danger" content="Delete Dialogue">
-                  <DeleteIcon className="text-danger" />
+                  <DeleteIcon />
                 </Tooltip>
               </DeleteModal>
             </div>
@@ -123,7 +118,7 @@ export const DialogueListTable = ({
           <TableColumn
             key={column.uid}
             align={column.uid === 'actions' ? 'center' : 'start'}
-            className="bg-primary text-lg tracking-widest text-white font-light"
+            className=" text-lg tracking-widest font-light"
           >
             {column.name}
           </TableColumn>

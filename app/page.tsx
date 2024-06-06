@@ -22,12 +22,12 @@ export default async function Index({
   return (
     <div className="flex flex-col items-center text-center gap-12">
       {searchParams?.message === 'logout' && (
-        <div className="bg-success text-white text-small p-2 rounded-small w-fit">
+        <div className="bg-success text-small p-2 rounded-small w-fit">
           You have been logged out.
         </div>
       )}
       <Hero />
-      <WorkflowAccordian />
+      {/* <WorkflowAccordian /> */}
       {voices && <VoiceSampler voices={voiceSample} />}
     </div>
   )

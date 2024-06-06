@@ -47,7 +47,7 @@ export function DeleteModal({
         onPress={onOpen}
         aria-label={`Delete ${title}`}
       >
-        <DeleteIcon className="text-danger " />
+        <DeleteIcon className="text-secondary " />
       </Button>
       <Modal
         backdrop="opaque"
