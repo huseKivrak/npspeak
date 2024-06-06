@@ -13,7 +13,6 @@ export const Navbar = ({ children }: { children: React.ReactNode }) => {
     <NextUINavbar
       shouldHideOnScroll
       maxWidth="lg"
-      position="sticky"
       className="mt-4"
     >
       <NavbarContent justify="start">
