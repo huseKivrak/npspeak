@@ -43,7 +43,6 @@ export const NPCDetail = ({
           <h2 className="text-2xl">All Dialogue</h2>
           <Button
             variant="flat"
-            color="success"
             size="sm"
             onClick={() => setShowDialogueForm(!showDialogueForm)}
             startContent={showDialogueForm ? '' : <PlusIcon />}
