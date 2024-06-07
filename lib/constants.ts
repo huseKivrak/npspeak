@@ -117,6 +117,7 @@ export const AccentEmojiMap: { [key: string]: string } = {
   australian: '🇦🇺',
   british: '🇬🇧',
   'english-swedish': '🇬🇧/🇸🇪',
+  'american-swedish': '🇺🇸/🇸🇪',
   'american-irish': '🇺🇸/🇮🇪',
   jolly: '🎅🏼',
   'american-southern': '🇺🇸/🤠',
