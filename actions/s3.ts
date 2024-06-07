@@ -41,12 +41,12 @@ export async function getPresignedUploadURL(): Promise<ActionStatus> {
   })
 
   try {
-    const url = await getSignedUrl(s3, putCommand, {
+    const presignedURL = await getSignedUrl(s3, putCommand, {
       expiresIn: 900,
     })
 
-    console.log('Presigned URL: ', url)
-    return { status: 'success', message: url, data: { key: s3FileName } }
+    console.log('Presigned URL: ', presignedURL)
+    return { status: 'success', data: { key: s3FileName, url: presignedURL } }
   } catch (error) {
     console.error('Error generating presigned upload URL: ', error)
     return {
@@ -62,9 +62,8 @@ export async function uploadAudioToS3(
   try {
     const response = await getPresignedUploadURL()
     if (response.status !== 'success') return response
-    const { message, data } = response
-    console.log('message:', message, 'data:', data)
-    const uploadResponse = await fetch(message!, {
+    const { key, url } = response.data
+    const uploadResponse = await fetch(url, {
       method: 'PUT',
       headers: {
         'Content-Type': 'audio/mpeg',
@@ -78,13 +77,13 @@ export async function uploadAudioToS3(
       )
     }
 
-    const file_key = data.key
-    const file_duration = audioBuffer.byteLength / 44100 / 2
+
+    const duration = audioBuffer.byteLength / 44100 / 2
 
     return {
       status: 'success',
       message: 'uploaded to s3',
-      data: { key: file_key, duration: file_duration },
+      data: { key, duration },
     }
   } catch (error) {
     console.error('Error uploading audio to S3: ', error)
