@@ -16,7 +16,7 @@ import {
 import { deleteCampaignAction } from '@/actions/db/campaigns';
 import { DeleteIcon } from '../icons';
 import Link from 'next/link';
-import { DeleteModal } from '../DeleteModal';
+import { DeleteModal } from '../forms/modals/DeleteModal';
 import { SearchBar } from './SearchBar';
 import { truncateText } from '@/utils/helpers/formHelpers';
 

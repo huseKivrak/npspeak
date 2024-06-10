@@ -12,10 +12,10 @@ import {
 import { Tooltip } from '@nextui-org/tooltip';
 import { DeleteIcon } from '../icons';
 import { DialogueIcon } from '../icons';
-import { DeleteModal } from '../DeleteModal';
+import { DeleteModal } from '../forms/modals/DeleteModal';
 import { deleteDialogueAction } from '@/actions/db/dialogue';
 import { PiMicrophoneSlashBold } from 'react-icons/pi';
-import { TTSModal } from '../TTSModal';
+import { TTSModal } from '../forms/modals/TTSModal';
 import { Pagination } from '@nextui-org/react';
 export const DialogueListTable = ({
   dialogues,

@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
 import { getUserInfo } from '@/actions/auth';
-import { VoiceSampler } from '@/components/VoiceSampler';
+import { VoiceSampler } from '@/components/landingPage/VoiceSampler';
 import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
-import { WorkflowAccordian } from '@/components/WorkflowAccordian';
-import { Hero } from '@/components/Hero';
+import { WorkflowAccordian } from '@/components/landingPage/WorkflowAccordian';
+import { Hero } from '@/components/landingPage/Hero';
 
 export default async function Index({
   searchParams,

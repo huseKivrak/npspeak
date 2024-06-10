@@ -4,7 +4,7 @@ import {
   getNPCsWithRelatedData,
 } from '../../database/drizzle/queries';
 import { redirect } from 'next/navigation';
-import { UserDashboard } from '@/components/UserDashboard';
+import { UserDashboard } from '@/components/views/UserDashboard';
 import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
 
 export default async function UserPage({

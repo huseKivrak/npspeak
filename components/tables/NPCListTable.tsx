@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useMemo, useState } from 'react';
 import { deleteNPCAction } from '@/actions/db/NPCs';
-import { DeleteModal } from '../DeleteModal';
+import { DeleteModal } from '../forms/modals/DeleteModal';
 import { SearchBar } from './SearchBar';
 import Link from 'next/link';
 import {

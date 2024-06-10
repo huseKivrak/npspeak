@@ -6,8 +6,8 @@ import { ElevenLabsVoice } from '@/types/elevenlabs';
 import { Checkbox } from '@nextui-org/checkbox';
 import ReactSelect from 'react-select';
 import { transformVoiceOptions } from '@/utils/helpers/formHelpers';
-import { VoiceOption } from './forms/dropdown/VoiceOption';
-import { VoiceSingleValue } from './forms/dropdown/VoiceSingleValue';
+import { VoiceOption } from '../forms/customSelect/VoiceOption';
+import { VoiceSingleValue } from '../forms/customSelect/VoiceSingleValue';
 
 export const VoiceSampler = ({ voices }: { voices: ElevenLabsVoice[] }) => {
   const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null);

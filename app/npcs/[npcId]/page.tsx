@@ -10,7 +10,7 @@ import {
   DetailedDialogue,
   SoundboardDialogue,
 } from '@/types/drizzle';
-import { NPCDetail } from '@/components/NPCDetail';
+import { NPCDetail } from '@/components/views/NPCDetail';
 import { formatDialoguesForSoundboard } from '@/utils/formatHelpers';
 export default async function NPCDetailPage({
   params,

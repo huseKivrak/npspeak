@@ -1,13 +1,13 @@
 'use client';
 import { CampaignWithNPCs, DetailedNPC } from '@/types/drizzle';
-import { CampaignListTable } from './tables/CampaignListTable';
-import { NPCListTable } from './tables/NPCListTable';
+import { CampaignListTable } from '../tables/CampaignListTable';
+import { NPCListTable } from '../tables/NPCListTable';
 import { Tabs, Tab, Chip, Button } from '@nextui-org/react';
 import { useState } from 'react';
-import { NPCForm } from './forms/NPCForm';
-import CampaignForm from './forms/CampaignForm';
+import { NPCForm } from '../forms/NPCForm';
+import CampaignForm from '../forms/CampaignForm';
 import { ElevenLabsVoice } from '@/types/elevenlabs';
-import { PlusIcon } from './icons';
+import { PlusIcon } from '../icons';
 import {
   transformNPCOptions,
   transformCampaignOptions,

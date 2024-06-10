@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 import { DialogueListTable } from '@/components/tables/DialogueListTable';
-import { DialogueForm } from './forms/DialogueForm';
+import { DialogueForm } from '../forms/DialogueForm';
 import { Divider } from '@nextui-org/divider';
 import { Button } from '@nextui-org/button';
 import { Tabs, Tab } from '@nextui-org/tabs';
-import { PlusIcon } from './icons';
+import { PlusIcon } from '../icons';
 import { DetailedDialogue, DetailedNPC } from '@/types/drizzle';
 import { formatDialoguesForSoundboard } from '@/utils/formatHelpers';
-import { Soundboard } from './soundboard/Soundboard';
+import { Soundboard } from '../soundboard/Soundboard';
 export const NPCDetail = ({
   npc,
   dialogues,
@@ -19,7 +19,7 @@ export const NPCDetail = ({
 }) => {
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-col gap-2 items-center">
+      <div className="flex flex-col gap-2">
         <h1 className="text-4xl lg:text-6xl text-primary">{npc.npc_name}</h1>
         <p className="lg:text-xl">{npc.description}</p>
       </div>
@@ -27,32 +27,30 @@ export const NPCDetail = ({
       <Divider className="my-4" />
 
       <Tabs
-        isVertical
         aria-label="Dialogue Views"
         size="lg"
         radius="sm"
         color="secondary"
+        classNames={{
+          tabList:
+            'gap-3 w-full relative rounded-none p-0 border-b border-divider bg-transparent',
+          cursor: 'w-full bg-danger',
+          tab: 'max-w-full px-0 h-12',
+          tabContent: 'text-3xl tracking-widest group-data-[selected=true]:',
+        }}
       >
-        <Tab key="table" title="Table">
-          {dialogues ? (
-            <DialogueListTable dialogues={dialogues} voiceId={npc.voice_id!} />
-          ) : (
-            ''
-          )}
-        </Tab>
-        <Tab key="soundboard" title="Soundboard">
-          {dialogues ? (
-            <Soundboard dialogues={formatDialoguesForSoundboard(dialogues)} />
-          ) : (
-            ''
-          )}
+        <Tab key="table" title="TABLE">
+          <DialogueListTable
+            dialogues={dialogues || []}
+            voiceId={npc.voice_id!}
+          />
         </Tab>
         <Tab
           key="dialogue form"
           title={
             <div className="flex items-center space-x-2">
               <PlusIcon />
-              <span>dialogue</span>
+              <span>ADD DIALOGUE</span>
             </div>
           }
         >

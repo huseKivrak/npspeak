@@ -2,6 +2,7 @@ import { getUserInfo } from '@/actions/auth';
 import { redirect } from 'next/navigation';
 import { getCampaignsWithNPCs } from '@/database/drizzle/queries';
 import { CampaignWithNPCs } from '@/types/drizzle';
+import { CampaignDetail } from '@/components/views/CampaignDetail';
 
 export default async function CampaignDetailPage({
   params,
@@ -22,7 +23,7 @@ export default async function CampaignDetailPage({
 
   return (
     <div>
-      <h1>{campaign.campaign_name}</h1>
+      <CampaignDetail campaign={campaign} />
     </div>
   );
 }

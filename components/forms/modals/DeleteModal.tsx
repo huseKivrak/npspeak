@@ -8,39 +8,46 @@ import {
   Button,
   useDisclosure,
 } from '@nextui-org/react';
+import { ServerAction } from '@/types/drizzle';
 import { useFormState } from 'react-dom';
-import ttsHandler from '@/actions/ttsHandler';
-import { PiMicrophoneBold } from 'react-icons/pi';
-import { SubmitButton } from './buttons/SubmitButton';
+import { DeleteModalMessages } from '@/lib/constants';
+import { DeleteIcon } from '../../icons';
+import { SubmitButton } from '../../buttons/SubmitButton';
 
-export function TTSModal({
-  dialogueId,
-  text,
-  voiceId,
-  npcId,
+export function DeleteModal({
+  id,
+  idName,
+  serverAction,
 }: {
-  dialogueId: number;
-  text: string;
-  voiceId: string;
-  npcId: number;
+  id: number;
+  idName: 'npc_id' | 'dialogue_id' | 'campaign_id';
+  serverAction: ServerAction;
   className?: string;
   children?: React.ReactNode;
 }) {
-  const [state, formAction] = useFormState(ttsHandler, {
+  const [state, formAction] = useFormState(serverAction, {
     status: 'idle',
     message: '',
   });
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const modalMessage = DeleteModalMessages[idName];
+  const title =
+    idName === 'npc_id'
+      ? 'NPC'
+      : idName === 'dialogue_id'
+        ? 'Dialogue'
+        : 'Campaign';
+  const modalTitle = `Delete ${title}?`;
   return (
     <>
       <Button
         isIconOnly
         variant="light"
         onPress={onOpen}
-        aria-label="Create Dialogue Audio"
+        aria-label={`Delete ${title}`}
       >
-        <PiMicrophoneBold className="text-xl text-primary" />
+        <DeleteIcon className="text-secondary " />
       </Button>
       <Modal
         backdrop="opaque"
@@ -71,26 +78,20 @@ export function TTSModal({
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Create Dialogue Audio
+                {modalTitle}
               </ModalHeader>
-              <ModalBody>Create audio for this dialogue?</ModalBody>
+              <ModalBody>{modalMessage}</ModalBody>
               <ModalFooter>
                 <form>
-                  <input type="hidden" name="dialogue_id" value={dialogueId} />
-                  <input type="hidden" name="text" value={text} />
-                  <input type="hidden" name="npc_id" value={npcId} />
-                  <input type="hidden" name="voice_id" value={voiceId} />
-
-                  <Button color="success" variant="light" onPress={onClose}>
+                  <input type="hidden" name={idName} value={id} />
+                  <Button color="default" variant="light" onPress={onClose}>
                     Close
                   </Button>
-
                   <SubmitButton
+                    pendingText={`Deleting ${title}...`}
                     formAction={formAction}
-                    pendingText="creating audio..."
-                    className="bg-success "
                   >
-                    Create!
+                    Delete
                   </SubmitButton>
                 </form>
               </ModalFooter>
