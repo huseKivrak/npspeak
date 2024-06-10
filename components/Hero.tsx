@@ -18,6 +18,7 @@ export const Hero = () => {
             size="lg"
             radius="sm"
             className="text-large h-16 font-semibold"
+            color="primary"
           >
             Get started
           </Button>
@@ -28,6 +29,7 @@ export const Hero = () => {
             size="lg"
             radius="sm"
             className="text-large h-16 font-semibold"
+            color="primary"
           >
             Learn more
           </Button>
