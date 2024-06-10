@@ -10,6 +10,9 @@ import { PlusIcon } from '../icons';
 import { DetailedDialogue, DetailedNPC } from '@/types/drizzle';
 import { formatDialoguesForSoundboard } from '@/utils/formatHelpers';
 import { Soundboard } from '../soundboard/Soundboard';
+import { Chip } from '@nextui-org/react';
+import Link from 'next/link';
+
 export const NPCDetail = ({
   npc,
   dialogues,
@@ -20,8 +23,26 @@ export const NPCDetail = ({
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col gap-2">
-        <h1 className="text-4xl lg:text-6xl text-primary">{npc.npc_name}</h1>
+        <h1>{npc.npc_name}</h1>
         <p className="lg:text-xl">{npc.description}</p>
+        <ul>
+          {npc.campaigns.map((campaign) => (
+            <Chip
+              key={campaign.id}
+              size="sm"
+              variant="flat"
+              className="hover:underline"
+            >
+              <Link
+                key={campaign.id}
+                href={`/campaigns/${campaign.id}`}
+                className="text-tiny"
+              >
+                {campaign.campaign_name}
+              </Link>
+            </Chip>
+          ))}
+        </ul>
       </div>
 
       <Divider className="my-4" />
