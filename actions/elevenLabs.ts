@@ -8,6 +8,8 @@ import { normalizeLabels } from '../utils/elevenlabs/api'
 import { ElevenLabsVoice } from '@/types/elevenlabs'
 import { ActionStatus } from '@/types/drizzle'
 
+
+//todo: save as json, revalidating periodically?
 export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
   try {
     const response = await fetch(`${ELEVENLABS_BASE_URL}/voices`, {
