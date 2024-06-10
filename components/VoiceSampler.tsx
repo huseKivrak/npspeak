@@ -39,6 +39,7 @@ export const VoiceSampler = ({ voices }: { voices: ElevenLabsVoice[] }) => {
             }}
             placeholder="Select a voice"
             isSearchable={false}
+            className="text-2xl"
           />
         )}
       />
