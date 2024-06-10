@@ -21,9 +21,6 @@ export function UserDashboard({
   npcs: DetailedNPC[] | null
   voices: ElevenLabsVoice[]
 }) {
-  const [showNPCForm, setShowNPCForm] = useState(false)
-  const [showCampaignForm, setShowCampaignForm] = useState(false)
-
   const npcOptions = transformNPCOptions(npcs ?? [])
   const campaignOptions = transformCampaignOptions(campaigns ?? [])
   return (
@@ -52,19 +49,6 @@ export function UserDashboard({
             </div>
           }
         >
-          <Button
-            size="lg"
-            variant="flat"
-            color="success"
-            className="mb-2 "
-            startContent={!showNPCForm && <PlusIcon />}
-            onClick={() => setShowNPCForm(!showNPCForm)}
-          >
-            {showNPCForm ? 'Close' : 'Add NPC'}
-          </Button>
-          {showNPCForm && (
-            <NPCForm voiceOptions={voices} campaignOptions={campaignOptions} />
-          )}
           {npcs && <NPCListTable npcs={npcs} />}
         </Tab>
         <Tab
@@ -78,17 +62,6 @@ export function UserDashboard({
             </div>
           }
         >
-          <Button
-            size="lg"
-            variant="flat"
-            color="success"
-            className="mb-2 "
-            startContent={!showCampaignForm && <PlusIcon />}
-            onClick={() => setShowCampaignForm(!showCampaignForm)}
-          >
-            {showCampaignForm ? 'Close' : 'Add Campaign'}
-          </Button>
-          {showCampaignForm && <CampaignForm npcOptions={npcOptions} />}
           {campaigns && <CampaignListTable campaigns={campaigns} />}
         </Tab>
       </Tabs>

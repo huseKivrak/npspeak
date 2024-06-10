@@ -98,13 +98,11 @@ export const NPCForm = ({
     <form
       id="npc-form"
       onSubmit={handleSubmit(onSubmit, onInvalid)}
-      className="flex flex-col gap-2 w-full max-w-md"
+      className="flex flex-col gap-4 w-full max-w-md"
     >
       {errors.root?.serverError && (
         <ErrorToast text={errors.root.serverError.message!} />
       )}
-
-      <button onClick={() => console.log('values', getValues())}>Log</button>
 
       <FormInput
         isRequired
