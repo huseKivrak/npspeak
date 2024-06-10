@@ -1,26 +1,21 @@
-'use client'
+'use client';
 import {
   Navbar as NextUINavbar,
   NavbarBrand,
   NavbarContent,
-} from '@nextui-org/navbar'
-import Link from 'next/link'
-import { ScrollEmojiIcon } from '../icons'
-import { ThemeSwitcher } from '../buttons/ThemeSwitcher'
+} from '@nextui-org/navbar';
+import Link from 'next/link';
+import { ScrollEmojiIcon } from '../icons';
+import { ThemeSwitcher } from '../buttons/ThemeSwitcher';
 
 export const Navbar = ({ children }: { children: React.ReactNode }) => {
   return (
-    <NextUINavbar
-      shouldHideOnScroll
-      maxWidth="lg"
-      position="sticky"
-      className="mt-4"
-    >
+    <NextUINavbar shouldHideOnScroll maxWidth="xl" isBlurred={false}>
       <NavbarContent justify="start">
         <NavbarBrand as="li" className="gap-3">
           <Link href="/" className="flex justify-start items-center">
             <ScrollEmojiIcon size={48} />
-            <p className="text-4xl text-warning tracking-widest font-thin font-alagard">
+            <p className="text-4xl tracking-widest font-thin font-alagard">
               npSpeak
             </p>
           </Link>
@@ -28,8 +23,8 @@ export const Navbar = ({ children }: { children: React.ReactNode }) => {
       </NavbarContent>
       <NavbarContent justify="end">
         {children}
-        {/* <ThemeSwitcher /> */}
+        <ThemeSwitcher />
       </NavbarContent>
     </NextUINavbar>
-  )
-}
+  );
+};

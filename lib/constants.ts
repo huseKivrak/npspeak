@@ -1,5 +1,5 @@
-import { FormOptions } from '@/types/drizzle'
-import { IconBaseProps } from 'react-icons'
+import { FormOptions } from '@/types/drizzle';
+import { IconBaseProps } from 'react-icons';
 import {
   FaRegSmile,
   FaRegSadCry,
@@ -7,12 +7,12 @@ import {
   FaQuestion,
   FaRegCheckCircle,
   FaExclamation,
-} from 'react-icons/fa'
-import { FaMars, FaVenus, FaMarsAndVenus } from 'react-icons/fa6'
+} from 'react-icons/fa';
+import { FaMars, FaVenus, FaMarsAndVenus } from 'react-icons/fa6';
 
 interface IconProps {
-  icon: React.ComponentType<IconBaseProps>
-  props: IconBaseProps
+  icon: React.ComponentType<IconBaseProps>;
+  props: IconBaseProps;
 }
 export const GenderIconMap: { [key: string]: IconProps } = {
   male: {
@@ -36,7 +36,7 @@ export const GenderIconMap: { [key: string]: IconProps } = {
       color: '#a78bfa',
     },
   },
-}
+};
 
 export const DialogueIconMap: { [key: string]: IconProps } = {
   greeting: {
@@ -88,7 +88,7 @@ export const DialogueIconMap: { [key: string]: IconProps } = {
       color: '#efefef',
     },
   },
-}
+};
 
 export const DefaultDialogueTypes: FormOptions = [
   { label: 'greeting', value: 1 },
@@ -98,7 +98,7 @@ export const DefaultDialogueTypes: FormOptions = [
   { label: 'question', value: 5 },
   { label: 'answer', value: 6 },
   { label: 'exclamation', value: 7 },
-]
+];
 
 export const AudioCardColors: { [key: string]: string } = {
   greeting: 'bg-primary',
@@ -108,7 +108,7 @@ export const AudioCardColors: { [key: string]: string } = {
   answer: 'bg-primary',
   exclamation: 'bg-warning',
   other: 'bg-default',
-}
+};
 
 export const AccentEmojiMap: { [key: string]: string } = {
   american: '🇺🇸',
@@ -117,11 +117,12 @@ export const AccentEmojiMap: { [key: string]: string } = {
   australian: '🇦🇺',
   british: '🇬🇧',
   'english-swedish': '🇬🇧/🇸🇪',
+  'american-swedish': '🇺🇸/🇸🇪',
   'american-irish': '🇺🇸/🇮🇪',
   jolly: '🎅🏼',
   'american-southern': '🇺🇸/🤠',
   'english-italian': '🇬🇧/🇮🇹',
-}
+};
 
 export const DeleteModalMessages: { [key: string]: string } = {
   npc_id:
@@ -130,4 +131,4 @@ export const DeleteModalMessages: { [key: string]: string } = {
     'Are you sure you want to delete this dialogue and any audio it may have? This action cannot be undone.',
   campaign_id:
     'Are you sure you want to delete this campaign? This action cannot be undone.',
-}
+};

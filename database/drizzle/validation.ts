@@ -1,5 +1,5 @@
-import { z } from 'zod'
-import { zfd } from 'zod-form-data'
+import { z } from 'zod';
+import { zfd } from 'zod-form-data';
 
 //Auth
 export const loginSchema = zfd.formData({
@@ -11,7 +11,7 @@ export const loginSchema = zfd.formData({
   password: zfd.text(
     z.string({ required_error: 'Oops! Please enter your password' })
   ),
-})
+});
 
 export const signupSchema = zfd
   .formData({
@@ -29,15 +29,15 @@ export const signupSchema = zfd
     ),
   })
   .superRefine((data, ctx) => {
-    const { password, confirm_password } = data
+    const { password, confirm_password } = data;
     if (password !== confirm_password) {
       ctx.addIssue({
         code: 'custom',
         path: ['password', 'confirm_password'],
         message: 'Passwords do not match; please try again',
-      })
+      });
     }
-  })
+  });
 
 //Campaigns
 export const campaignSchema = zfd
@@ -60,35 +60,35 @@ export const campaignSchema = zfd
     end_date: zfd.text(z.string().optional()),
   })
   .superRefine((data, ctx) => {
-    const { start_date, end_date } = data
+    const { start_date, end_date } = data;
     if (start_date) {
-      const startDate = new Date(start_date)
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
+      const startDate = new Date(start_date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
       if (startDate < today) {
         ctx.addIssue({
           code: 'invalid_date',
           path: ['start_date'],
           message: 'Start date must be today or later',
-        })
+        });
       }
     }
     if (end_date && start_date) {
-      const startDate = new Date(start_date)
-      const endDate = new Date(end_date)
+      const startDate = new Date(start_date);
+      const endDate = new Date(end_date);
       if (endDate < startDate) {
         ctx.addIssue({
           code: 'invalid_date',
           path: ['end_date'],
           message: 'End date must be the same or later than the start date',
-        })
+        });
       }
     }
-  })
+  });
 
 export const deleteCampaignSchema = zfd.formData({
   campaign_id: zfd.numeric(),
-})
+});
 
 //NPCs
 export const npcSchema = zfd.formData({
@@ -107,11 +107,11 @@ export const npcSchema = zfd.formData({
   ),
   campaign_ids: zfd.repeatableOfType(zfd.numeric().optional()),
   voice_id: zfd.text(z.string()),
-})
+});
 
 export const deleteNPCSchema = zfd.formData({
   npc_id: zfd.numeric(),
-})
+});
 
 //Dialogues
 export const dialogueSchema = zfd.formData({
@@ -124,11 +124,11 @@ export const dialogueSchema = zfd.formData({
       .max(500, 'Dialogue must be at most 500 characters long')
   ),
   tts_audio_id: zfd.numeric().optional(),
-})
+});
 
 export const deleteDialogueSchema = zfd.formData({
   dialogue_id: zfd.numeric(),
-})
+});
 
 //TTS
 export const ttsAudioSchema = zfd.formData({
@@ -136,11 +136,11 @@ export const ttsAudioSchema = zfd.formData({
   source_text: zfd.text(z.string()),
   file_url: zfd.text(z.string()),
   duration_seconds: zfd.numeric(),
-})
+});
 
 export const ttsHandlerSchema = zfd.formData({
   text: zfd.text(z.string()),
   voice_id: zfd.text(z.string()),
   npc_id: zfd.numeric(),
   dialogue_id: zfd.numeric(),
-})
+});

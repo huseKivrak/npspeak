@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
 //todo: skeletons for loading
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import {
   Card,
   CardBody,
@@ -15,112 +15,112 @@ import {
   Image,
   Chip,
   Skeleton,
-} from '@nextui-org/react'
-import { cn } from '@/utils/helpers/clsxMerge'
+} from '@nextui-org/react';
+import { cn } from '@/utils/helpers/clsxMerge';
 import {
   PiPlayBold as PlayIcon,
   PiPauseBold as PauseIcon,
-} from 'react-icons/pi'
-import { DialogueIcon } from '../icons'
-import { SoundboardDialogue } from '@/types/drizzle'
-import { formatTimer } from '@/utils/formatHelpers'
+} from 'react-icons/pi';
+import { DialogueIcon } from '../icons';
+import { SoundboardDialogue } from '@/types/drizzle';
+import { formatTimer } from '@/utils/formatHelpers';
 
 export const AudioCard = ({
   dialogue,
   id,
 }: {
-  dialogue: SoundboardDialogue
-  id: number
+  dialogue: SoundboardDialogue;
+  id: number;
 }) => {
-  const [isLoading, setIsLoading] = useState(true)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [isCompleted, setIsCompleted] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [duration, setDuration] = useState<null | number>(null)
-  const [currentTime, setCurrentTime] = useState(0)
+  const [isLoading, setIsLoading] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState<null | number>(null);
+  const [currentTime, setCurrentTime] = useState(0);
 
-  const audioRef = useRef<HTMLAudioElement>(null)
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id,
       data: { dialogue },
-    })
+    });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-  }
+  };
 
   useEffect(() => {
-    const audio = audioRef.current
-    if (!audio) return
+    const audio = audioRef.current;
+    if (!audio) return;
 
     if (audio.readyState >= 1) {
-      if (audio.duration) setDuration(audio.duration)
+      if (audio.duration) setDuration(audio.duration);
     }
 
     const updateProgress = () => {
-      const newProgress = (audio.currentTime / (audio.duration || 1)) * 100
-      setProgress(newProgress)
-      setCurrentTime(audio.currentTime)
-    }
+      const newProgress = (audio.currentTime / (audio.duration || 1)) * 100;
+      setProgress(newProgress);
+      setCurrentTime(audio.currentTime);
+    };
 
     const onLoadedData = () => {
-      setDuration(audio.duration)
-      setIsLoading(false)
-    }
+      setDuration(audio.duration);
+      setIsLoading(false);
+    };
 
     const onEnded = () => {
-      setIsPlaying(false)
-      setIsCompleted(true)
-    }
+      setIsPlaying(false);
+      setIsCompleted(true);
+    };
 
-    audio?.addEventListener('loadeddata', onLoadedData)
-    audio?.addEventListener('timeupdate', updateProgress)
-    audio?.addEventListener('ended', onEnded)
+    audio?.addEventListener('loadeddata', onLoadedData);
+    audio?.addEventListener('timeupdate', updateProgress);
+    audio?.addEventListener('ended', onEnded);
 
     return () => {
-      audio?.removeEventListener('loadeddata', onLoadedData)
-      audio?.removeEventListener('timeupdate', updateProgress)
-      audio?.removeEventListener('ended', onEnded)
-    }
-  }, [dialogue.audio])
+      audio?.removeEventListener('loadeddata', onLoadedData);
+      audio?.removeEventListener('timeupdate', updateProgress);
+      audio?.removeEventListener('ended', onEnded);
+    };
+  }, [dialogue.audio]);
 
   const togglePlayPause = useCallback(() => {
-    const audio = audioRef.current
+    const audio = audioRef.current;
     if (audio) {
       if (audio.paused || audio.ended) {
-        audio.play()
-        setIsPlaying(true)
+        audio.play();
+        setIsPlaying(true);
         if (audio.ended) {
-          audio.currentTime = 0
-          setProgress(0)
+          audio.currentTime = 0;
+          setProgress(0);
         }
-        setIsCompleted(false)
+        setIsCompleted(false);
       } else {
-        audio.pause()
-        setIsPlaying(false)
+        audio.pause();
+        setIsPlaying(false);
       }
     }
-  }, [dialogue.audio])
+  }, [dialogue.audio]);
 
   const timeRemaining =
-    duration !== null ? formatTimer(duration - currentTime) : '--:--'
-  const isPaused = currentTime > 0 && !isPlaying
+    duration !== null ? formatTimer(duration - currentTime) : '--:--';
+  const isPaused = currentTime > 0 && !isPlaying;
   const cardStyles = {
-    base: 'flex flex-col justify-center bg-secondary-300/60 w-[200px] h-[200px] transition-all ease-in-out duration-300',
-    playing: 'bg-warning-300/60 scale-105',
-    paused: 'bg-warning-300/60 scale-105 animate-pulse',
-    completed: 'bg-success',
-  }
+    base: 'flex flex-col justify-center  w-[200px] h-[200px] transition-all ease-in-out duration-300',
+    playing: ' scale-105',
+    paused: ' scale-105 animate-pulse',
+    completed: '',
+  };
 
   const progressStyles = {
     base: 'max-w-md',
     track: 'drop-shadow-md border border-default',
-    indicator: 'bg-gradient-to-r from-pink-500 to-yellow-500',
-    label: 'tracking-wider font-medium text-default-600',
-    value: 'text-foreground/60',
-  }
+    indicator: '',
+    label: 'tracking-wider font-medium ',
+    value: '',
+  };
 
   const currentStyle = isPlaying
     ? cardStyles.playing
@@ -128,7 +128,7 @@ export const AudioCard = ({
       ? cardStyles.completed
       : isPaused
         ? cardStyles.paused
-        : ''
+        : '';
 
   return (
     <div
@@ -149,10 +149,7 @@ export const AudioCard = ({
             content={dialogue.type}
             placement="top"
             classNames={{
-              content: [
-                'px-2 shadow-none',
-                'text-foreground text-lg bg-transparent',
-              ],
+              content: ['px-2 shadow-none', ' text-lg bg-transparent'],
             }}
           >
             <div className="m-2">
@@ -169,9 +166,7 @@ export const AudioCard = ({
         />
 
         <CardBody className="z-10 px-1 overflow-hidden items-center justify-center max-h-24">
-          <p className="text-center text-balance text-lg text-foreground">
-            {dialogue.text}
-          </p>
+          <p className="text-center text-balance text-lg ">{dialogue.text}</p>
         </CardBody>
 
         <CardFooter className="z-10 bottom-0 gap-1 px-1 my-1">
@@ -179,7 +174,7 @@ export const AudioCard = ({
           <Button
             isIconOnly
             aria-label="play/pause"
-            className="bg-secondary-700 h-6 my-1"
+            className=" h-6 my-1"
             size="sm"
           >
             {isPlaying ? <PauseIcon /> : <PlayIcon />}
@@ -191,10 +186,10 @@ export const AudioCard = ({
             classNames={progressStyles}
           />
           <Chip variant="light">
-            <p className="text-secondary-200">{timeRemaining}</p>
+            <p className="text-secondary">{timeRemaining}</p>
           </Chip>
         </CardFooter>
       </Card>
     </div>
-  )
-}
+  );
+};

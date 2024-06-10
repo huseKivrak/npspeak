@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import {
   Modal,
   ModalContent,
@@ -7,47 +7,40 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from '@nextui-org/react'
-import { ServerAction } from '@/types/drizzle'
-import { useFormState } from 'react-dom'
-import { DeleteModalMessages } from '@/lib/constants'
-import { DeleteIcon } from './icons'
-import { SubmitButton } from './buttons/SubmitButton'
+} from '@nextui-org/react';
+import { useFormState } from 'react-dom';
+import ttsHandler from '@/actions/ttsHandler';
+import { PiMicrophoneBold } from 'react-icons/pi';
+import { SubmitButton } from '../../buttons/SubmitButton';
 
-export function DeleteModal({
-  id,
-  idName,
-  serverAction,
+export function TTSModal({
+  dialogueId,
+  text,
+  voiceId,
+  npcId,
 }: {
-  id: number
-  idName: 'npc_id' | 'dialogue_id' | 'campaign_id'
-  serverAction: ServerAction
-  className?: string
-  children?: React.ReactNode
+  dialogueId: number;
+  text: string;
+  voiceId: string;
+  npcId: number;
+  className?: string;
+  children?: React.ReactNode;
 }) {
-  const [state, formAction] = useFormState(serverAction, {
+  const [state, formAction] = useFormState(ttsHandler, {
     status: 'idle',
     message: '',
-  })
-  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  });
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const modalMessage = DeleteModalMessages[idName]
-  const title =
-    idName === 'npc_id'
-      ? 'NPC'
-      : idName === 'dialogue_id'
-        ? 'Dialogue'
-        : 'Campaign'
-  const modalTitle = `Delete ${title}?`
   return (
     <>
       <Button
         isIconOnly
         variant="light"
         onPress={onOpen}
-        aria-label={`Delete ${title}`}
+        aria-label="Create Dialogue Audio"
       >
-        <DeleteIcon className="text-danger " />
+        <PiMicrophoneBold className="text-xl text-primary" />
       </Button>
       <Modal
         backdrop="opaque"
@@ -78,20 +71,26 @@ export function DeleteModal({
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                {modalTitle}
+                Create Dialogue Audio
               </ModalHeader>
-              <ModalBody>{modalMessage}</ModalBody>
+              <ModalBody>Create audio for this dialogue?</ModalBody>
               <ModalFooter>
                 <form>
-                  <input type="hidden" name={idName} value={id} />
-                  <Button color="default" variant="light" onPress={onClose}>
+                  <input type="hidden" name="dialogue_id" value={dialogueId} />
+                  <input type="hidden" name="text" value={text} />
+                  <input type="hidden" name="npc_id" value={npcId} />
+                  <input type="hidden" name="voice_id" value={voiceId} />
+
+                  <Button color="success" variant="light" onPress={onClose}>
                     Close
                   </Button>
+
                   <SubmitButton
-                    pendingText={`Deleting ${title}...`}
                     formAction={formAction}
+                    pendingText="Creating Audio..."
+                    className="bg-success "
                   >
-                    Delete
+                    Create!
                   </SubmitButton>
                 </form>
               </ModalFooter>
@@ -100,5 +99,5 @@ export function DeleteModal({
         </ModalContent>
       </Modal>
     </>
-  )
+  );
 }

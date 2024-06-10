@@ -1,17 +1,17 @@
-import { components, SingleValueProps } from 'react-select'
-import { GenderIcon } from '@/components/icons'
-import { getAccentEmoji } from '@/utils/helpers/formHelpers'
-import { Chip } from '@nextui-org/chip'
-import { VoiceOptionProps } from '@/utils/helpers/formHelpers'
+import { components, SingleValueProps } from 'react-select';
+import { GenderIcon } from '@/components/icons';
+import { getAccentEmoji } from '@/utils/helpers/formHelpers';
+import { Chip } from '@nextui-org/chip';
+import { VoiceOptionProps } from '@/utils/helpers/formHelpers';
 
 interface VoiceSingleValueProps
   extends SingleValueProps<VoiceOptionProps, false> {}
 
 export const VoiceSingleValue: React.FC<VoiceSingleValueProps> = (props) => {
-  const { label, gender, accent, useCase, description } = props.data
+  const { label, gender, accent, useCase, description } = props.data;
 
-  const genderIcon = GenderIcon(gender)
-  const accentEmoji = getAccentEmoji(accent)
+  const genderIcon = GenderIcon(gender);
+  const accentEmoji = getAccentEmoji(accent);
 
   return (
     <components.SingleValue {...props}>
@@ -31,5 +31,5 @@ export const VoiceSingleValue: React.FC<VoiceSingleValueProps> = (props) => {
         )}
       </div>
     </components.SingleValue>
-  )
-}
+  );
+};

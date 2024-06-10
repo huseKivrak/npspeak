@@ -1,6 +1,6 @@
-'use client'
-import { useCallback, useMemo, useState } from 'react'
-import { CampaignWithNPCs } from '@/types/drizzle'
+'use client';
+import { useCallback, useMemo, useState } from 'react';
+import { CampaignWithNPCs } from '@/types/drizzle';
 import {
   Table,
   TableHeader,
@@ -12,74 +12,76 @@ import {
   Tooltip,
   Pagination,
   SortDescriptor,
-} from '@nextui-org/react'
-import { deleteCampaignAction } from '@/actions/db/campaigns'
-import { DeleteIcon } from '../icons'
-import Link from 'next/link'
-import { DeleteModal } from '../DeleteModal'
-import { SearchBar } from './SearchBar'
-import { truncateText } from '@/utils/helpers/formHelpers'
+} from '@nextui-org/react';
+import { deleteCampaignAction } from '@/actions/db/campaigns';
+import { DeleteIcon } from '../icons';
+import Link from 'next/link';
+import { DeleteModal } from '../forms/modals/DeleteModal';
+import { SearchBar } from './SearchBar';
+import { truncateText } from '@/utils/helpers/formHelpers';
 
 export function CampaignListTable({
   campaigns,
 }: {
-  campaigns: CampaignWithNPCs[]
+  campaigns: CampaignWithNPCs[];
 }) {
-  const [filterValue, setFilterValue] = useState('')
+  const [filterValue, setFilterValue] = useState('');
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: 'campaign_name',
     direction: 'ascending',
-  })
-  const [page, setPage] = useState(1)
+  });
+  const [page, setPage] = useState(1);
 
-  const rowsPerPage = 5
-  const pages = Math.ceil(campaigns.length / rowsPerPage)
+  const rowsPerPage = 5;
+  const pages = Math.ceil(campaigns.length / rowsPerPage);
 
-  const hasSearchFilter = Boolean(filterValue)
+  const hasSearchFilter = Boolean(filterValue);
 
   //Items filtered by search value
   const filteredItems = useMemo(() => {
-    let filteredCampaigns = [...campaigns]
+    let filteredCampaigns = [...campaigns];
 
     if (hasSearchFilter) {
       filteredCampaigns = filteredCampaigns.filter((c) =>
         c.campaign_name.toLowerCase().includes(filterValue.toLowerCase())
-      )
+      );
     }
-    return filteredCampaigns
-  }, [campaigns, filterValue, hasSearchFilter])
+    return filteredCampaigns;
+  }, [campaigns, filterValue, hasSearchFilter]);
 
   const items = useMemo(() => {
-    const start = (page - 1) * rowsPerPage
-    const end = start + rowsPerPage
-    return campaigns.slice(start, end)
-  }, [page, campaigns])
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    return campaigns.slice(start, end);
+  }, [page, campaigns]);
 
   const sortedItems = useMemo(() => {
     return [...items].sort((a: CampaignWithNPCs, b: CampaignWithNPCs) => {
-      const first = a[sortDescriptor.column as keyof CampaignWithNPCs] as number
+      const first = a[
+        sortDescriptor.column as keyof CampaignWithNPCs
+      ] as number;
       const second = b[
         sortDescriptor.column as keyof CampaignWithNPCs
-      ] as number
-      const cmp = first < second ? -1 : first > second ? 1 : 0
+      ] as number;
+      const cmp = first < second ? -1 : first > second ? 1 : 0;
 
-      return sortDescriptor.direction === 'descending' ? -cmp : cmp
-    })
-  }, [sortDescriptor, items])
+      return sortDescriptor.direction === 'descending' ? -cmp : cmp;
+    });
+  }, [sortDescriptor, items]);
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
-      setFilterValue(value)
-      setPage(1)
+      setFilterValue(value);
+      setPage(1);
     } else {
-      setFilterValue('')
+      setFilterValue('');
     }
-  }, [])
+  }, []);
 
   const onClear = useCallback(() => {
-    setFilterValue('')
-    setPage(1)
-  }, [])
+    setFilterValue('');
+    setPage(1);
+  }, []);
 
   const renderCell = useCallback(
     (campaign: CampaignWithNPCs, columnKey: React.Key) => {
@@ -93,7 +95,7 @@ export function CampaignListTable({
                 </Link>
               </p>
             </div>
-          )
+          );
         case 'description':
           return (
             <div className="flex flex-col">
@@ -108,7 +110,7 @@ export function CampaignListTable({
                 </p>
               </Tooltip>
             </div>
-          )
+          );
         case 'npcs':
           return (
             <div className="flex flex-col gap-1">
@@ -134,7 +136,7 @@ export function CampaignListTable({
                 <p className="text-tiny"> No NPCs</p>
               )}
             </div>
-          )
+          );
         case 'created_at':
           return (
             <div className="flex flex-col">
@@ -142,7 +144,7 @@ export function CampaignListTable({
                 {new Date(campaign.created_at).toLocaleDateString()}
               </p>
             </div>
-          )
+          );
         case 'actions':
           return (
             <div className="relative flex justify-center gap-2">
@@ -156,13 +158,13 @@ export function CampaignListTable({
                 </Tooltip>
               </DeleteModal>
             </div>
-          )
+          );
         default:
-          return null
+          return null;
       }
     },
     []
-  )
+  );
 
   //Search bar
   const topContent = useMemo(() => {
@@ -174,8 +176,8 @@ export function CampaignListTable({
           onClear={onClear}
         />
       </div>
-    )
-  }, [filterValue, onSearchChange, onClear])
+    );
+  }, [filterValue, onSearchChange, onClear]);
 
   const bottomContent = useMemo(() => {
     return (
@@ -192,8 +194,8 @@ export function CampaignListTable({
           }}
         />
       </div>
-    )
-  }, [page, pages])
+    );
+  }, [page, pages]);
 
   return (
     <Table
@@ -201,7 +203,7 @@ export function CampaignListTable({
       aria-label="Campaigns Table"
       classNames={{
         wrapper: 'p-0 rounded-sm min-h-[382px] max-h-[382px]',
-        th: ['bg-primary', 'text-foreground', 'border-b', 'border-divider'],
+        th: ['bg-primary', '', 'border-b', 'border-divider'],
         td: [
           'group-data-[first=true]:first:before:rounded-none',
           'group-data-[first=true]:last:before:rounded-none',
@@ -249,5 +251,5 @@ export function CampaignListTable({
         )}
       </TableBody>
     </Table>
-  )
+  );
 }

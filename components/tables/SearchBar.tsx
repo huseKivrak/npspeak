@@ -1,4 +1,4 @@
-import { Input } from '@nextui-org/input'
+import { Input } from '@nextui-org/input';
 
 export const SearchBar = ({
   filterValue,
@@ -6,9 +6,9 @@ export const SearchBar = ({
   onValueChange,
   ...props
 }: {
-  filterValue: string
-  onClear: () => void
-  onValueChange: (value: string) => void
+  filterValue: string;
+  onClear: () => void;
+  onValueChange: (value: string) => void;
 }) => {
   return (
     <Input
@@ -20,5 +20,5 @@ export const SearchBar = ({
       onClear={onClear}
       {...props}
     />
-  )
-}
+  );
+};

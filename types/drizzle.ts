@@ -1,67 +1,67 @@
-import { Tables } from './supabase'
+import { Tables } from './supabase';
 
 export type CampaignWithNPCs = Tables<'campaigns'> & {
-  npcs: Tables<'npcs'>[]
-}
+  npcs: Tables<'npcs'>[];
+};
 
 export type DetailedNPC = Tables<'npcs'> & {
-  campaigns: Tables<'campaigns'>[]
-  dialogues: Tables<'npc_dialogues'>[]
-}
+  campaigns: Tables<'campaigns'>[];
+  dialogues: Tables<'npc_dialogues'>[];
+};
 
 export type UpdateNPC = {
-  npc_id: number
-  npc_name: string
-  description: string | undefined //todo: ts fix
-  campaign_ids: number[]
-  voice_id: string
-}
+  npc_id: number;
+  npc_name: string;
+  description: string | undefined; //todo: ts fix
+  campaign_ids: number[];
+  voice_id: string;
+};
 
 export type ActionStatus =
   | {
-      status: 'success'
-      message?: string
-      data: any
+      status: 'success';
+      message?: string;
+      data: any;
     }
   | {
-      status: 'error'
-      message: string
+      status: 'error';
+      message: string;
       errors?: Array<{
-        path: string
-        message: string
-      }>
+        path: string;
+        message: string;
+      }>;
     }
   | {
-      status: 'idle'
-      message: ''
-    }
+      status: 'idle';
+      message: '';
+    };
 
 export type FormOptions = {
-  value: number
-  label: string
-}[]
+  value: number;
+  label: string;
+}[];
 
 //todo
 export type DetailedDialogue = {
-  id: number
-  npc_id: number | null
-  user_id: string | null
-  text: string
-  dialogueType: string | null
-  audioFileKey?: string | null
-  audioURL?: string | null
-  audioDuration?: number | null
-}
+  id: number;
+  npc_id: number | null;
+  user_id: string | null;
+  text: string;
+  dialogueType: string | null;
+  audioFileKey?: string | null;
+  audioURL?: string | null;
+  audioDuration?: number | null;
+};
 
 export type ServerAction = (
   prevState: ActionStatus | null,
   formData: FormData
-) => Promise<ActionStatus>
+) => Promise<ActionStatus>;
 
 export type SoundboardDialogue = {
-  id: number
-  type: string
-  text: string
-  audio: string
-  npc_id: number
-}
+  id: number;
+  type: string;
+  text: string;
+  audio: string;
+  npc_id: number;
+};
