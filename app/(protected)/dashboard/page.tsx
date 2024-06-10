@@ -2,7 +2,7 @@ import { getUserInfo } from '@/actions/auth';
 import {
   getCampaignsWithNPCs,
   getNPCsWithRelatedData,
-} from '../../database/drizzle/queries';
+} from '@/database/drizzle/queries';
 import { redirect } from 'next/navigation';
 import { UserDashboard } from '@/components/views/UserDashboard';
 import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
