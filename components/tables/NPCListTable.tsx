@@ -83,7 +83,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
       case 'npc_name':
         return (
           <div className="flex flex-col">
-            <p className=" capitalize hover:underline">
+            <p className="text-lg capitalize hover:underline">
               <Link href={`/npcs/${npc.id}`}>{npc.npc_name}</Link>
             </p>
           </div>
@@ -97,7 +97,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
               content={npc.description}
               className="max-w-sm"
             >
-              <p className="text-tiny capitalize truncate max-w-xs h-8">
+              <p className=" capitalize truncate max-w-xs h-8">
                 {npc.description}
               </p>
             </Tooltip>
@@ -132,7 +132,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
       case 'created_at':
         return (
           <div className="flex flex-col">
-            <p className="text-tiny capitalize">
+            <p className=" capitalize">
               {new Date(npc.created_at).toLocaleDateString()}
             </p>
           </div>
@@ -193,7 +193,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
       aria-label="NPCs Table"
       classNames={{
         wrapper: 'p-0 rounded-sm min-h-[382px] max-h-[382px] max-w-screen',
-        th: ['bg-success', '', 'border-b', 'border-divider'],
+        th: ['border-b', 'border-divider'],
         td: [
           'group-data-[first=true]:first:before:rounded-none',
           'group-data-[first=true]:last:before:rounded-none',
