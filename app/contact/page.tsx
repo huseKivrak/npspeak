@@ -1,8 +1,7 @@
-export default function ContactPage(){
-
+export default function ContactPage() {
   return (
     <div>
-      <h1 className='text-6xl'>Contact</h1>
+      <h1 className="text-6xl">Contact</h1>
     </div>
-  )
+  );
 }

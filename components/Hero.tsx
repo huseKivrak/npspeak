@@ -1,6 +1,6 @@
-import { Button } from '@nextui-org/button'
-import { Divider } from '@nextui-org/react'
-import Link from 'next/link'
+import { Button } from '@nextui-org/button';
+import { Divider } from '@nextui-org/react';
+import Link from 'next/link';
 
 export const Hero = () => {
   return (
@@ -37,5 +37,5 @@ export const Hero = () => {
       </div>
       <Divider className="mt-4" />
     </div>
-  )
-}
+  );
+};

@@ -7,5 +7,5 @@ export default function SignupSuccessPage() {
         npSpeak
       </p>
     </div>
-  )
+  );
 }

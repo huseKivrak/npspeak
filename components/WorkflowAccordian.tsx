@@ -1,11 +1,11 @@
-'use client'
-import { Accordion, AccordionItem } from '@nextui-org/accordion'
-import { Divider } from '@nextui-org/react'
+'use client';
+import { Accordion, AccordionItem } from '@nextui-org/accordion';
+import { Divider } from '@nextui-org/react';
 import {
   PiMicrophoneBold,
   PiNotePencilBold,
   PiAddressBookBold,
-} from 'react-icons/pi'
+} from 'react-icons/pi';
 export const WorkflowAccordian = () => {
   const itemClasses = {
     base: 'py-3 max-w-md sm:max-w-lg w-full',
@@ -14,7 +14,7 @@ export const WorkflowAccordian = () => {
     trigger: 'px-1 py-1 rounded-sm h-12 flex items-center',
     indicator: 'text-4xl ',
     content: 'sm:text-[20px] text-start pl-2 sm:pl-4 pr-0',
-  }
+  };
 
   return (
     <div className="flex flex-col flex-grow gap-4">
@@ -113,5 +113,5 @@ export const WorkflowAccordian = () => {
       </Accordion>
       <Divider className="my-4" />
     </div>
-  )
-}
+  );
+};

@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -9,21 +9,21 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-} from '@dnd-kit/core'
+} from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   horizontalListSortingStrategy,
-} from '@dnd-kit/sortable'
-import { AudioCard } from './AudioCard'
-import { SoundboardDialogue } from '@/types/drizzle'
+} from '@dnd-kit/sortable';
+import { AudioCard } from './AudioCard';
+import { SoundboardDialogue } from '@/types/drizzle';
 export const Soundboard = ({
   dialogues,
 }: {
-  dialogues: SoundboardDialogue[]
+  dialogues: SoundboardDialogue[];
 }) => {
-  const [items, setItems] = useState(dialogues)
+  const [items, setItems] = useState(dialogues);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -33,19 +33,19 @@ export const Soundboard = ({
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
-  )
+  );
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
+    const { active, over } = event;
 
     if (over && active.id !== over.id) {
       setItems((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id)
-        const newIndex = items.findIndex((item) => item.id === over.id)
-        return arrayMove(items, oldIndex, newIndex)
-      })
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
     }
-  }
+  };
   return (
     <DndContext
       sensors={sensors}
@@ -60,5 +60,5 @@ export const Soundboard = ({
         </div>
       </SortableContext>
     </DndContext>
-  )
-}
+  );
+};

@@ -1,7 +1,7 @@
-import type { Config } from 'tailwindcss'
-import { nextui } from '@nextui-org/react'
-import { balatroTheme } from './styles/balatroTheme'
-import { greyscaleTheme } from './styles/greyscaleTheme'
+import type { Config } from 'tailwindcss';
+import { nextui } from '@nextui-org/react';
+import { balatroTheme } from './styles/balatroTheme';
+import { greyscaleTheme } from './styles/greyscaleTheme';
 
 const config: Config = {
   content: [
@@ -30,5 +30,5 @@ const config: Config = {
       },
     }),
   ],
-}
-export default config
+};
+export default config;

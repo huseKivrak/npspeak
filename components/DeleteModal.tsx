@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import {
   Modal,
   ModalContent,
@@ -7,38 +7,38 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from '@nextui-org/react'
-import { ServerAction } from '@/types/drizzle'
-import { useFormState } from 'react-dom'
-import { DeleteModalMessages } from '@/lib/constants'
-import { DeleteIcon } from './icons'
-import { SubmitButton } from './buttons/SubmitButton'
+} from '@nextui-org/react';
+import { ServerAction } from '@/types/drizzle';
+import { useFormState } from 'react-dom';
+import { DeleteModalMessages } from '@/lib/constants';
+import { DeleteIcon } from './icons';
+import { SubmitButton } from './buttons/SubmitButton';
 
 export function DeleteModal({
   id,
   idName,
   serverAction,
 }: {
-  id: number
-  idName: 'npc_id' | 'dialogue_id' | 'campaign_id'
-  serverAction: ServerAction
-  className?: string
-  children?: React.ReactNode
+  id: number;
+  idName: 'npc_id' | 'dialogue_id' | 'campaign_id';
+  serverAction: ServerAction;
+  className?: string;
+  children?: React.ReactNode;
 }) {
   const [state, formAction] = useFormState(serverAction, {
     status: 'idle',
     message: '',
-  })
-  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  });
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const modalMessage = DeleteModalMessages[idName]
+  const modalMessage = DeleteModalMessages[idName];
   const title =
     idName === 'npc_id'
       ? 'NPC'
       : idName === 'dialogue_id'
         ? 'Dialogue'
-        : 'Campaign'
-  const modalTitle = `Delete ${title}?`
+        : 'Campaign';
+  const modalTitle = `Delete ${title}?`;
   return (
     <>
       <Button
@@ -100,5 +100,5 @@ export function DeleteModal({
         </ModalContent>
       </Modal>
     </>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { ConfigTheme } from '@nextui-org/react'
+import { ConfigTheme } from '@nextui-org/react';
 export const balatroTheme: ConfigTheme = {
   extend: 'dark',
   layout: {
@@ -122,4 +122,4 @@ export const balatroTheme: ConfigTheme = {
       foreground: '#FFFFFF',
     },
   },
-}
+};

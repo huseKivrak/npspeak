@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import {
   Modal,
   ModalContent,
@@ -7,11 +7,11 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from '@nextui-org/react'
-import { useFormState } from 'react-dom'
-import ttsHandler from '@/actions/ttsHandler'
-import { PiMicrophoneBold } from 'react-icons/pi'
-import { SubmitButton } from './buttons/SubmitButton'
+} from '@nextui-org/react';
+import { useFormState } from 'react-dom';
+import ttsHandler from '@/actions/ttsHandler';
+import { PiMicrophoneBold } from 'react-icons/pi';
+import { SubmitButton } from './buttons/SubmitButton';
 
 export function TTSModal({
   dialogueId,
@@ -19,18 +19,18 @@ export function TTSModal({
   voiceId,
   npcId,
 }: {
-  dialogueId: number
-  text: string
-  voiceId: string
-  npcId: number
-  className?: string
-  children?: React.ReactNode
+  dialogueId: number;
+  text: string;
+  voiceId: string;
+  npcId: number;
+  className?: string;
+  children?: React.ReactNode;
 }) {
   const [state, formAction] = useFormState(ttsHandler, {
     status: 'idle',
     message: '',
-  })
-  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  });
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
     <>
@@ -99,5 +99,5 @@ export function TTSModal({
         </ModalContent>
       </Modal>
     </>
-  )
+  );
 }

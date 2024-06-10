@@ -1,5 +1,5 @@
 // MyInput.tsx
-import { extendVariants, Input } from '@nextui-org/react'
+import { extendVariants, Input } from '@nextui-org/react';
 
 export const FormInput = extendVariants(Input, {
   variants: {
@@ -57,4 +57,4 @@ export const FormInput = extendVariants(Input, {
     textSize: 'base',
     removeLabel: false,
   },
-})
+});

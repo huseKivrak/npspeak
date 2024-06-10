@@ -1,32 +1,32 @@
-'use client'
-import { useState } from 'react'
-import { useForm, Controller, FieldPath } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { createNPCAction, updateNPCAction } from '@/actions/db/NPCs'
-import { npcSchema } from '@/database/drizzle/validation'
-import { CheckboxGroup, Checkbox, Textarea, Button } from '@nextui-org/react'
-import { SubmitButton } from '@/components/buttons/SubmitButton'
-import ReactSelect from 'react-select'
-import { VoiceOption } from './dropdown/VoiceOption'
-import { VoiceSingleValue } from './dropdown/VoiceSingleValue'
-import { PlusIcon } from '../icons'
-import { ErrorMessage } from '@hookform/error-message'
-import { ErrorToast } from '@/components/ErrorToast'
-import { FormOptions, UpdateNPC } from '@/types/drizzle'
-import { ElevenLabsVoice } from '@/types/elevenlabs'
-import { FormInput } from './FormInput'
+'use client';
+import { useState } from 'react';
+import { useForm, Controller, FieldPath } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createNPCAction, updateNPCAction } from '@/actions/db/NPCs';
+import { npcSchema } from '@/database/drizzle/validation';
+import { CheckboxGroup, Checkbox, Textarea, Button } from '@nextui-org/react';
+import { SubmitButton } from '@/components/buttons/SubmitButton';
+import ReactSelect from 'react-select';
+import { VoiceOption } from './dropdown/VoiceOption';
+import { VoiceSingleValue } from './dropdown/VoiceSingleValue';
+import { PlusIcon } from '../icons';
+import { ErrorMessage } from '@hookform/error-message';
+import { ErrorToast } from '@/components/ErrorToast';
+import { FormOptions, UpdateNPC } from '@/types/drizzle';
+import { ElevenLabsVoice } from '@/types/elevenlabs';
+import { FormInput } from './FormInput';
 import {
   transformVoiceOptions,
   VoiceOptionProps,
-} from '@/utils/helpers/formHelpers'
+} from '@/utils/helpers/formHelpers';
 
-type Inputs = z.infer<typeof npcSchema>
+type Inputs = z.infer<typeof npcSchema>;
 
 interface NPCFormProps {
-  campaignOptions?: FormOptions
-  voiceOptions: ElevenLabsVoice[]
-  npcToUpdate?: UpdateNPC
+  campaignOptions?: FormOptions;
+  voiceOptions: ElevenLabsVoice[];
+  npcToUpdate?: UpdateNPC;
 }
 
 export const NPCForm = ({
@@ -34,10 +34,10 @@ export const NPCForm = ({
   voiceOptions,
   npcToUpdate,
 }: NPCFormProps) => {
-  const isEditing = Boolean(npcToUpdate)
-  const [showAddCampaign, setShowAddCampaign] = useState(false)
-  const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null)
-  const [autoplay, setAutoplay] = useState(false)
+  const isEditing = Boolean(npcToUpdate);
+  const [showAddCampaign, setShowAddCampaign] = useState(false);
+  const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null);
+  const [autoplay, setAutoplay] = useState(false);
 
   const {
     register,
@@ -54,20 +54,20 @@ export const NPCForm = ({
     defaultValues: {
       ...npcToUpdate,
     },
-  })
+  });
 
-  const hasCampaigns = campaignOptions && campaignOptions.length > 0
+  const hasCampaigns = campaignOptions && campaignOptions.length > 0;
 
   const onSubmit = async (data: Inputs) => {
-    console.log('Submitting')
-    const form = document.getElementById('npc-form') as HTMLFormElement
-    const submitter = document.getElementById('npc-form-submit')
-    const formData = new FormData(form, submitter) //? benefit of submitter?
+    console.log('Submitting');
+    const form = document.getElementById('npc-form') as HTMLFormElement;
+    const submitter = document.getElementById('npc-form-submit');
+    const formData = new FormData(form, submitter); //? benefit of submitter?
 
     const response =
       isEditing && npcToUpdate
         ? await updateNPCAction(null, formData, npcToUpdate?.npc_id)
-        : await createNPCAction(null, formData)
+        : await createNPCAction(null, formData);
 
     //only handling errors; redirects if successful
     if (response.status === 'error') {
@@ -75,24 +75,24 @@ export const NPCForm = ({
         response.errors.forEach((error) => {
           setError(error.path as FieldPath<Inputs>, {
             message: error.message,
-          })
-        })
+          });
+        });
       } else {
         //non-validation server errors
         setError('root.serverError', {
           type: 'serverError',
           message: response.message,
-        })
+        });
       }
     }
-  }
+  };
 
   const onInvalid = (errors: any) => {
-    console.log('field values:', getValues())
-    console.log('errors:', errors)
-  }
+    console.log('field values:', getValues());
+    console.log('errors:', errors);
+  };
 
-  const selectOptions: VoiceOptionProps[] = transformVoiceOptions(voiceOptions)
+  const selectOptions: VoiceOptionProps[] = transformVoiceOptions(voiceOptions);
 
   return (
     <form
@@ -142,8 +142,8 @@ export const NPCForm = ({
             name={name}
             ref={ref}
             onChange={(value) => {
-              onChange(value?.value)
-              setSelectedVoiceURL(value?.preview_url ?? '')
+              onChange(value?.value);
+              setSelectedVoiceURL(value?.preview_url ?? '');
             }}
             components={{
               Option: VoiceOption,
@@ -221,5 +221,5 @@ export const NPCForm = ({
         {isEditing ? 'update' : 'create'}
       </SubmitButton>
     </form>
-  )
-}
+  );
+};

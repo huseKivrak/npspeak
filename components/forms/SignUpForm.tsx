@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import { signUpAction } from '@/actions/auth'
-import { useForm, FieldPath } from 'react-hook-form'
-import { useFormState } from 'react-dom'
-import { useEffect } from 'react'
-import Link from 'next/link'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { FormInput } from './FormInput'
-import { signupSchema } from '@/database/drizzle/validation'
-import { SubmitButton } from '@/components/buttons/SubmitButton'
-import { Button } from '@nextui-org/react'
-import { SendEmailIcon } from '@/components/icons'
-import { ErrorToast } from '../ErrorToast'
-import { ErrorMessage } from '@hookform/error-message'
-import { ActionStatus } from '@/types/drizzle'
-type Inputs = z.infer<typeof signupSchema>
+import { signUpAction } from '@/actions/auth';
+import { useForm, FieldPath } from 'react-hook-form';
+import { useFormState } from 'react-dom';
+import { useEffect } from 'react';
+import Link from 'next/link';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormInput } from './FormInput';
+import { signupSchema } from '@/database/drizzle/validation';
+import { SubmitButton } from '@/components/buttons/SubmitButton';
+import { Button } from '@nextui-org/react';
+import { SendEmailIcon } from '@/components/icons';
+import { ErrorToast } from '../ErrorToast';
+import { ErrorMessage } from '@hookform/error-message';
+import { ActionStatus } from '@/types/drizzle';
+type Inputs = z.infer<typeof signupSchema>;
 export default function SignUpForm() {
   const [state, formAction] = useFormState<ActionStatus, FormData>(
     signUpAction,
@@ -23,7 +23,7 @@ export default function SignUpForm() {
       status: 'idle',
       message: '',
     }
-  )
+  );
 
   const {
     register,
@@ -33,18 +33,18 @@ export default function SignUpForm() {
     mode: 'onBlur',
     criteriaMode: 'all',
     resolver: zodResolver(signupSchema),
-  })
+  });
 
   useEffect(() => {
-    if (state.status === 'idle') return
+    if (state.status === 'idle') return;
     if (state.status === 'error') {
       state.errors?.forEach((error) => {
         setError(error.path as FieldPath<Inputs>, {
           message: error.message,
-        })
-      })
+        });
+      });
     }
-  }, [state, setError])
+  }, [state, setError]);
 
   return (
     <form className="flex flex-col items-center gap-2">
@@ -131,5 +131,5 @@ export default function SignUpForm() {
         </Link>
       </div>
     </form>
-  )
+  );
 }

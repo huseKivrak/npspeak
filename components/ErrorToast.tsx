@@ -1,10 +1,10 @@
 interface ErrorToastProps {
-  text: string
-  className?: string
-  children?: React.ReactNode
+  text: string;
+  className?: string;
+  children?: React.ReactNode;
 }
-import { cn } from '@/utils/helpers/clsxMerge'
-import { ErrorIcon } from './icons'
+import { cn } from '@/utils/helpers/clsxMerge';
+import { ErrorIcon } from './icons';
 
 export function ErrorToast({ text, className, children }: ErrorToastProps) {
   return (
@@ -15,5 +15,5 @@ export function ErrorToast({ text, className, children }: ErrorToastProps) {
       </div>
       {children}
     </div>
-  )
+  );
 }

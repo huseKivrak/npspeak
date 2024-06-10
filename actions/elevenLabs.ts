@@ -1,13 +1,12 @@
-'use server'
+'use server';
 
 import {
   ELEVENLABS_BASE_URL,
   ELEVENLABS_API_HEADERS,
-} from '../utils/elevenlabs/api'
-import { normalizeLabels } from '../utils/elevenlabs/api'
-import { ElevenLabsVoice } from '@/types/elevenlabs'
-import { ActionStatus } from '@/types/drizzle'
-
+} from '../utils/elevenlabs/api';
+import { normalizeLabels } from '../utils/elevenlabs/api';
+import { ElevenLabsVoice } from '@/types/elevenlabs';
+import { ActionStatus } from '@/types/drizzle';
 
 //todo: save as json, revalidating periodically?
 export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
@@ -15,18 +14,18 @@ export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
     const response = await fetch(`${ELEVENLABS_BASE_URL}/voices`, {
       method: 'GET',
       headers: ELEVENLABS_API_HEADERS,
-    })
-    const data = await response.json()
-    const allVoices: ElevenLabsVoice[] = data.voices
-    allVoices.forEach(normalizeLabels)
+    });
+    const data = await response.json();
+    const allVoices: ElevenLabsVoice[] = data.voices;
+    allVoices.forEach(normalizeLabels);
     return {
       status: 'success',
       message: 'Retrieved all voices',
       data: allVoices,
-    }
+    };
   } catch (error) {
-    console.error(error)
-    return { status: 'error', message: `Error: ${error}` }
+    console.error(error);
+    return { status: 'error', message: `Error: ${error}` };
   }
 }
 
@@ -40,13 +39,13 @@ export async function getElevenLabsVoiceInfo(
         method: 'GET',
         headers: ELEVENLABS_API_HEADERS,
       }
-    )
-    const data = await response.json()
-    normalizeLabels(data)
-    return { status: 'success', message: 'Retrieved voice info', data }
+    );
+    const data = await response.json();
+    normalizeLabels(data);
+    return { status: 'success', message: 'Retrieved voice info', data };
   } catch (error) {
-    console.error(error)
-    return { status: 'error', message: `Error: ${error}` }
+    console.error(error);
+    return { status: 'error', message: `Error: ${error}` };
   }
 }
 
@@ -54,17 +53,17 @@ export async function createElevenLabsTTSAction(
   prevState: any,
   formData: FormData
 ): Promise<ActionStatus> {
-  const voice_id = formData.get('voice_id')
+  const voice_id = formData.get('voice_id');
 
-  const userText = formData.get('text')
-  console.log('voice_id: ', voice_id)
-  console.log('text: ', userText)
+  const userText = formData.get('text');
+  console.log('voice_id: ', voice_id);
+  console.log('text: ', userText);
   //todo: add zod validation
 
   const requestBody = JSON.stringify({
     model_id: 'eleven_multilingual_v2',
     text: userText,
-  })
+  });
 
   try {
     const response = await fetch(
@@ -77,24 +76,24 @@ export async function createElevenLabsTTSAction(
         },
         body: requestBody,
       }
-    )
-    console.log('response: ', response)
+    );
+    console.log('response: ', response);
     if (response.ok) {
-      const blob = await response.blob()
-      const buffer = await blob.arrayBuffer()
+      const blob = await response.blob();
+      const buffer = await blob.arrayBuffer();
 
       return {
         status: 'success',
         message: 'TTS Audio created',
         data: { buffer },
-      }
+      };
     }
     const message =
-      response.status === 400 ? 'Error: Bad request' : 'Error: Unknown error'
-    return { status: 'error', message: message }
+      response.status === 400 ? 'Error: Bad request' : 'Error: Unknown error';
+    return { status: 'error', message: message };
   } catch (error) {
-    console.error(error)
-    return { status: 'error', message: `Error: ${error}` }
+    console.error(error);
+    return { status: 'error', message: `Error: ${error}` };
   }
 }
 
@@ -103,24 +102,24 @@ export async function createElevenLabsVoiceAction(
   prevState: any,
   formData: FormData
 ): Promise<ActionStatus> {
-  console.log('formData: ', formData)
+  console.log('formData: ', formData);
 
   try {
     const response = await fetch(`${ELEVENLABS_BASE_URL}/voices/add`, {
       method: 'POST',
       headers: ELEVENLABS_API_HEADERS,
       body: formData,
-    })
+    });
 
-    const data = await response.json()
-    console.log('voice:', data.voice_id)
+    const data = await response.json();
+    console.log('voice:', data.voice_id);
     return {
       status: 'success',
       message: `Voice created`,
       data: { voice_id: data.voice_id },
-    }
+    };
   } catch (error) {
-    console.error(error)
-    return { status: 'error', message: `Error: ${error}` }
+    console.error(error);
+    return { status: 'error', message: `Error: ${error}` };
   }
 }

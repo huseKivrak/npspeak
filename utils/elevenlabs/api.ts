@@ -1,11 +1,11 @@
 //docs - https://elevenlabs.io/docs/api-reference/
 
-import { ElevenLabsVoice, Label } from '@/types/elevenlabs'
+import { ElevenLabsVoice, Label } from '@/types/elevenlabs';
 
-export const ELEVENLABS_BASE_URL = 'https://api.elevenlabs.io/v1'
+export const ELEVENLABS_BASE_URL = 'https://api.elevenlabs.io/v1';
 export const ELEVENLABS_API_HEADERS = {
   'xi-api-key': process.env.ELEVENLABS_API_KEY!,
-}
+};
 
 export const audioFormats = {
   mp3_32kbps_22kHz: 'mp3_22050_32',
@@ -19,7 +19,7 @@ export const audioFormats = {
   pcm_24kHz: 'pcm_24000',
   // pcm_cdQuality_44kHz: 'pcm_44100', //independent plan
   ulaw_telephony_8kHz: 'ulaw_8000',
-}
+};
 
 /**
  * Normalizes any 'use case' labels to 'use_case'.
@@ -27,11 +27,11 @@ export const audioFormats = {
  */
 export function normalizeLabels(voice: ElevenLabsVoice): void {
   if (voice.labels['use case']) {
-    voice.labels.use_case = voice.labels['use case']
-    delete voice.labels['use case']
+    voice.labels.use_case = voice.labels['use case'];
+    delete voice.labels['use case'];
   } else if (voice.labels['description ']) {
-    voice.labels.description = voice.labels['description ']
-    delete voice.labels['description ']
+    voice.labels.description = voice.labels['description '];
+    delete voice.labels['description '];
   }
 }
 
@@ -41,18 +41,18 @@ export const ELEVENLABS_PREMADE_LABELS = [
   'gender',
   'age',
   'use_case',
-]
+];
 
 //finds non-default labels
 export function findLabels(voices?: ElevenLabsVoice[]): string[] {
-  if (!Array.isArray(voices)) return ELEVENLABS_PREMADE_LABELS
+  if (!Array.isArray(voices)) return ELEVENLABS_PREMADE_LABELS;
 
   const uniqueLabels = voices.reduce<Set<string>>((acc, curr) => {
-    Object.keys(curr.labels).forEach((label) => acc.add(label))
-    return acc
-  }, new Set<string>())
+    Object.keys(curr.labels).forEach((label) => acc.add(label));
+    return acc;
+  }, new Set<string>());
 
-  return [...uniqueLabels]
+  return [...uniqueLabels];
 }
 
 export const filterByLabelValue = (
@@ -60,14 +60,14 @@ export const filterByLabelValue = (
   label: Label,
   lableValue: string
 ): ElevenLabsVoice[] =>
-  voices.filter((voice) => voice.labels[label] === lableValue)
+  voices.filter((voice) => voice.labels[label] === lableValue);
 
 export const getLabelOptions = ({
   voices,
   label,
 }: {
-  voices: ElevenLabsVoice[]
-  label: Label
+  voices: ElevenLabsVoice[];
+  label: Label;
 }) => {
   const labelOptions: Record<string, string[]> = {
     accent: [],
@@ -75,17 +75,17 @@ export const getLabelOptions = ({
     gender: [],
     age: [],
     use_case: [],
-  }
+  };
 
   for (const voice of voices) {
-    labelOptions.accent.push(voice.labels.accent)
-    labelOptions.description.push(voice.labels.description)
-    labelOptions.gender.push(voice.labels.gender)
-    labelOptions.age.push(voice.labels.age)
+    labelOptions.accent.push(voice.labels.accent);
+    labelOptions.description.push(voice.labels.description);
+    labelOptions.gender.push(voice.labels.gender);
+    labelOptions.age.push(voice.labels.age);
 
     // @ts-ignore
-    const useCase = voice.labels.use_case || voice.labels['use case']
-    if (useCase) labelOptions.use_case.push(useCase)
+    const useCase = voice.labels.use_case || voice.labels['use case'];
+    if (useCase) labelOptions.use_case.push(useCase);
   }
-  return labelOptions
-}
+  return labelOptions;
+};

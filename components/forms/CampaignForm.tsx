@@ -1,31 +1,31 @@
-'use client'
-import { useState, useEffect } from 'react'
-import { useForm, FieldPath, Controller } from 'react-hook-form'
-import { useFormState } from 'react-dom'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { createCampaignAction } from '@/actions/db/campaigns'
-import { campaignSchema } from '@/database/drizzle/validation'
-import { ActionStatus } from '@/types/drizzle'
-import { SubmitButton } from '@/components/buttons/SubmitButton'
-import { ErrorMessage } from '@hookform/error-message'
-import { ErrorToast } from '../ErrorToast'
-import { PlusIcon } from '../icons'
-import { FormOptions } from '@/types/drizzle'
+'use client';
+import { useState, useEffect } from 'react';
+import { useForm, FieldPath, Controller } from 'react-hook-form';
+import { useFormState } from 'react-dom';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createCampaignAction } from '@/actions/db/campaigns';
+import { campaignSchema } from '@/database/drizzle/validation';
+import { ActionStatus } from '@/types/drizzle';
+import { SubmitButton } from '@/components/buttons/SubmitButton';
+import { ErrorMessage } from '@hookform/error-message';
+import { ErrorToast } from '../ErrorToast';
+import { PlusIcon } from '../icons';
+import { FormOptions } from '@/types/drizzle';
 import {
   CheckboxGroup,
   Checkbox,
   Input,
   Textarea,
   Button,
-} from '@nextui-org/react'
-import { FormInput } from './FormInput'
+} from '@nextui-org/react';
+import { FormInput } from './FormInput';
 
 interface CampaignFormProps {
-  npcOptions?: FormOptions
+  npcOptions?: FormOptions;
 }
 
-type Inputs = z.infer<typeof campaignSchema>
+type Inputs = z.infer<typeof campaignSchema>;
 export default function CampaignForm({ npcOptions }: CampaignFormProps) {
   const [state, formAction] = useFormState<ActionStatus, FormData>(
     createCampaignAction,
@@ -33,8 +33,8 @@ export default function CampaignForm({ npcOptions }: CampaignFormProps) {
       status: 'idle',
       message: '',
     }
-  )
-  const [showAddNpc, setShowAddNpc] = useState(false)
+  );
+  const [showAddNpc, setShowAddNpc] = useState(false);
   const {
     register,
     formState: { errors },
@@ -45,21 +45,21 @@ export default function CampaignForm({ npcOptions }: CampaignFormProps) {
     mode: 'onSubmit',
     criteriaMode: 'all',
     resolver: zodResolver(campaignSchema),
-  })
+  });
 
   useEffect(() => {
-    if (state.status === 'idle') return
+    if (state.status === 'idle') return;
     if (state?.status === 'error') {
-      console.log('errors:', state.errors)
+      console.log('errors:', state.errors);
       state.errors?.forEach((error) => {
         setError(error.path as FieldPath<Inputs>, {
           message: error.message,
-        })
-      })
+        });
+      });
     }
-  }, [state, setError])
+  }, [state, setError]);
 
-  const hasNPCs = npcOptions && npcOptions.length > 0
+  const hasNPCs = npcOptions && npcOptions.length > 0;
 
   return (
     <form className="flex flex-col w-full max-w-md gap-3">
@@ -161,5 +161,5 @@ export default function CampaignForm({ npcOptions }: CampaignFormProps) {
         create
       </SubmitButton>
     </form>
-  )
+  );
 }

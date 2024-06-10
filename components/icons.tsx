@@ -1,23 +1,23 @@
-import { DialogueIconMap, GenderIconMap } from '@/lib/constants'
-import { IconSvgProps } from '@/types/types'
+import { DialogueIconMap, GenderIconMap } from '@/lib/constants';
+import { IconSvgProps } from '@/types/types';
 
 export const DialogueIcon = ({
   dialogueType,
   size = 24,
 }: {
-  dialogueType: string
-  size?: number
+  dialogueType: string;
+  size?: number;
 }) => {
   const { icon: DialogueIcon, props } =
-    DialogueIconMap[dialogueType] || DialogueIconMap.other
-  return <DialogueIcon {...props} size={size} />
-}
+    DialogueIconMap[dialogueType] || DialogueIconMap.other;
+  return <DialogueIcon {...props} size={size} />;
+};
 
 export const GenderIcon = (gender: string, size = 24) => {
   const { icon: GenderIcon, props } =
-    GenderIconMap[gender] || GenderIconMap.default
-  return <GenderIcon {...props} size={size} />
-}
+    GenderIconMap[gender] || GenderIconMap.default;
+  return <GenderIcon {...props} size={size} />;
+};
 
 export const SendEmailIcon = ({
   size = 24,
@@ -44,7 +44,7 @@ export const SendEmailIcon = ({
       className="st0"
     />
   </svg>
-)
+);
 
 export const ErrorIcon = ({
   size = 24,
@@ -69,7 +69,7 @@ export const ErrorIcon = ({
     <path d="M12 9v4" />
     <path d="M12 16v.01" />
   </svg>
-)
+);
 
 export const PlusIcon = ({
   size = 24,
@@ -98,7 +98,7 @@ export const PlusIcon = ({
       <path d="M12 18V6" />
     </g>
   </svg>
-)
+);
 
 export const DeleteIcon = ({
   size = 24,
@@ -152,7 +152,7 @@ export const DeleteIcon = ({
       strokeWidth={1.5}
     />
   </svg>
-)
+);
 
 export const ScrollEmojiIcon = ({
   size = 24,
@@ -324,7 +324,7 @@ export const ScrollEmojiIcon = ({
       />
     </g>
   </svg>
-)
+);
 
 export const MoonFilledIcon = ({
   size = 24,
@@ -346,7 +346,7 @@ export const MoonFilledIcon = ({
       fill="currentColor"
     />
   </svg>
-)
+);
 
 export const SunFilledIcon = ({
   size = 24,
@@ -368,7 +368,7 @@ export const SunFilledIcon = ({
       <path d="M12 22.96a.969.969 0 01-1-.96v-.08a1 1 0 012 0 1.038 1.038 0 01-1 1.04zm7.14-2.82a1.024 1.024 0 01-.71-.29l-.13-.13a1 1 0 011.41-1.41l.13.13a1 1 0 010 1.41.984.984 0 01-.7.29zm-14.28 0a1.024 1.024 0 01-.71-.29 1 1 0 010-1.41l.13-.13a1 1 0 011.41 1.41l-.13.13a1 1 0 01-.7.29zM22 13h-.08a1 1 0 010-2 1.038 1.038 0 011.04 1 .969.969 0 01-.96 1zM2.08 13H2a1 1 0 010-2 1.038 1.038 0 011.04 1 .969.969 0 01-.96 1zm16.93-7.01a1.024 1.024 0 01-.71-.29 1 1 0 010-1.41l.13-.13a1 1 0 011.41 1.41l-.13.13a.984.984 0 01-.7.29zm-14.02 0a1.024 1.024 0 01-.71-.29l-.13-.14a1 1 0 011.41-1.41l.13.13a1 1 0 010 1.41.97.97 0 01-.7.3zM12 3.04a.969.969 0 01-1-.96V2a1 1 0 012 0 1.038 1.038 0 01-1 1.04z" />
     </g>
   </svg>
-)
+);
 
 export const SearchIcon = ({
   size = 24,
@@ -401,4 +401,4 @@ export const SearchIcon = ({
       strokeWidth="2"
     />
   </svg>
-)
+);

@@ -1,19 +1,19 @@
-'use client'
-import { useEffect } from 'react'
-import { useForm, Controller, FieldPath } from 'react-hook-form'
-import { useFormState } from 'react-dom'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { createDialogueAction } from '@/actions/db/dialogue'
-import { dialogueSchema } from '@/database/drizzle/validation'
-import { SubmitButton } from '@/components/buttons/SubmitButton'
-import { ActionStatus } from '@/types/drizzle'
-import { ErrorMessage } from '@hookform/error-message'
-import { ErrorToast } from '@/components/ErrorToast'
-import { DefaultDialogueTypes } from '@/lib/constants'
-import { Select, SelectItem, Textarea } from '@nextui-org/react'
+'use client';
+import { useEffect } from 'react';
+import { useForm, Controller, FieldPath } from 'react-hook-form';
+import { useFormState } from 'react-dom';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createDialogueAction } from '@/actions/db/dialogue';
+import { dialogueSchema } from '@/database/drizzle/validation';
+import { SubmitButton } from '@/components/buttons/SubmitButton';
+import { ActionStatus } from '@/types/drizzle';
+import { ErrorMessage } from '@hookform/error-message';
+import { ErrorToast } from '@/components/ErrorToast';
+import { DefaultDialogueTypes } from '@/lib/constants';
+import { Select, SelectItem, Textarea } from '@nextui-org/react';
 
-type Inputs = z.infer<typeof dialogueSchema>
+type Inputs = z.infer<typeof dialogueSchema>;
 export const DialogueForm = ({ npcId }: { npcId: number }) => {
   const [state, formAction] = useFormState<ActionStatus, FormData>(
     createDialogueAction,
@@ -21,7 +21,7 @@ export const DialogueForm = ({ npcId }: { npcId: number }) => {
       status: 'idle',
       message: '',
     }
-  )
+  );
 
   const {
     register,
@@ -33,22 +33,22 @@ export const DialogueForm = ({ npcId }: { npcId: number }) => {
     mode: 'onSubmit',
     criteriaMode: 'all',
     resolver: zodResolver(dialogueSchema),
-  })
+  });
 
   useEffect(() => {
-    if (state.status === 'idle') return
+    if (state.status === 'idle') return;
     if (state?.status === 'error') {
-      console.log('errors:', state.errors)
+      console.log('errors:', state.errors);
       state.errors?.forEach((error) => {
         setError(error.path as FieldPath<Inputs>, {
           message: error.message,
-        })
-      })
+        });
+      });
     }
     if (state.status === 'success') {
-      reset()
+      reset();
     }
-  }, [state, setError, reset])
+  }, [state, setError, reset]);
 
   return (
     <form className="flex flex-col gap-3 w-full items-start">
@@ -94,5 +94,5 @@ export const DialogueForm = ({ npcId }: { npcId: number }) => {
       </SubmitButton>
       {state?.status === 'error' && <ErrorToast text={state.message} />}
     </form>
-  )
-}
+  );
+};

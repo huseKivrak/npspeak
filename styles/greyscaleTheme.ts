@@ -1,4 +1,4 @@
-import { ConfigTheme } from '@nextui-org/react'
+import { ConfigTheme } from '@nextui-org/react';
 
 export const greyscaleTheme: ConfigTheme = {
   extend: 'dark',
@@ -38,4 +38,4 @@ export const greyscaleTheme: ConfigTheme = {
     warning: 'hsl(0, 0%, 40%)',
     danger: 'hsl(0, 0%, 25%)',
   },
-}
+};

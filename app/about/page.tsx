@@ -25,5 +25,5 @@ export default function AboutPage() {
       </p>
       <p>For more information or support, please contact us at</p>
     </div>
-  )
+  );
 }

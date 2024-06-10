@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { DialogueListTable } from '@/components/tables/DialogueListTable'
-import { DialogueForm } from './forms/DialogueForm'
-import { Divider } from '@nextui-org/divider'
-import { Button } from '@nextui-org/button'
-import { Tabs, Tab } from '@nextui-org/tabs'
-import { PlusIcon } from './icons'
-import { DetailedDialogue, DetailedNPC } from '@/types/drizzle'
-import { formatDialoguesForSoundboard } from '@/utils/formatHelpers'
-import { Soundboard } from './soundboard/Soundboard'
+import { useState } from 'react';
+import { DialogueListTable } from '@/components/tables/DialogueListTable';
+import { DialogueForm } from './forms/DialogueForm';
+import { Divider } from '@nextui-org/divider';
+import { Button } from '@nextui-org/button';
+import { Tabs, Tab } from '@nextui-org/tabs';
+import { PlusIcon } from './icons';
+import { DetailedDialogue, DetailedNPC } from '@/types/drizzle';
+import { formatDialoguesForSoundboard } from '@/utils/formatHelpers';
+import { Soundboard } from './soundboard/Soundboard';
 export const NPCDetail = ({
   npc,
   dialogues,
 }: {
-  npc: DetailedNPC
-  dialogues?: DetailedDialogue[]
+  npc: DetailedNPC;
+  dialogues?: DetailedDialogue[];
 }) => {
   return (
     <div className="flex flex-col w-full">
@@ -60,5 +60,5 @@ export const NPCDetail = ({
         </Tab>
       </Tabs>
     </div>
-  )
-}
+  );
+};

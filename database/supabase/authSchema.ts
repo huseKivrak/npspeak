@@ -8,8 +8,8 @@ import {
   text,
   smallint,
   pgSchema,
-} from 'drizzle-orm/pg-core'
-export const authSchema = pgSchema('auth')
+} from 'drizzle-orm/pg-core';
+export const authSchema = pgSchema('auth');
 
 /**
  * The built-in auth.users table from Supabase,
@@ -54,4 +54,4 @@ export const authUsers = authSchema.table('users', {
   reauthentication_sent_at: timestamp('reauthentication_sent_at'),
   is_sso_user: boolean('is_sso_user').notNull(), // Change 'is_sso_user' to boolean
   deleted_at: timestamp('deleted_at'),
-})
+});

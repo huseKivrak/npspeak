@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import { signInAction } from '@/actions/auth'
-import { useEffect } from 'react'
-import { useForm, FieldPath } from 'react-hook-form'
-import { useFormState } from 'react-dom'
-import Link from 'next/link'
-import { FormInput } from './FormInput'
-import { SubmitButton } from '../buttons/SubmitButton'
-import { Button } from '@nextui-org/react'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { loginSchema } from '@/database/drizzle/validation'
-import { ErrorMessage } from '@hookform/error-message'
-import { ErrorToast } from '../ErrorToast'
-import { ActionStatus } from '@/types/drizzle'
+import { signInAction } from '@/actions/auth';
+import { useEffect } from 'react';
+import { useForm, FieldPath } from 'react-hook-form';
+import { useFormState } from 'react-dom';
+import Link from 'next/link';
+import { FormInput } from './FormInput';
+import { SubmitButton } from '../buttons/SubmitButton';
+import { Button } from '@nextui-org/react';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema } from '@/database/drizzle/validation';
+import { ErrorMessage } from '@hookform/error-message';
+import { ErrorToast } from '../ErrorToast';
+import { ActionStatus } from '@/types/drizzle';
 
-type Inputs = z.infer<typeof loginSchema>
+type Inputs = z.infer<typeof loginSchema>;
 export default function LoginForm() {
   const [state, formAction] = useFormState<ActionStatus, FormData>(
     signInAction,
@@ -23,7 +23,7 @@ export default function LoginForm() {
       status: 'idle',
       message: '',
     }
-  )
+  );
   const {
     register,
     formState: { errors },
@@ -32,19 +32,19 @@ export default function LoginForm() {
     mode: 'onSubmit',
     criteriaMode: 'all',
     resolver: zodResolver(loginSchema),
-  })
+  });
 
   useEffect(() => {
-    if (state.status === 'idle') return
+    if (state.status === 'idle') return;
     if (state.status === 'error') {
-      console.error(state.errors)
+      console.error(state.errors);
       state.errors?.forEach((error) => {
         setError(error.path as FieldPath<Inputs>, {
           message: error.message,
-        })
-      })
+        });
+      });
     }
-  }, [state, setError])
+  }, [state, setError]);
 
   return (
     <form className="flex flex-col items-center gap-4">
@@ -99,5 +99,5 @@ export default function LoginForm() {
         </Link>
       </div>
     </form>
-  )
+  );
 }

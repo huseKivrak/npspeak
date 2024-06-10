@@ -13,10 +13,10 @@ import {
   primaryKey,
   real,
   jsonb,
-} from 'drizzle-orm/pg-core'
-import { sql } from 'drizzle-orm'
-import { authUsers as users } from '../supabase/authSchema'
-import { ElevenLabsVoice } from '@/types/elevenlabs'
+} from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { authUsers as users } from '../supabase/authSchema';
+import { ElevenLabsVoice } from '@/types/elevenlabs';
 
 export const campaigns = pgTable('campaigns', {
   id: serial('id').primaryKey().notNull(),
@@ -32,7 +32,7 @@ export const campaigns = pgTable('campaigns', {
   end_date: date('end_date', { mode: 'string' }),
   is_default: boolean('is_default').default(false).notNull(),
   campaign_name: varchar('campaign_name').notNull(),
-})
+});
 
 export const npcs = pgTable('npcs', {
   id: serial('id').primaryKey().notNull(),
@@ -47,7 +47,7 @@ export const npcs = pgTable('npcs', {
   description: text('description'),
   voice_id: text('voice_id'),
   is_default: boolean('is_default').default(false).notNull(),
-})
+});
 
 export const audio_clips = pgTable(
   'audio_clips',
@@ -76,9 +76,9 @@ export const audio_clips = pgTable(
       audio_clips_file_url_key: unique('audio_clips_file_url_key').on(
         table.file_url
       ),
-    }
+    };
   }
-)
+);
 
 export const npc_dialogue_types = pgTable('npc_dialogue_types', {
   id: serial('id').primaryKey().notNull(),
@@ -88,7 +88,7 @@ export const npc_dialogue_types = pgTable('npc_dialogue_types', {
     .notNull()
     .references(() => users.id, { onDelete: 'set null' }),
   is_default: boolean('is_default').default(false).notNull(),
-})
+});
 
 export const campaign_npcs = pgTable(
   'campaign_npcs',
@@ -106,9 +106,9 @@ export const campaign_npcs = pgTable(
         columns: [table.campaign_id, table.npc_id],
         name: 'campaign_npcs_pkey',
       }),
-    }
+    };
   }
-)
+);
 
 export const profiles = pgTable('profiles', {
   id: uuid('id')
@@ -120,7 +120,7 @@ export const profiles = pgTable('profiles', {
   full_name: text('full_name'),
   avatar_url: text('avatar_url'),
   website: text('website'),
-})
+});
 
 export const voice_clones = pgTable(
   'voice_clones',
@@ -147,9 +147,9 @@ export const voice_clones = pgTable(
       voice_clones_elevenlabs_voice_id_key: unique(
         'voice_clones_elevenlabs_voice_id_key'
       ).on(table.elevenlabs_voice_id),
-    }
+    };
   }
-)
+);
 
 export const npc_dialogues = pgTable('npc_dialogues', {
   id: serial('id').primaryKey().notNull(),
@@ -164,7 +164,7 @@ export const npc_dialogues = pgTable('npc_dialogues', {
     () => tts_audio.id,
     { onDelete: 'set null' }
   ),
-})
+});
 
 export const tts_audio = pgTable(
   'tts_audio',
@@ -191,9 +191,9 @@ export const tts_audio = pgTable(
       tts_audio_file_url_key: unique('tts_audio_file_url_key').on(
         table.file_url
       ),
-    }
+    };
   }
-)
+);
 
 export const voice_clone_clips = pgTable(
   'voice_clone_clips',
@@ -211,6 +211,6 @@ export const voice_clone_clips = pgTable(
         columns: [table.voice_clone_id, table.audio_clip_id],
         name: 'voice_clone_clips_pkey',
       }),
-    }
+    };
   }
-)
+);
