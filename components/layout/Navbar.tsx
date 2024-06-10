@@ -10,7 +10,7 @@ import { ThemeSwitcher } from '../buttons/ThemeSwitcher';
 
 export const Navbar = ({ children }: { children: React.ReactNode }) => {
   return (
-    <NextUINavbar shouldHideOnScroll maxWidth="lg" className="mt-4">
+    <NextUINavbar shouldHideOnScroll maxWidth="xl" isBlurred={false}>
       <NavbarContent justify="start">
         <NavbarBrand as="li" className="gap-3">
           <Link href="/" className="flex justify-start items-center">
@@ -23,7 +23,7 @@ export const Navbar = ({ children }: { children: React.ReactNode }) => {
       </NavbarContent>
       <NavbarContent justify="end">
         {children}
-        {/* <ThemeSwitcher /> */}
+        <ThemeSwitcher />
       </NavbarContent>
     </NextUINavbar>
   );
