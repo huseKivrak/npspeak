@@ -9,7 +9,8 @@
     "lint": "next lint",
     "prettier:format": "prettier --write .",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "seed": "ts-node -O \"{\\\"module\\\": \\\"commonjs\\\"}\" ./database/drizzle/seed.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.514.0",
@@ -45,6 +46,7 @@
     "zod-form-data": "^2.0.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@playwright/test": "^1.41.2",
     "@tailwindcss/typography": "^0.5.10",
     "@testing-library/jest-dom": "^6.4.5",
