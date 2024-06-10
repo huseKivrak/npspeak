@@ -1,5 +1,5 @@
 'use client'
-import { useCallback } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { DetailedDialogue, DetailedNPC } from '@/types/drizzle'
 import {
   Table,
@@ -16,6 +16,7 @@ import { DeleteModal } from '../DeleteModal'
 import { deleteDialogueAction } from '@/actions/db/dialogue'
 import { PiMicrophoneSlashBold } from 'react-icons/pi'
 import { TTSModal } from '../TTSModal'
+import { Pagination } from '@nextui-org/react'
 export const DialogueListTable = ({
   dialogues,
   voiceId,
@@ -23,6 +24,10 @@ export const DialogueListTable = ({
   dialogues: DetailedDialogue[]
   voiceId: string
 }) => {
+  const [page, setPage] = useState(1)
+  const rowsPerPage = 5
+  const pages = Math.ceil(dialogues.length / rowsPerPage)
+
   const columns = [
     { name: 'TYPE', uid: 'type' },
     { name: 'TEXT', uid: 'text' },
@@ -38,6 +43,30 @@ export const DialogueListTable = ({
     npc_id: dialogue.npc_id,
     voice_id: voiceId,
   }))
+
+  const items = useMemo(() => {
+    const start = (page - 1) * rowsPerPage
+    const end = start + rowsPerPage
+
+    return rows.slice(start, end)
+  }, [page, rows])
+
+  const bottomContent = useMemo(() => {
+    return (
+      <div className="flex w-full justify-center bg-transparent">
+        <Pagination
+          page={page}
+          total={pages}
+          onChange={setPage}
+          classNames={{
+            wrapper: 'gap-2 bg-transparent',
+            item: 'bg-transparent text-large',
+            cursor: 'text-large',
+          }}
+        />
+      </div>
+    )
+  }, [page, pages])
 
   type Dialogue = (typeof rows)[0]
   const renderCell = useCallback(
@@ -109,9 +138,7 @@ export const DialogueListTable = ({
     <Table
       isHeaderSticky
       aria-label="Dialogue Table"
-      classNames={{
-        wrapper: 'max-h-[382px] p-0 rounded-none',
-      }}
+      bottomContent={bottomContent}
     >
       <TableHeader columns={columns}>
         {(column) => (
@@ -124,7 +151,7 @@ export const DialogueListTable = ({
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody items={rows} emptyContent={'No dialogues to display.'}>
+      <TableBody items={items} emptyContent={'No dialogues to display.'}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
