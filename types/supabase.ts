@@ -229,7 +229,7 @@ export interface Database {
           id?: never
           is_default?: boolean
           npc_name: string
-          user_id?: string | null
+          user_id: string
           voice_id?: string | null
         }
         Update: {
