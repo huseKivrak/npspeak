@@ -1,7 +1,7 @@
 export default function AboutPage() {
   return (
     <div className="flex flex-col items-center px-36">
-      <h1 className="text-6xl md:text-8xl lg:text-9xl font-thin font-alagard text-primary">
+      <h1 className="text-6xl md:text-8xl lg:text-9xl font-thin font-alagard">
         About
       </h1>
       <p>
