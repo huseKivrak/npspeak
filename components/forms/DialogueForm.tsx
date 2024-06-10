@@ -51,7 +51,7 @@ export const DialogueForm = ({ npcId }: { npcId: number }) => {
   }, [state, setError, reset])
 
   return (
-    <form className="flex flex-col gap-1 w-4/5 max-w-xs items-start">
+    <form className="flex flex-col gap-3 w-full items-start">
       <input type="hidden" {...register('npc_id')} value={npcId} />
       <Controller
         name="dialogue_type_id"
@@ -59,10 +59,8 @@ export const DialogueForm = ({ npcId }: { npcId: number }) => {
         render={({ field }) => (
           <Select
             {...field}
-            label="Dialogue Type"
-            className="max-w-xs mt-4"
+            label="Type"
             variant="bordered"
-            labelPlacement="outside"
             isRequired
             {...register('dialogue_type_id')}
             items={DefaultDialogueTypes}
@@ -81,14 +79,7 @@ export const DialogueForm = ({ npcId }: { npcId: number }) => {
         name="text"
         control={control}
         render={({ field }) => (
-          <Textarea
-            {...field}
-            label="Text"
-            className="max-w-xs mt-4"
-            variant="bordered"
-            labelPlacement="outside"
-            isRequired
-          />
+          <Textarea {...field} label="Text" variant="bordered" isRequired />
         )}
       />
       <ErrorMessage errors={errors} name="text" />
