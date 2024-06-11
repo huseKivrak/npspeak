@@ -76,9 +76,9 @@ export default function LoginForm() {
         errors={errors}
         render={({ message }) => <ErrorToast text={message} />}
       />
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-4">
         <SubmitButton
-          variant="shadow"
+          variant="flat"
           formAction={formAction}
           pendingText="signing in..."
           className=" text-large tracking-wider"
@@ -87,16 +87,12 @@ export default function LoginForm() {
         >
           login
         </SubmitButton>
-        <Link href="/signup">
-          <Button
-            variant="shadow"
-            className=" text-large tracking-wider"
-            radius="sm"
-            size="lg"
-          >
-            sign up
-          </Button>
-        </Link>
+        <p className="text-2xl">
+          No account?{' '}
+          <Link href="/signup" className="underline">
+            Click here to sign up
+          </Link>
+        </p>
       </div>
     </form>
   );

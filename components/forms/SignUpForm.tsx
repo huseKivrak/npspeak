@@ -47,7 +47,7 @@ export default function SignUpForm() {
   }, [state, setError]);
 
   return (
-    <form className="flex flex-col items-center gap-2">
+    <form className="flex flex-col items-center gap-4">
       <FormInput
         isRequired
         type="email"
@@ -106,29 +106,24 @@ export default function SignUpForm() {
         name="confirm_password"
         render={({ message }) => <ErrorToast text={message} />}
       />
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-4">
         <SubmitButton
+          variant="flat"
           formAction={formAction}
           pendingText="creating account..."
           endContent={<SendEmailIcon width={24} color="white" />}
-          color="success"
           className=" text-large tracking-wider"
           radius="sm"
           size="lg"
         >
           create
         </SubmitButton>
-        <Link href="/login">
-          <Button
-            variant="shadow"
-            className=" text-large tracking-wider"
-            radius="sm"
-            size="lg"
-            color="primary"
-          >
-            login
-          </Button>
-        </Link>
+        <p className="text-2xl">
+          Have an account?{' '}
+          <Link href="/login" className="underline">
+            Click here to login.
+          </Link>
+        </p>
       </div>
     </form>
   );
