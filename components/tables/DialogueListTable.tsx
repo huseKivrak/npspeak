@@ -15,8 +15,13 @@ import { DeleteModal } from '../forms/modals/DeleteModal';
 import { deleteDialogueAction } from '@/actions/db/dialogue';
 import { PiMicrophoneSlashBold } from 'react-icons/pi';
 import { TTSModal } from '../forms/modals/TTSModal';
-import { Pagination } from '@nextui-org/react';
+import { Button, Pagination, Switch } from '@nextui-org/react';
 import { capitalize } from '@/utils/formatHelpers';
+import {
+  FaChessBoard,
+  FaMicrophoneLines,
+  FaRegTrashCan,
+} from 'react-icons/fa6';
 
 export const DialogueListTable = ({
   dialogues,
@@ -25,6 +30,8 @@ export const DialogueListTable = ({
   dialogues: DetailedDialogue[];
   voiceId: string;
 }) => {
+  const [selectMode, setSelectMode] = useState(false);
+
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
   const pages = Math.ceil(dialogues.length / rowsPerPage);
@@ -36,14 +43,20 @@ export const DialogueListTable = ({
     { name: 'ACTIONS', uid: 'actions' },
   ];
 
-  const rows = dialogues.map((dialogue) => ({
-    id: dialogue.id,
-    type: dialogue.dialogueType || 'other',
-    text: dialogue.text,
-    audio: dialogue.audioURL,
-    npc_id: dialogue.npc_id,
-    voice_id: voiceId,
-  }));
+  //formats dialogues and sorts audio to top rows
+  const rows = dialogues
+    .map((dialogue) => {
+      const { id, dialogueType, text, audioURL, npc_id } = dialogue;
+      return {
+        id,
+        type: dialogueType || 'other',
+        text,
+        audio: audioURL,
+        npc_id,
+        voice_id: voiceId,
+      };
+    })
+    .sort((a, b) => (b.audio ? 1 : 0) - (a.audio ? 1 : 0));
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -51,6 +64,27 @@ export const DialogueListTable = ({
 
     return rows.slice(start, end);
   }, [page, rows]);
+
+  const topContent = useMemo(() => {
+    return (
+      <div className="flex">
+        <Switch isSelected={selectMode} onValueChange={setSelectMode} />
+        {selectMode && (
+          <div className="flex space-x-4">
+            <Button variant="light">
+              <FaMicrophoneLines color="green" />
+            </Button>
+            <Button variant="light">
+              <FaChessBoard color="yellow" />
+            </Button>
+            <Button variant="light">
+              <FaRegTrashCan color="red" />
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  }, [selectMode]);
 
   const bottomContent = useMemo(() => {
     return (
@@ -136,7 +170,9 @@ export const DialogueListTable = ({
     <Table
       isHeaderSticky
       aria-label="Dialogue Table"
+      topContent={topContent}
       bottomContent={bottomContent}
+      selectionMode={selectMode ? 'multiple' : 'none'}
     >
       <TableHeader columns={columns}>
         {(column) => (
