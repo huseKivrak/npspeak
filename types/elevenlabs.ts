@@ -23,7 +23,7 @@ export type ElevenLabsVoice = {
     'description '?: string;
     age: string;
     gender: string;
-    use_case?: string | null;
+    use_case: string;
     'use case'?: string | null;
     featured?: string | null;
   };
@@ -48,3 +48,5 @@ export type ElevenLabsVoice = {
 };
 
 export type Label = 'accent' | 'description' | 'gender' | 'age' | 'use_case';
+
+export type LabelOptions = Record<Label, string[]>;
