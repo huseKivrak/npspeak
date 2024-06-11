@@ -1,6 +1,6 @@
 //docs - https://elevenlabs.io/docs/api-reference/
 
-import { ElevenLabsVoice, Label } from '@/types/elevenlabs';
+import { ElevenLabsVoice, Label, LabelOptions } from '@/types/elevenlabs';
 
 export const ELEVENLABS_BASE_URL = 'https://api.elevenlabs.io/v1';
 export const ELEVENLABS_API_HEADERS = {
@@ -35,7 +35,7 @@ export function normalizeLabels(voice: ElevenLabsVoice): void {
   }
 }
 
-export const ELEVENLABS_PREMADE_LABELS = [
+export const ELEVENLABS_DEFAULT_VOICE_LABELS = [
   'accent',
   'description',
   'gender',
@@ -43,49 +43,72 @@ export const ELEVENLABS_PREMADE_LABELS = [
   'use_case',
 ];
 
-//finds non-default labels
-export function findLabels(voices?: ElevenLabsVoice[]): string[] {
-  if (!Array.isArray(voices)) return ELEVENLABS_PREMADE_LABELS;
+export const getAllVoiceLabelOptions = (
+  voices: ElevenLabsVoice[]
+): LabelOptions => {
+  // Initialize the label options
+  const uniqueLabelOptions: Record<
+    Label,
+    Set<string>
+  > = ELEVENLABS_DEFAULT_VOICE_LABELS.reduce(
+    (acc, label) => {
+      acc[label as Label] = new Set();
+      return acc;
+    },
+    {} as Record<Label, Set<string>>
+  );
 
-  const uniqueLabels = voices.reduce<Set<string>>((acc, curr) => {
-    Object.keys(curr.labels).forEach((label) => acc.add(label));
-    return acc;
-  }, new Set<string>());
+  // Add all unique option values for each label
+  voices.forEach((voice) => {
+    ELEVENLABS_DEFAULT_VOICE_LABELS.forEach((label) => {
+      const value = voice.labels[label as Label];
+      if (value) uniqueLabelOptions[label as Label].add(value);
+    });
+  });
 
-  return [...uniqueLabels];
-}
+  // Convert the label options to an array
+  const allLabelOptions = {} as LabelOptions;
+  ELEVENLABS_DEFAULT_VOICE_LABELS.forEach((label) => {
+    allLabelOptions[label as Label] = Array.from(
+      uniqueLabelOptions[label as Label]
+    );
+  });
 
-export const filterByLabelValue = (
-  voices: ElevenLabsVoice[],
-  label: Label,
-  lableValue: string
-): ElevenLabsVoice[] =>
-  voices.filter((voice) => voice.labels[label] === lableValue);
-
-export const getLabelOptions = ({
-  voices,
-  label,
-}: {
-  voices: ElevenLabsVoice[];
-  label: Label;
-}) => {
-  const labelOptions: Record<string, string[]> = {
-    accent: [],
-    description: [],
-    gender: [],
-    age: [],
-    use_case: [],
-  };
-
-  for (const voice of voices) {
-    labelOptions.accent.push(voice.labels.accent);
-    labelOptions.description.push(voice.labels.description);
-    labelOptions.gender.push(voice.labels.gender);
-    labelOptions.age.push(voice.labels.age);
-
-    // @ts-ignore
-    const useCase = voice.labels.use_case || voice.labels['use case'];
-    if (useCase) labelOptions.use_case.push(useCase);
-  }
-  return labelOptions;
+  return allLabelOptions;
 };
+
+export const filterByLabelValues = (
+  voices: ElevenLabsVoice[],
+  filters: Record<Label, string>
+): ElevenLabsVoice[] => {
+  return voices.filter((voice) => {
+    return Object.entries(filters).every(([label, value]) => {
+      return value === '' || voice.labels[label as Label] === value;
+    });
+  });
+};
+
+export const getSingleLabelValues = (
+  voices: ElevenLabsVoice[],
+  labelName: Label
+): string[] => {
+  const labelSet = new Set<string>();
+
+  voices.forEach((voice) => {
+    const labelValue = voice.labels[labelName];
+    labelSet.add(labelValue);
+  });
+  return Array.from(labelSet);
+};
+
+//(Unused) Utility for finding non-default labels, in case new options are added
+// export function getAllVoiceLabels(voices?: ElevenLabsVoice[]): string[] {
+//   if (!voices) return ELEVENLABS_PREMADE_LABELS;
+
+//   const uniqueLabels = voices.reduce<Set<string>>((acc, curr) => {
+//     Object.keys(curr.labels).forEach((label) => acc.add(label));
+//     return acc;
+//   }, new Set<string>());
+
+//   return [...uniqueLabels];
+// }
