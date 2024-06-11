@@ -16,6 +16,7 @@ import { deleteDialogueAction } from '@/actions/db/dialogue';
 import { PiMicrophoneSlashBold } from 'react-icons/pi';
 import { TTSModal } from '../forms/modals/TTSModal';
 import { Pagination } from '@nextui-org/react';
+import { capitalize } from '@/utils/formatHelpers';
 
 export const DialogueListTable = ({
   dialogues,
@@ -74,7 +75,11 @@ export const DialogueListTable = ({
       switch (columnKey) {
         case 'type':
           return (
-            <Tooltip content={dialogue.type} delay={200} closeDelay={200}>
+            <Tooltip
+              content={capitalize(dialogue.type)}
+              delay={200}
+              closeDelay={200}
+            >
               <div className="flex flex-col items-center">
                 <DialogueIcon dialogueType={dialogue.type} />
               </div>

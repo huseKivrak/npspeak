@@ -1,12 +1,13 @@
 import { FormOptions } from '@/types/drizzle';
 import { IconBaseProps } from 'react-icons';
 import {
-  FaRegSmile,
-  FaRegSadCry,
+  FaRegHandshake,
   FaBook,
-  FaQuestion,
+  FaRegQuestionCircle,
   FaRegCheckCircle,
   FaExclamation,
+  FaAsterisk,
+  FaRegHandPeace,
 } from 'react-icons/fa';
 import { FaMars, FaVenus, FaMarsAndVenus } from 'react-icons/fa6';
 
@@ -40,14 +41,14 @@ export const GenderIconMap: { [key: string]: IconProps } = {
 
 export const DialogueIconMap: { [key: string]: IconProps } = {
   greeting: {
-    icon: FaRegSmile,
+    icon: FaRegHandshake,
     props: {
       size: 20,
       color: '#f7d599',
     },
   },
   farewell: {
-    icon: FaRegSadCry,
+    icon: FaRegHandPeace,
     props: {
       size: 20,
       color: '#fd7e76',
@@ -61,7 +62,7 @@ export const DialogueIconMap: { [key: string]: IconProps } = {
     },
   },
   question: {
-    icon: FaQuestion,
+    icon: FaRegQuestionCircle,
     props: {
       size: 20,
       color: '#99d7fe',
@@ -82,7 +83,7 @@ export const DialogueIconMap: { [key: string]: IconProps } = {
     },
   },
   other: {
-    icon: FaQuestion,
+    icon: FaAsterisk,
     props: {
       size: 20,
       color: '#efefef',
