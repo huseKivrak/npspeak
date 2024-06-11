@@ -10,13 +10,13 @@ import {
   TableCell,
 } from '@nextui-org/table';
 import { Tooltip } from '@nextui-org/tooltip';
-import { DeleteIcon } from '../icons';
 import { DialogueIcon } from '../icons';
 import { DeleteModal } from '../forms/modals/DeleteModal';
 import { deleteDialogueAction } from '@/actions/db/dialogue';
 import { PiMicrophoneSlashBold } from 'react-icons/pi';
 import { TTSModal } from '../forms/modals/TTSModal';
 import { Pagination } from '@nextui-org/react';
+
 export const DialogueListTable = ({
   dialogues,
   voiceId,
@@ -25,7 +25,7 @@ export const DialogueListTable = ({
   voiceId: string;
 }) => {
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
   const pages = Math.ceil(dialogues.length / rowsPerPage);
 
   const columns = [
@@ -74,11 +74,11 @@ export const DialogueListTable = ({
       switch (columnKey) {
         case 'type':
           return (
-            <div className="flex flex-col items-center">
-              <Tooltip content={dialogue.type} delay={200} closeDelay={200}>
+            <Tooltip content={dialogue.type} delay={200} closeDelay={200}>
+              <div className="flex flex-col items-center">
                 <DialogueIcon dialogueType={dialogue.type} />
-              </Tooltip>
-            </div>
+              </div>
+            </Tooltip>
           );
         case 'text':
           return (
@@ -95,7 +95,6 @@ export const DialogueListTable = ({
                 <div className="">
                   <div className="flex justify-center items-center gap-2 ">
                     <PiMicrophoneSlashBold />
-                    <p className="text-tiny">This dialogue has no audio.</p>
                   </div>
                 </div>
               )}
@@ -110,9 +109,7 @@ export const DialogueListTable = ({
                   npcId={dialogue.npc_id!}
                   dialogueId={dialogue.id}
                   text={dialogue.text}
-                >
-                  <Tooltip color="success" content="Create Audio" />
-                </TTSModal>
+                />
               )}
 
               <DeleteModal
@@ -120,11 +117,7 @@ export const DialogueListTable = ({
                 serverAction={deleteDialogueAction}
                 id={dialogue.id}
                 className=""
-              >
-                <Tooltip color="danger" content="Delete Dialogue">
-                  <DeleteIcon />
-                </Tooltip>
-              </DeleteModal>
+              />
             </div>
           );
         default:

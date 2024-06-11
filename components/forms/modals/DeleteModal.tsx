@@ -7,6 +7,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
+  Tooltip,
 } from '@nextui-org/react';
 import { ServerAction } from '@/types/drizzle';
 import { useFormState } from 'react-dom';
@@ -41,14 +42,16 @@ export function DeleteModal({
   const modalTitle = `Delete ${title}?`;
   return (
     <>
-      <Button
-        isIconOnly
-        variant="light"
-        onPress={onOpen}
-        aria-label={`Delete ${title}`}
-      >
-        <DeleteIcon className="text-secondary " />
-      </Button>
+      <Tooltip content="Delete">
+        <Button
+          isIconOnly
+          variant="light"
+          onPress={onOpen}
+          aria-label={`Delete ${title}`}
+        >
+          <DeleteIcon className="text-red-500 " />
+        </Button>
+      </Tooltip>
       <Modal
         backdrop="opaque"
         isOpen={isOpen}

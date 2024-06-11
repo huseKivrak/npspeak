@@ -7,6 +7,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
+  Tooltip,
 } from '@nextui-org/react';
 import { useFormState } from 'react-dom';
 import ttsHandler from '@/actions/ttsHandler';
@@ -34,14 +35,16 @@ export function TTSModal({
 
   return (
     <>
-      <Button
-        isIconOnly
-        variant="light"
-        onPress={onOpen}
-        aria-label="Create Dialogue Audio"
-      >
-        <PiMicrophoneBold className="text-xl text-primary" />
-      </Button>
+      <Tooltip content="Create Audio">
+        <Button
+          isIconOnly
+          variant="light"
+          onPress={onOpen}
+          aria-label="Create Dialogue Audio"
+        >
+          <PiMicrophoneBold className="text-xl text-green-500" />
+        </Button>
+      </Tooltip>
       <Modal
         backdrop="opaque"
         isOpen={isOpen}
