@@ -7,7 +7,7 @@ import { Divider } from '@nextui-org/divider';
 export const VoiceOption: React.FC<OptionProps<VoiceOptionProps, false>> = (
   props
 ) => {
-  const { label, gender, accent, description, useCase } = props.data;
+  const { label, gender, accent, description, useCase, age } = props.data;
 
   const genderIcon = GenderIcon(gender);
   const accentEmoji = getAccentEmoji(accent);
@@ -17,6 +17,7 @@ export const VoiceOption: React.FC<OptionProps<VoiceOptionProps, false>> = (
       <div className="flex gap-5 items-center">
         <span className="text-primary text-xl">{label}</span>
         {genderIcon}
+        {age && <Chip variant="flat">{age}</Chip>}
         <span className="text-2xl">{accentEmoji}</span>
         {useCase && <Chip variant="flat">{useCase}</Chip>}
         {description && <Chip variant="flat">{description}</Chip>}

@@ -8,7 +8,7 @@ interface VoiceSingleValueProps
   extends SingleValueProps<VoiceOptionProps, false> {}
 
 export const VoiceSingleValue: React.FC<VoiceSingleValueProps> = (props) => {
-  const { label, gender, accent, useCase, description } = props.data;
+  const { label, gender, accent, useCase, description, age } = props.data;
 
   const genderIcon = GenderIcon(gender);
   const accentEmoji = getAccentEmoji(accent);
@@ -18,6 +18,7 @@ export const VoiceSingleValue: React.FC<VoiceSingleValueProps> = (props) => {
       <div className="flex gap-5 items-center">
         <span className="font-bold text-secondary text-xl">{label}</span>
         {genderIcon}
+        {age && <Chip variant="flat">{age}</Chip>}
         <span className="text-2xl">{accentEmoji}</span>
         {useCase && <Chip variant="flat">{useCase}</Chip>}
         {description && <Chip variant="flat">{description}</Chip>}
