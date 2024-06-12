@@ -2,7 +2,10 @@ import { NPCForm } from '@/components/forms/NPCForm';
 import { getUserInfo } from '@/actions/auth';
 import { redirect } from 'next/navigation';
 import { getCampaignsWithNPCs } from '@/database/drizzle/queries';
-import { transformCampaignOptions } from '@/utils/helpers/formHelpers';
+import {
+  transformCampaignOptions,
+  transformVoiceOptions,
+} from '@/utils/helpers/formHelpers';
 import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
 export default async function CreateCampaignPage() {
   const { user } = await getUserInfo();
@@ -14,11 +17,13 @@ export default async function CreateCampaignPage() {
     campaignsResponse.status === 'success' ? campaignsResponse.data : [];
   const campaignOptions = campaigns ? transformCampaignOptions(campaigns) : [];
 
-  const voices = await getAllElevenLabsVoices();
-  const voiceOptions = voices.status === 'success' ? voices.data : [];
+  const voicesResponse = await getAllElevenLabsVoices();
+  const voices = voicesResponse.status === 'success' ? voicesResponse.data : [];
+  const voiceOptions = transformVoiceOptions(voices);
+
   return (
-    <div className="flex flex-col items-center">
-      <h1 className="underline">Create a new NPC</h1>
+    <div className="flex flex-col items-center gap-2">
+      <h1 className="underline">Create a New NPC</h1>
       <NPCForm campaignOptions={campaignOptions} voiceOptions={voiceOptions} />
     </div>
   );

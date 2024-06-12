@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useForm, Controller, FieldPath } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,12 +20,13 @@ import {
   transformVoiceOptions,
   VoiceOptionProps,
 } from '@/utils/helpers/formHelpers';
+import { VoiceFilter } from './VoiceFilter';
 
 type Inputs = z.infer<typeof npcSchema>;
 
 interface NPCFormProps {
   campaignOptions?: FormOptions;
-  voiceOptions: ElevenLabsVoice[];
+  voiceOptions: VoiceOptionProps[];
   npcToUpdate?: UpdateNPC;
 }
 
@@ -38,7 +39,8 @@ export const NPCForm = ({
   const [showAddCampaign, setShowAddCampaign] = useState(false);
   const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null);
   const [autoplay, setAutoplay] = useState(false);
-
+  const [filteredOptions, setFilteredOptions] =
+    useState<VoiceOptionProps[]>(voiceOptions);
   const {
     register,
     control,
@@ -57,6 +59,14 @@ export const NPCForm = ({
   });
 
   const hasCampaigns = campaignOptions && campaignOptions.length > 0;
+
+  const handleFilterChange = useCallback(
+    (filteredOptions: VoiceOptionProps[]) => {
+      console.log('filtered options in NPCForm:', filteredOptions);
+      setFilteredOptions(filteredOptions);
+    },
+    []
+  );
 
   const onSubmit = async (data: Inputs) => {
     console.log('Submitting');
@@ -91,8 +101,6 @@ export const NPCForm = ({
     console.log('field values:', getValues());
     console.log('errors:', errors);
   };
-
-  const selectOptions: VoiceOptionProps[] = transformVoiceOptions(voiceOptions);
 
   return (
     <form
@@ -132,7 +140,10 @@ export const NPCForm = ({
         name="description"
         render={({ message }) => <ErrorToast text={message} />}
       />
-
+      <VoiceFilter
+        voiceOptions={voiceOptions}
+        onFilterChange={handleFilterChange}
+      />
       <Controller
         name="voice_id"
         control={control}
@@ -151,10 +162,10 @@ export const NPCForm = ({
             }}
             placeholder="Select a voice"
             isSearchable={false}
-            options={selectOptions}
+            options={filteredOptions}
             defaultValue={
               isEditing
-                ? selectOptions.find(
+                ? filteredOptions.find(
                     (option) => npcToUpdate?.voice_id === option.value
                   )
                 : null

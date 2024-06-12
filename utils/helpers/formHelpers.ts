@@ -40,9 +40,10 @@ export type VoiceOptionProps = {
   label: string;
   value: string;
   gender: string;
+  age: string;
   accent: string;
   description: string;
-  useCase: string | undefined;
+  useCase: string;
   preview_url: string;
 };
 
@@ -54,9 +55,10 @@ export const transformVoiceOptions = (
       label: voice.name,
       value: voice.voice_id,
       gender: voice.labels.gender,
+      age: voice.labels.age,
       accent: voice.labels.accent,
       description: voice.labels.description,
-      useCase: voice.labels.use_case || undefined, //todo: fix ts error (removes null possibility)
+      useCase: voice.labels.use_case,
       preview_url: voice.preview_url,
     }))
     .sort((a, b) => a.label.localeCompare(b.label));

@@ -1,6 +1,7 @@
 //docs - https://elevenlabs.io/docs/api-reference/
 
 import { ElevenLabsVoice, Label, LabelOptions } from '@/types/elevenlabs';
+import { VoiceOptionProps } from '../helpers/formHelpers';
 
 export const ELEVENLABS_BASE_URL = 'https://api.elevenlabs.io/v1';
 export const ELEVENLABS_API_HEADERS = {
@@ -40,11 +41,11 @@ export const ELEVENLABS_DEFAULT_VOICE_LABELS = [
   'description',
   'gender',
   'age',
-  'use_case',
+  'useCase',
 ];
 
 export const getAllVoiceLabelOptions = (
-  voices: ElevenLabsVoice[]
+  voices: VoiceOptionProps[]
 ): LabelOptions => {
   // Initialize the label options
   const uniqueLabelOptions: Record<
@@ -61,7 +62,7 @@ export const getAllVoiceLabelOptions = (
   // Add all unique option values for each label
   voices.forEach((voice) => {
     ELEVENLABS_DEFAULT_VOICE_LABELS.forEach((label) => {
-      const value = voice.labels[label as Label];
+      const value = voice[label as Label];
       if (value) uniqueLabelOptions[label as Label].add(value);
     });
   });
@@ -78,24 +79,24 @@ export const getAllVoiceLabelOptions = (
 };
 
 export const filterByLabelValues = (
-  voices: ElevenLabsVoice[],
+  voices: VoiceOptionProps[],
   filters: Record<Label, string>
-): ElevenLabsVoice[] => {
-  return voices.filter((voice) => {
+): VoiceOptionProps[] => {
+  return voices.filter((voiceOption: VoiceOptionProps) => {
     return Object.entries(filters).every(([label, value]) => {
-      return value === '' || voice.labels[label as Label] === value;
+      return value === '' || voiceOption[label as Label] === value;
     });
   });
 };
 
 export const getSingleLabelValues = (
-  voices: ElevenLabsVoice[],
+  voices: VoiceOptionProps[],
   labelName: Label
 ): string[] => {
   const labelSet = new Set<string>();
 
   voices.forEach((voice) => {
-    const labelValue = voice.labels[labelName];
+    const labelValue = voice[labelName];
     labelSet.add(labelValue);
   });
   return Array.from(labelSet);

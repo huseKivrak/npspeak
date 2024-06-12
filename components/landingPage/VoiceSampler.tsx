@@ -5,16 +5,19 @@ import { useForm, Controller } from 'react-hook-form';
 import { ElevenLabsVoice } from '@/types/elevenlabs';
 import { Checkbox } from '@nextui-org/checkbox';
 import ReactSelect from 'react-select';
-import { transformVoiceOptions } from '@/utils/helpers/formHelpers';
+import { VoiceOptionProps } from '@/utils/helpers/formHelpers';
 import { VoiceOption } from '../forms/customSelect/VoiceOption';
 import { VoiceSingleValue } from '../forms/customSelect/VoiceSingleValue';
 
-export const VoiceSampler = ({ voices }: { voices: ElevenLabsVoice[] }) => {
+export const VoiceSampler = ({
+  voiceOptions,
+}: {
+  voiceOptions: VoiceOptionProps[];
+}) => {
   const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null);
   const [autoplay, setAutoplay] = useState(false);
 
   const { control } = useForm(); //just needed for VoiceSelect props
-  const selectOptions = transformVoiceOptions(voices);
 
   return (
     <div className="flex flex-col gap-2 max-w-xl text-start">
@@ -29,7 +32,7 @@ export const VoiceSampler = ({ voices }: { voices: ElevenLabsVoice[] }) => {
           <ReactSelect
             name={name}
             ref={ref}
-            options={selectOptions}
+            options={voiceOptions}
             onChange={(value) => {
               setSelectedVoiceURL(value?.preview_url ?? '');
             }}

@@ -47,6 +47,6 @@ export type ElevenLabsVoice = {
   high_quality_base_model_ids: string[];
 };
 
-export type Label = 'accent' | 'description' | 'gender' | 'age' | 'use_case';
+export type Label = 'accent' | 'description' | 'gender' | 'age' | 'useCase';
 
 export type LabelOptions = Record<Label, string[]>;
