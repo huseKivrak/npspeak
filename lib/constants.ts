@@ -118,11 +118,12 @@ export const AccentEmojiMap: { [key: string]: string } = {
   australian: '🇦🇺',
   british: '🇬🇧',
   'english-swedish': '🇬🇧/🇸🇪',
+  'british-swedish': '🇬🇧/🇸🇪',
   'american-swedish': '🇺🇸/🇸🇪',
   'american-irish': '🇺🇸/🇮🇪',
-  jolly: '🎅🏼',
   'american-southern': '🇺🇸/🤠',
   'english-italian': '🇬🇧/🇮🇹',
+  jolly: '🎅🏼',
 };
 
 export const DeleteModalMessages: { [key: string]: string } = {
