@@ -428,7 +428,7 @@ export interface Database {
   };
 }
 
-interface BasicUserInfo {
+export interface BasicUserInfo {
   id: string;
   username: string;
   lastSignIn: string | null;
