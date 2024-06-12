@@ -3,7 +3,7 @@ import { getAccentEmoji } from '@/utils/helpers/formHelpers';
 import { GenderIcon } from '@/components/icons';
 import { Chip } from '@nextui-org/chip';
 import { VoiceOptionProps } from '@/utils/helpers/formHelpers';
-
+import { Divider } from '@nextui-org/divider';
 export const VoiceOption: React.FC<OptionProps<VoiceOptionProps, false>> = (
   props
 ) => {
@@ -18,16 +18,8 @@ export const VoiceOption: React.FC<OptionProps<VoiceOptionProps, false>> = (
         <span className="text-primary text-xl">{label}</span>
         {genderIcon}
         <span className="text-2xl">{accentEmoji}</span>
-        {useCase && (
-          <Chip color="primary" variant="flat">
-            {useCase}
-          </Chip>
-        )}
-        {description && (
-          <Chip color="secondary" variant="flat">
-            {description}
-          </Chip>
-        )}
+        {useCase && <Chip variant="flat">{useCase}</Chip>}
+        {description && <Chip variant="flat">{description}</Chip>}
       </div>
     </components.Option>
   );
