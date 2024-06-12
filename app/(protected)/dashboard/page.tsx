@@ -5,7 +5,6 @@ import {
 } from '@/database/drizzle/queries';
 import { redirect } from 'next/navigation';
 import { UserDashboard } from '@/components/views/UserDashboard';
-import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
 
 export default async function UserPage({
   searchParams,
@@ -20,12 +19,10 @@ export default async function UserPage({
     campaignResponse.status === 'success' ? campaignResponse.data : [];
   const npcsResponse = await getNPCsWithRelatedData();
   const npcs = npcsResponse.status === 'success' ? npcsResponse.data : [];
-  const voiceResponse = await getAllElevenLabsVoices();
-  const voices = voiceResponse.status === 'success' ? voiceResponse.data : [];
 
   return (
     <div className="flex flex-col">
-      <UserDashboard campaigns={campaigns} npcs={npcs} voices={voices} />
+      <UserDashboard user={user} campaigns={campaigns} npcs={npcs} />
     </div>
   );
 }
