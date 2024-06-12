@@ -3,28 +3,41 @@ import { CampaignWithNPCs, DetailedNPC } from '@/types/drizzle';
 import { CampaignListTable } from '../tables/CampaignListTable';
 import { NPCListTable } from '../tables/NPCListTable';
 import { Tabs, Tab, Chip, Button } from '@nextui-org/react';
-import { useState } from 'react';
-import { NPCForm } from '../forms/NPCForm';
-import CampaignForm from '../forms/CampaignForm';
-import { ElevenLabsVoice } from '@/types/elevenlabs';
 import { PlusIcon } from '../icons';
-import {
-  transformNPCOptions,
-  transformCampaignOptions,
-} from '@/utils/helpers/formHelpers';
+import { BasicUserInfo } from '@/types/supabase';
+import Link from 'next/link';
+
 export function UserDashboard({
+  user,
   campaigns,
   npcs,
-  voices,
 }: {
+  user: BasicUserInfo;
   campaigns: CampaignWithNPCs[] | null;
   npcs: DetailedNPC[] | null;
-  voices: ElevenLabsVoice[];
 }) {
-  const npcOptions = transformNPCOptions(npcs ?? []);
-  const campaignOptions = transformCampaignOptions(campaigns ?? []);
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full space-y-4">
+      <div className="flex flex-col">
+        <h1>{user.username} Dashboard</h1>
+        <div className="flex flex-col items-start">
+          <h2 className="text-xl">Quick Actions</h2>
+          <div className="flex flex-row gap-3 tracking-wider">
+            <Link href="/npcs/create">
+              <Button size="sm" radius="sm" variant="flat">
+                <PlusIcon />
+                <span className="mb-1 ">NPC</span>
+              </Button>
+            </Link>
+            <Link href="/campaigns/create">
+              <Button size="sm" radius="sm" variant="flat">
+                <PlusIcon />
+                <span className="mb-1 ">campaign</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
       <Tabs
         aria-label="Options"
         size="lg"
