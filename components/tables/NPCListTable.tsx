@@ -11,14 +11,18 @@ import {
   TableColumn,
   TableRow,
   TableCell,
-  Chip,
   Tooltip,
   Pagination,
   SortDescriptor,
+  Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from '@nextui-org/react';
-import { DeleteIcon } from '../icons';
-import { truncateText } from '@/utils/helpers/formHelpers';
+
 import { DetailedNPC } from '@/types/drizzle';
+import { FaEdit, FaExternalLinkAlt } from 'react-icons/fa';
 
 export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
   const [filterValue, setFilterValue] = useState('');
@@ -105,27 +109,34 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
         );
       case 'campaigns':
         return (
-          <div className="flex flex-col gap-1 max-h-[100px]">
+          <div className="flex flex-col gap-1">
             {npc.campaigns.length > 0 ? (
-              npc.campaigns.map((campaign) => (
-                <Chip
-                  key={campaign.id}
-                  size="sm"
-                  color="primary"
-                  variant="flat"
-                  className="hover:underline"
-                >
-                  <Link
-                    key={campaign.id}
-                    href={`/campaigns/${campaign.id}`}
-                    className="text-tiny"
-                  >
-                    {truncateText(campaign.campaign_name, 15)}
-                  </Link>
-                </Chip>
-              ))
+              <Dropdown
+                classNames={{
+                  content: 'border border-default',
+                }}
+              >
+                <DropdownTrigger>
+                  <Button variant="light" size="sm">
+                    {npc.campaigns.length} Campaigns{' '}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu>
+                  {npc.campaigns.map((campaign) => (
+                    <DropdownItem key={campaign.id}>
+                      <Link
+                        href={`/campaigns/${campaign.id}`}
+                        className="flex items-center gap-1 text-sm"
+                      >
+                        {campaign.campaign_name}
+                        <FaExternalLinkAlt />
+                      </Link>
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
             ) : (
-              <p className="text-tiny">No campaigns</p>
+              <p className="text-tiny"> No NPCs</p>
             )}
           </div>
         );
@@ -139,16 +150,18 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
         );
       case 'actions':
         return (
-          <div className="relative flex justify-center gap-2">
+          <div className="relative flex items-center gap-2">
+            <Tooltip content="Edit NPC">
+              <Link href={`/npcs/${npc.id}/edit`}>
+                <FaEdit />
+              </Link>
+            </Tooltip>
+
             <DeleteModal
               idName="npc_id"
               serverAction={deleteNPCAction}
               id={npc.id}
-            >
-              <Tooltip color="danger" content="Delete NPC">
-                <DeleteIcon className="text-secondary" />
-              </Tooltip>
-            </DeleteModal>
+            />
           </div>
         );
       default:
