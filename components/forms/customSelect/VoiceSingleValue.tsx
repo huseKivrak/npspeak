@@ -19,16 +19,8 @@ export const VoiceSingleValue: React.FC<VoiceSingleValueProps> = (props) => {
         <span className="font-bold text-secondary text-xl">{label}</span>
         {genderIcon}
         <span className="text-2xl">{accentEmoji}</span>
-        {useCase && (
-          <Chip color="primary" variant="flat">
-            {useCase}
-          </Chip>
-        )}
-        {description && (
-          <Chip color="secondary" variant="flat">
-            {description}
-          </Chip>
-        )}
+        {useCase && <Chip variant="flat">{useCase}</Chip>}
+        {description && <Chip variant="flat">{description}</Chip>}
       </div>
     </components.SingleValue>
   );
