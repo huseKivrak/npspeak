@@ -25,6 +25,7 @@ export type ElevenLabsVoice = {
     gender: string;
     use_case: string;
     'use case'?: string | null;
+    usecase?: string | null;
     featured?: string | null;
   };
 

@@ -23,19 +23,23 @@ export const audioFormats = {
 };
 
 /**
- * Normalizes any 'use case' labels to 'use_case'.
- * ! Modifies the voice object in place.
+ * Normalizes any 'use case' and 'usecase' labels to 'use_case',
+ * and trims 'description ' label found in some voices.
+ * ! Modifies the voice object in place; Called after fetching all voices.
  */
 export function normalizeLabels(voice: ElevenLabsVoice): void {
   if (voice.labels['use case']) {
     voice.labels.use_case = voice.labels['use case'];
     delete voice.labels['use case'];
-  } else if (voice.labels['description ']) {
+  } else if (voice.labels['usecase']) {
+    voice.labels.use_case = voice.labels['usecase'];
+    delete voice.labels['usecase'];
+  }
+  if (voice.labels['description ']) {
     voice.labels.description = voice.labels['description '];
     delete voice.labels['description '];
   }
 }
-
 export const ELEVENLABS_DEFAULT_VOICE_LABELS = [
   'accent',
   'description',

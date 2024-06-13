@@ -17,7 +17,8 @@ export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
     });
     const data = await response.json();
     const allVoices: ElevenLabsVoice[] = data.voices;
-    allVoices.forEach(normalizeLabels);
+    allVoices.forEach((voice) => normalizeLabels(voice));
+
     return {
       status: 'success',
       message: 'Retrieved all voices',
