@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { getUserInfo } from '@/actions/auth';
 import {
   getDetailedDialogues,
@@ -7,7 +7,7 @@ import {
 import { getPresignedDownloadURL } from '@/actions/s3';
 import { DetailedNPC, DetailedDialogue } from '@/types/drizzle';
 import { NPCDetail } from '@/components/views/NPCDetail';
-
+import UnauthorizedError from '@/components/UnauthorizedError';
 export default async function NPCDetailPage({
   params,
 }: {
@@ -19,10 +19,13 @@ export default async function NPCDetailPage({
   if (!user) return redirect('/login');
 
   const npcResponse = await getNPCsWithRelatedData(params.npcId);
-  if (npcResponse.status !== 'success') return redirect('/npcs/404');
+  if (npcResponse.status !== 'success') notFound();
 
   const npc: DetailedNPC = npcResponse.data;
-  if (npc.user_id !== user.id) return redirect('/unauthorized');
+  if (npc.user_id !== user.id)
+    return (
+      <UnauthorizedError resource="NPC" returnURL="/npcs" returnLabel="NPCs" />
+    );
 
   const dialogueResponse = await getDetailedDialogues(npc.id);
   if (dialogueResponse.status !== 'success')
