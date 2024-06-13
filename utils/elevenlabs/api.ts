@@ -24,7 +24,8 @@ export const audioFormats = {
 
 /**
  * Normalizes any 'use case' and 'usecase' labels to 'use_case',
- * and trims 'description ' label found in some voices.
+ * trims 'description ' label found in some voices,
+ * and normalizes all 'middle aged' labels to 'middle-aged'.
  * ! Modifies the voice object in place; Called after fetching all voices.
  */
 export function normalizeLabels(voice: ElevenLabsVoice): void {
@@ -38,6 +39,9 @@ export function normalizeLabels(voice: ElevenLabsVoice): void {
   if (voice.labels['description ']) {
     voice.labels.description = voice.labels['description '];
     delete voice.labels['description '];
+  }
+  if (voice.labels.age === 'middle aged') {
+    voice.labels.age = 'middle-aged';
   }
 }
 export const ELEVENLABS_DEFAULT_VOICE_LABELS = [
