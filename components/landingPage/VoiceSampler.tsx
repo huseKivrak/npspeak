@@ -14,7 +14,9 @@ export const VoiceSampler = ({
 }: {
   voiceOptions: VoiceOptionProps[];
 }) => {
-  const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null);
+  const [selectedVoiceSampleURL, setSelectedVoiceSampleURL] = useState<
+    string | null
+  >(null);
   const [autoplay, setAutoplay] = useState(false);
 
   const { control } = useForm(); //just needed for VoiceSelect props
@@ -34,7 +36,7 @@ export const VoiceSampler = ({
             ref={ref}
             options={voiceOptions}
             onChange={(value) => {
-              setSelectedVoiceURL(value?.preview_url ?? '');
+              setSelectedVoiceSampleURL(value?.sampleURL ?? '');
             }}
             components={{
               Option: VoiceOption,
@@ -48,7 +50,11 @@ export const VoiceSampler = ({
       />
 
       <div className="flex mt-2 space-x-4">
-        <audio src={selectedVoiceURL ?? ''} controls autoPlay={autoplay} />
+        <audio
+          src={selectedVoiceSampleURL ?? ''}
+          controls
+          autoPlay={autoplay}
+        />
         <Checkbox
           isSelected={autoplay}
           onValueChange={setAutoplay}

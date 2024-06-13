@@ -44,7 +44,7 @@ export type VoiceOptionProps = {
   accent: string;
   description: string;
   useCase: string;
-  preview_url: string;
+  sampleURL: string;
 };
 
 export const transformVoiceOptions = (
@@ -59,7 +59,7 @@ export const transformVoiceOptions = (
       accent: voice.labels.accent,
       description: voice.labels.description,
       useCase: voice.labels.use_case,
-      preview_url: voice.preview_url,
+      sampleURL: voice.preview_url,
     }))
     .sort((a, b) => a.label.localeCompare(b.label));
 };
