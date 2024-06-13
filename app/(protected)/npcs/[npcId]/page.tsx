@@ -5,13 +5,9 @@ import {
   getNPCsWithRelatedData,
 } from '@/database/drizzle/queries';
 import { getPresignedDownloadURL } from '@/actions/s3';
-import {
-  DetailedNPC,
-  DetailedDialogue,
-  SoundboardDialogue,
-} from '@/types/drizzle';
+import { DetailedNPC, DetailedDialogue } from '@/types/drizzle';
 import { NPCDetail } from '@/components/views/NPCDetail';
-import { formatDialoguesForSoundboard } from '@/utils/formatHelpers';
+
 export default async function NPCDetailPage({
   params,
 }: {
@@ -23,32 +19,27 @@ export default async function NPCDetailPage({
   if (!user) return redirect('/login');
 
   const npcResponse = await getNPCsWithRelatedData(params.npcId);
-  const npc: DetailedNPC =
-    npcResponse.status === 'success' ? npcResponse.data : [];
-  if (npc.user_id !== user.id) return <p>Unauthorized</p>;
-  if (!npc) return <p>NPC not found</p>;
+  if (npcResponse.status !== 'success') return redirect('/npcs/404');
+
+  const npc: DetailedNPC = npcResponse.data;
+  if (npc.user_id !== user.id) return redirect('/unauthorized');
 
   const dialogueResponse = await getDetailedDialogues(npc.id);
-  const dialogues =
-    dialogueResponse.status === 'success' ? dialogueResponse.data : [];
+  if (dialogueResponse.status !== 'success')
+    return <p>{dialogueResponse.message}</p>;
+  const npcDialogues: DetailedDialogue[] = dialogueResponse.data;
 
-  await Promise.all(
-    dialogues.map(async (d: DetailedDialogue) => {
-      try {
-        const fileKey = d.audioFileKey;
-        if (!fileKey) return;
+  const dialoguesWithAudio = npcDialogues.map(async (d) => {
+    if (!d.audioFileKey) return d;
+    const response = await getPresignedDownloadURL(d.audioFileKey);
+    d.audioURL = response.status === 'success' ? response.data : null;
+    return d;
+  });
 
-        const response = await getPresignedDownloadURL(fileKey);
-        if (response.status === 'success') {
-          return (d.audioURL = response.data);
-        } else {
-          return (d.audioURL = null);
-        }
-      } catch (error) {
-        console.error(error);
-        return;
-      }
-    })
-  );
+  //todo: handle rejecteds?
+  const dialogues = (await Promise.allSettled(dialoguesWithAudio))
+    .filter((d) => d.status === 'fulfilled')
+    .map((d) => d.value);
+
   return <NPCDetail npc={npc} dialogues={dialogues} />;
 }
