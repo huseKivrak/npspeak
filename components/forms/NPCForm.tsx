@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useForm, Controller, FieldPath } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,13 +14,8 @@ import { PlusIcon } from '../icons';
 import { ErrorMessage } from '@hookform/error-message';
 import { ErrorToast } from '@/components/ErrorToast';
 import { FormOptions, UpdateNPC } from '@/types/drizzle';
-import { ElevenLabsVoice } from '@/types/elevenlabs';
 import { FormInput } from './FormInput';
-import {
-  transformVoiceOptions,
-  VoiceOptionProps,
-} from '@/utils/helpers/formHelpers';
-import { VoiceFilter } from './VoiceFilter';
+import { VoiceOptionProps } from '@/utils/helpers/formHelpers';
 
 type Inputs = z.infer<typeof npcSchema>;
 
@@ -59,14 +54,6 @@ export const NPCForm = ({
   });
 
   const hasCampaigns = campaignOptions && campaignOptions.length > 0;
-
-  const handleFilterChange = useCallback(
-    (filteredOptions: VoiceOptionProps[]) => {
-      console.log('filtered options in NPCForm:', filteredOptions);
-      setFilteredOptions(filteredOptions);
-    },
-    []
-  );
 
   const onSubmit = async (data: Inputs) => {
     console.log('Submitting');
@@ -140,10 +127,6 @@ export const NPCForm = ({
         name="description"
         render={({ message }) => <ErrorToast text={message} />}
       />
-      <VoiceFilter
-        voiceOptions={voiceOptions}
-        onFilterChange={handleFilterChange}
-      />
       <Controller
         name="voice_id"
         control={control}
@@ -154,7 +137,7 @@ export const NPCForm = ({
             ref={ref}
             onChange={(value) => {
               onChange(value?.value);
-              setSelectedVoiceURL(value?.preview_url ?? '');
+              setSelectedVoiceURL(value?.sampleURL ?? '');
             }}
             components={{
               Option: VoiceOption,
