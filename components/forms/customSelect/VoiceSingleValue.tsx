@@ -18,8 +18,8 @@ export const VoiceSingleValue: React.FC<VoiceSingleValueProps> = (props) => {
       <div className="flex gap-5 items-center">
         <span className="font-bold text-secondary text-xl">{label}</span>
         {genderIcon}
-        {age && <Chip variant="flat">{age}</Chip>}
         <span className="text-2xl">{accentEmoji}</span>
+        {age && <Chip variant="flat">{age}</Chip>}
         {useCase && <Chip variant="flat">{useCase}</Chip>}
         {description && <Chip variant="flat">{description}</Chip>}
       </div>
