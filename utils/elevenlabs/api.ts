@@ -1,7 +1,11 @@
 //docs - https://elevenlabs.io/docs/api-reference/
 
-import { ElevenLabsVoice, Label, LabelOptions } from '@/types/elevenlabs';
-import { VoiceOptionProps } from '../helpers/formHelpers';
+import {
+  ElevenLabsVoice,
+  LabelOptions,
+  NormalizedLabel,
+} from '@/types/elevenlabs';
+import { VoiceOptionProps } from '@/types/elevenlabs';
 
 export const ELEVENLABS_BASE_URL = 'https://api.elevenlabs.io/v1';
 export const ELEVENLABS_API_HEADERS = {
@@ -23,63 +27,87 @@ export const audioFormats = {
 };
 
 /**
- * Normalizes any 'use case' and 'usecase' labels to 'use_case',
- * trims 'description ' label found in some voices,
- * and normalizes all 'middle aged' labels to 'middle-aged'.
- * ! Modifies the voice object in place; Called after fetching all voices.
+ * Transforms and normalizes the labels for the voice options.
+ * @param voice - The voice object to transform and normalize.
+ * @returns The transformed and normalized voice object.
  */
-export function normalizeLabels(voice: ElevenLabsVoice): void {
-  if (voice.labels['use case']) {
-    voice.labels.use_case = voice.labels['use case'];
-    delete voice.labels['use case'];
-  } else if (voice.labels['usecase']) {
-    voice.labels.use_case = voice.labels['usecase'];
-    delete voice.labels['usecase'];
-  }
-  if (voice.labels['description ']) {
-    voice.labels.description = voice.labels['description '];
-    delete voice.labels['description '];
-  }
-  if (voice.labels.age === 'middle aged') {
-    voice.labels.age = 'middle-aged';
-  }
+export function transformAndNormalizeLabels(
+  voice: ElevenLabsVoice
+): VoiceOptionProps {
+  const labelMap: Record<string, NormalizedLabel> = {
+    'use case': 'useCase',
+    usecase: 'useCase',
+    use_case: 'useCase',
+    accent: 'accent',
+    description: 'description',
+    age: 'age',
+    gender: 'gender',
+  };
+
+  const normalizedLabels: Partial<Record<NormalizedLabel, string>> = {
+    accent: '',
+    description: '',
+    age: '',
+    gender: '',
+    useCase: '',
+  };
+
+  //Normalize and trim labels/values
+  Object.entries(voice.labels).forEach(([label, value]) => {
+    const trimmedLabel = label.trim();
+    const normalizedLabel = labelMap[trimmedLabel] || trimmedLabel;
+    if (normalizedLabel) {
+      let trimmedValue = value ? value.trim() : '';
+      if (normalizedLabel === 'age' && trimmedValue === 'middle aged') {
+        trimmedValue = 'middle-aged';
+      }
+      normalizedLabels[normalizedLabel] = trimmedValue;
+    }
+  });
+
+  //Transform voice object into a format more usable in ReactSelect components
+  const transformedVoice: VoiceOptionProps = {
+    label: voice.name,
+    value: voice.voice_id,
+    gender: normalizedLabels.gender || '',
+    age: normalizedLabels.age || '',
+    accent: normalizedLabels.accent || '',
+    description: normalizedLabels.description || '',
+    useCase: normalizedLabels.useCase || '',
+    sampleURL: voice.preview_url,
+  };
+  return transformedVoice;
 }
-export const ELEVENLABS_DEFAULT_VOICE_LABELS = [
-  'accent',
-  'description',
-  'gender',
-  'age',
-  'useCase',
-];
 
 export const getAllVoiceLabelOptions = (
   voices: VoiceOptionProps[]
 ): LabelOptions => {
+  const labelOptions = ['accent', 'description', 'gender', 'age', 'useCase'];
   // Initialize the label options
   const uniqueLabelOptions: Record<
-    Label,
+    NormalizedLabel,
     Set<string>
-  > = ELEVENLABS_DEFAULT_VOICE_LABELS.reduce(
+  > = labelOptions.reduce(
     (acc, label) => {
-      acc[label as Label] = new Set();
+      acc[label as NormalizedLabel] = new Set();
       return acc;
     },
-    {} as Record<Label, Set<string>>
+    {} as Record<NormalizedLabel, Set<string>>
   );
 
   // Add all unique option values for each label
   voices.forEach((voice) => {
-    ELEVENLABS_DEFAULT_VOICE_LABELS.forEach((label) => {
-      const value = voice[label as Label];
-      if (value) uniqueLabelOptions[label as Label].add(value);
+    labelOptions.forEach((label) => {
+      const value = voice[label as NormalizedLabel];
+      if (value) uniqueLabelOptions[label as NormalizedLabel].add(value);
     });
   });
 
   // Convert the label options to an array
   const allLabelOptions = {} as LabelOptions;
-  ELEVENLABS_DEFAULT_VOICE_LABELS.forEach((label) => {
-    allLabelOptions[label as Label] = Array.from(
-      uniqueLabelOptions[label as Label]
+  labelOptions.forEach((label) => {
+    allLabelOptions[label as NormalizedLabel] = Array.from(
+      uniqueLabelOptions[label as NormalizedLabel]
     );
   });
 
@@ -88,18 +116,18 @@ export const getAllVoiceLabelOptions = (
 
 export const filterByLabelValues = (
   voices: VoiceOptionProps[],
-  filters: Record<Label, string>
+  filters: Record<NormalizedLabel, string>
 ): VoiceOptionProps[] => {
   return voices.filter((voiceOption: VoiceOptionProps) => {
     return Object.entries(filters).every(([label, value]) => {
-      return value === '' || voiceOption[label as Label] === value;
+      return value === '' || voiceOption[label as NormalizedLabel] === value;
     });
   });
 };
 
 export const getSingleLabelValues = (
   voices: VoiceOptionProps[],
-  labelName: Label
+  labelName: NormalizedLabel
 ): string[] => {
   const labelSet = new Set<string>();
 

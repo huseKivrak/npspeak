@@ -4,7 +4,6 @@ import { VoiceSampler } from '@/components/landingPage/VoiceSampler';
 import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
 import { WorkflowAccordian } from '@/components/landingPage/WorkflowAccordian';
 import { Hero } from '@/components/landingPage/Hero';
-import { transformVoiceOptions } from '@/utils/helpers/formHelpers';
 
 export default async function Index({
   searchParams,
@@ -19,7 +18,6 @@ export default async function Index({
   const voiceResponse = await getAllElevenLabsVoices();
   const voices = voiceResponse.status === 'success' ? voiceResponse.data : [];
   const voiceSample = voices.slice(0, 12);
-  const voiceOptions = transformVoiceOptions(voiceSample);
   return (
     <div className="flex flex-col items-center text-center gap-12">
       {searchParams?.message === 'logout' && (
@@ -29,7 +27,7 @@ export default async function Index({
       )}
       <Hero />
       {/* <WorkflowAccordian /> */}
-      {voices && <VoiceSampler voiceOptions={voiceOptions} />}
+      {voices && <VoiceSampler voiceOptions={voiceSample} />}
     </div>
   );
 }

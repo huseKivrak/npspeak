@@ -1,7 +1,6 @@
 import { CampaignWithNPCs, DetailedNPC } from '@/types/drizzle';
 import { Tables } from '@/types/supabase';
 import { AccentEmojiMap } from '@/lib/constants';
-import { ElevenLabsVoice } from '@/types/elevenlabs';
 
 export const transformCampaignOptions = (campaigns: CampaignWithNPCs[]) => {
   return campaigns.map((campaign) => ({
@@ -36,30 +35,9 @@ export const truncateText = (text: string, length: number) => {
   return text;
 };
 
-export type VoiceOptionProps = {
-  label: string;
-  value: string;
-  gender: string;
-  age: string;
-  accent: string;
-  description: string;
-  useCase: string;
-  sampleURL: string;
-};
-
-export const transformVoiceOptions = (
-  voiceOptions: ElevenLabsVoice[]
-): VoiceOptionProps[] => {
-  return voiceOptions
-    .map((voice) => ({
-      label: voice.name,
-      value: voice.voice_id,
-      gender: voice.labels.gender,
-      age: voice.labels.age,
-      accent: voice.labels.accent,
-      description: voice.labels.description,
-      useCase: voice.labels.use_case,
-      sampleURL: voice.preview_url,
-    }))
-    .sort((a, b) => a.label.localeCompare(b.label));
+export const voiceMatchesFilter = (
+  selectedFilters: string[],
+  voiceLabel: string
+) => {
+  return selectedFilters.length === 0 || selectedFilters.includes(voiceLabel);
 };

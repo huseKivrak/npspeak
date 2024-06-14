@@ -48,6 +48,22 @@ export type ElevenLabsVoice = {
   high_quality_base_model_ids: string[];
 };
 
-export type Label = 'accent' | 'description' | 'gender' | 'age' | 'useCase';
+export type NormalizedLabel =
+  | 'accent'
+  | 'description'
+  | 'gender'
+  | 'age'
+  | 'useCase';
 
-export type LabelOptions = Record<Label, string[]>;
+export type LabelOptions = Record<NormalizedLabel, string[]>;
+
+export type VoiceOptionProps = {
+  label: string;
+  value: string;
+  gender: string;
+  age: string;
+  accent: string;
+  description: string;
+  useCase: string;
+  sampleURL: string;
+};

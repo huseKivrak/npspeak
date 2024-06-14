@@ -3,8 +3,9 @@
 import {
   ELEVENLABS_BASE_URL,
   ELEVENLABS_API_HEADERS,
+  transformAndNormalizeLabels,
 } from '../utils/elevenlabs/api';
-import { normalizeLabels } from '../utils/elevenlabs/api';
+
 import { ElevenLabsVoice } from '@/types/elevenlabs';
 import { ActionStatus } from '@/types/drizzle';
 
@@ -17,12 +18,14 @@ export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
     });
     const data = await response.json();
     const allVoices: ElevenLabsVoice[] = data.voices;
-    allVoices.forEach((voice) => normalizeLabels(voice));
+    const normalizedVoices = allVoices.map((voice) =>
+      transformAndNormalizeLabels(voice)
+    );
 
     return {
       status: 'success',
       message: 'Retrieved all voices',
-      data: allVoices,
+      data: normalizedVoices,
     };
   } catch (error) {
     console.error(error);
@@ -42,8 +45,12 @@ export async function getElevenLabsVoiceInfo(
       }
     );
     const data = await response.json();
-    normalizeLabels(data);
-    return { status: 'success', message: 'Retrieved voice info', data };
+    const normalizedVoice = transformAndNormalizeLabels(data);
+    return {
+      status: 'success',
+      message: 'Retrieved voice info',
+      data: normalizedVoice,
+    };
   } catch (error) {
     console.error(error);
     return { status: 'error', message: `Error: ${error}` };
