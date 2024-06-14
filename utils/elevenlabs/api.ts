@@ -79,6 +79,14 @@ export function transformAndNormalizeLabels(
   return transformedVoice;
 }
 
+export const transformAndNormalizeAllVoices = (
+  voices: ElevenLabsVoice[]
+): VoiceOptionProps[] => {
+  return voices
+    .map(transformAndNormalizeLabels)
+    .sort((a, b) => a.label.localeCompare(b.label));
+};
+
 export const getAllVoiceLabelOptions = (
   voices: VoiceOptionProps[]
 ): LabelOptions => {

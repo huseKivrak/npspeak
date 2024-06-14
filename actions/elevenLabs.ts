@@ -3,6 +3,7 @@
 import {
   ELEVENLABS_BASE_URL,
   ELEVENLABS_API_HEADERS,
+  transformAndNormalizeAllVoices,
   transformAndNormalizeLabels,
 } from '../utils/elevenlabs/api';
 
@@ -18,9 +19,7 @@ export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
     });
     const data = await response.json();
     const allVoices: ElevenLabsVoice[] = data.voices;
-    const normalizedVoices = allVoices.map((voice) =>
-      transformAndNormalizeLabels(voice)
-    );
+    const normalizedVoices = transformAndNormalizeAllVoices(allVoices);
 
     return {
       status: 'success',
