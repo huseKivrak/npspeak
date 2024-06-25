@@ -10,8 +10,11 @@ export async function GET(request: Request) {
   if (code) {
     const cookieStore = cookies();
     const supabase = createClientOnServer(cookieStore);
-    await supabase.auth.exchangeCodeForSession(code);
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error) {
+      return NextResponse.redirect(`${origin}/dashboard`);
+    }
   }
 
-  return NextResponse.redirect(`${origin}/dashboard`);
+  return NextResponse.redirect(`${origin}/login?message=auth-code-error`);
 }
