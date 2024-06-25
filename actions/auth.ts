@@ -118,6 +118,49 @@ export const signInAction = async (
   redirect(`/`);
 };
 
+export const signInWithGithub = async () => {
+  const origin = headers().get('origin');
+
+  const cookieStore = cookies();
+  const supabase = createClientOnServer(cookieStore);
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'github',
+    options: {
+      redirectTo: `${origin}/auth/callback`,
+    },
+  });
+  if (error) {
+    console.error('Sign in with GitHub error:', error);
+    redirect('/?message=github-error');
+  }
+
+  if (data.url) {
+    redirect(data.url);
+  }
+};
+
+export const signInWithDiscord = async () => {
+  const origin = headers().get('origin');
+
+  const cookieStore = cookies();
+  const supabase = createClientOnServer(cookieStore);
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'discord',
+    options: {
+      redirectTo: `${origin}/auth/callback`,
+    },
+  });
+  if (error) {
+    console.error('Sign in with Discord error:', error);
+    redirect('/?message=discord-error');
+  }
+  if (data.url) {
+    redirect(data.url);
+  }
+};
+
 export const logoutAction = async () => {
   const cookieStore = cookies();
   const supabase = createClientOnServer(cookieStore);
