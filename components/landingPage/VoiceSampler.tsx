@@ -2,10 +2,9 @@
 
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { ElevenLabsVoice } from '@/types/elevenlabs';
 import { Checkbox } from '@nextui-org/checkbox';
 import ReactSelect from 'react-select';
-import { VoiceOptionProps } from '@/utils/helpers/formHelpers';
+import { VoiceOptionProps } from '@/types/elevenlabs';
 import { VoiceOption } from '../forms/customSelect/VoiceOption';
 import { VoiceSingleValue } from '../forms/customSelect/VoiceSingleValue';
 
