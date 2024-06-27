@@ -2,7 +2,7 @@
 import { CampaignWithNPCs, DetailedNPC } from '@/types/drizzle';
 import { CampaignListTable } from '../tables/CampaignListTable';
 import { NPCListTable } from '../tables/NPCListTable';
-import { Tabs, Tab, Chip, Button } from '@nextui-org/react';
+import { Tabs, Tab, Chip, Button, Divider } from '@nextui-org/react';
 import { PlusIcon } from '../icons';
 import { BasicUserInfo } from '@/types/supabase';
 import Link from 'next/link';
@@ -20,8 +20,8 @@ export function UserDashboard({
     <div className="flex flex-col w-full space-y-4">
       <div className="flex flex-col">
         <h1>{user.username} Dashboard</h1>
+        <Divider className="my-2" />
         <div className="flex flex-col items-start">
-          <h2 className="text-xl">Quick Actions</h2>
           <div className="flex flex-row gap-3 tracking-wider">
             <Link href="/npcs/create">
               <Button size="sm" radius="sm" variant="flat">
