@@ -10,8 +10,8 @@ import {
   Checkbox,
   Textarea,
   Button,
-  Spacer,
   Input,
+  Divider,
 } from '@nextui-org/react';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
 import ReactSelect from 'react-select';
@@ -21,8 +21,9 @@ import { PlusIcon } from '../icons';
 import { ErrorMessage } from '@hookform/error-message';
 import { ErrorToast } from '@/components/ErrorToast';
 import { FormOptions, UpdateNPC } from '@/types/drizzle';
-import { VoiceFilterForm } from './customSelect/VoiceLabelFilter';
+import { VoiceLabelFilter } from './customSelect/VoiceLabelFilter';
 import { VoiceOptionProps } from '@/types/elevenlabs';
+import { VoiceTipsModal } from './modals/VoiceTipsModal';
 
 type Inputs = z.infer<typeof npcSchema>;
 
@@ -38,9 +39,9 @@ export const NPCForm = ({
   npcToUpdate,
 }: NPCFormProps) => {
   const isEditing = Boolean(npcToUpdate);
-  const [showAddCampaign, setShowAddCampaign] = useState(false);
+
   const [selectedVoiceURL, setSelectedVoiceURL] = useState<string | null>(null);
-  const [autoplay, setAutoplay] = useState(false);
+  const [autoplay, setAutoplay] = useState(true);
   const [filteredOptions, setFilteredOptions] =
     useState<VoiceOptionProps[]>(voiceOptions);
   const {
@@ -102,15 +103,10 @@ export const NPCForm = ({
 
   return (
     <div className="flex w-full">
-      <VoiceFilterForm
-        voiceOptions={voiceOptions}
-        onFilterChange={handleFilteredOptions}
-      />
-      <Spacer x={12} />
       <form
         id="npc-form"
         onSubmit={handleSubmit(onSubmit, onInvalid)}
-        className="flex flex-col gap-8 w-full max-w-lg border rounded-3xl p-4"
+        className="flex flex-col gap-4 w-full border rounded-3xl p-4"
       >
         {errors.root?.serverError && (
           <ErrorToast text={errors.root.serverError.message!} />
@@ -124,6 +120,8 @@ export const NPCForm = ({
           defaultValue={npcToUpdate?.npc_name}
           placeholder="what are they called?"
           variant="bordered"
+          labelPlacement="outside"
+          className="w-full max-w-xl"
         />
         <ErrorMessage
           errors={errors}
@@ -137,8 +135,9 @@ export const NPCForm = ({
           defaultValue={npcToUpdate?.description}
           placeholder="describe your NPC"
           variant="bordered"
-          className=" text-2xl"
-          minRows={4}
+          labelPlacement="outside"
+          minRows={3}
+          className="w-full max-w-xl"
         />
         <ErrorMessage
           errors={errors}
@@ -146,62 +145,16 @@ export const NPCForm = ({
           render={({ message }) => <ErrorToast text={message} />}
         />
 
-        <Controller
-          name="voice_id"
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { name, ref, onChange } }) => (
-            <ReactSelect
-              name={name}
-              ref={ref}
-              onChange={(value) => {
-                onChange(value?.value);
-                setSelectedVoiceURL(value?.sampleURL ?? '');
-              }}
-              components={{
-                Option: VoiceOption,
-                SingleValue: VoiceSingleValue,
-              }}
-              placeholder="Select a voice"
-              isSearchable={false}
-              options={filteredOptions}
-              defaultValue={null}
-            />
-          )}
-        />
-
-        <div className="flex items-center my-4 gap-6">
-          <span className="text-secondary font-semibold">Voice Preview:</span>
-          <audio src={selectedVoiceURL ?? ''} controls autoPlay={autoplay} />
-          <Checkbox
-            isSelected={autoplay}
-            onValueChange={setAutoplay}
-            color="success"
-            radius="full"
-            size="lg"
-          >
-            Autoplay
-          </Checkbox>
-        </div>
         {hasCampaigns && (
-          <Button
-            onClick={() => setShowAddCampaign(!showAddCampaign)}
-            variant="flat"
-            color="primary"
-            startContent={showAddCampaign ? '' : <PlusIcon />}
-          >
-            {showAddCampaign ? 'cancel' : 'campaign(s)'}
-          </Button>
-        )}
-        {showAddCampaign && hasCampaigns && (
           <Controller
             name="campaign_ids"
             control={control}
             render={({ field: { ref } }) => (
               <CheckboxGroup
-                label="campaigns"
                 name="campaign_ids"
-                orientation="horizontal"
+                label="Add to Campaign(s)"
+                orientation="vertical"
+                radius="full"
                 ref={ref}
               >
                 {campaignOptions.map((option) => (
@@ -220,14 +173,93 @@ export const NPCForm = ({
           />
         )}
 
+        <Divider className="my-2" />
+
+        <div className="flex w-full">
+          <div className="flex flex-col w-1/3 gap-3 tracking-wider text-medium">
+            <div className="flex  flex-col gap-2 text-large">
+              <h3 className="underline underline-offset-4 font-semibold">
+                Voice Selection:
+              </h3>
+              <p>Find the perfect voice for your character!</p>
+            </div>
+            <ul className="list-disc list-inside ">
+              <li>
+                Browse all voices below or use the filter to search by tag.
+              </li>
+              <li>Listen to some sample audio using the voice preview.</li>
+            </ul>
+            {/* <VoiceTipsModal /> */}
+          </div>
+
+          <div className="flex-1 w-2/3">
+            <VoiceLabelFilter
+              voiceOptions={voiceOptions}
+              onFilterChange={handleFilteredOptions}
+            />
+            <div className="flex items-center justify-evenly space-x-2">
+              <Controller
+                name="voice_id"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { name, ref, onChange } }) => (
+                  <ReactSelect
+                    name={name}
+                    aria-label="voice selection"
+                    ref={ref}
+                    onChange={(value) => {
+                      onChange(value?.value);
+                      setSelectedVoiceURL(value?.sampleURL ?? '');
+                    }}
+                    components={{
+                      Option: VoiceOption,
+                      SingleValue: VoiceSingleValue,
+                    }}
+                    placeholder={`Select from ${filteredOptions.length} voices`}
+                    isSearchable={false}
+                    options={filteredOptions}
+                    defaultValue={null}
+                    className="w-full max-w-lg"
+                  />
+                )}
+              />
+
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center">
+                  <p className="font-semibold text-medium">Voice Preview</p>
+                </div>
+                <div className="flex space-x-2">
+                  <audio
+                    src={selectedVoiceURL ?? ''}
+                    controls
+                    autoPlay={autoplay}
+                  />
+                  <Checkbox
+                    isSelected={autoplay}
+                    onValueChange={setAutoplay}
+                    color="success"
+                    radius="full"
+                    size="lg"
+                    className="z-0"
+                  >
+                    Autoplay
+                  </Checkbox>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Divider className="my-2" />
+
         <SubmitButton
           id="npc-form-submit"
-          pendingText={isEditing ? 'updating NPC...' : 'creating NPC...'}
+          pendingText="creating NPC..."
           variant="flat"
           color="success"
           className="mt-2 font-bold text-large"
         >
-          {isEditing ? 'update' : 'create'}
+          Create!
         </SubmitButton>
       </form>
     </div>
