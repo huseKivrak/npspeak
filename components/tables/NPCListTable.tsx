@@ -136,7 +136,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
                 </DropdownMenu>
               </Dropdown>
             ) : (
-              <p className="text-tiny"> No NPCs</p>
+              <p className="text-tiny"> No Campaigns</p>
             )}
           </div>
         );
