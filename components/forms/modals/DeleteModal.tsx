@@ -49,7 +49,7 @@ export function DeleteModal({
           onPress={onOpen}
           aria-label={`Delete ${title}`}
         >
-          <DeleteIcon className="text-red-500 " />
+          <DeleteIcon className="text-danger" />
         </Button>
       </Tooltip>
       <Modal
@@ -87,15 +87,17 @@ export function DeleteModal({
               <ModalFooter>
                 <form>
                   <input type="hidden" name={idName} value={id} />
-                  <Button color="default" variant="light" onPress={onClose}>
-                    Close
-                  </Button>
                   <SubmitButton
                     pendingText={`Deleting ${title}...`}
                     formAction={formAction}
+                    color="danger"
+                    className="hover:bg-danger-700 hover:text-white"
                   >
                     Delete
                   </SubmitButton>
+                  <Button variant="light" onPress={onClose} className="ml-2">
+                    Close
+                  </Button>
                 </form>
               </ModalFooter>
             </>

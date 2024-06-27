@@ -2,6 +2,7 @@ import type { Config } from 'tailwindcss';
 import { nextui } from '@nextui-org/react';
 import { balatroTheme } from './styles/balatroTheme';
 import { greyscaleTheme } from './styles/greyscaleTheme';
+import { mainTheme } from './styles/mainTheme';
 
 const config: Config = {
   content: [
@@ -27,6 +28,7 @@ const config: Config = {
       themes: {
         balatro: balatroTheme,
         greyscale: greyscaleTheme,
+        mainTheme
       },
     }),
   ],
