@@ -17,7 +17,6 @@ import {
 import { ZodError } from 'zod';
 
 export const createDialogueAction = async (
-  prevState: ActionStatus | null,
   formData: FormData
 ): Promise<ActionStatus> => {
   const { user } = await getUserInfo();

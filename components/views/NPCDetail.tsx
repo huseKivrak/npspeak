@@ -1,12 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { DialogueListTable } from '@/components/tables/DialogueListTable';
-import { DialogueForm } from '../forms/DialogueForm';
+import { DialogueModal } from '../forms/modals/DialogueModal';
 import { Divider } from '@nextui-org/divider';
-import { Button } from '@nextui-org/button';
 import { Tabs, Tab } from '@nextui-org/tabs';
-import { PlusIcon } from '../icons';
 import { DetailedDialogue, DetailedNPC } from '@/types/drizzle';
 import { formatDialoguesForSoundboard } from '@/utils/formatHelpers';
 import { Soundboard } from '../soundboard/Soundboard';
@@ -46,12 +43,12 @@ export const NPCDetail = ({
       </div>
 
       <Divider className="my-4" />
-
+      <h2 className="text-4xl mb-4">Dialogue</h2>
+      <DialogueModal npcId={npc.id} className="mb-4" />
       <Tabs
         aria-label="Dialogue Views"
         size="lg"
         radius="sm"
-        color="secondary"
         classNames={{
           tabList:
             'gap-3 w-full relative rounded-none p-0 border-b border-divider bg-transparent',
@@ -66,16 +63,12 @@ export const NPCDetail = ({
             voiceId={npc.voice_id!}
           />
         </Tab>
-        <Tab
-          key="dialogue form"
-          title={
-            <div className="flex items-center space-x-2">
-              <PlusIcon />
-              <span>ADD DIALOGUE</span>
-            </div>
-          }
-        >
-          <DialogueForm npcId={npc.id} />
+        <Tab key="soundboard" title="SOUNDBOARD">
+          {dialogues ? (
+            <Soundboard dialogues={formatDialoguesForSoundboard(dialogues)} />
+          ) : (
+            <p>No dialogues found</p>
+          )}
         </Tab>
       </Tabs>
     </div>
