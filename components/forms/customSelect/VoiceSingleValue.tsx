@@ -2,7 +2,7 @@ import { components, SingleValueProps } from 'react-select';
 import { GenderIcon } from '@/components/icons';
 import { getAccentEmoji } from '@/utils/helpers/formHelpers';
 import { Chip } from '@nextui-org/chip';
-import { VoiceOptionProps } from '@/utils/helpers/formHelpers';
+import { VoiceOptionProps } from '@/types/elevenlabs';
 
 interface VoiceSingleValueProps
   extends SingleValueProps<VoiceOptionProps, false> {}

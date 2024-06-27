@@ -2,7 +2,7 @@ import { components, OptionProps } from 'react-select';
 import { getAccentEmoji } from '@/utils/helpers/formHelpers';
 import { GenderIcon } from '@/components/icons';
 import { Chip } from '@nextui-org/chip';
-import { VoiceOptionProps } from '@/utils/helpers/formHelpers';
+import { VoiceOptionProps } from '@/types/elevenlabs';
 
 export const VoiceOption: React.FC<OptionProps<VoiceOptionProps, false>> = (
   props
