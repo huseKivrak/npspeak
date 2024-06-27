@@ -11,13 +11,13 @@ import {
 import {
   getAccentEmoji,
   voiceMatchesFilter,
-  VoiceOptionProps,
 } from '@/utils/helpers/formHelpers';
 import { capitalize } from '@/utils/formatHelpers';
 import { FaMale, FaFemale } from 'react-icons/fa';
 import { MdOutlineDirectionsWalk, MdOutlineElderly } from 'react-icons/md';
 import { BiChild } from 'react-icons/bi';
 import { VscRefresh } from 'react-icons/vsc';
+import { VoiceOptionProps } from '@/types/elevenlabs';
 
 interface FilterState {
   selectedGender: string[];
@@ -27,7 +27,7 @@ interface FilterState {
   selectedDescription: string[];
 }
 
-export function VoiceFilterForm({
+export function VoiceLabelFilter({
   voiceOptions,
   onFilterChange,
 }: {
@@ -81,20 +81,24 @@ export function VoiceFilterForm({
   }, [filteredOptions, onFilterChange]);
 
   return (
-    <div className="flex flex-col max-w-md border rounded-3xl border-gray-200 p-4">
-      <Button
-        isIconOnly
-        type="reset"
-        onClick={onReset}
-        size="sm"
-        radius="full"
-        variant="flat"
-        className="absolute w-1 self-end h-min p-1"
-      >
-        <VscRefresh size={20} />
-      </Button>
-
-      <div className="flex space-x-8">
+    <div className="flex flex-col border rounded-3xl border-gray-200 p-4">
+      <div className="flex justify-between mb-2">
+        <h2 className="text-2xl tracking-wide">Filter voices by...</h2>
+        <Tooltip content="Reset filters">
+          <Button
+            isIconOnly
+            type="reset"
+            onClick={onReset}
+            size="sm"
+            radius="full"
+            variant="flat"
+            className="w-1 h-min p-1"
+          >
+            <VscRefresh size={18} />
+          </Button>
+        </Tooltip>
+      </div>
+      <div className="flex space-x-4">
         <CheckboxGroup
           label="Gender"
           onChange={(values) => handleFilterChange('selectedGender', values)}
@@ -106,20 +110,20 @@ export function VoiceFilterForm({
           <Checkbox key={'male'} value={'male'}>
             <Tooltip content="male">
               <span>
-                <FaMale size={30} color="lightblue" />
+                <FaMale size={24} color="lightblue" />
               </span>
             </Tooltip>
           </Checkbox>
           <Checkbox key={'female'} value={'female'}>
             <Tooltip content="female">
               <span>
-                <FaFemale size={30} color="lightpink" />
+                <FaFemale size={24} color="lightpink" />
               </span>
             </Tooltip>
           </Checkbox>
         </CheckboxGroup>
 
-        <Divider orientation="vertical" className="h-14 mt-2 self-center" />
+        <Divider orientation="vertical" className="h-10 mt-2 self-center" />
 
         <CheckboxGroup
           label="Age"
@@ -133,7 +137,7 @@ export function VoiceFilterForm({
             <span>
               <Tooltip content="young">
                 <span>
-                  <BiChild size={32} className="text-green-200" />
+                  <BiChild size={28} className="text-green-200" />
                 </span>
               </Tooltip>
             </span>
@@ -143,8 +147,8 @@ export function VoiceFilterForm({
               <Tooltip content="middle-aged">
                 <span>
                   <MdOutlineDirectionsWalk
-                    size={30}
-                    className="text-green-400"
+                    size={28}
+                    className="text-green-300"
                   />
                 </span>
               </Tooltip>
@@ -154,32 +158,32 @@ export function VoiceFilterForm({
             <span>
               <Tooltip content="old">
                 <span>
-                  <MdOutlineElderly size={30} className="text-green-600" />
+                  <MdOutlineElderly size={28} className="text-green-500" />
                 </span>
               </Tooltip>
             </span>
           </Checkbox>
         </CheckboxGroup>
+
+        <Divider orientation="vertical" className="h-10 mt-2 self-center" />
+
+        <CheckboxGroup
+          label="Accent"
+          onChange={(values) => handleFilterChange('selectedAccent', values)}
+          orientation="horizontal"
+          size="sm"
+          radius="full"
+          value={filters.selectedAccent}
+        >
+          {accent.map((accent) => (
+            <Checkbox key={accent} value={accent}>
+              <Tooltip content={accent}>
+                <span className="text-3xl">{getAccentEmoji(accent)}</span>
+              </Tooltip>
+            </Checkbox>
+          ))}
+        </CheckboxGroup>
       </div>
-
-      <Divider className="my-4" />
-
-      <CheckboxGroup
-        label="Accent"
-        onChange={(values) => handleFilterChange('selectedAccent', values)}
-        orientation="horizontal"
-        size="sm"
-        radius="full"
-        value={filters.selectedAccent}
-      >
-        {accent.map((accent) => (
-          <Checkbox key={accent} value={accent}>
-            <Tooltip content={accent}>
-              <span className="text-3xl">{getAccentEmoji(accent)}</span>
-            </Tooltip>
-          </Checkbox>
-        ))}
-      </CheckboxGroup>
 
       <Divider className="my-2" />
 
