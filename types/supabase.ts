@@ -277,11 +277,11 @@ export type Database = {
         Row: {
           active: boolean | null;
           currency: string | null;
-          description: string | null;
+          description?: string | null;
           id: string;
           interval: Database['public']['Enums']['pricing_plan_interval'] | null;
           interval_count: number | null;
-          metadata: Json | null;
+          metadata?: Json | null;
           product_id: string | null;
           trial_period_days: number | null;
           type: Database['public']['Enums']['pricing_type'] | null;
@@ -557,7 +557,8 @@ export type Database = {
         | 'incomplete'
         | 'incomplete_expired'
         | 'past_due'
-        | 'unpaid';
+        | 'unpaid'
+        | 'paused';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -646,3 +647,14 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
     ? PublicSchema['Enums'][PublicEnumNameOrOptions]
     : never;
+
+export interface BasicUserInfo {
+  id: string;
+  username: string;
+  lastSignIn: string | null;
+}
+
+export interface UserAuth {
+  user: BasicUserInfo | null;
+  error: string | null;
+}
