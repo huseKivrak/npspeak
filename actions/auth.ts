@@ -3,17 +3,17 @@
 import { createClientOnServer } from '@/utils/supabase/server';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
 import { signupSchema, loginSchema } from '@/database/drizzle/validation';
 import { ZodError } from 'zod';
 import { ActionStatus } from '@/types/drizzle';
 import { UserAuth } from '@/types/supabase';
+import { getURL } from '@/utils/helpers/vercel';
 
 export const signUpAction = async (
   prevState: ActionStatus,
   formData: FormData
 ): Promise<ActionStatus> => {
-  const origin = headers().get('origin');
+  const callbackURL = getURL('/auth/callback');
 
   try {
     const { email, username, password } = signupSchema.parse(formData);
@@ -24,7 +24,7 @@ export const signUpAction = async (
       email,
       password,
       options: {
-        emailRedirectTo: `${origin}/auth/callback`,
+        emailRedirectTo: callbackURL,
         data: {
           username,
         },
