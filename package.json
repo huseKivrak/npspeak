@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
+    "drizzle:generate": "drizzle-kit generate",
+    "drizzle:migrate": "drizzle-kit migrate",
     "start": "next start",
     "lint": "next lint",
     "prettier:format": "prettier --write .",
