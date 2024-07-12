@@ -16,7 +16,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { authUsers as users } from '../supabase/authSchema';
-import { ElevenLabsVoice } from '@/types/elevenlabs';
 
 export const campaigns = pgTable('campaigns', {
   id: serial('id').primaryKey().notNull(),
@@ -119,7 +118,8 @@ export const profiles = pgTable('profiles', {
   username: text('username').notNull(),
   full_name: text('full_name'),
   avatar_url: text('avatar_url'),
-  website: text('website'),
+  billing_address: jsonb('billing_address'),
+  payment_method: jsonb('payment_method'),
 });
 
 export const voice_clones = pgTable(
@@ -191,26 +191,6 @@ export const tts_audio = pgTable(
       tts_audio_file_url_key: unique('tts_audio_file_url_key').on(
         table.file_url
       ),
-    };
-  }
-);
-
-export const voice_clone_clips = pgTable(
-  'voice_clone_clips',
-  {
-    voice_clone_id: integer('voice_clone_id')
-      .notNull()
-      .references(() => voice_clones.id, { onDelete: 'cascade' }),
-    audio_clip_id: integer('audio_clip_id')
-      .notNull()
-      .references(() => audio_clips.id, { onDelete: 'cascade' }),
-  },
-  (table) => {
-    return {
-      voice_clone_clips_pkey: primaryKey({
-        columns: [table.voice_clone_id, table.audio_clip_id],
-        name: 'voice_clone_clips_pkey',
-      }),
     };
   }
 );
