@@ -1,3 +1,5 @@
+import * as schema from './schema';
+import * as relations from './relations';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { cwd } from 'process';
@@ -14,4 +16,4 @@ if (!connectionString) {
 const client = postgres(connectionString, {
   prepare: false,
 });
-export const db = drizzle(client);
+export const db = drizzle(client, { schema: { ...schema, ...relations } });
