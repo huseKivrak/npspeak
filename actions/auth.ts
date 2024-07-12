@@ -18,8 +18,7 @@ export const signUpAction = async (
   try {
     const { email, username, password } = signupSchema.parse(formData);
 
-    const cookieStore = cookies();
-    const supabase = createClientOnServer(cookieStore);
+    const supabase = createClientOnServer();
 
     const { error } = await supabase.auth.signUp({
       email,
@@ -78,8 +77,7 @@ export const signInAction = async (
   try {
     const { email, password } = loginSchema.parse(formData);
 
-    const cookieStore = cookies();
-    const supabase = createClientOnServer(cookieStore);
+    const supabase = createClientOnServer();
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -121,8 +119,7 @@ export const signInAction = async (
 export const signInWithGithub = async () => {
   const origin = headers().get('origin');
 
-  const cookieStore = cookies();
-  const supabase = createClientOnServer(cookieStore);
+  const supabase = createClientOnServer();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
@@ -143,8 +140,7 @@ export const signInWithGithub = async () => {
 export const signInWithDiscord = async () => {
   const origin = headers().get('origin');
 
-  const cookieStore = cookies();
-  const supabase = createClientOnServer(cookieStore);
+  const supabase = createClientOnServer();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'discord',
@@ -162,8 +158,7 @@ export const signInWithDiscord = async () => {
 };
 
 export const logoutAction = async () => {
-  const cookieStore = cookies();
-  const supabase = createClientOnServer(cookieStore);
+  const supabase = createClientOnServer();
 
   const { error } = await supabase.auth.signOut();
   if (error) {
@@ -176,8 +171,7 @@ export const logoutAction = async () => {
 
 //streamlined method for returning up-to-date user info
 export const getUserInfo = async (): Promise<UserAuth> => {
-  const cookieStore = cookies();
-  const supabase = createClientOnServer(cookieStore);
+  const supabase = createClientOnServer();
   try {
     const {
       data: { user },

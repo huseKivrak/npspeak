@@ -8,8 +8,7 @@ export async function GET(request: Request) {
   const origin = requestUrl.origin;
 
   if (code) {
-    const cookieStore = cookies();
-    const supabase = createClientOnServer(cookieStore);
+    const supabase = createClientOnServer();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
       return NextResponse.redirect(`${origin}/dashboard`);
