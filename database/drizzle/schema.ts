@@ -84,6 +84,7 @@ export const subscription_status = pgEnum('subscription_status', [
   'incomplete_expired',
   'past_due',
   'unpaid',
+  'paused',
 ]);
 export const action = pgEnum('action', [
   'INSERT',
