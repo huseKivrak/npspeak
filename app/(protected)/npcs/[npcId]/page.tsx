@@ -41,7 +41,10 @@ export default async function NPCDetailPage({
 
   //todo: handle rejecteds?
   const dialogues = (await Promise.allSettled(dialoguesWithAudio))
-    .filter((d) => d.status === 'fulfilled')
+    .filter(
+      (d): d is PromiseFulfilledResult<DetailedDialogue> =>
+        d.status === 'fulfilled'
+    )
     .map((d) => d.value);
 
   return <NPCDetail npc={npc} dialogues={dialogues} />;
