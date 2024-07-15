@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { Tables, TablesInsert } from '../../types/supabase';
-import { capitalize } from '../../utils/formatHelpers';
+import { capitalize } from '../../utils/helpers/formatHelpers';
 import { DefaultDialogueTypes } from '../../lib/constants';
 import { db } from '.';
 import { campaign_npcs, campaigns, npc_dialogues, npcs } from './schema';
