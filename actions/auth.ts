@@ -30,6 +30,7 @@ export const signUpAction = async (
         },
       },
     });
+
     if (error) {
       return {
         status: 'error',
@@ -170,6 +171,7 @@ export const logoutAction = async () => {
 };
 
 //streamlined method for returning up-to-date user info
+//todo: replace with profiles table
 export const getUserInfo = async (): Promise<UserAuth> => {
   const supabase = createClientOnServer();
   try {
@@ -178,7 +180,7 @@ export const getUserInfo = async (): Promise<UserAuth> => {
       error,
     } = await supabase.auth.getUser();
     if (!user) {
-      console.error(`getUserInfo error ${error?.status}`);
+      console.error(`getUserInfo error ${error?.message}`);
       return { user: null, error: `Auth Error: ${error?.message}` };
     }
     const username = user.user_metadata.username;
