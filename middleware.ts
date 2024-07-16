@@ -4,8 +4,21 @@ import { updateSession } from './utils/supabase/middleware';
 export async function middleware(request: NextRequest) {
   return await updateSession(request);
 }
+
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|signup|login|about|contact|api).*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - signup
+     * - login
+     * - about
+     * - contact
+     * - api
+     * - _next/static
+     * - _next/image
+     * - favicon.ico (favicon file)
+     * - $ (homepage)
+     */
+    '/((?!signup|login|about|contact|api|_next/static|_next/image|favicon.ico|$).*)',
   ],
 };
