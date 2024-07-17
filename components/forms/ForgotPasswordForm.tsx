@@ -56,6 +56,7 @@ export function ForgotPasswordForm() {
           size="lg"
           isDisabled={isSubmitting}
           endContent={!isSubmitting && <SendEmailIcon />}
+          type="submit"
         >
           {isSubmitting ? <Spinner /> : 'Send reset link'}
         </Button>
