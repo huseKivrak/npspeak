@@ -362,6 +362,7 @@ export type Database = {
           id: string;
           payment_method: Json | null;
           username: string;
+          email: string;
         };
         Insert: {
           avatar_url?: string | null;
@@ -370,6 +371,7 @@ export type Database = {
           id: string;
           payment_method?: Json | null;
           username: string;
+          email: string;
         };
         Update: {
           avatar_url?: string | null;
@@ -378,6 +380,7 @@ export type Database = {
           id?: string;
           payment_method?: Json | null;
           username?: string;
+          email?: string;
         };
         Relationships: [
           {

@@ -345,6 +345,7 @@ export const profiles = pgTable('profiles', {
   billing_address: jsonb('billing_address'),
   payment_method: jsonb('payment_method'),
   username: text('username').notNull(),
+  email: text('email').notNull(),
 });
 
 export const subscriptions = pgTable('subscriptions', {
