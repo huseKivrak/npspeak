@@ -1,4 +1,4 @@
-import { getUserInfo } from '@/actions/auth';
+import { getUserProfile } from '@/actions/auth';
 import { redirect } from 'next/navigation';
 import { getCampaignsWithNPCs } from '@/database/drizzle/queries';
 import { CampaignWithNPCs } from '@/types/drizzle';
@@ -11,7 +11,7 @@ export default async function CampaignDetailPage({
     campaignId: number;
   };
 }) {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) return redirect('/login');
 
   const campaignId = params.campaignId;

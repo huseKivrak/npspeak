@@ -1,4 +1,4 @@
-import { getUserInfo } from '@/actions/auth';
+import { getUserProfile } from '@/actions/auth';
 import {
   getCampaignsWithNPCs,
   getNPCsWithRelatedData,
@@ -11,7 +11,7 @@ export default async function UserPage({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) return redirect('/login');
 
   const campaignResponse = await getCampaignsWithNPCs();

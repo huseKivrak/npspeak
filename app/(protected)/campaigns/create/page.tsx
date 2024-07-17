@@ -1,11 +1,11 @@
 import CampaignForm from '@/components/forms/CampaignForm';
-import { getUserInfo } from '@/actions/auth';
+import { getUserProfile } from '@/actions/auth';
 import { redirect } from 'next/navigation';
 import { getNPCsWithRelatedData } from '@/database/drizzle/queries';
 import { DetailedNPC } from '@/types/drizzle';
 
 export default async function CreateCampaignPage() {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) {
     redirect('/login');
   }

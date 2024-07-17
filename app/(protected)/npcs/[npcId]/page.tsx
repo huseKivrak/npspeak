@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import { getUserInfo } from '@/actions/auth';
+import { getUserProfile } from '@/actions/auth';
 import {
   getDetailedDialogues,
   getNPCsWithRelatedData,
@@ -15,7 +15,7 @@ export default async function NPCDetailPage({
     npcId: number;
   };
 }) {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) return redirect('/login');
 
   const npcResponse = await getNPCsWithRelatedData(params.npcId);

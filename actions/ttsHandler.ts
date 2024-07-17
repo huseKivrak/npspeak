@@ -1,5 +1,5 @@
 'use server';
-import { getUserInfo } from './auth';
+import { getUserProfile } from './auth';
 import { createElevenLabsTTSAction } from './elevenLabs';
 import { updateDialogueTTSAudioAction } from './db/dialogue';
 import { uploadAudioToS3 } from './s3';
@@ -15,7 +15,7 @@ export default async function ttsHandler(
   prevState: any,
   formData: FormData
 ): Promise<ActionStatus> {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) {
     return {
       status: 'error',

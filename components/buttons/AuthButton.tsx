@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { logoutAction } from '@/actions/auth';
-import { getUserInfo } from '@/actions/auth';
+import { getUserProfile } from '@/actions/auth';
 
 /**
  * Login/logout button depending on user auth state
  */
 
 export default async function AuthButton() {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
 
   return user ? (
     <div className="flex items-center gap-4 ">

@@ -1,6 +1,6 @@
 'use server';
 
-import { getUserInfo } from './auth';
+import { getUserProfile } from './auth';
 import { ActionStatus } from '@/types/drizzle';
 
 import {
@@ -25,7 +25,7 @@ const s3 = new S3Client({
  */
 
 export async function getPresignedUploadURL(): Promise<ActionStatus> {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) return { status: 'error', message: 'not authenticated' };
 
   const randomString = uuidv4();
@@ -96,7 +96,7 @@ export async function uploadAudioToS3(
 export async function getPresignedDownloadURL(
   fileName: string
 ): Promise<ActionStatus> {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) return { status: 'error', message: 'not authenticated' };
 
   try {
@@ -126,7 +126,7 @@ export async function getPresignedDownloadURL(
 export async function deleteAudioFromS3(
   fileName: string
 ): Promise<ActionStatus> {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) return { status: 'error', message: 'not authenticated' };
 
   const deleteCommand = new DeleteObjectCommand({

@@ -1,6 +1,6 @@
 'use server';
 import { db } from '@/database/drizzle';
-import { getUserInfo } from '../auth';
+import { getUserProfile } from '../auth';
 import { npcs, campaign_npcs } from '@/database/drizzle/schema';
 import { eq, and } from 'drizzle-orm';
 import { Tables } from '@/types/supabase';
@@ -14,7 +14,7 @@ export const createNPCAction = async (
   prevState: ActionStatus | null,
   formData: FormData
 ): Promise<ActionStatus> => {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) throw new Error('You must be logged in to create NPCs.');
 
   const user_id = user.id;
@@ -70,7 +70,7 @@ export const updateNPCAction = async (
   formData: FormData,
   npcId: number
 ): Promise<ActionStatus> => {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) throw new Error('You must be logged in to update NPCs.');
 
   try {
@@ -130,7 +130,7 @@ export const deleteNPCAction = async (
   prevState: ActionStatus | null,
   formData: FormData
 ): Promise<ActionStatus> => {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) throw new Error('You must be logged in to delete NPCs.');
 
   let deletedNPCName: string | null = null;
@@ -159,7 +159,7 @@ export const addVoiceToNPC = async (
   prevState: ActionStatus | null,
   formData: FormData
 ): Promise<ActionStatus> => {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user)
     return {
       status: 'error',

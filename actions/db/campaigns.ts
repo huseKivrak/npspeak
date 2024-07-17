@@ -1,6 +1,6 @@
 'use server';
 import { db } from '@/database/drizzle';
-import { getUserInfo } from '../auth';
+import { getUserProfile } from '../auth';
 import { campaigns, campaign_npcs } from '@/database/drizzle/schema';
 import { eq, and } from 'drizzle-orm';
 import { Tables } from '@/types/supabase';
@@ -17,7 +17,7 @@ export const createCampaignAction = async (
   prevState: ActionStatus | null,
   formData: FormData
 ): Promise<ActionStatus> => {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) return { status: 'error', message: 'Unauthenticated' };
 
   const user_id = user.id;
@@ -70,7 +70,7 @@ export const deleteCampaignAction = async (
   prevState: ActionStatus | null,
   formData: FormData
 ): Promise<ActionStatus> => {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) return { status: 'error', message: 'Unauthenticated' };
   const user_id = user.id;
 

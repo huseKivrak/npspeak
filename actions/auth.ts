@@ -11,9 +11,12 @@ import {
 } from '@/database/drizzle/validation';
 import { ZodError } from 'zod';
 import { ActionStatus } from '@/types/drizzle';
-import { UserAuth } from '@/types/supabase';
 import { getURL } from '@/utils/helpers/vercel';
 import { isExistingEmail } from '@/database/drizzle/queries';
+import { db } from '@/database/drizzle';
+import { eq } from 'drizzle-orm';
+import { profiles } from '@/database/drizzle/schema';
+import { Tables } from '@/types/supabase';
 
 export const signUpAction = async (
   prevState: ActionStatus,
@@ -288,9 +291,16 @@ export const logoutAction = async () => {
   redirect('/?message=logout');
 };
 
-//streamlined method for returning up-to-date user info
-//todo: replace with profiles table
-export const getUserInfo = async (): Promise<UserAuth> => {
+/**
+ * Returns the authenticated user's profile,
+ * essentially a wrapper around Supabase's auth schema.
+ * This is necessary as Supabase's auth schema is read-only.
+ */
+
+export type UserProfile = Tables<'profiles'>;
+export const getUserProfile = async (): Promise<{
+  user: UserProfile | null;
+}> => {
   const supabase = createClientOnServer();
   try {
     const {
@@ -299,14 +309,15 @@ export const getUserInfo = async (): Promise<UserAuth> => {
     } = await supabase.auth.getUser();
     if (!user) {
       console.error(`getUserInfo error ${error?.message}`);
-      return { user: null, error: `Auth Error: ${error?.message}` };
+      return { user: null };
     }
-    const username = user.user_metadata.username;
-    const id = user.id;
-    const lastSignIn = user.last_sign_in_at ?? null;
-    return { user: { id, username, lastSignIn }, error: null };
+
+    const userProfile = await db.query.profiles.findFirst({
+      where: eq(profiles.id, user.id),
+    });
+    return { user: userProfile ? (userProfile as UserProfile) : null };
   } catch (error) {
     console.error('Error:', error);
-    return { user: null, error: `Unexpected error: ${error}` };
+    return { user: null };
   }
 };
