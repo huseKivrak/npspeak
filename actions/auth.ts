@@ -3,11 +3,17 @@
 import { createClientOnServer } from '@/utils/supabase/server';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { signupSchema, loginSchema } from '@/database/drizzle/validation';
+import {
+  signupSchema,
+  loginSchema,
+  resetPasswordSchema,
+  forgotPasswordSchema,
+} from '@/database/drizzle/validation';
 import { ZodError } from 'zod';
 import { ActionStatus } from '@/types/drizzle';
 import { UserAuth } from '@/types/supabase';
 import { getURL } from '@/utils/helpers/vercel';
+import { isExistingEmail } from '@/database/drizzle/queries';
 
 export const signUpAction = async (
   prevState: ActionStatus,
@@ -17,6 +23,19 @@ export const signUpAction = async (
 
   try {
     const { email, username, password } = signupSchema.parse(formData);
+    const existingEmail = await isExistingEmail(email);
+    if (existingEmail) {
+      return {
+        status: 'error',
+        message: 'Email is already taken.',
+        errors: [
+          {
+            path: 'email',
+            message: 'This email is already taken.',
+          },
+        ],
+      };
+    }
 
     const supabase = createClientOnServer();
 
@@ -115,6 +134,105 @@ export const signInAction = async (
   }
 
   redirect(`/`);
+};
+
+export const sendResetPasswordEmail = async (
+  prevState: ActionStatus,
+  formData: FormData
+): Promise<ActionStatus> => {
+  try {
+    const { email } = forgotPasswordSchema.parse(formData);
+
+    //Check if there's a user with that email
+    const supabase = createClientOnServer();
+    const existingEmail = await isExistingEmail(email);
+    if (!existingEmail) {
+      return {
+        status: 'error',
+        message: 'There is no account with that email.',
+      };
+    }
+    const callbackURL = getURL('/account/reset-password');
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: callbackURL,
+    });
+    if (error) {
+      return {
+        status: 'error',
+        message: 'Oops! Something went wrong. Please try again',
+      };
+    }
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        status: 'error',
+        message: 'Please enter a valid email address.',
+      };
+    } else {
+      return {
+        status: 'error',
+        message: 'Oops! Something went wrong. Please try again',
+      };
+    }
+  }
+  return {
+    status: 'success',
+    message: 'Email sent.',
+    data: 'Success! Please check your email for a reset link.',
+  };
+};
+
+export const resetPasswordAction = async (
+  prevState: ActionStatus,
+  formData: FormData
+): Promise<ActionStatus> => {
+  try {
+    const { new_password, confirm_password } =
+      resetPasswordSchema.parse(formData);
+
+    const supabase = createClientOnServer();
+    const { error } = await supabase.auth.updateUser({
+      password: new_password,
+    });
+
+    if (error) {
+      return {
+        status: 'error',
+        message: 'An error occured during password reset.',
+        errors: [
+          {
+            path: 'confirm_password',
+            message:
+              'An error occured during password reset. Please try again.',
+          },
+        ],
+      };
+    }
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        status: 'error',
+        message: 'Invalid form data',
+        errors: error.issues.map((issue) => ({
+          path: issue.path.join('.'),
+          message: `${issue.message}`,
+        })),
+      };
+    } else {
+      console.error('An error occured during password reset: ', error);
+      return {
+        status: 'error',
+        message: 'Oops! Something went wrong. Please try again',
+        errors: [
+          {
+            path: 'confirm_password',
+            message: 'Oops! Something went wrong. Please try again',
+          },
+        ],
+      };
+    }
+  }
+  redirect('/dashboard');
 };
 
 export const signInWithGithub = async () => {
