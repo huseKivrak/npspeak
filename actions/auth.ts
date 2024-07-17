@@ -3,15 +3,10 @@
 import { createClientOnServer } from '@/utils/supabase/server';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import {
-  signupSchema,
-  loginSchema,
-  resetPasswordSchema,
-  forgotPasswordSchema,
-} from '@/database/drizzle/validation';
+import { signupSchema, loginSchema } from '@/database/drizzle/validation';
 import { ZodError } from 'zod';
 import { ActionStatus } from '@/types/drizzle';
-import { getURL } from '@/utils/helpers/vercel';
+import { getURL, isValidEmail } from '@/utils/helpers/vercel';
 import { isExistingEmail } from '@/database/drizzle/queries';
 import { db } from '@/database/drizzle';
 import { eq } from 'drizzle-orm';
@@ -34,7 +29,7 @@ export const signUpAction = async (
         errors: [
           {
             path: 'email',
-            message: 'This email is already taken.',
+            message: 'This email is unavailable.',
           },
         ],
       };
@@ -139,103 +134,50 @@ export const signInAction = async (
   redirect(`/`);
 };
 
-export const sendResetPasswordEmail = async (
-  prevState: ActionStatus,
-  formData: FormData
-): Promise<ActionStatus> => {
-  try {
-    const { email } = forgotPasswordSchema.parse(formData);
+export const sendResetPasswordEmail = async (email: string) => {
+  const validEmail = isValidEmail(email);
+  if (!validEmail) {
+    return 'Please enter a valid email.';
+  }
 
+  try {
     //Check if there's a user with that email
     const supabase = createClientOnServer();
     const existingEmail = await isExistingEmail(email);
     if (!existingEmail) {
-      return {
-        status: 'error',
-        message: 'There is no account with that email.',
-      };
+      //Handle as "success" to prevent email phishing
+      redirect('/forgot-password/success');
     }
-    const callbackURL = getURL('/account/reset-password');
+
+    const callbackURL = getURL('/auth/reset-password');
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: callbackURL,
     });
     if (error) {
-      return {
-        status: 'error',
-        message: 'Oops! Something went wrong. Please try again',
-      };
+      return 'Oops! Something went wrong. Please try again';
     }
   } catch (error) {
-    if (error instanceof ZodError) {
-      return {
-        status: 'error',
-        message: 'Please enter a valid email address.',
-      };
-    } else {
-      return {
-        status: 'error',
-        message: 'Oops! Something went wrong. Please try again',
-      };
-    }
+    console.error(error);
+    return 'Oops! Something went wrong. Please try again';
   }
-  return {
-    status: 'success',
-    message: 'Email sent.',
-    data: 'Success! Please check your email for a reset link.',
-  };
+  redirect('/forgot-password/success');
 };
 
-export const resetPasswordAction = async (
-  prevState: ActionStatus,
-  formData: FormData
-): Promise<ActionStatus> => {
-  try {
-    const { new_password, confirm_password } =
-      resetPasswordSchema.parse(formData);
-
-    const supabase = createClientOnServer();
-    const { error } = await supabase.auth.updateUser({
-      password: new_password,
-    });
-
-    if (error) {
-      return {
-        status: 'error',
-        message: 'An error occured during password reset.',
-        errors: [
-          {
-            path: 'confirm_password',
-            message:
-              'An error occured during password reset. Please try again.',
-          },
-        ],
-      };
-    }
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return {
-        status: 'error',
-        message: 'Invalid form data',
-        errors: error.issues.map((issue) => ({
-          path: issue.path.join('.'),
-          message: `${issue.message}`,
-        })),
-      };
-    } else {
-      console.error('An error occured during password reset: ', error);
-      return {
-        status: 'error',
-        message: 'Oops! Something went wrong. Please try again',
-        errors: [
-          {
-            path: 'confirm_password',
-            message: 'Oops! Something went wrong. Please try again',
-          },
-        ],
-      };
-    }
+export const updatePasswordAction = async (formData: FormData) => {
+  const password = String(formData.get('password')).trim();
+  const confirmPassword = String(formData.get('confirm_password')).trim();
+  if (password !== confirmPassword) {
+    return 'Passwords do not match.';
+  } else if (password.length < 6) {
+    return 'Password must be at least 6 characters.';
   }
-  redirect('/dashboard');
+
+  const supabase = createClientOnServer();
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) return error.message;
+
+  redirect('/dashboard?message=password-updated');
 };
 
 export const signInWithGithub = async () => {

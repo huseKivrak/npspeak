@@ -2,6 +2,11 @@ import type { Tables } from '@/types/supabase';
 
 type Price = Tables<'prices'>;
 
+export function isValidEmail(email: string) {
+  var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  return regex.test(email);
+}
+
 export const getURL = (path: string = '') => {
   // Check if NEXT_PUBLIC_SITE_URL is set and non-empty. Set this to your site URL in production env.
   let url =

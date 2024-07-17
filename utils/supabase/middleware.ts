@@ -29,7 +29,26 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const unprotectedPaths = [
+    '/signup',
+    '/login',
+    '/about',
+    '/contact',
+    '/api',
+    '/forgot-password',
+  ];
+  const isUnprotectedPath = unprotectedPaths.some((path) =>
+    request.nextUrl.pathname.startsWith(path)
+  );
+  if (!user && !isUnprotectedPath) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/login';
+    return NextResponse.redirect(url);
+  }
 
   return supabaseResponse;
 }

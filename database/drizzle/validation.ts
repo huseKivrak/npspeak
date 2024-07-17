@@ -39,12 +39,6 @@ export const signupSchema = zfd
     }
   });
 
-export const forgotPasswordSchema = zfd.formData({
-  email: zfd.text(
-    z.string().email({ message: 'Please enter a valid email address' })
-  ),
-});
-
 export const resetPasswordSchema = zfd
   .formData({
     new_password: zfd.text(
