@@ -8,6 +8,7 @@ import {
   npc_dialogue_types,
   npc_dialogues,
   tts_audio,
+  profiles,
 } from '@/database/drizzle/schema';
 import { db } from '.';
 import { eq, and } from 'drizzle-orm';
@@ -208,4 +209,11 @@ export const getDetailedDialogues = async (
       message: `Error fetching detailed dialogues: ${error}`,
     };
   }
+};
+
+export const isExistingEmail = async (email: string): Promise<boolean> => {
+  const exisitingEmail = await db.query.profiles.findFirst({
+    where: eq(profiles.email, email),
+  });
+  return !!exisitingEmail;
 };
