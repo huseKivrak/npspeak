@@ -281,7 +281,7 @@ export type Database = {
           id: string;
           interval: Database['public']['Enums']['pricing_plan_interval'] | null;
           interval_count: number | null;
-          metadata?: Json | null;
+          metadata?: Json | null | unknown;
           product_id: string | null;
           trial_period_days: number | null;
           type: Database['public']['Enums']['pricing_type'] | null;
@@ -333,7 +333,7 @@ export type Database = {
           description: string | null;
           id: string;
           image: string | null;
-          metadata: Json | null;
+          metadata: Json | null | unknown;
           name: string | null;
         };
         Insert: {

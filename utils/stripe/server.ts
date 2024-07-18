@@ -101,19 +101,11 @@ export async function checkoutWithStripe(
   } catch (error) {
     if (error instanceof Error) {
       return {
-        errorRedirect: getErrorRedirect(
-          redirectPath,
-          error.message,
-          'Please try again later or contact a system administrator.'
-        ),
+        errorRedirect: `${redirectPath}?message=${error.message}`,
       };
     } else {
       return {
-        errorRedirect: getErrorRedirect(
-          redirectPath,
-          'An unknown error occurred.',
-          'Please try again later or contact a system administrator.'
-        ),
+        errorRedirect: `${redirectPath}?message=unknown-error`,
       };
     }
   }
