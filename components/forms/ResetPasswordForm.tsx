@@ -41,7 +41,6 @@ export default function ResetPasswordForm() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <FormInput
           autoFocus
-          isClearable
           isRequired
           type="password"
           label="New Password"
