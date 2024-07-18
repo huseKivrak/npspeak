@@ -39,6 +39,26 @@ export const signupSchema = zfd
     }
   });
 
+export const resetPasswordSchema = zfd
+  .formData({
+    new_password: zfd.text(
+      z.string().min(7, 'Password must be at least 7 characters long')
+    ),
+    confirm_password: zfd.text(
+      z.string().min(7, 'Password must be at least 7 characters long')
+    ),
+  })
+  .superRefine((data, ctx) => {
+    const { new_password, confirm_password } = data;
+    if (new_password !== confirm_password) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['new_password', 'confirm_password'],
+        message: 'Passwords do not match; please try again',
+      });
+    }
+  });
+
 //Campaigns
 export const campaignSchema = zfd
   .formData({

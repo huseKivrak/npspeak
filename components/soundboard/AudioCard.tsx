@@ -23,7 +23,7 @@ import {
 } from 'react-icons/pi';
 import { DialogueIcon } from '../icons';
 import { SoundboardDialogue } from '@/types/drizzle';
-import { formatTimer } from '@/utils/formatHelpers';
+import { formatTimer } from '@/utils/helpers/formatHelpers';
 
 export const AudioCard = ({
   dialogue,

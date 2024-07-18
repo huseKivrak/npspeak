@@ -4,7 +4,7 @@ import { db } from '@/database/drizzle';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { eq, and } from 'drizzle-orm';
-import { getUserInfo } from '../auth';
+import { getUserProfile } from '../auth';
 import { deleteAudioFromS3 } from '../s3';
 import { npc_dialogues, tts_audio } from '@/database/drizzle/schema';
 import { Tables } from '@/types/supabase';
@@ -19,7 +19,7 @@ import { ZodError } from 'zod';
 export const createDialogueAction = async (
   formData: FormData
 ): Promise<ActionStatus> => {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user)
     return {
       status: 'error',
@@ -69,7 +69,7 @@ export const deleteDialogueAction = async (
   prevState: ActionStatus | null,
   formData: FormData
 ): Promise<ActionStatus> => {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user)
     return {
       status: 'error',
@@ -135,7 +135,7 @@ export async function updateDialogueTTSAudioAction(
   prevState: ActionStatus | null,
   formData: FormData
 ): Promise<ActionStatus> {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user)
     return {
       status: 'error',

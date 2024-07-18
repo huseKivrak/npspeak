@@ -3,34 +3,51 @@
 import { createClientOnServer } from '@/utils/supabase/server';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
 import { signupSchema, loginSchema } from '@/database/drizzle/validation';
 import { ZodError } from 'zod';
 import { ActionStatus } from '@/types/drizzle';
-import { UserAuth } from '@/types/supabase';
+import { getURL, isValidEmail } from '@/utils/helpers/vercel';
+import { isExistingEmail } from '@/database/drizzle/queries';
+import { db } from '@/database/drizzle';
+import { eq } from 'drizzle-orm';
+import { profiles } from '@/database/drizzle/schema';
+import { Tables } from '@/types/supabase';
 
 export const signUpAction = async (
   prevState: ActionStatus,
   formData: FormData
 ): Promise<ActionStatus> => {
-  const origin = headers().get('origin');
+  const callbackURL = getURL('/auth/confirm');
 
   try {
     const { email, username, password } = signupSchema.parse(formData);
+    const existingEmail = await isExistingEmail(email);
+    if (existingEmail) {
+      return {
+        status: 'error',
+        message: 'Email is already taken.',
+        errors: [
+          {
+            path: 'email',
+            message: 'This email is unavailable.',
+          },
+        ],
+      };
+    }
 
-    const cookieStore = cookies();
-    const supabase = createClientOnServer(cookieStore);
+    const supabase = createClientOnServer();
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${origin}/auth/callback`,
+        emailRedirectTo: callbackURL,
         data: {
           username,
         },
       },
     });
+
     if (error) {
       return {
         status: 'error',
@@ -78,8 +95,7 @@ export const signInAction = async (
   try {
     const { email, password } = loginSchema.parse(formData);
 
-    const cookieStore = cookies();
-    const supabase = createClientOnServer(cookieStore);
+    const supabase = createClientOnServer();
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -118,16 +134,62 @@ export const signInAction = async (
   redirect(`/`);
 };
 
+export const sendResetPasswordEmail = async (email: string) => {
+  const callbackURL = getURL('/auth/confirm');
+
+  const validEmail = isValidEmail(email.trim());
+  if (!validEmail) {
+    return 'Please enter a valid email.';
+  }
+
+  try {
+    //Check if there's a user with that email
+    const existingEmail = await isExistingEmail(email);
+    if (!existingEmail) {
+      //Handle as "success" to prevent email phishing
+      redirect('/forgot-password/success');
+    }
+
+    const supabase = createClientOnServer();
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: callbackURL,
+    });
+    if (error) {
+      return 'Oops! Something went wrong. Please try again';
+    }
+  } catch (error) {
+    console.error(error);
+    return 'Oops! Something went wrong. Please try again';
+  }
+  redirect('/forgot-password/success');
+};
+
+export const updatePasswordAction = async (formData: FormData) => {
+  const password = String(formData.get('password')).trim();
+  const confirmPassword = String(formData.get('confirm_password')).trim();
+  if (password !== confirmPassword) {
+    return 'Passwords do not match.';
+  } else if (password.length < 6) {
+    return 'Password must be at least 6 characters.';
+  }
+
+  const supabase = createClientOnServer();
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) return error.message;
+
+  redirect('/dashboard?message=password-updated');
+};
+
 export const signInWithGithub = async () => {
   const origin = headers().get('origin');
 
-  const cookieStore = cookies();
-  const supabase = createClientOnServer(cookieStore);
+  const supabase = createClientOnServer();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
     options: {
-      redirectTo: `${origin}/auth/callback`,
+      redirectTo: `${origin}/auth/confirm`,
     },
   });
   if (error) {
@@ -143,13 +205,12 @@ export const signInWithGithub = async () => {
 export const signInWithDiscord = async () => {
   const origin = headers().get('origin');
 
-  const cookieStore = cookies();
-  const supabase = createClientOnServer(cookieStore);
+  const supabase = createClientOnServer();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'discord',
     options: {
-      redirectTo: `${origin}/auth/callback`,
+      redirectTo: `${origin}/auth/confirm`,
     },
   });
   if (error) {
@@ -162,8 +223,7 @@ export const signInWithDiscord = async () => {
 };
 
 export const logoutAction = async () => {
-  const cookieStore = cookies();
-  const supabase = createClientOnServer(cookieStore);
+  const supabase = createClientOnServer();
 
   const { error } = await supabase.auth.signOut();
   if (error) {
@@ -174,25 +234,33 @@ export const logoutAction = async () => {
   redirect('/?message=logout');
 };
 
-//streamlined method for returning up-to-date user info
-export const getUserInfo = async (): Promise<UserAuth> => {
-  const cookieStore = cookies();
-  const supabase = createClientOnServer(cookieStore);
+/**
+ * Returns the authenticated user's profile,
+ * essentially a wrapper around Supabase's auth schema.
+ * This is necessary as Supabase's auth schema is read-only.
+ */
+
+export type UserProfile = Tables<'profiles'>;
+export const getUserProfile = async (): Promise<{
+  user: UserProfile | null;
+}> => {
+  const supabase = createClientOnServer();
   try {
     const {
       data: { user },
       error,
     } = await supabase.auth.getUser();
     if (!user) {
-      console.error(`getUserInfo error ${error?.status}`);
-      return { user: null, error: `Auth Error: ${error?.message}` };
+      console.error(`getUserInfo error ${error?.message}`);
+      return { user: null };
     }
-    const username = user.user_metadata.username;
-    const id = user.id;
-    const lastSignIn = user.last_sign_in_at ?? null;
-    return { user: { id, username, lastSignIn }, error: null };
+
+    const userProfile = await db.query.profiles.findFirst({
+      where: eq(profiles.id, user.id),
+    });
+    return { user: userProfile ? (userProfile as UserProfile) : null };
   } catch (error) {
     console.error('Error:', error);
-    return { user: null, error: `Unexpected error: ${error}` };
+    return { user: null };
   }
 };

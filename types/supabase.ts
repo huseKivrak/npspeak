@@ -1,4 +1,3 @@
-import { ElevenLabsVoice } from './elevenlabs';
 export type Json =
   | string
   | number
@@ -7,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       audio_clips: {
@@ -19,27 +18,27 @@ export interface Database {
           id: number;
           is_default: boolean;
           original_file_name: string;
-          user_id: string | null;
+          user_id: string;
         };
         Insert: {
           audio_clip_name: string;
           created_at?: string;
           duration_seconds: number;
           file_url: string;
-          id?: never;
+          id?: number;
           is_default?: boolean;
           original_file_name: string;
-          user_id?: string | null;
+          user_id?: string;
         };
         Update: {
           audio_clip_name?: string;
           created_at?: string;
           duration_seconds?: number;
           file_url?: string;
-          id?: never;
+          id?: number;
           is_default?: boolean;
           original_file_name?: string;
-          user_id?: string | null;
+          user_id?: string;
         };
         Relationships: [
           {
@@ -66,14 +65,14 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'campaign_npcs_campaign_id_fkey';
+            foreignKeyName: 'public_campaign_npcs_campaign_id_fkey';
             columns: ['campaign_id'];
             isOneToOne: false;
             referencedRelation: 'campaigns';
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'campaign_npcs_npc_id_fkey';
+            foreignKeyName: 'public_campaign_npcs_npc_id_fkey';
             columns: ['npc_id'];
             isOneToOne: false;
             referencedRelation: 'npcs';
@@ -91,35 +90,58 @@ export interface Database {
           is_default: boolean;
           start_date: string | null;
           updated_at: string | null;
-          user_id: string | null;
+          user_id: string;
         };
         Insert: {
           campaign_name: string;
-          created_at?: never;
+          created_at?: string;
           description?: string | null;
           end_date?: string | null;
-          id?: never;
+          id?: number;
           is_default?: boolean;
           start_date?: string | null;
           updated_at?: string | null;
-          user_id?: string | null;
+          user_id?: string;
         };
         Update: {
           campaign_name?: string;
-          created_at?: never;
+          created_at?: string;
           description?: string | null;
           end_date?: string | null;
-          id?: never;
+          id?: number;
           is_default?: boolean;
           start_date?: string | null;
           updated_at?: string | null;
-          user_id?: string | null;
+          user_id?: string;
         };
         Relationships: [
           {
             foreignKeyName: 'campaigns_user_id_fkey';
             columns: ['user_id'];
             isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      customers: {
+        Row: {
+          id: string;
+          stripe_customer_id: string | null;
+        };
+        Insert: {
+          id: string;
+          stripe_customer_id?: string | null;
+        };
+        Update: {
+          id?: string;
+          stripe_customer_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'customers_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
             referencedRelation: 'users';
             referencedColumns: ['id'];
           },
@@ -133,13 +155,13 @@ export interface Database {
           user_id: string | null;
         };
         Insert: {
-          id?: never;
+          id?: number;
           is_default?: boolean;
           type_name: string;
           user_id?: string | null;
         };
         Update: {
-          id?: never;
+          id?: number;
           is_default?: boolean;
           type_name?: string;
           user_id?: string | null;
@@ -156,31 +178,31 @@ export interface Database {
       };
       npc_dialogues: {
         Row: {
-          id: number;
           dialogue_type_id: number | null;
+          id: number;
           is_default: boolean;
           npc_id: number | null;
           text: string;
+          tts_audio_id: number | null;
           user_id: string | null;
-          tts_audio_id?: number | null;
         };
         Insert: {
-          id?: number;
           dialogue_type_id?: number | null;
+          id?: number;
           is_default?: boolean;
           npc_id?: number | null;
           text: string;
-          user_id?: string | null;
           tts_audio_id?: number | null;
+          user_id?: string | null;
         };
         Update: {
-          id?: number;
           dialogue_type_id?: number | null;
+          id?: number;
           is_default?: boolean;
           npc_id?: number | null;
           text?: string;
-          user_id?: string | null;
           tts_audio_id?: number | null;
+          user_id?: string | null;
         };
         Relationships: [
           {
@@ -191,13 +213,6 @@ export interface Database {
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'npc_dialogues_npc_id_fkey';
-            columns: ['npc_id'];
-            isOneToOne: false;
-            referencedRelation: 'npcs';
-            referencedColumns: ['id'];
-          },
-          {
             foreignKeyName: 'npc_dialogues_user_id_fkey';
             columns: ['user_id'];
             isOneToOne: false;
@@ -205,7 +220,14 @@ export interface Database {
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'npc_dialogues_tts_audio_id_fkey';
+            foreignKeyName: 'public_npc_dialogues_npc_id_fkey';
+            columns: ['npc_id'];
+            isOneToOne: false;
+            referencedRelation: 'npcs';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'public_npc_dialogues_tts_audio_id_fkey';
             columns: ['tts_audio_id'];
             isOneToOne: false;
             referencedRelation: 'tts_audio';
@@ -220,25 +242,25 @@ export interface Database {
           id: number;
           is_default: boolean;
           npc_name: string;
-          user_id: string | null;
+          user_id: string;
           voice_id: string | null;
         };
         Insert: {
           created_at?: string;
           description?: string | null;
-          id?: never;
+          id?: number;
           is_default?: boolean;
           npc_name: string;
-          user_id: string;
+          user_id?: string;
           voice_id?: string | null;
         };
         Update: {
-          created_at?: never;
+          created_at?: string;
           description?: string | null;
-          id?: never;
-          is_default?: never;
+          id?: number;
+          is_default?: boolean;
           npc_name?: string;
-          user_id?: never;
+          user_id?: string;
           voice_id?: string | null;
         };
         Relationships: [
@@ -249,45 +271,191 @@ export interface Database {
             referencedRelation: 'users';
             referencedColumns: ['id'];
           },
+        ];
+      };
+      prices: {
+        Row: {
+          active: boolean | null;
+          currency: string | null;
+          description?: string | null;
+          id: string;
+          interval: Database['public']['Enums']['pricing_plan_interval'] | null;
+          interval_count: number | null;
+          metadata?: Json | null | unknown;
+          product_id: string | null;
+          trial_period_days: number | null;
+          type: Database['public']['Enums']['pricing_type'] | null;
+          unit_amount: number | null;
+        };
+        Insert: {
+          active?: boolean | null;
+          currency?: string | null;
+          description?: string | null;
+          id: string;
+          interval?:
+            | Database['public']['Enums']['pricing_plan_interval']
+            | null;
+          interval_count?: number | null;
+          metadata?: Json | null;
+          product_id?: string | null;
+          trial_period_days?: number | null;
+          type?: Database['public']['Enums']['pricing_type'] | null;
+          unit_amount?: number | null;
+        };
+        Update: {
+          active?: boolean | null;
+          currency?: string | null;
+          description?: string | null;
+          id?: string;
+          interval?:
+            | Database['public']['Enums']['pricing_plan_interval']
+            | null;
+          interval_count?: number | null;
+          metadata?: Json | null;
+          product_id?: string | null;
+          trial_period_days?: number | null;
+          type?: Database['public']['Enums']['pricing_type'] | null;
+          unit_amount?: number | null;
+        };
+        Relationships: [
           {
-            foreignKeyName: 'npcs_voice_id_fkey';
-            columns: ['voice_id'];
+            foreignKeyName: 'prices_product_id_fkey';
+            columns: ['product_id'];
             isOneToOne: false;
-            referencedRelation: 'voice_clones';
+            referencedRelation: 'products';
             referencedColumns: ['id'];
           },
         ];
       };
+      products: {
+        Row: {
+          active: boolean | null;
+          description: string | null;
+          id: string;
+          image: string | null;
+          metadata: Json | null | unknown;
+          name: string | null;
+        };
+        Insert: {
+          active?: boolean | null;
+          description?: string | null;
+          id: string;
+          image?: string | null;
+          metadata?: Json | null;
+          name?: string | null;
+        };
+        Update: {
+          active?: boolean | null;
+          description?: string | null;
+          id?: string;
+          image?: string | null;
+          metadata?: Json | null;
+          name?: string | null;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: {
           avatar_url: string | null;
+          billing_address: Json | null;
           full_name: string | null;
           id: string;
-          updated_at: string | null;
+          payment_method: Json | null;
           username: string;
-          website: string | null;
+          email: string;
         };
         Insert: {
           avatar_url?: string | null;
+          billing_address?: Json | null;
           full_name?: string | null;
           id: string;
-          updated_at?: string | null;
+          payment_method?: Json | null;
           username: string;
-          website?: string | null;
+          email: string;
         };
         Update: {
           avatar_url?: string | null;
+          billing_address?: Json | null;
           full_name?: string | null;
           id?: string;
-          updated_at?: string | null;
+          payment_method?: Json | null;
           username?: string;
-          website?: string | null;
+          email?: string;
         };
         Relationships: [
           {
-            foreignKeyName: 'profiles_id_fkey';
+            foreignKeyName: 'users_id_fkey';
             columns: ['id'];
             isOneToOne: true;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      subscriptions: {
+        Row: {
+          cancel_at: string | null;
+          cancel_at_period_end: boolean | null;
+          canceled_at: string | null;
+          created: string;
+          current_period_end: string;
+          current_period_start: string;
+          ended_at: string | null;
+          id: string;
+          metadata: Json | null;
+          price_id: string | null;
+          quantity: number | null;
+          status: Database['public']['Enums']['subscription_status'] | null;
+          trial_end: string | null;
+          trial_start: string | null;
+          user_id: string;
+        };
+        Insert: {
+          cancel_at?: string | null;
+          cancel_at_period_end?: boolean | null;
+          canceled_at?: string | null;
+          created?: string;
+          current_period_end?: string;
+          current_period_start?: string;
+          ended_at?: string | null;
+          id: string;
+          metadata?: Json | null;
+          price_id?: string | null;
+          quantity?: number | null;
+          status?: Database['public']['Enums']['subscription_status'] | null;
+          trial_end?: string | null;
+          trial_start?: string | null;
+          user_id: string;
+        };
+        Update: {
+          cancel_at?: string | null;
+          cancel_at_period_end?: boolean | null;
+          canceled_at?: string | null;
+          created?: string;
+          current_period_end?: string;
+          current_period_start?: string;
+          ended_at?: string | null;
+          id?: string;
+          metadata?: Json | null;
+          price_id?: string | null;
+          quantity?: number | null;
+          status?: Database['public']['Enums']['subscription_status'] | null;
+          trial_end?: string | null;
+          trial_start?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'subscriptions_price_id_fkey';
+            columns: ['price_id'];
+            isOneToOne: false;
+            referencedRelation: 'prices';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'subscriptions_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
             referencedRelation: 'users';
             referencedColumns: ['id'];
           },
@@ -301,7 +469,7 @@ export interface Database {
           id: number;
           is_default: boolean;
           source_text: string;
-          user_id: string | null;
+          user_id: string;
           voice_id: string | null;
         };
         Insert: {
@@ -311,7 +479,7 @@ export interface Database {
           id?: number;
           is_default?: boolean;
           source_text: string;
-          user_id?: string | null;
+          user_id?: string;
           voice_id?: string | null;
         };
         Update: {
@@ -321,7 +489,7 @@ export interface Database {
           id?: number;
           is_default?: boolean;
           source_text?: string;
-          user_id?: string | null;
+          user_id?: string;
           voice_id?: string | null;
         };
         Relationships: [
@@ -330,43 +498,6 @@ export interface Database {
             columns: ['user_id'];
             isOneToOne: false;
             referencedRelation: 'users';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'tts_audio_voice_id_fkey';
-            columns: ['voice_id'];
-            isOneToOne: false;
-            referencedRelation: 'voice_clones';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      voice_clone_clips: {
-        Row: {
-          audio_clip_id: number;
-          voice_clone_id: number;
-        };
-        Insert: {
-          audio_clip_id: number;
-          voice_clone_id: number;
-        };
-        Update: {
-          audio_clip_id?: number;
-          voice_clone_id?: number;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'voice_clone_clips_audio_clip_id_fkey';
-            columns: ['audio_clip_id'];
-            isOneToOne: false;
-            referencedRelation: 'audio_clips';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'voice_clone_clips_voice_clone_id_fkey';
-            columns: ['voice_clone_id'];
-            isOneToOne: false;
-            referencedRelation: 'voice_clones';
             referencedColumns: ['id'];
           },
         ];
@@ -420,13 +551,105 @@ export interface Database {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      pricing_plan_interval: 'day' | 'week' | 'month' | 'year';
+      pricing_type: 'one_time' | 'recurring';
+      subscription_status:
+        | 'trialing'
+        | 'active'
+        | 'canceled'
+        | 'incomplete'
+        | 'incomplete_expired'
+        | 'past_due'
+        | 'unpaid'
+        | 'paused';
     };
     CompositeTypes: {
       [_ in never]: never;
     };
   };
-}
+};
+
+type PublicSchema = Database[Extract<keyof Database, 'public'>];
+
+export type Tables<
+  PublicTableNameOrOptions extends
+    | keyof (PublicSchema['Tables'] & PublicSchema['Views'])
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+        Database[PublicTableNameOrOptions['schema']]['Views'])
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+      Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
+      Row: infer R;
+    }
+    ? R
+    : never
+  : PublicTableNameOrOptions extends keyof (PublicSchema['Tables'] &
+        PublicSchema['Views'])
+    ? (PublicSchema['Tables'] &
+        PublicSchema['Views'])[PublicTableNameOrOptions] extends {
+        Row: infer R;
+      }
+      ? R
+      : never
+    : never;
+
+export type TablesInsert<
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema['Tables']
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
+      Insert: infer I;
+    }
+    ? I
+    : never
+  : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
+    ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
+        Insert: infer I;
+      }
+      ? I
+      : never
+    : never;
+
+export type TablesUpdate<
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema['Tables']
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
+      Update: infer U;
+    }
+    ? U
+    : never
+  : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
+    ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
+        Update: infer U;
+      }
+      ? U
+      : never
+    : never;
+
+export type Enums<
+  PublicEnumNameOrOptions extends
+    | keyof PublicSchema['Enums']
+    | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicEnumNameOrOptions['schema']]['Enums']
+    : never = never,
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
+    ? PublicSchema['Enums'][PublicEnumNameOrOptions]
+    : never;
 
 export interface BasicUserInfo {
   id: string;
@@ -438,89 +661,3 @@ export interface UserAuth {
   user: BasicUserInfo | null;
   error: string | null;
 }
-
-export type Tables<
-  PublicTableNameOrOptions extends
-    | keyof (Database['public']['Tables'] & Database['public']['Views'])
-    | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends {
-    schema: keyof Database;
-  }
-    ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] &
-        Database[PublicTableNameOrOptions['schema']]['Views'])
-    : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
-      Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
-      Row: infer R;
-    }
-    ? R
-    : never
-  : PublicTableNameOrOptions extends keyof (Database['public']['Tables'] &
-        Database['public']['Views'])
-    ? (Database['public']['Tables'] &
-        Database['public']['Views'])[PublicTableNameOrOptions] extends {
-        Row: infer R;
-      }
-      ? R
-      : never
-    : never;
-
-export type TablesInsert<
-  PublicTableNameOrOptions extends
-    | keyof Database['public']['Tables']
-    | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends {
-    schema: keyof Database;
-  }
-    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
-    : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
-      Insert: infer I;
-    }
-    ? I
-    : never
-  : PublicTableNameOrOptions extends keyof Database['public']['Tables']
-    ? Database['public']['Tables'][PublicTableNameOrOptions] extends {
-        Insert: infer I;
-      }
-      ? I
-      : never
-    : never;
-
-export type TablesUpdate<
-  PublicTableNameOrOptions extends
-    | keyof Database['public']['Tables']
-    | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends {
-    schema: keyof Database;
-  }
-    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
-    : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
-      Update: infer U;
-    }
-    ? U
-    : never
-  : PublicTableNameOrOptions extends keyof Database['public']['Tables']
-    ? Database['public']['Tables'][PublicTableNameOrOptions] extends {
-        Update: infer U;
-      }
-      ? U
-      : never
-    : never;
-
-export type Enums<
-  PublicEnumNameOrOptions extends
-    | keyof Database['public']['Enums']
-    | { schema: keyof Database },
-  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions['schema']]['Enums']
-    : never = never,
-> = PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
-  : PublicEnumNameOrOptions extends keyof Database['public']['Enums']
-    ? Database['public']['Enums'][PublicEnumNameOrOptions]
-    : never;

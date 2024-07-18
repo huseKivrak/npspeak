@@ -12,7 +12,7 @@ import {
   getAccentEmoji,
   voiceMatchesFilter,
 } from '@/utils/helpers/formHelpers';
-import { capitalize } from '@/utils/formatHelpers';
+import { capitalize } from '@/utils/helpers/formatHelpers';
 import { FaMale, FaFemale } from 'react-icons/fa';
 import { MdOutlineDirectionsWalk, MdOutlineElderly } from 'react-icons/md';
 import { BiChild } from 'react-icons/bi';

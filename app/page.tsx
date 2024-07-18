@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getUserInfo } from '@/actions/auth';
+import { getUserProfile } from '@/actions/auth';
 import { VoiceSampler } from '@/components/landingPage/VoiceSampler';
 import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
 import { WorkflowAccordian } from '@/components/landingPage/WorkflowAccordian';
@@ -10,7 +10,7 @@ export default async function Index({
 }: {
   searchParams: { message: string };
 }) {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (user) {
     redirect('/dashboard');
   }

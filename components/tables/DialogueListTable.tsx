@@ -21,7 +21,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from '@nextui-org/react';
-import { capitalize } from '@/utils/formatHelpers';
+import { capitalize } from '@/utils/helpers/formatHelpers';
 import {
   FaChessBoard,
   FaChevronDown,

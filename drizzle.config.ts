@@ -1,27 +1,22 @@
 //Config for drizzle-kit only
 
-import type { Config } from 'drizzle-kit';
 import { cwd } from 'process';
 import { loadEnvConfig } from '@next/env';
+import { defineConfig } from 'drizzle-kit';
 
 loadEnvConfig(cwd());
 
-const pw = process.env.DATABASE_PASSWORD || '';
-const dbHost = process.env.DATABASE_HOST || '';
-const dbUser = process.env.DATABASE_USER || '';
-export default {
+export default defineConfig({
   schema: './database/drizzle/schema.ts',
   schemaFilter: ['public'],
   out: './database/drizzle',
-  driver: 'pg',
+  dialect: 'postgresql',
   dbCredentials: {
-    user: dbUser,
-    password: pw,
-    host: dbHost,
-    port: 6543,
-    database: 'postgres',
+    url: process.env.POSTGRES_URL!,
   },
   introspect: {
     casing: 'preserve',
   },
-} satisfies Config;
+  verbose: true,
+  strict: true,
+});

@@ -8,10 +8,11 @@ import {
   npc_dialogue_types,
   npc_dialogues,
   tts_audio,
+  profiles,
 } from '@/database/drizzle/schema';
 import { db } from '.';
 import { eq, and } from 'drizzle-orm';
-import { getUserInfo } from '@/actions/auth';
+import { getUserProfile } from '@/actions/auth';
 import { DetailedDialogue } from '@/types/drizzle';
 import { PgSelect } from 'drizzle-orm/pg-core';
 /**
@@ -21,7 +22,7 @@ import { PgSelect } from 'drizzle-orm/pg-core';
 export const getCampaignsWithNPCs = async (
   campaignId?: number
 ): Promise<ActionStatus> => {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user)
     return {
       status: 'error',
@@ -90,7 +91,7 @@ export const getCampaignsWithNPCs = async (
 export const getNPCsWithRelatedData = async (
   npcId?: number
 ): Promise<ActionStatus> => {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user)
     return {
       status: 'error',
@@ -172,7 +173,7 @@ export const getNPCsWithRelatedData = async (
 export const getDetailedDialogues = async (
   npcId: number
 ): Promise<ActionStatus> => {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) {
     return {
       status: 'error',
@@ -208,4 +209,11 @@ export const getDetailedDialogues = async (
       message: `Error fetching detailed dialogues: ${error}`,
     };
   }
+};
+
+export const isExistingEmail = async (email: string): Promise<boolean> => {
+  const exisitingEmail = await db.query.profiles.findFirst({
+    where: eq(profiles.email, email),
+  });
+  return !!exisitingEmail;
 };

@@ -4,15 +4,16 @@ import { CampaignListTable } from '../tables/CampaignListTable';
 import { NPCListTable } from '../tables/NPCListTable';
 import { Tabs, Tab, Chip, Button, Divider } from '@nextui-org/react';
 import { PlusIcon } from '../icons';
-import { BasicUserInfo } from '@/types/supabase';
+
 import Link from 'next/link';
+import { UserProfile } from '@/actions/auth';
 
 export function UserDashboard({
   user,
   campaigns,
   npcs,
 }: {
-  user: BasicUserInfo;
+  user: UserProfile;
   campaigns: CampaignWithNPCs[] | null;
   npcs: DetailedNPC[] | null;
 }) {

@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import { getUserInfo } from '@/actions/auth';
+import { getUserProfile } from '@/actions/auth';
 import {
   getDetailedDialogues,
   getNPCsWithRelatedData,
@@ -15,7 +15,7 @@ export default async function NPCDetailPage({
     npcId: number;
   };
 }) {
-  const { user } = await getUserInfo();
+  const { user } = await getUserProfile();
   if (!user) return redirect('/login');
 
   const npcResponse = await getNPCsWithRelatedData(params.npcId);
@@ -41,7 +41,10 @@ export default async function NPCDetailPage({
 
   //todo: handle rejecteds?
   const dialogues = (await Promise.allSettled(dialoguesWithAudio))
-    .filter((d) => d.status === 'fulfilled')
+    .filter(
+      (d): d is PromiseFulfilledResult<DetailedDialogue> =>
+        d.status === 'fulfilled'
+    )
     .map((d) => d.value);
 
   return <NPCDetail npc={npc} dialogues={dialogues} />;
