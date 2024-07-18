@@ -1,23 +1,29 @@
+import { type EmailOtpType } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
 import { createClientOnServer } from '@/utils/supabase/server';
-import { NextResponse } from 'next/server';
-import { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
-  // The `/auth/callback` route is required for the server-side auth flow implemented
-  // by the `@supabase/ssr` package. It exchanges an auth code for the user's session.
-  const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get('code');
+  const { searchParams } = new URL(request.url);
+  const token_hash = searchParams.get('token_hash');
+  const type = searchParams.get('type') as EmailOtpType | null;
+  const next = searchParams.get('next') ?? '/';
+  const redirectTo = request.nextUrl.clone();
+  redirectTo.pathname = next;
 
-  if (code) {
+  if (token_hash && type) {
     const supabase = createClientOnServer();
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-    if (error) {
-      return NextResponse.redirect(`${requestUrl.origin}/forgot-password`);
+    const { error } = await supabase.auth.verifyOtp({
+      type,
+      token_hash,
+    });
+    if (!error) {
+      // redirect user to specified redirect URL or root of app
+      return NextResponse.redirect(redirectTo);
     }
   }
 
-  // URL to redirect to after sign in process completes
-  return NextResponse.redirect(`${requestUrl.origin}/reset-password`);
+  // redirect the user to an error page with some instructions
+  redirectTo.pathname = '/error';
+  return NextResponse.redirect(redirectTo);
 }
