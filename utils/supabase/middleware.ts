@@ -41,7 +41,7 @@ export async function updateSession(request: NextRequest) {
     '/api',
     '/auth',
     '/forgot-password',
-    '/account/reset-password',
+    '/reset-password',
   ];
   const isUnprotectedPath = unprotectedPaths.some((path) =>
     request.nextUrl.pathname.startsWith(path)
