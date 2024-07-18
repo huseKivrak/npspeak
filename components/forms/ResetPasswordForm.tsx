@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { FormInput } from './FormInput';
 import { Button, Spinner } from '@nextui-org/react';
 
-export default function UpdatePasswordForm() {
+export default function ResetPasswordForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -68,6 +68,7 @@ export default function UpdatePasswordForm() {
           radius="sm"
           size="lg"
           isDisabled={isSubmitting}
+          type="submit"
         >
           {isSubmitting ? <Spinner /> : 'Update Password'}
         </Button>
