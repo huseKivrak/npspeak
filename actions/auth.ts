@@ -17,7 +17,7 @@ export const signUpAction = async (
   prevState: ActionStatus,
   formData: FormData
 ): Promise<ActionStatus> => {
-  const callbackURL = getURL('/auth/callback');
+  const callbackURL = getURL('/auth/confirm');
 
   try {
     const { email, username, password } = signupSchema.parse(formData);
@@ -135,7 +135,7 @@ export const signInAction = async (
 };
 
 export const sendResetPasswordEmail = async (email: string) => {
-  const callbackURL = getURL('/auth/reset-password');
+  const callbackURL = getURL('/auth/confirm');
 
   const validEmail = isValidEmail(email.trim());
   if (!validEmail) {
@@ -189,7 +189,7 @@ export const signInWithGithub = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
     options: {
-      redirectTo: `${origin}/auth/callback`,
+      redirectTo: `${origin}/auth/confirm`,
     },
   });
   if (error) {
@@ -210,7 +210,7 @@ export const signInWithDiscord = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'discord',
     options: {
-      redirectTo: `${origin}/auth/callback`,
+      redirectTo: `${origin}/auth/confirm`,
     },
   });
   if (error) {
