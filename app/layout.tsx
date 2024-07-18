@@ -8,6 +8,7 @@ import { fontAlagard, fontGrenze } from '@/config/fonts';
 import clsx from 'clsx';
 import { Navbar } from '@/components/layout/Navbar';
 import AuthButton from '@/components/buttons/AuthButton';
+import { Toaster } from '@/components/toaster/toaster';
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -56,6 +57,7 @@ export default function RootLayout({
               </p>
             </footer>
           </div>
+          <Toaster />
         </Providers>
       </body>
     </html>
