@@ -135,21 +135,22 @@ export const signInAction = async (
 };
 
 export const sendResetPasswordEmail = async (email: string) => {
-  const validEmail = isValidEmail(email);
+  const callbackURL = getURL('/auth/reset-password');
+
+  const validEmail = isValidEmail(email.trim());
   if (!validEmail) {
     return 'Please enter a valid email.';
   }
 
   try {
     //Check if there's a user with that email
-    const supabase = createClientOnServer();
     const existingEmail = await isExistingEmail(email);
     if (!existingEmail) {
       //Handle as "success" to prevent email phishing
       redirect('/forgot-password/success');
     }
 
-    const callbackURL = getURL('/auth/reset-password');
+    const supabase = createClientOnServer();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: callbackURL,
     });
