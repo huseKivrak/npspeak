@@ -12,7 +12,7 @@ import {
   getURL,
   isValidEmail,
 } from '@/utils/helpers/vercel';
-import { isExistingEmail } from '@/database/drizzle/queries';
+import { isExistingEmailAddress } from '@/database/drizzle/queries';
 import { db } from '@/database/drizzle';
 import { eq } from 'drizzle-orm';
 import { profiles } from '@/database/drizzle/schema';
@@ -157,7 +157,7 @@ export const sendResetPasswordEmail = async (email: string) => {
 
   try {
     //Check if there's a user with that email
-    const existingEmail = await isExistingEmail(email);
+    const existingEmail = await isExistingEmailAddress(email);
     if (!existingEmail) {
       //Handle as "success" to prevent email phishing
       redirect('/forgot-password/success');

@@ -211,9 +211,11 @@ export const getDetailedDialogues = async (
   }
 };
 
-export const isExistingEmail = async (email: string): Promise<boolean> => {
+export const isExistingEmailAddress = async (
+  emailAddress: string
+): Promise<boolean> => {
   const exisitingEmail = await db.query.profiles.findFirst({
-    where: eq(profiles.email, email),
+    where: eq(profiles.email, emailAddress),
   });
   return !!exisitingEmail;
 };
