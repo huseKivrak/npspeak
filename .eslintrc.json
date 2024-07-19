@@ -5,5 +5,11 @@
     "project": "./tsconfig.json"
   },
   "plugins": ["drizzle"],
+  "rules": {
+    "drizzle/enforce-delete-with-where": [
+      "error",
+      { "drizzleObjectName": "db" }
+    ]
+  },
   "extends": ["plugin:drizzle/recommended", "next/core-web-vitals"]
 }
