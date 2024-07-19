@@ -6,7 +6,12 @@ import { redirect } from 'next/navigation';
 import { signupSchema, loginSchema } from '@/database/drizzle/validation';
 import { ZodError } from 'zod';
 import { ActionStatus } from '@/types/drizzle';
-import { getURL, isValidEmail } from '@/utils/helpers/vercel';
+import {
+  getErrorRedirect,
+  getStatusRedirect,
+  getURL,
+  isValidEmail,
+} from '@/utils/helpers/vercel';
 import { isExistingEmail } from '@/database/drizzle/queries';
 import { db } from '@/database/drizzle';
 import { eq } from 'drizzle-orm';
@@ -16,28 +21,24 @@ import { Tables } from '@/types/supabase';
 export const signUpAction = async (
   prevState: ActionStatus,
   formData: FormData
-): Promise<ActionStatus> => {
+) => {
   const callbackURL = getURL('/auth/confirm');
+  let redirectPath: string;
 
   try {
     const { email, username, password } = signupSchema.parse(formData);
-    const existingEmail = await isExistingEmail(email);
-    if (existingEmail) {
-      return {
-        status: 'error',
-        message: 'Email is already taken.',
-        errors: [
-          {
-            path: 'email',
-            message: 'This email is unavailable.',
-          },
-        ],
-      };
-    }
+    // const existingEmail = await isExistingEmail(email);
+
+    // if (existingEmail) {
+    //   redirectPath = getErrorRedirect(
+    //     '/signup',
+    //     'Unavailable',
+    //     'An account already exists with this email address.'
+    //   );
+    // }
 
     const supabase = createClientOnServer();
-
-    const { error } = await supabase.auth.signUp({
+    const { error, data } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -49,20 +50,36 @@ export const signUpAction = async (
     });
 
     if (error) {
-      return {
-        status: 'error',
-        message: 'Oops! Something went wrong. Please try again',
-        errors: [
-          {
-            path: 'confirm_password',
-            message: 'Oops! Something went wrong. Please try again',
-          },
-        ],
-      };
+      redirectPath = getErrorRedirect(
+        '/signup',
+        'sign up failed.',
+        error.message
+      );
+    } else if (data.session) {
+      redirectPath = getStatusRedirect('/dashboard', 'hey', 'nice to see ya!');
+    } else if (
+      data.user &&
+      data.user.identities &&
+      data.user.identities.length === 0
+    ) {
+      redirectPath = getErrorRedirect(
+        '/signup',
+        'sign up failed',
+        'sorry, this email address is taken'
+      );
+      console.log('TAKEN EMAIL REDIRECT PATH:', redirectPath);
+    } else if (data.user) {
+      redirectPath = getStatusRedirect('/signup/success', 'email sent', 'nice');
+      console.log('SUCCESS REDIRECT PATH:', redirectPath);
+    } else {
+      redirectPath = getErrorRedirect(
+        '/signup',
+        'oops',
+        'there was an error during signup'
+      );
     }
   } catch (error) {
     if (error instanceof ZodError) {
-      console.log('zod error: ', error);
       return {
         status: 'error',
         message: 'Invalid form data',
@@ -73,19 +90,15 @@ export const signUpAction = async (
       };
     } else {
       console.error('Error during signup: ', error);
-      return {
-        status: 'error',
-        message: 'Oops! Something went wrong. Please try again',
-        errors: [
-          {
-            path: 'confirm_password',
-            message: 'Oops! Something went wrong. Please try again',
-          },
-        ],
-      };
+      redirectPath = getErrorRedirect(
+        '/signup',
+        'oops',
+        'there was an error during signup'
+      );
     }
   }
-  redirect('/signup/success');
+  console.debug('REDIRECTING TO:', redirectPath);
+  redirect(redirectPath);
 };
 
 export const signInAction = async (

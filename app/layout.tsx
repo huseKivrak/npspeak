@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import { Navbar } from '@/components/layout/Navbar';
 import AuthButton from '@/components/buttons/AuthButton';
 import { Toaster } from '@/components/toaster/toaster';
+import { Suspense, PropsWithChildren } from 'react';
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -26,11 +27,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
@@ -51,13 +48,18 @@ export default function RootLayout({
             </main>
             <Analytics />
             <SpeedInsights />
-            <footer className="w-full flex items-center justify-center py-4">
-              <p className="text-tiny sm:text-small text-white">
-                Copyright © 2024 - All rights reserved by npSpeak
-              </p>
+            <footer className="mx-auto max-w-[1920px] flex items-center justify-center px-8">
+              <div className="py-20">
+                <span className="text-tiny sm:text-small text-white tracking-wider">
+                  &copy; {new Date().getFullYear()} npSpeak. All rights
+                  reserved.
+                </span>
+              </div>
             </footer>
           </div>
-          <Toaster />
+          <Suspense>
+            <Toaster />
+          </Suspense>
         </Providers>
       </body>
     </html>
