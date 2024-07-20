@@ -67,3 +67,50 @@ export type VoiceOptionProps = {
   useCase: string;
   sampleURL: string;
 };
+
+export type SharedElevenLabsVoice = {
+  public_owner_id: string;
+  voice_id: string;
+  date_unix: number;
+  name: string;
+  accent: string;
+  gender: string;
+  age: string;
+  descriptive: string;
+  use_case: string;
+  category: string;
+  language: string;
+  description: string;
+  preview_url: string;
+  usage_character_count_1y: number;
+  usage_character_count_7d: number;
+  play_api_usage_character_count_1y: number;
+  cloned_by_count: number;
+  rate: number;
+  free_users_allowed: boolean;
+  live_moderation_enabled: boolean;
+  featured: boolean;
+  notice_period: number;
+  instagram_username: string;
+  twitter_username: string;
+  youtube_username: string;
+  tiktok_username: string;
+  image_url: string;
+};
+
+export type SharedElevenLabsVoiceQueryProps = {
+  page_size?: number; // default: 30, max: 100
+  category?: string;
+  gender?: string;
+  age?: string;
+  accent?: string;
+  language?: string;
+  search?: string;
+  use_cases?: string[];
+  descriptives?: string[];
+  featured?: boolean; // default: false
+  reader_app_enabled?: boolean; // default: false
+  owner_id?: string;
+  sort?: string;
+  page?: number; // default: 0
+};
