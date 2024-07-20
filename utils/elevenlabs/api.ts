@@ -4,6 +4,7 @@ import {
   ElevenLabsVoice,
   LabelOptions,
   NormalizedLabel,
+  SharedElevenLabsVoiceQueryProps,
 } from '@/types/elevenlabs';
 import { VoiceOptionProps } from '@/types/elevenlabs';
 
@@ -157,3 +158,12 @@ export const getSingleLabelValues = (
 
 //   return [...uniqueLabels];
 // }
+
+export const createSharedVoiceQuery = (
+  query: SharedElevenLabsVoiceQueryProps
+): string => {
+  const queryString = Object.entries(query)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');
+  return queryString;
+};
