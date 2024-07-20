@@ -14,7 +14,7 @@ export const Navbar = ({ children }: { children: React.ReactNode }) => {
       shouldHideOnScroll
       maxWidth="xl"
       isBlurred={false}
-      className="pt-8"
+      className="pt-8 px-4 sm:px-8 lg:px-16"
     >
       <NavbarContent justify="start">
         <NavbarBrand as="li" className="gap-3">

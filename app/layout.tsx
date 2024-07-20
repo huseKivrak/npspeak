@@ -43,14 +43,14 @@ export default async function RootLayout({ children }: PropsWithChildren) {
             <Navbar>
               <AuthButton />
             </Navbar>
-            <main className="container mx-auto max-w-7xl sm:px-4 pt-8 flex-grow">
+            <main className="container mx-auto max-w-7xl px-4 sm:px-8 pt-4 flex-grow overflow-hidden">
               {children}
             </main>
             <Analytics />
             <SpeedInsights />
-            <footer className="mx-auto max-w-[1920px] flex items-center justify-center px-8">
+            <footer className="mx-auto max-w-[1920px] flex items-center justify-center px-4 sm:px-8 py-8 sm:py-12 lg:py-20">
               <div className="py-20">
-                <span className="text-tiny sm:text-small text-white tracking-wider">
+                <span className="sm:text-small md:text-base lg:text-large text-white tracking-wider">
                   &copy; {new Date().getFullYear()} npSpeak. All rights
                   reserved.
                 </span>
