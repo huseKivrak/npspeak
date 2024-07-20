@@ -1,8 +1,12 @@
 import { ConfigTheme } from '@nextui-org/react';
 
+/**
+ * @link https://lospec.com/palette-list/cc-29
+ */
 export const mainTheme: ConfigTheme = {
-  extend: 'dark',
   layout: {
+    dividerWeight: '2px',
+    disabledOpacity: 0.5,
     fontSize: {
       tiny: '0.9375rem',
       small: '1.09375rem',
@@ -15,81 +19,62 @@ export const mainTheme: ConfigTheme = {
       medium: '1.75rem',
       large: '2rem',
     },
-    // radius: {
-    //   small: '10px', // rounded-small
-    //   medium: '15px', // rounded-medium
-    //   large: '18px', // rounded-large
-    // },
-    // borderWidth: {
-    //   small: '2px', // border-small
-    //   medium: '3px', // border-medium (default)
-    //   large: '4px', // border-large
-    // },
+    radius: {
+      small: '10px', // rounded-small
+      medium: '15px', // rounded-medium
+      large: '18px', // rounded-large
+    },
+    borderWidth: {
+      small: '2px', // border-small
+      medium: '3px', // border-medium (default)
+      large: '4px', // border-large
+    },
   },
-
   colors: {
-    background: 'hsl(0, 0%, 13%)',
-    foreground: 'hsl(0, 0%, 91%)',
-    focus: 'hsl(0, 0%, 91%)',
-    default: 'hsl(0, 0%, 35%)',
+    background: '#212123',
+    foreground: '#f2f0e5',
+    divider: '#b8b5b9',
+    focus: '#4b80ca',
+    content1: '#45444f',
+    content2: '#646365',
+    content3: '#868188',
+    content4: '#b8b5b9',
+    default: {
+      100: '#b8b5b9',
+      200: '#868188',
+      600: '#646365',
+      800: '#45444f',
+      DEFAULT: '#868188',
+      foreground: '#212123',
+    },
     primary: {
-      // blue
-      '50': '#e6f5ff',
-      '100': '#ccebff',
-      '200': '#99d7fe',
-      '300': '#67c4fe',
-      '400': '#34b0fd',
-      '500': '#019cfd',
-      '600': '#017dca',
-      '700': '#015e98',
-      '800': '#003e65',
-      '900': '#001f33',
-      DEFAULT: '#019cfd',
-      foreground: '#FFFFFF',
+      200: '#68c2d3',
+      800: '#352b42',
+      DEFAULT: '#4b80ca',
+      foreground: '#212123',
     },
     secondary: {
-      // purple
-      '50': '#f7f0ff',
-      '100': '#efe0ff',
-      '200': '#dfc1ff',
-      '300': '#cea3ff',
-      '400': '#be84ff',
-      '500': '#ae65ff',
-      '600': '#8b51cc',
-      '700': '#683d99',
-      '800': '#462866',
-      '900': '#231433',
-      DEFAULT: '#ae65ff',
-      foreground: '#FFFFFF',
+      200: '#edc8c4',
+      800: '#6a536e',
+      DEFAULT: '#cf8acb',
+      foreground: '#212123',
     },
     success: {
-      '50': '#eef6f3',
-      '100': '#ddede7',
-      '200': '#bbdccf',
-      '300': '#9acab7',
-      '400': '#78b99f',
-      '500': '#56a787',
-      '600': '#45866c',
-      '700': '#346451',
-      '800': '#224336',
-      '900': '#11211b',
-      DEFAULT: '#56a787',
-      foreground: '#FFFFFF',
+      200: '#c2d368',
+      800: '#4e584a',
+      DEFAULT: '#8ab060',
+      foreground: '#212123',
     },
-    warning: 'hsl(0, 0%, 40%)',
+    warning: {
+      200: '#ede19e',
+      800: '#a77b5b',
+      DEFAULT: '#d3a068',
+      foreground: '#212123',
+    },
     danger: {
-      '50': '#ffefee',
-      '100': '#fedfdd',
-      '200': '#febfbb',
-      '300': '#fd9e98',
-      '400': '#fd7e76',
-      '500': '#fc5e54',
-      '600': '#ca4b43',
-      '700': '#973832',
-      '800': '#652622',
-      '900': '#321311',
-      DEFAULT: '#fc5e54',
-      foreground: '#FFFFFF',
+      800: '#80493a',
+      DEFAULT: '#b45252',
+      foreground: '#212123',
     },
   },
 };
