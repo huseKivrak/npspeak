@@ -1,6 +1,7 @@
 import { type EmailOtpType } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClientOnServer } from '@/utils/supabase/server';
+import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers/vercel';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -17,13 +18,28 @@ export async function GET(request: NextRequest) {
       type,
       token_hash,
     });
-    if (!error) {
-      // redirect user to specified redirect URL or root of app
-      return NextResponse.redirect(redirectTo);
+
+    if (error) {
+      redirectTo.pathname = '/login';
+      return NextResponse.redirect(
+        getErrorRedirect(
+          `${redirectTo}`,
+          error.name,
+          'Oops! Something went wrong. Please try again.'
+        )
+      );
     }
   }
 
+  let successMessage = 'Email confirmed! ';
+
+  successMessage +=
+    type === 'recovery'
+      ? 'Create a new password to complete the reset.'
+      : 'Get started by making your first NPC';
+
   // redirect the user to an error page with some instructions
-  redirectTo.pathname = '/error';
-  return NextResponse.redirect(redirectTo);
+  return NextResponse.redirect(
+    getStatusRedirect(`${redirectTo}`, 'Success!', successMessage)
+  );
 }

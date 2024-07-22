@@ -5,11 +5,7 @@ import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
 import { WorkflowAccordian } from '@/components/landingPage/WorkflowAccordian';
 import { Hero } from '@/components/landingPage/Hero';
 
-export default async function Index({
-  searchParams,
-}: {
-  searchParams: { message: string };
-}) {
+export default async function Index() {
   const { user } = await getUserProfile();
   if (user) {
     redirect('/dashboard');
@@ -20,11 +16,6 @@ export default async function Index({
   const voiceSample = voices.slice(0, 12);
   return (
     <div className="flex flex-col items-center text-center gap-12">
-      {searchParams?.message === 'logout' && (
-        <div className="bg-success text-small p-2 rounded-small w-fit">
-          You have been logged out.
-        </div>
-      )}
       <Hero />
       {/* <WorkflowAccordian /> */}
       {voices && <VoiceSampler voiceOptions={voiceSample} />}

@@ -21,7 +21,7 @@ import { Tables } from '@/types/supabase';
 export const signUpAction = async (
   prevState: ActionStatus,
   formData: FormData
-) => {
+): Promise<ActionStatus> => {
   const callbackURL = getURL('/auth/confirm');
   let redirectPath: string;
 
@@ -65,12 +65,15 @@ export const signUpAction = async (
       redirectPath = getErrorRedirect(
         '/signup',
         'sign up failed',
-        'sorry, this email address is taken'
+        'this email address is taken, please try again'
       );
       console.log('TAKEN EMAIL REDIRECT PATH:', redirectPath);
     } else if (data.user) {
-      redirectPath = getStatusRedirect('/signup/success', 'email sent', 'nice');
-      console.log('SUCCESS REDIRECT PATH:', redirectPath);
+      redirectPath = getStatusRedirect(
+        '/signup/success',
+        'Success!',
+        `Confirmation email sent to ${data.user.email}`
+      );
     } else {
       redirectPath = getErrorRedirect(
         '/signup',
@@ -97,7 +100,7 @@ export const signUpAction = async (
       );
     }
   }
-  console.debug('REDIRECTING TO:', redirectPath);
+
   redirect(redirectPath);
 };
 
@@ -105,6 +108,8 @@ export const signInAction = async (
   prevState: ActionStatus,
   formData: FormData
 ): Promise<ActionStatus> => {
+  let redirectPath: string;
+
   try {
     const { email, password } = loginSchema.parse(formData);
 
@@ -115,16 +120,17 @@ export const signInAction = async (
       password,
     });
     if (error) {
-      return {
-        status: 'error',
-        message: 'Invalid email/password',
-        errors: [
-          {
-            path: 'password',
-            message: 'Incorrect email/password. Please try again',
-          },
-        ],
-      };
+      redirectPath = getErrorRedirect(
+        '/login',
+        'Login failed',
+        'Invalid email/password. Please try again.'
+      );
+    } else {
+      redirectPath = getStatusRedirect(
+        '/',
+        'Login successful',
+        'Welcome back!'
+      );
     }
   } catch (error) {
     if (error instanceof ZodError) {
@@ -137,14 +143,17 @@ export const signInAction = async (
           message: `${issue.message}`,
         })),
       };
+    } else {
+      console.error('Unexpected error:', error);
+      redirectPath = getErrorRedirect(
+        '/login',
+        'Oops',
+        'An unexpected error occurred during login.'
+      );
     }
-    return {
-      status: 'error',
-      message: 'Unexpected error',
-    };
   }
 
-  redirect(`/`);
+  redirect(redirectPath);
 };
 
 export const sendResetPasswordEmail = async (email: string) => {
@@ -237,14 +246,24 @@ export const signInWithDiscord = async () => {
 
 export const logoutAction = async () => {
   const supabase = createClientOnServer();
+  let redirectPath: string;
 
   const { error } = await supabase.auth.signOut();
   if (error) {
     console.error('Logout Error:', error);
-    redirect('/?message=error');
+    redirectPath = getErrorRedirect(
+      '/',
+      'Logout failed',
+      'An error occurred during logout.'
+    );
+  } else {
+    redirectPath = getStatusRedirect(
+      '/',
+      'Logout successful',
+      'See you next time!'
+    );
   }
-
-  redirect('/?message=logout');
+  redirect(redirectPath);
 };
 
 /**
