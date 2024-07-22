@@ -1,7 +1,7 @@
 'use client';
 
 import { signInAction } from '@/actions/auth';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm, FieldPath } from 'react-hook-form';
 import { useFormState } from 'react-dom';
 import Link from 'next/link';
@@ -13,8 +13,6 @@ import { loginSchema } from '@/database/drizzle/validation';
 import { ErrorMessage } from '@hookform/error-message';
 import { ErrorToast } from '../ErrorToast';
 import { ActionStatus } from '@/types/drizzle';
-import { Button } from '@nextui-org/react';
-import { ForgotPasswordForm } from './ForgotPasswordForm';
 
 type Inputs = z.infer<typeof loginSchema>;
 export default function LoginForm() {

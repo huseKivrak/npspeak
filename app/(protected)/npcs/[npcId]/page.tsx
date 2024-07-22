@@ -47,5 +47,9 @@ export default async function NPCDetailPage({
     )
     .map((d) => d.value);
 
-  return <NPCDetail npc={npc} dialogues={dialogues} />;
+  return (
+    <div className="flex flex-col w-full">
+      <NPCDetail npc={npc} dialogues={dialogues} />
+    </div>
+  );
 }

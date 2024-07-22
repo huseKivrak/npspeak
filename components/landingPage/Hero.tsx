@@ -1,6 +1,7 @@
+'use client';
+
 import { Button } from '@nextui-org/button';
-import { Divider } from '@nextui-org/react';
-import Link from 'next/link';
+import { Divider, Link } from '@nextui-org/react';
 
 export const Hero = () => {
   return (
@@ -8,7 +9,7 @@ export const Hero = () => {
       <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold font-alagard  tracking-wider">
         npSpeak
       </h1>
-      <p className="mt-[-24px] text-3xl md:text-5xl lg:text-6xl  font-bold">
+      <p className="mt-[-24px] text-warning text-3xl md:text-5xl lg:text-6xl  font-bold">
         Give your character a voice.
       </p>
       <div className="flex gap-4 w-full justify-center tracking-widest font-semibold">
@@ -16,9 +17,8 @@ export const Hero = () => {
           <Button
             variant="flat"
             size="lg"
-            radius="sm"
             className="text-large h-16 font-semibold"
-            color="primary"
+            color="success"
           >
             Get started
           </Button>
@@ -27,12 +27,16 @@ export const Hero = () => {
           <Button
             variant="flat"
             size="lg"
-            radius="sm"
             className="text-large h-16 font-semibold"
-            color="primary"
+            color="secondary"
           >
             Learn more
           </Button>
+        </Link>
+      </div>
+      <div className="flex items-center justify-center gap-2">
+        <Link href="/promo" color="foreground" showAnchorIcon underline="hover">
+          Have a promo code?
         </Link>
       </div>
       <Divider className="mt-4" />

@@ -4,7 +4,8 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Providers } from './providers';
 import { siteConfig } from '@/config/site';
-import { fontAlagard, fontGrenze } from '@/config/fonts';
+import { fontAlagard, fontGrenze, redHatText } from '@/config/fonts';
+
 import clsx from 'clsx';
 import { Navbar } from '@/components/layout/Navbar';
 import AuthButton from '@/components/buttons/AuthButton';
@@ -35,7 +36,8 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         className={clsx(
           'min-h-screen text-foreground bg-background font-grenze antialiased',
           fontGrenze.variable,
-          fontAlagard.variable
+          fontAlagard.variable,
+          redHatText.className
         )}
       >
         <Providers>

@@ -44,12 +44,12 @@ export function UserDashboard({
         size="lg"
         radius="sm"
         variant="solid"
+        color="secondary"
         classNames={{
-          tabList:
-            'gap-3 w-full relative rounded-none p-0 border-b border-divider',
+          tabList: 'gap-3 w-full relative rounded rounded-lg p-0',
           cursor: 'w-full',
           tab: 'max-w-full px-0 h-12',
-          tabContent: 'text-3xl tracking-widest group-data-[selected=true]:',
+          tabContent: 'text-3xl tracking-widest group-data-[selected=true]',
         }}
       >
         <Tab

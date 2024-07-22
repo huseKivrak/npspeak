@@ -15,11 +15,10 @@ import { FormOptions } from '@/types/drizzle';
 import {
   CheckboxGroup,
   Checkbox,
-  Input,
   Textarea,
   Button,
+  Input,
 } from '@nextui-org/react';
-import { FormInput } from './FormInput';
 
 interface CampaignFormProps {
   npcOptions?: FormOptions;
@@ -62,8 +61,8 @@ export default function CampaignForm({ npcOptions }: CampaignFormProps) {
   const hasNPCs = npcOptions && npcOptions.length > 0;
 
   return (
-    <form className="flex flex-col w-full max-w-md gap-3">
-      <FormInput
+    <form className="flex flex-col w-full max-w-xl gap-3">
+      <Input
         isRequired
         {...register('campaign_name')}
         type="text"
@@ -91,7 +90,7 @@ export default function CampaignForm({ npcOptions }: CampaignFormProps) {
         render={({ message }) => <ErrorToast text={message} />}
       />
 
-      <FormInput
+      <Input
         {...register('start_date')}
         type="date"
         label="Start Date (optional)"
@@ -105,7 +104,7 @@ export default function CampaignForm({ npcOptions }: CampaignFormProps) {
         render={({ message }) => <ErrorToast text={message} />}
       />
 
-      <FormInput
+      <Input
         {...register('end_date')}
         type="date"
         label="End date (optional)"
@@ -135,11 +134,15 @@ export default function CampaignForm({ npcOptions }: CampaignFormProps) {
           control={control}
           render={({ field: { ref } }) => (
             <CheckboxGroup
-              label="npcs"
+              aria-label="npc options"
               name="npc_ids"
-              orientation="horizontal"
               ref={ref}
-              className="gap-1"
+              size="sm"
+              classNames={{
+                base: 'w-full inline-flex m-0 p-0',
+                wrapper:
+                  'grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 tracking-wider',
+              }}
             >
               {npcOptions.map((option) => (
                 <Checkbox key={option.label} value={option.value.toString()}>

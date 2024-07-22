@@ -46,6 +46,7 @@ export function DeleteModal({
         <Button
           isIconOnly
           variant="light"
+          size="sm"
           onPress={onOpen}
           aria-label={`Delete ${title}`}
         >
@@ -91,7 +92,7 @@ export function DeleteModal({
                     pendingText={`Deleting ${title}...`}
                     formAction={formAction}
                     color="danger"
-                    className="hover:bg-danger-700 hover:text-white"
+                    className="disabled:bg-danger/20 disabled:text-opacity-20"
                   >
                     Delete
                   </SubmitButton>

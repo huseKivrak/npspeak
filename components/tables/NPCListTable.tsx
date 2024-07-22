@@ -119,7 +119,9 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
               >
                 <DropdownTrigger>
                   <Button variant="light" size="sm">
-                    {npc.campaigns.length} Campaigns{' '}
+                    {`${npc.campaigns.length} ${
+                      npc.campaigns.length > 1 ? 'Campaigns' : 'Campaign'
+                    }`}
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
@@ -173,7 +175,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
   //Search bar
   const topContent = useMemo(() => {
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 p-2">
         <SearchBar
           filterValue={filterValue}
           onValueChange={onSearchChange}
@@ -191,6 +193,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
           page={page}
           total={pages}
           onChange={setPage}
+          color="secondary"
           classNames={{
             wrapper: 'gap-2 bg-transparent',
             item: 'bg-transparent text-large',
@@ -203,7 +206,6 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
 
   return (
     <Table
-      color="primary"
       isHeaderSticky
       aria-label="NPCs Table"
       sortDescriptor={sortDescriptor}

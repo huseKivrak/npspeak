@@ -14,7 +14,6 @@ import {
   Tooltip,
   Image,
   Chip,
-  Skeleton,
 } from '@nextui-org/react';
 import { cn } from '@/utils/helpers/clsxMerge';
 import {
@@ -108,7 +107,7 @@ export const AudioCard = ({
     duration !== null ? formatTimer(duration - currentTime) : '--:--';
   const isPaused = currentTime > 0 && !isPlaying;
   const cardStyles = {
-    base: 'flex flex-col justify-center  w-[200px] h-[200px] transition-all ease-in-out duration-300',
+    base: 'flex flex-col justify-center  w-[250px] h-[250px] transition-all ease-in-out duration-300',
     playing: ' scale-105',
     paused: ' scale-105 animate-pulse',
     completed: '',
@@ -149,7 +148,7 @@ export const AudioCard = ({
             content={dialogue.type}
             placement="top"
             classNames={{
-              content: ['px-2 shadow-none', ' text-lg bg-transparent'],
+              content: ['px-2 shadow-none'],
             }}
           >
             <div className="m-2">
@@ -165,8 +164,8 @@ export const AudioCard = ({
           src={isPlaying ? '/images/pause_icon.svg' : '/images/play_icon.svg'}
         />
 
-        <CardBody className="z-10 px-1 overflow-hidden items-center justify-center max-h-24">
-          <p className="text-center text-balance text-lg ">{dialogue.text}</p>
+        <CardBody className="z-10 px-4 items-center justify-center max-h-[150px]">
+          <p className="text-center text-balance text-tiny">{dialogue.text}</p>
         </CardBody>
 
         <CardFooter className="z-10 bottom-0 gap-1 px-1 my-1">

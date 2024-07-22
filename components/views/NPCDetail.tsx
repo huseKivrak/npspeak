@@ -18,8 +18,8 @@ export const NPCDetail = ({
   dialogues?: DetailedDialogue[];
 }) => {
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex flex-col gap-2">
+    <div className="flex flex-col w-full justify-center">
+      <div className="flex flex-col">
         <h1>{npc.npc_name}</h1>
         <p className="lg:text-xl">{npc.description}</p>
         <ul>
@@ -43,27 +43,41 @@ export const NPCDetail = ({
       </div>
 
       <Divider className="my-4" />
-      <h2 className="text-4xl mb-4">Dialogue</h2>
-      <DialogueModal npcId={npc.id} className="mb-4" />
+
       <Tabs
         aria-label="Dialogue Views"
         size="lg"
         radius="sm"
-        color="primary"
+        color="secondary"
         classNames={{
-          tabList: 'gap-3 w-full relative rounded-none p-0',
+          tabList: 'gap-3 w-full relative rounded-lg p-0',
           cursor: 'w-full',
           tab: 'max-w-full px-0 h-12',
           tabContent: 'text-3xl tracking-widest group-data-[selected=true]:',
         }}
       >
-        <Tab key="table" title="TABLE">
+        <Tab
+          key="table"
+          title={
+            <div className="flex items-center gap-2">
+              <span>TABLE</span>
+            </div>
+          }
+        >
           <DialogueListTable
             dialogues={dialogues || []}
             voiceId={npc.voice_id!}
+            npcId={npc.id}
           />
         </Tab>
-        <Tab key="soundboard" title="SOUNDBOARD">
+        <Tab
+          key="soundboard"
+          title={
+            <div className="flex items-center">
+              <span>SOUNDBOARD</span>
+            </div>
+          }
+        >
           {dialogues ? (
             <Soundboard dialogues={formatDialoguesForSoundboard(dialogues)} />
           ) : (

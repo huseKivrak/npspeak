@@ -65,12 +65,12 @@ export function DialogueModal({
     <div className={className}>
       <Button
         onClick={onOpen}
-        variant="ghost"
+        variant="flat"
         color="success"
-        className="w-fit"
+        size="sm"
         startContent={<PlusIcon />}
       >
-        dialogue
+        <span className="tracking-tight">add dialogue</span>
       </Button>
       <Modal
         isOpen={isOpen}
@@ -147,6 +147,7 @@ export function DialogueModal({
                       type="submit"
                       disabled={isSubmitting}
                       color="success"
+                      className="disabled:bg-success/20 disabled:text-opacity-20"
                     >
                       {isSubmitting ? 'adding dialogue...' : 'add dialogue'}
                     </Button>

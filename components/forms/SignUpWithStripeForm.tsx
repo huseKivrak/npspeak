@@ -85,52 +85,6 @@ export default function SignupWithStripeForm({ user, products }: Props) {
             );
           })}
       </div>
-      <div className="flex items-center gap-2">
-        <span className="text-large font-semibold">I have a promo code</span>
-        <Tooltip
-          placement="right"
-          color="warning"
-          content={
-            <div className="px-1 py-2">
-              <div className="text-small font-semibold">
-                Thanks for checking out the site!
-              </div>
-              <div className="text-small">
-                You can enter your code at checkout
-              </div>
-            </div>
-          }
-          delay={0}
-          closeDelay={0}
-          motionProps={{
-            variants: {
-              exit: {
-                opacity: 0,
-                transition: {
-                  duration: 0.1,
-                  ease: 'easeIn',
-                },
-              },
-              enter: {
-                opacity: 1,
-                transition: {
-                  duration: 0.15,
-                  ease: 'easeOut',
-                },
-              },
-            },
-          }}
-        >
-          <Button
-            isIconOnly
-            variant="light"
-            color="warning"
-            aria-label="I have a promo code"
-          >
-            <FaQuestionCircle />
-          </Button>
-        </Tooltip>
-      </div>
     </div>
   );
 }

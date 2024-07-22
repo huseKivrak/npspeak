@@ -127,7 +127,9 @@ export function CampaignListTable({
                 >
                   <DropdownTrigger>
                     <Button variant="light" size="sm">
-                      {campaign.npcs.length} NPCs
+                      {`${campaign.npcs.length} ${
+                        campaign.npcs.length > 1 ? 'NPCs' : 'NPC'
+                      }`}
                     </Button>
                   </DropdownTrigger>
                   <DropdownMenu>
@@ -194,6 +196,7 @@ export function CampaignListTable({
           page={page}
           total={pages}
           onChange={(page) => setPage(page)}
+          color="secondary"
           classNames={{
             wrapper: 'gap-2 bg-transparent',
             item: 'bg-transparent text-large',
@@ -238,10 +241,7 @@ export function CampaignListTable({
       </TableHeader>
       <TableBody items={sortedItems} emptyContent={'No campaigns to display.'}>
         {(item) => (
-          <TableRow
-            key={item.id}
-            className="text-white group-data-[selected=true]:text-white"
-          >
+          <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
