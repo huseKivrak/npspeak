@@ -24,7 +24,7 @@ export function VoiceCard({ voice }: { voice: VoiceOptionProps }) {
     <Card
       radius="sm"
       className={cn(
-        'col-span-1 max-w-[450px] w-full h-[150px] bg-success-600 pt-2'
+        'col-span-1 max-w-[450px] w-full h-[150px] bg-success pt-2'
       )}
     >
       <CardHeader className="flex items-center justify-start text-white py-0 h-2/5">
@@ -45,7 +45,7 @@ export function VoiceCard({ voice }: { voice: VoiceOptionProps }) {
           variant="flat"
           size="sm"
           classNames={{
-            base: 'bg-danger bg-opacity-50 m-0 p-1',
+            base: 'bg-danger m-0 p-1',
             content: 'text-white text-sm',
           }}
         >
@@ -55,7 +55,7 @@ export function VoiceCard({ voice }: { voice: VoiceOptionProps }) {
           variant="flat"
           size="sm"
           classNames={{
-            base: 'bg-primary bg-opacity-50 m-0 p-1',
+            base: 'bg-primary m-0 p-1',
             content: 'text-white text-sm',
           }}
         >
@@ -65,7 +65,7 @@ export function VoiceCard({ voice }: { voice: VoiceOptionProps }) {
           variant="flat"
           size="sm"
           classNames={{
-            base: 'bg-secondary bg-opacity-50 m-0 p-1',
+            base: 'bg-secondary m-0 p-1',
             content: 'text-white text-sm',
           }}
         >

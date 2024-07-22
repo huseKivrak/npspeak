@@ -111,14 +111,14 @@ export function VoiceLabelFilter({
             value={filters.selectedGender}
           >
             <Checkbox key={'male'} value={'male'} className="">
-              <Tooltip content="male">
+              <Tooltip content="male" placement="bottom-end">
                 <span>
                   <FaMale size={20} color="lightblue" className="-ml-1" />
                 </span>
               </Tooltip>
             </Checkbox>
             <Checkbox key={'female'} value={'female'}>
-              <Tooltip content="female">
+              <Tooltip content="female" placement="bottom">
                 <span>
                   <FaFemale size={20} color="lightpink" className="-ml-1" />
                 </span>
@@ -137,7 +137,7 @@ export function VoiceLabelFilter({
           >
             <Checkbox key={'young'} value={'young'}>
               <span>
-                <Tooltip content="young">
+                <Tooltip content="young" placement="bottom">
                   <span>
                     <BiChild size={20} className="-ml-1 text-green-200" />
                   </span>
@@ -146,7 +146,7 @@ export function VoiceLabelFilter({
             </Checkbox>
             <Checkbox key={'middle-aged'} value={'middle-aged'}>
               <span>
-                <Tooltip content="middle-aged">
+                <Tooltip content="middle-aged" placement="bottom">
                   <span>
                     <MdOutlineDirectionsWalk
                       size={20}
@@ -158,7 +158,7 @@ export function VoiceLabelFilter({
             </Checkbox>
             <Checkbox key={'old'} value={'old'}>
               <span>
-                <Tooltip content="old">
+                <Tooltip content="old" placement="bottom-start">
                   <span>
                     <MdOutlineElderly
                       size={20}
