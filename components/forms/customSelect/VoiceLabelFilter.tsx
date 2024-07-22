@@ -184,8 +184,8 @@ export function VoiceLabelFilter({
           }}
         >
           {accent.map((accent) => (
-            <Tooltip content={accent}>
-              <Checkbox key={accent} value={accent} aria-label={accent}>
+            <Tooltip content={accent} key={accent}>
+              <Checkbox value={accent} aria-label={accent}>
                 <span className="-ml-1 mr-1">
                   {getAccentEmoji(accent.toLowerCase())}
                 </span>

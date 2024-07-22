@@ -61,7 +61,7 @@ export default function SignupWithStripeForm({ user, products }: Props) {
     <div className="flex flex-col items-center justify-center gap-4">
       <h1 className="text-white font-alagard tracking-widest">subscribe</h1>
       <p className="text-2xl">
-        Choose the plan that's right for you to get started.
+        Choose the plan that&apos;s right for you to get started.
       </p>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:gap-8 justify-center py-4">
