@@ -12,6 +12,7 @@ const config: Config = {
       fontFamily: {
         alagard: ['var(--font-alagard)'],
         grenze: ['var(--font-grenze)'],
+        redHatMono: ['var(--font-mono)'],
       },
     },
   },
@@ -36,7 +37,7 @@ const config: Config = {
               '700': '#524331',
               '800': '#3c3124',
               '900': '#261f17',
-              foreground: '#ede4da',
+              foreground: '#25252c',
               DEFAULT: '#7e674c',
             },
             primary: {
@@ -126,19 +127,19 @@ const config: Config = {
             },
             content1: {
               DEFAULT: '#d4c2b6',
-              foreground: '#ede4da',
+              foreground: '#25252c',
             },
             content2: {
               DEFAULT: '#bdaa97',
-              foreground: '#ede4da',
+              foreground: '#25252c',
             },
             content3: {
               DEFAULT: '#86735b',
-              foreground: '#ede4da',
+              foreground: '#25252c',
             },
             content4: {
               DEFAULT: '#7e674c',
-              foreground: '#ede4da',
+              foreground: '#25252c',
             },
             focus: '#668da9',
             overlay: '#bdaa97',
@@ -263,43 +264,42 @@ const config: Config = {
               foreground: '#ede4da',
             },
             focus: '#668da9',
-            overlay: '#ede4da',
+            overlay: '#282729',
             divider: '#636167',
           },
         },
       },
       layout: {
         fontSize: {
-          tiny: '1rem', // 16px
-          small: '1.125rem', // 18px
-          medium: '1.25rem', // 20px
-          large: '1.375rem', // 22px
+          tiny: '1rem',
+          small: '1.125rem',
+          medium: '1.25rem',
+          large: '1.375rem',
         },
-        // lineHeight: {
-        //   tiny: '1.5rem',
-        //   small: '1.75rem',
-        //   medium: '2rem',
-        //   large: '2.25rem',
-        // },
         lineHeight: {
-          tiny: '.875rem',
-          small: '1rem',
-          medium: '1.125rem',
-          large: '1.25rem',
+          tiny: '1.25rem',
+          small: '1.5rem',
+          medium: '1.75rem',
+          large: '2rem',
         },
         radius: {
-          small: '0.5rem',
-          medium: '0.75rem',
-          large: '0.875rem',
+          small: '2px',
+          medium: '4px',
+          large: '6px',
         },
         borderWidth: {
           small: '1px',
           medium: '2px',
           large: '3px',
         },
-        disabledOpacity: '0.5',
-        dividerWeight: '1',
-        hoverOpacity: '0.9',
+        disabledOpacity: '0.3',
+        dividerWeight: '2',
+        hoverOpacity: '0.8',
+        boxShadow: {
+          small: '3px 3px 0px 0px #000',
+          medium: '6px 6px 0px 0px #000',
+          large: '9px 9px 0px 0px #000',
+        },
       },
     }),
   ],
