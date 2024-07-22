@@ -43,7 +43,7 @@ export function TTSModal({
           onPress={onOpen}
           aria-label="Create Dialogue Audio"
         >
-          <PiMicrophoneBold className="text-xl text-green-500" />
+          <PiMicrophoneBold className="text-xl text-success" />
         </Button>
       </Tooltip>
       <Modal
