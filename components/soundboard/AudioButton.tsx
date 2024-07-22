@@ -8,7 +8,7 @@ import {
   FaRegFileAudio,
 } from 'react-icons/fa6';
 
-export function AudioButton({ src }: { src: string }) {
+export function AudioButton({ src, label }: { src: string; label?: string }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -32,17 +32,18 @@ export function AudioButton({ src }: { src: string }) {
   }, []);
 
   return (
-    <>
+    <div className="flex items-center justify-center">
       <Button
+        isIconOnly
         variant="light"
-        radius="none"
+        radius="full"
         size="lg"
         onClick={togglePlayback}
         endContent={isPlaying ? <FaCircleStop /> : <FaVolumeUp />}
       >
-        <span className="font-light">Sample</span>
+        {label && <span className="font-light">{label}</span>}
       </Button>
       <audio ref={audioRef} src={src} />
-    </>
+    </div>
   );
 }
