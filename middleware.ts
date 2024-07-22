@@ -6,19 +6,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - signup
-     * - login
-     * - about
-     * - contact
-     * - api
-     * - _next/static
-     * - _next/image
-     * - favicon.ico (favicon file)
-     * - $ (homepage)
-     */
-    '/((?!_next/static|_next/image|favicon.ico|$).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|$).*)'],
 };
