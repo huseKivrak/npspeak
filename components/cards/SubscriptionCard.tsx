@@ -2,6 +2,7 @@ import { ProductWithPrice } from '../forms/SignUpWithStripeForm';
 import { Card, CardHeader, CardBody, CardFooter } from '@nextui-org/card';
 import { Button, Divider } from '@nextui-org/react';
 import { Tables } from '@/types/supabase';
+import { cn } from '@/utils/helpers/clsxMerge';
 
 type Price = Tables<'prices'>;
 interface Props {
@@ -25,27 +26,50 @@ export function SubscriptionCard({
 
   const billingInterval = price.interval ? price.interval : '';
   return (
-    <Card className="max-w-md">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <p className="text-md">{product.name}</p>
-          <p className="text-md">
-            <span>{priceString}</span>
-            {billingInterval && <span>/{billingInterval}</span>}
-          </p>
-        </div>
+    <Card
+      isPressable
+      onPress={() => handleCheckout(price)}
+      classNames={{
+        base: `w-full max-w-[350px] flex flex-col items-center justify-evenly py-2 px-8 bg-success hover:bg-opacity-30 hover:scale-105 transition-all duration-300`,
+        header: 'justify-between text-4xl font-alagard tracking-wider pb-0',
+        body: 'text-center justify-center text-3xl pt-0 ',
+        footer:
+          'flex items-center justify-center pt-0 font-alagard text-4xl tracking-widest font-bold',
+      }}
+    >
+      <CardHeader
+        className={cn('', {
+          'text-warning': !billingInterval,
+        })}
+      >
+        <p>{product.name}</p>
+        <span className="text-3xl font-mono font-bold">{priceString}</span>
       </CardHeader>
-      <Divider />
-      <CardBody>
-        <p>{product.description}</p>
+      <Divider className="my-2" />
+      <CardBody
+        className={cn({
+          'text-warning': !billingInterval,
+        })}
+      >
+        <p className="text-balance">{product.description}</p>
       </CardBody>
       <CardFooter>
         <Button
           type="button"
+          color="success"
+          size="lg"
+          fullWidth
+          variant="flat"
           onClick={() => handleCheckout(price)}
           isLoading={buttonIsLoading}
         >
-          subscribe
+          <span
+            className={cn('text-foreground', {
+              'text-warning': !billingInterval,
+            })}
+          >
+            subscribe
+          </span>
         </Button>
       </CardFooter>
     </Card>
