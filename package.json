@@ -22,7 +22,7 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.9.0",
-    "@nextui-org/react": "^2.4.2",
+    "@nextui-org/react": "^2.4.6",
     "@radix-ui/react-toast": "^1.2.1",
     "@react-aria/ssr": "^3.9.4",
     "@stripe/stripe-js": "^4.1.0",
