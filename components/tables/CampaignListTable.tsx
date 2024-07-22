@@ -23,6 +23,7 @@ import { DeleteModal } from '../forms/modals/DeleteModal';
 import { SearchBar } from './SearchBar';
 import { truncateText } from '@/utils/helpers/formHelpers';
 import { FaEdit } from 'react-icons/fa';
+import { tableStyles } from '@/styles/tableStyles';
 
 export function CampaignListTable({
   campaigns,
@@ -207,25 +208,13 @@ export function CampaignListTable({
     <Table
       isHeaderSticky
       aria-label="Campaigns Table"
-      classNames={{
-        wrapper: 'p-0 rounded-sm min-h-[382px] max-h-[382px]',
-        th: ['bg-primary', '', 'border-b', 'border-divider'],
-        td: [
-          'group-data-[first=true]:first:before:rounded-none',
-          'group-data-[first=true]:last:before:rounded-none',
-
-          'group-data-[middle=true]:before:rounded-none',
-
-          'group-data-[last=true]:first:before:rounded-none',
-          'group-data-[last=true]:last:before:rounded-none',
-        ],
-      }}
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       onSortChange={setSortDescriptor}
+      classNames={tableStyles}
     >
       <TableHeader className="">
         <TableColumn
@@ -249,7 +238,10 @@ export function CampaignListTable({
       </TableHeader>
       <TableBody items={sortedItems} emptyContent={'No campaigns to display.'}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow
+            key={item.id}
+            className="text-white group-data-[selected=true]:text-white"
+          >
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}

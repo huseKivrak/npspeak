@@ -33,7 +33,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       <head />
       <body
         className={clsx(
-          'min-h-screen mainTheme text-foreground bg-background font-grenze antialiased',
+          'min-h-screen text-foreground bg-background font-grenze antialiased',
           fontGrenze.variable,
           fontAlagard.variable
         )}
@@ -50,7 +50,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
             <SpeedInsights />
             <footer className="mx-auto max-w-[1920px] flex items-center justify-center px-4 sm:px-8 py-8 sm:py-12 lg:py-20">
               <div className="py-20">
-                <span className="sm:text-small md:text-base lg:text-large text-white tracking-wider">
+                <span className="sm:text-small md:text-base lg:text-large tracking-wider">
                   &copy; {new Date().getFullYear()} npSpeak. All rights
                   reserved.
                 </span>

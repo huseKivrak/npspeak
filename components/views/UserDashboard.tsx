@@ -46,8 +46,8 @@ export function UserDashboard({
         variant="solid"
         classNames={{
           tabList:
-            'gap-3 w-full relative rounded-none p-0 border-b border-divider bg-transparent',
-          cursor: 'w-full bg-danger',
+            'gap-3 w-full relative rounded-none p-0 border-b border-divider',
+          cursor: 'w-full',
           tab: 'max-w-full px-0 h-12',
           tabContent: 'text-3xl tracking-widest group-data-[selected=true]:',
         }}
@@ -55,7 +55,7 @@ export function UserDashboard({
         <Tab
           key="npcs"
           title={
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
               <span>NPC</span>
               <Chip size="lg" variant="flat">
                 {npcs?.length}
@@ -68,7 +68,7 @@ export function UserDashboard({
         <Tab
           key="campaigns"
           title={
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
               <span>CAMPAIGN</span>
               <Chip size="lg" variant="flat">
                 {campaigns?.length}

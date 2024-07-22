@@ -23,6 +23,7 @@ import {
 
 import { DetailedNPC } from '@/types/drizzle';
 import { FaEdit, FaExternalLinkAlt } from 'react-icons/fa';
+import { tableStyles } from '@/styles/tableStyles';
 
 export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
   const [filterValue, setFilterValue] = useState('');
@@ -202,29 +203,18 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
 
   return (
     <Table
+      color="primary"
       isHeaderSticky
       aria-label="NPCs Table"
-      classNames={{
-        wrapper: 'p-0 rounded-sm min-h-[382px] max-h-[382px] max-w-screen',
-        th: ['border-b', 'border-divider'],
-        td: [
-          'group-data-[first=true]:first:before:rounded-none',
-          'group-data-[first=true]:last:before:rounded-none',
-
-          'group-data-[middle=true]:before:rounded-none',
-
-          'group-data-[last=true]:first:before:rounded-none',
-          'group-data-[last=true]:last:before:rounded-none',
-        ],
-      }}
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       onSortChange={setSortDescriptor}
+      classNames={tableStyles}
     >
-      <TableHeader className="">
+      <TableHeader>
         <TableColumn allowsSorting align="center" key="npc_name" maxWidth={48}>
           Name
         </TableColumn>

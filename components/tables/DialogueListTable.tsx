@@ -29,6 +29,8 @@ import {
   FaMicrophoneSlash,
   FaRegTrashCan,
 } from 'react-icons/fa6';
+import { AudioButton } from '../soundboard/AudioButton';
+import { tableStyles } from '@/styles/tableStyles';
 
 export const DialogueListTable = ({
   dialogues,
@@ -104,31 +106,43 @@ export const DialogueListTable = ({
 
   const topContent = useMemo(() => {
     return (
-      <div className="flex justify-between space-x-4">
+      <div className="flex justify-between space-x-4 font-mono">
         <div>
-          <Tooltip content="Create audio for selected dialogues">
+          <Tooltip
+            content="Create audio for selected dialogues"
+            placement="top-end"
+          >
             <Button variant="light" isDisabled={!hasSelectedDialogues}>
-              <FaMicrophoneLines className="text-green-400" />
+              <FaMicrophoneLines className="text-success" />
             </Button>
           </Tooltip>
-          <Tooltip content="Create soundboard for selected dialogues">
+          <Tooltip
+            content="Create soundboard for selected dialogues"
+            placement="top"
+          >
             <Button variant="light" isDisabled={!hasSelectedDialogues}>
-              <FaChessBoard className="text-purple-400" />
+              <FaChessBoard className="text-secondary" />
             </Button>
           </Tooltip>
-          <Tooltip content="Delete selected dialogues" className="text-red-400">
+          <Tooltip
+            content="Delete selected dialogues"
+            className="text-danger"
+            placement="top-start"
+          >
             <Button variant="light" isDisabled={!hasSelectedDialogues}>
-              <FaRegTrashCan className="text-red-400" />
+              <FaRegTrashCan className="text-danger" />
             </Button>
           </Tooltip>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex gap-2">
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
               <Button
                 endContent={<FaChevronDown className="text-small" />}
-                variant="ghost"
+                variant="light"
+                size="sm"
+                className="self-center py-0 my-0"
               >
                 Audio
               </Button>
@@ -140,18 +154,21 @@ export const DialogueListTable = ({
               selectedKeys={audioFilter}
               selectionMode="multiple"
               onSelectionChange={setAudioFilter}
+              variant="light"
             >
               {audioOptions.map((option) => (
                 <DropdownItem key={option.uid}>{option.name}</DropdownItem>
               ))}
             </DropdownMenu>
           </Dropdown>
-          <label className="flex items-center text-default-400 text-small">
-            Rows per page:
-            <select className="bg-transparent" onChange={onRowsPerPageChange}>
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
+          <label className="flex items-center pr-2 py-4">
+            <select
+              onChange={onRowsPerPageChange}
+              className="bg-transparent tracking-tight text-sm"
+            >
+              <option value="5">5 rows</option>
+              <option value="10">10 rows</option>
+              <option value="15">15 rows</option>
             </select>
           </label>
         </div>
@@ -163,7 +180,6 @@ export const DialogueListTable = ({
     return (
       <div className="flex w-full justify-center bg-transparent">
         <Pagination
-          showControls
           page={page}
           total={pages}
           onChange={setPage}
@@ -202,7 +218,8 @@ export const DialogueListTable = ({
         return (
           <div className="flex flex-col items-center">
             {dialogue.audio ? (
-              <audio src={dialogue.audio} controls />
+              // <audio src={dialogue.audio} controls />
+              <AudioButton src={dialogue.audio} />
             ) : (
               <div className="flex items-center gap-2">
                 <FaMicrophoneSlash />
@@ -234,25 +251,6 @@ export const DialogueListTable = ({
     }
   }, []);
 
-  const classNames = useMemo(
-    () => ({
-      wrapper: ['h-full', 'w-full'],
-      th: ['bg-transparent', 'text-default-500', 'border-b', 'border-divider'],
-      td: [
-        // changing the rows border radius
-        // first
-        'group-data-[first=true]:first:before:rounded-none',
-        'group-data-[first=true]:last:before:rounded-none',
-        // middle
-        'group-data-[middle=true]:before:rounded-none',
-        // last
-        'group-data-[last=true]:first:before:rounded-none',
-        'group-data-[last=true]:last:before:rounded-none',
-      ],
-    }),
-    []
-  );
-
   return (
     <Table
       isHeaderSticky
@@ -262,7 +260,7 @@ export const DialogueListTable = ({
       selectionMode="multiple"
       selectedKeys={selectedKeys}
       onSelectionChange={setSelectedKeys}
-      classNames={classNames}
+      classNames={tableStyles}
     >
       <TableHeader columns={columns}>
         {(column) => (

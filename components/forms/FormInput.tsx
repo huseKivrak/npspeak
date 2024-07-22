@@ -8,11 +8,8 @@ export const FormInput = extendVariants(Input, {
         label: ' text-2xl',
         inputWrapper: [
           'shadow-xl',
-          'bg-default',
           'backdrop-blur-xl',
           'backdrop-saturate-200',
-          '',
-          'data-[hover=true]:bg-transparent',
           'group-data-[focus=true]:',
         ],
         input: ['', 'placeholder: tracking-wider'],

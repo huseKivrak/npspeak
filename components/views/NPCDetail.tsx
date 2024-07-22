@@ -49,10 +49,10 @@ export const NPCDetail = ({
         aria-label="Dialogue Views"
         size="lg"
         radius="sm"
+        color="primary"
         classNames={{
-          tabList:
-            'gap-3 w-full relative rounded-none p-0 border-b border-divider bg-transparent',
-          cursor: 'w-full bg-danger',
+          tabList: 'gap-3 w-full relative rounded-none p-0',
+          cursor: 'w-full',
           tab: 'max-w-full px-0 h-12',
           tabContent: 'text-3xl tracking-widest group-data-[selected=true]:',
         }}
