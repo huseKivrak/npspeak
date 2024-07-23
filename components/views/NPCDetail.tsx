@@ -53,7 +53,8 @@ export const NPCDetail = ({
           tabList: 'gap-3 w-full relative rounded-lg p-0',
           cursor: 'w-full',
           tab: 'max-w-full px-0 h-12',
-          tabContent: 'text-3xl tracking-widest group-data-[selected=true]:',
+          tabContent:
+            'text-large font-semibold tracking-wider group-data-[selected=true]:',
         }}
       >
         <Tab
