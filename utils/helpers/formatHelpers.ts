@@ -1,29 +1,9 @@
 import {
   DetailedDialogue,
-  DetailedNPC,
   FormOptions,
   SoundboardDialogue,
 } from '@/types/drizzle';
 import { Tables } from '@/types/supabase';
-
-export const createNPCStats = (npc: DetailedNPC) => {
-  const dialogueCount = npc.dialogues.length;
-  const dialogueWithAudioCount = npc.dialogues.filter(
-    (d) => d.tts_audio_id
-  ).length;
-  const dialogueAudioPercentage = `${(
-    (dialogueWithAudioCount / dialogueCount) *
-    100
-  ).toFixed(2)} %`;
-  const campaignCount = npc.campaigns.length;
-
-  return {
-    dialogueCount,
-    campaignCount,
-    dialogueWithAudioCount,
-    dialogueAudioPercentage,
-  };
-};
 
 export const createTTSFormOptions = (dialogues: Tables<'npc_dialogues'>[]) => {
   return dialogues.reduce<FormOptions>((acc, dialogue) => {
@@ -39,9 +19,9 @@ export const formatDialoguesForSoundboard = (
 ): SoundboardDialogue[] => {
   const formattedDialogues = dialogues.map((dialogue) => ({
     id: dialogue.id,
-    type: dialogue.dialogueType || 'other',
+    type: dialogue.dialogueType ?? 'other',
     text: dialogue.text,
-    audio: dialogue.audioURL || '',
+    audio: dialogue.audioURL ?? '',
     npc_id: dialogue.npc_id!,
   }));
 
