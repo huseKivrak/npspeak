@@ -18,10 +18,9 @@ import {
   Button,
 } from '@nextui-org/react';
 import { deleteCampaignAction } from '@/actions/db/campaigns';
-import Link from 'next/link';
+import { Link as NextUILink } from '@nextui-org/react';
 import { DeleteModal } from '../forms/modals/DeleteModal';
 import { SearchBar } from './SearchBar';
-import { truncateText } from '@/utils/helpers/formHelpers';
 import { FaEdit } from 'react-icons/fa';
 import { tableStyles } from '@/styles/tableStyles';
 
@@ -57,8 +56,8 @@ export function CampaignListTable({
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
-    return campaigns.slice(start, end);
-  }, [page, campaigns]);
+    return filteredItems.slice(start, end);
+  }, [page, filteredItems]);
 
   const sortedItems = useMemo(() => {
     return [...items].sort((a: CampaignWithNPCs, b: CampaignWithNPCs) => {
@@ -95,25 +94,10 @@ export function CampaignListTable({
           return (
             <div className="flex flex-col">
               <p className="capitalize hover:underline">
-                <Link href={`/campaigns/${campaign.id}`}>
+                <NextUILink href={`/campaigns/${campaign.id}`}>
                   {campaign.campaign_name}
-                </Link>
+                </NextUILink>
               </p>
-            </div>
-          );
-        case 'description':
-          return (
-            <div className="flex flex-col">
-              <Tooltip
-                delay={500}
-                closeDelay={0}
-                content={campaign.description}
-                className="max-w-xs"
-              >
-                <p className="text-tiny capitalize truncate max-w-xs h-8">
-                  {campaign.description}
-                </p>
-              </Tooltip>
             </div>
           );
         case 'npcs':
@@ -135,7 +119,9 @@ export function CampaignListTable({
                   <DropdownMenu>
                     {campaign.npcs.map((npc) => (
                       <DropdownItem key={npc.id}>
-                        <Link href={`/npcs/${npc.id}`}>{npc.npc_name}</Link>
+                        <NextUILink href={`/npcs/${npc.id}`}>
+                          {npc.npc_name}
+                        </NextUILink>
                       </DropdownItem>
                     ))}
                   </DropdownMenu>
@@ -157,9 +143,9 @@ export function CampaignListTable({
           return (
             <div className="relative flex items-center gap-2">
               <Tooltip content="Edit Campaign">
-                <Link href={`/campaigns/${campaign.id}/edit`}>
+                <NextUILink href={`/campaigns/${campaign.id}/edit`}>
                   <FaEdit />
-                </Link>
+                </NextUILink>
               </Tooltip>
               <DeleteModal
                 idName="campaign_id"
@@ -227,9 +213,6 @@ export function CampaignListTable({
           maxWidth={48}
         >
           Name
-        </TableColumn>
-        <TableColumn key="description" align="center" maxWidth={48}>
-          Description
         </TableColumn>
         <TableColumn key="npcs" align="center" maxWidth={48}>
           NPCs

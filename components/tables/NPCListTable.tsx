@@ -3,7 +3,6 @@ import { useCallback, useMemo, useState } from 'react';
 import { deleteNPCAction } from '@/actions/db/NPCs';
 import { DeleteModal } from '../forms/modals/DeleteModal';
 import { SearchBar } from './SearchBar';
-import Link from 'next/link';
 import {
   Table,
   TableHeader,
@@ -19,6 +18,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Link as NextUILink,
 } from '@nextui-org/react';
 
 import { DetailedNPC } from '@/types/drizzle';
@@ -87,25 +87,10 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
     switch (columnKey) {
       case 'npc_name':
         return (
-          <div className="flex flex-col">
-            <p className="text-lg capitalize hover:underline">
-              <Link href={`/npcs/${npc.id}`}>{npc.npc_name}</Link>
-            </p>
-          </div>
-        );
-      case 'description':
-        return (
-          <div className="flex flex-col">
-            <Tooltip
-              delay={500}
-              closeDelay={0}
-              content={npc.description}
-              className="max-w-sm"
-            >
-              <p className=" capitalize truncate max-w-xs h-8">
-                {npc.description}
-              </p>
-            </Tooltip>
+          <div className="">
+            <NextUILink href={`/npcs/${npc.id}`} underline="hover">
+              {npc.npc_name}
+            </NextUILink>
           </div>
         );
       case 'campaigns':
@@ -127,13 +112,13 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
                 <DropdownMenu>
                   {npc.campaigns.map((campaign) => (
                     <DropdownItem key={campaign.id}>
-                      <Link
+                      <NextUILink
                         href={`/campaigns/${campaign.id}`}
                         className="flex items-center gap-1 text-sm"
                       >
                         {campaign.campaign_name}
                         <FaExternalLinkAlt />
-                      </Link>
+                      </NextUILink>
                     </DropdownItem>
                   ))}
                 </DropdownMenu>
@@ -155,9 +140,9 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
         return (
           <div className="relative flex items-center gap-2">
             <Tooltip content="Edit NPC">
-              <Link href={`/npcs/${npc.id}/edit`}>
+              <NextUILink href={`/npcs/${npc.id}/edit`}>
                 <FaEdit />
-              </Link>
+              </NextUILink>
             </Tooltip>
 
             <DeleteModal
@@ -219,9 +204,6 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
       <TableHeader>
         <TableColumn allowsSorting align="center" key="npc_name" maxWidth={48}>
           Name
-        </TableColumn>
-        <TableColumn key="description" align="center" maxWidth={48}>
-          Description
         </TableColumn>
         <TableColumn key="campaigns" align="center" maxWidth={48}>
           Campaigns
