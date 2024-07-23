@@ -44,7 +44,7 @@ export const DialogueListTable = ({
 }) => {
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [audioFilter, setAudioFilter] = useState<Selection>('all');
-  const [rowsPerPage, setRowsPerPage] = useState(15);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(1);
   const pages = Math.ceil(dialogues.length / rowsPerPage);
 
