@@ -18,25 +18,24 @@ export function UserDashboard({
   npcs: DetailedNPC[] | null;
 }) {
   return (
-    <div className="flex flex-col w-full space-y-4">
+    <div className="flex flex-col space-y-2">
       <div className="flex flex-col">
-        <h1>{user.username} Dashboard</h1>
+        <h1>dashboard</h1>
         <Divider className="my-2" />
-        <div className="flex flex-col items-start">
-          <div className="flex flex-row gap-3 tracking-wider">
-            <Link href="/npcs/create">
-              <Button size="sm" radius="sm" variant="flat">
-                <PlusIcon />
-                <span className="mb-1 ">NPC</span>
-              </Button>
-            </Link>
-            <Link href="/campaigns/create">
-              <Button size="sm" radius="sm" variant="flat">
-                <PlusIcon />
-                <span className="mb-1 ">campaign</span>
-              </Button>
-            </Link>
-          </div>
+
+        <div className="flex gap-3 tracking-wider">
+          <Link href="/npcs/create">
+            <Button size="sm" radius="sm" variant="flat">
+              <PlusIcon />
+              <span className="mb-1 ">NPC</span>
+            </Button>
+          </Link>
+          <Link href="/campaigns/create">
+            <Button size="sm" radius="sm" variant="flat">
+              <PlusIcon />
+              <span className="mb-1 ">campaign</span>
+            </Button>
+          </Link>
         </div>
       </div>
       <Tabs
@@ -46,20 +45,20 @@ export function UserDashboard({
         variant="solid"
         color="secondary"
         classNames={{
-          tabList: 'gap-3 w-full relative rounded rounded-lg p-0',
+          tabList: 'w-full gap-3 relative rounded rounded-lg py-0',
           cursor: 'w-full',
-          tab: 'max-w-full px-0 h-12',
-          tabContent: 'text-3xl tracking-widest group-data-[selected=true]',
+          tab: 'px-0 h-12',
+          tabContent:
+            'sm:text-large font-semibold sm:tracking-wider group-data-[selected=true]:',
         }}
       >
         <Tab
           key="npcs"
+          className="p-0 m-0"
           title={
-            <div className="flex items-center space-x-4">
+            <div className="space-x-4">
               <span>NPC</span>
-              <Chip size="lg" variant="flat">
-                {npcs?.length}
-              </Chip>
+              <Chip variant="flat">{npcs?.length}</Chip>
             </div>
           }
         >
@@ -67,12 +66,11 @@ export function UserDashboard({
         </Tab>
         <Tab
           key="campaigns"
+          className="p-0 m-0"
           title={
-            <div className="flex items-center space-x-4">
+            <div className="space-x-4">
               <span>CAMPAIGN</span>
-              <Chip size="lg" variant="flat">
-                {campaigns?.length}
-              </Chip>
+              <Chip variant="flat">{campaigns?.length}</Chip>
             </div>
           }
         >

@@ -20,9 +20,14 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  SharedSelection,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
 } from '@nextui-org/react';
 import { capitalize } from '@/utils/helpers/formatHelpers';
 import {
+  FaCheck,
   FaChessBoard,
   FaChevronDown,
   FaMicrophoneLines,
@@ -31,35 +36,37 @@ import {
 } from 'react-icons/fa6';
 import { AudioButton } from '../soundboard/AudioButton';
 import { tableStyles } from '@/styles/tableStyles';
-import { DialogueModal } from '../forms/modals/DialogueModal';
+import { truncateText } from '@/utils/helpers/formHelpers';
 
 export const DialogueListTable = ({
   dialogues,
   voiceId,
-  npcId,
 }: {
   dialogues: DetailedDialogue[];
   voiceId: string;
-  npcId: number;
 }) => {
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [audioFilter, setAudioFilter] = useState<Selection>('all');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState<Selection>(new Set(['5']));
   const [page, setPage] = useState(1);
-  const pages = Math.ceil(dialogues.length / rowsPerPage);
 
-  const columns = [
-    { name: 'TYPE', uid: 'type' },
-    { name: 'TEXT', uid: 'text' },
-    { name: 'AUDIO', uid: 'audio' },
-    { name: 'ACTIONS', uid: 'actions' },
-  ];
+  const itemsPerPage = useMemo(
+    () => Number(Array.from(rowsPerPage).join(', ').replaceAll('_', ' ')),
+    [rowsPerPage]
+  );
+  const pages = Math.ceil(dialogues.length / Number(itemsPerPage));
 
   const hasSelectedDialogues = selectedKeys === 'all' || selectedKeys.size > 0;
 
   const audioOptions = [
-    { name: 'With Audio', uid: 'withAudio' },
-    { name: 'No Audio', uid: 'noAudio' },
+    { name: 'with audio', uid: 'withAudio' },
+    { name: 'no audio', uid: 'noAudio' },
+  ];
+
+  const rowsPerPageOptions = [
+    { name: '5', uid: 5 },
+    { name: '10', uid: 10 },
+    { name: '15', uid: 15 },
   ];
   const filteredItems = useMemo(() => {
     let filteredDialogues = [...dialogues];
@@ -92,41 +99,46 @@ export const DialogueListTable = ({
     })
     .sort((a, b) => (b.audio ? 1 : 0) - (a.audio ? 1 : 0));
 
-  const onRowsPerPageChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setRowsPerPage(Number(e.target.value));
-      setPage(1);
-    },
-    []
-  );
+  const onRowsPerPageChange = useCallback((keys: SharedSelection) => {
+    const rowsPerPage = Array.from(keys).join(', ').replaceAll('_', ' ');
+    setRowsPerPage(new Set([rowsPerPage]));
+    setPage(1);
+  }, []);
 
   const items = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
 
     return rows.slice(start, end);
   }, [page, rows, rowsPerPage]);
 
   const topContent = useMemo(() => {
     return (
-      <div className="flex items-center justify-between font-mono px-4 shadow-small">
-        <DialogueModal npcId={npcId} className="" />
+      <div className="flex items-center justify-between font-mono py-2 md:py-4 px-2 sm:px-4 shadow-small">
         <div className="flex flex-col">
-          <div>
+          <div className="flex sm:gap-4 lg:gap-8">
             <Tooltip
               content="Create audio for selected dialogues"
               placement="top-end"
             >
-              <Button variant="light" isDisabled={!hasSelectedDialogues}>
-                <FaMicrophoneLines className="text-success" />
+              <Button
+                isIconOnly
+                variant="light"
+                isDisabled={!hasSelectedDialogues}
+              >
+                <FaMicrophoneLines className="text-success sm:text-large" />
               </Button>
             </Tooltip>
             <Tooltip
               content="Create soundboard for selected dialogues"
               placement="top"
             >
-              <Button variant="light" isDisabled={!hasSelectedDialogues}>
-                <FaChessBoard className="text-secondary" />
+              <Button
+                isIconOnly
+                variant="light"
+                isDisabled={!hasSelectedDialogues}
+              >
+                <FaChessBoard className="text-secondary sm:text-large" />
               </Button>
             </Tooltip>
             <Tooltip
@@ -134,55 +146,76 @@ export const DialogueListTable = ({
               className="text-danger"
               placement="top-start"
             >
-              <Button variant="light" isDisabled={!hasSelectedDialogues}>
-                <FaRegTrashCan className="text-danger" />
+              <Button
+                isIconOnly
+                variant="light"
+                isDisabled={!hasSelectedDialogues}
+              >
+                <FaRegTrashCan className="text-danger sm:text-large" />
               </Button>
             </Tooltip>
           </div>
-          {!hasSelectedDialogues && (
-            <span className="self-center text-tiny font-grenze text-default">
-              Select dialogues to perform actions.
-            </span>
-          )}
         </div>
 
-        <div className="flex justify-evenly space-x-8">
-          <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
+        <div className="flex gap-4 ">
+          <Dropdown
+            classNames={{
+              content: ['flex min-w-[20[px]]'],
+            }}
+          >
+            <DropdownTrigger className="flex max-w-xs md:w-[120px]">
               <Button
-                endContent={<FaChevronDown className="text-tiny" />}
-                variant="light"
+                endContent={<FaChevronDown className="text-xs md:text-sm" />}
                 size="sm"
+                variant="flat"
               >
-                Audio
+                <span className="text-tiny md:text-small">filter</span>
               </Button>
             </DropdownTrigger>
             <DropdownMenu
               disallowEmptySelection
-              aria-label="Table Columns"
+              aria-label="Filter"
               closeOnSelect={false}
               selectedKeys={audioFilter}
               selectionMode="multiple"
               onSelectionChange={setAudioFilter}
-              variant="light"
             >
               {audioOptions.map((option) => (
                 <DropdownItem key={option.uid}>{option.name}</DropdownItem>
               ))}
             </DropdownMenu>
           </Dropdown>
-          {/* <label className="flex items-center"> */}
 
-          <select onChange={onRowsPerPageChange} className="bg-transparent">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-          </select>
-          {/* </label> */}
+          <Dropdown
+            classNames={{
+              content: ['flex min-w-[20px]'],
+            }}
+          >
+            <DropdownTrigger className="hidden sm:flex md:w-[100px]">
+              <Button
+                endContent={<FaChevronDown className="text-xs sm:text-sm" />}
+                size="sm"
+                variant="flat"
+              >
+                <span className="text-small">rows</span>
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              disallowEmptySelection
+              aria-label="Rows"
+              selectionMode="single"
+              selectedKeys={rowsPerPage}
+              onSelectionChange={onRowsPerPageChange}
+            >
+              {rowsPerPageOptions.map((option) => (
+                <DropdownItem key={option.uid}>{option.name}</DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
         </div>
       </div>
     );
-  }, [audioFilter, dialogues.length, selectedKeys]);
+  }, [audioFilter, dialogues.length, selectedKeys, rowsPerPage]);
 
   const bottomContent = useMemo(() => {
     return (
@@ -213,28 +246,37 @@ export const DialogueListTable = ({
             delay={200}
             closeDelay={200}
           >
-            <div className="flex flex-col items-center">
-              <DialogueIcon dialogueType={dialogue.type} />
+            <div className="flex justify-center">
+              <DialogueIcon dialogueType={dialogue.type} size={20} />
             </div>
           </Tooltip>
         );
       case 'text':
         return (
-          <div className="flex flex-col">
-            <span className="">{dialogue.text}</span>
+          <div className="flex flex-col items-start max-w-fit">
+            <Popover>
+              <PopoverTrigger className="sm:hidden">
+                <Button size="sm" variant="light">
+                  {truncateText(dialogue.text, 10)}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="flex items-center justify-center p-2 max-w-xs">
+                <span className="italic">{dialogue.text}</span>
+              </PopoverContent>
+            </Popover>
+
+            <span className="hidden sm:flex italic">
+              {truncateText(dialogue.text, 100)}
+            </span>
           </div>
         );
       case 'audio':
         return (
           <div className="flex flex-col items-center">
             {dialogue.audio ? (
-              // <audio src={dialogue.audio} controls />
               <AudioButton src={dialogue.audio} />
             ) : (
-              <div className="flex items-center gap-2">
-                <FaMicrophoneSlash />
-                <span>This dialogue has no audio.</span>
-              </div>
+              <FaMicrophoneSlash />
             )}
           </div>
         );
@@ -271,17 +313,32 @@ export const DialogueListTable = ({
       selectedKeys={selectedKeys}
       onSelectionChange={setSelectedKeys}
       classNames={tableStyles}
+      className="max-w-fit"
     >
-      <TableHeader columns={columns}>
+      {/* <TableHeader columns={columns}>
         {(column) => (
           <TableColumn
             key={column.uid}
             align={column.uid === 'actions' ? 'center' : 'start'}
-            className="text-large font-semibold"
+            className="sm:text-large font-semibold"
           >
             {column.name}
           </TableColumn>
         )}
+      </TableHeader> */}
+      <TableHeader>
+        <TableColumn align="center" key="type" width={12} maxWidth={12}>
+          TYPE
+        </TableColumn>
+        <TableColumn align="start" key="text" maxWidth={100}>
+          TEXT
+        </TableColumn>
+        <TableColumn align="center" key="audio" width={12} maxWidth={12}>
+          AUDIO
+        </TableColumn>
+        <TableColumn align="center" key="actions" width={12} maxWidth={12}>
+          ACTIONS
+        </TableColumn>
       </TableHeader>
       <TableBody items={items} emptyContent={'No dialogues to display.'}>
         {(item) => (

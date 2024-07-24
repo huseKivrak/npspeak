@@ -19,7 +19,7 @@ export const NPCDetail = ({
 }) => {
   return (
     <div className="flex flex-col w-full justify-center">
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-2">
         <h1>{npc.npc_name}</h1>
         <p className="lg:text-xl">{npc.description}</p>
         <ul>
@@ -40,6 +40,7 @@ export const NPCDetail = ({
             </Chip>
           ))}
         </ul>
+        <DialogueModal npcId={npc.id} className="" />
       </div>
 
       <Divider className="my-4" />
@@ -68,7 +69,6 @@ export const NPCDetail = ({
           <DialogueListTable
             dialogues={dialogues || []}
             voiceId={npc.voice_id!}
-            npcId={npc.id}
           />
         </Tab>
         <Tab

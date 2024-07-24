@@ -92,21 +92,24 @@ export function CampaignListTable({
       switch (columnKey) {
         case 'campaign_name':
           return (
-            <div className="flex flex-col">
-              <p className="capitalize hover:underline">
-                <NextUILink href={`/campaigns/${campaign.id}`}>
-                  {campaign.campaign_name}
-                </NextUILink>
-              </p>
-            </div>
+            <NextUILink
+              href={`/campaigns/${campaign.id}`}
+              color="foreground"
+              underline="hover"
+            >
+              <span className="tracking-tight leading-5 text-tiny md:text-large md:tracking-wide">
+                {campaign.campaign_name}
+              </span>
+            </NextUILink>
           );
         case 'npcs':
           return (
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col items-start justify-start gap-1">
               {campaign.npcs.length > 0 ? (
                 <Dropdown
+                  showArrow
                   classNames={{
-                    content: 'border border-default',
+                    content: 'p-0 border border-default',
                   }}
                 >
                   <DropdownTrigger>
@@ -116,12 +119,22 @@ export function CampaignListTable({
                       }`}
                     </Button>
                   </DropdownTrigger>
-                  <DropdownMenu>
+                  <DropdownMenu
+                    itemClasses={{
+                      base: [
+                        'transition-opacity',
+                        'data-[hover=true]:text-foreground',
+                        'data-[hover=true]:bg-default-200',
+                        'dark:data-[hover=true]:bg-default-300',
+                        'data-[selectable=true]:focus:bg-default-300',
+                        'data-[pressed=true]:opacity-70',
+                        'data-[focus-visible=true]:ring-default-500',
+                      ],
+                    }}
+                  >
                     {campaign.npcs.map((npc) => (
-                      <DropdownItem key={npc.id}>
-                        <NextUILink href={`/npcs/${npc.id}`}>
-                          {npc.npc_name}
-                        </NextUILink>
+                      <DropdownItem key={npc.id} href={`/npcs/${npc.id}`}>
+                        <span className="">{npc.npc_name}</span>
                       </DropdownItem>
                     ))}
                   </DropdownMenu>
@@ -129,14 +142,6 @@ export function CampaignListTable({
               ) : (
                 <p className="text-tiny"> No NPCs</p>
               )}
-            </div>
-          );
-        case 'created_at':
-          return (
-            <div className="flex flex-col">
-              <p className="text-tiny capitalize ">
-                {new Date(campaign.created_at).toLocaleDateString()}
-              </p>
             </div>
           );
         case 'actions':
@@ -208,19 +213,18 @@ export function CampaignListTable({
       <TableHeader className="">
         <TableColumn
           allowsSorting
-          align="center"
+          align="start"
           key="campaign_name"
           maxWidth={48}
         >
           Name
         </TableColumn>
-        <TableColumn key="npcs" align="center" maxWidth={48}>
+        <TableColumn key="npcs" align="start" maxWidth={48}>
           NPCs
         </TableColumn>
-        <TableColumn allowsSorting align="center" key="created_at">
-          Created
+        <TableColumn key="actions" align="center">
+          Actions
         </TableColumn>
-        <TableColumn key="actions">Actions</TableColumn>
       </TableHeader>
       <TableBody items={sortedItems} emptyContent={'No campaigns to display.'}>
         {(item) => (

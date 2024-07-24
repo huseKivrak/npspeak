@@ -12,12 +12,12 @@ export default async function AuthButton() {
   return user ? (
     <div className="flex items-center gap-4 ">
       <form action={logoutAction}>
-        <button className="text-4xl">logout</button>
+        <button className="text-xl sm:text-4xl">logout</button>
       </form>
     </div>
   ) : (
     <Link href="/login">
-      <button className="text-4xl">login</button>
+      <button className="text-xl sm:text-4xl">login</button>
     </Link>
   );
 }

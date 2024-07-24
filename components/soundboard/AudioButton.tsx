@@ -1,14 +1,9 @@
 import { Button } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
 import { FaVolumeUp } from 'react-icons/fa';
-import {
-  FaCirclePlay,
-  FaCircleStop,
-  FaFileAudio,
-  FaRegFileAudio,
-} from 'react-icons/fa6';
+import { FaCircleStop } from 'react-icons/fa6';
 
-export function AudioButton({ src, label }: { src: string; label?: string }) {
+export function AudioButton({ src }: { src: string }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -32,18 +27,15 @@ export function AudioButton({ src, label }: { src: string; label?: string }) {
   }, []);
 
   return (
-    <div className="flex items-center justify-center">
-      <Button
-        isIconOnly
-        variant="light"
-        radius="full"
-        size="lg"
-        onClick={togglePlayback}
-        endContent={isPlaying ? <FaCircleStop /> : <FaVolumeUp />}
-      >
-        {label && <span className="font-light">{label}</span>}
-      </Button>
+    <Button
+      isIconOnly
+      variant="light"
+      radius="full"
+      onClick={togglePlayback}
+      className="p-0 m-0"
+    >
+      {isPlaying ? <FaCircleStop /> : <FaVolumeUp />}
       <audio ref={audioRef} src={src} />
-    </div>
+    </Button>
   );
 }

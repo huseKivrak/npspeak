@@ -5,11 +5,11 @@ import { Divider, Link } from '@nextui-org/react';
 
 export const Hero = () => {
   return (
-    <div className="flex flex-col gap-8 ">
-      <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold font-alagard  tracking-wider">
+    <div className="flex flex-col gap-8 max-w-md sm:max-w-6xl">
+      <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold font-alagard tracking-wider">
         npSpeak
       </h1>
-      <p className="mt-[-24px] text-warning text-3xl md:text-5xl lg:text-6xl  font-bold">
+      <p className="mt-[-24px] text-warning text-2xl md:text-4xl lg:text-6xl font-bold">
         Give your character a voice.
       </p>
       <div className="flex gap-4 w-full justify-center tracking-widest font-semibold">

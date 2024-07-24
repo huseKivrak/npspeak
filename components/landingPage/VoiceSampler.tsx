@@ -21,7 +21,7 @@ export const VoiceSampler = ({
   const { control } = useForm(); //just needed for VoiceSelect props
 
   return (
-    <div className="flex flex-col gap-2 max-w-xl text-start">
+    <div className="flex flex-col gap-2 max-w-xs sm:max-w-xl text-start">
       <h2 className="text-2xl sm:text-4xl">Over 50 voices to choose from!</h2>
 
       <p className="text-xl sm:text-2xl">Listen to some samples:</p>

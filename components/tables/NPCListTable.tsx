@@ -22,7 +22,7 @@ import {
 } from '@nextui-org/react';
 
 import { DetailedNPC } from '@/types/drizzle';
-import { FaEdit, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 import { tableStyles } from '@/styles/tableStyles';
 
 export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
@@ -87,19 +87,24 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
     switch (columnKey) {
       case 'npc_name':
         return (
-          <div className="">
-            <NextUILink href={`/npcs/${npc.id}`} underline="hover">
+          <NextUILink
+            href={`/npcs/${npc.id}`}
+            underline="hover"
+            color="foreground"
+          >
+            <span className="tracking-tight leading-5 text-tiny md:text-large md:tracking-wide">
               {npc.npc_name}
-            </NextUILink>
-          </div>
+            </span>
+          </NextUILink>
         );
       case 'campaigns':
         return (
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col items-start justify-start gap-1">
             {npc.campaigns.length > 0 ? (
               <Dropdown
+                showArrow
                 classNames={{
-                  content: 'border border-default',
+                  content: 'p-0 border border-default',
                 }}
               >
                 <DropdownTrigger>
@@ -109,16 +114,27 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
                     }`}
                   </Button>
                 </DropdownTrigger>
-                <DropdownMenu>
+                <DropdownMenu
+                  itemClasses={{
+                    base: [
+                      'transition-opacity',
+                      'data-[hover=true]:text-foreground',
+                      'data-[hover=true]:bg-default-300',
+                      'dark:data-[hover=true]:bg-default-200',
+                      'data-[selectable=true]:focus:bg-default-300',
+                      'data-[pressed=true]:opacity-70',
+                      'data-[focus-visible=true]:ring-default-500',
+                    ],
+                  }}
+                >
                   {npc.campaigns.map((campaign) => (
-                    <DropdownItem key={campaign.id}>
-                      <NextUILink
-                        href={`/campaigns/${campaign.id}`}
-                        className="flex items-center gap-1 text-sm"
-                      >
+                    <DropdownItem
+                      key={campaign.id}
+                      href={`/campaigns/${campaign.id}`}
+                    >
+                      <span className="text-small">
                         {campaign.campaign_name}
-                        <FaExternalLinkAlt />
-                      </NextUILink>
+                      </span>
                     </DropdownItem>
                   ))}
                 </DropdownMenu>
@@ -128,17 +144,10 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
             )}
           </div>
         );
-      case 'created_at':
-        return (
-          <div className="flex flex-col">
-            <p className=" capitalize">
-              {new Date(npc.created_at).toLocaleDateString()}
-            </p>
-          </div>
-        );
+
       case 'actions':
         return (
-          <div className="relative flex items-center gap-2">
+          <div className="relative flex gap-2">
             <Tooltip content="Edit NPC">
               <NextUILink href={`/npcs/${npc.id}/edit`}>
                 <FaEdit />
@@ -202,16 +211,16 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
       classNames={tableStyles}
     >
       <TableHeader>
-        <TableColumn allowsSorting align="center" key="npc_name" maxWidth={48}>
+        <TableColumn allowsSorting align="start" key="npc_name" maxWidth={48}>
           Name
         </TableColumn>
-        <TableColumn key="campaigns" align="center" maxWidth={48}>
+        <TableColumn key="campaigns" align="start" maxWidth={48}>
           Campaigns
         </TableColumn>
-        <TableColumn allowsSorting align="center" key="created_at">
-          Created
+
+        <TableColumn key="actions" align="center">
+          Actions
         </TableColumn>
-        <TableColumn key="actions"> Actions </TableColumn>
       </TableHeader>
       <TableBody items={sortedItems} emptyContent={'No NPCs to display.'}>
         {(item) => (
