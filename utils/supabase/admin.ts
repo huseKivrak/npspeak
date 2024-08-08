@@ -186,19 +186,21 @@ const createOrRetrieveCustomer = async ({
 /**
  * Copies the billing details from the payment method to the customer object.
  */
-const copyBillingDetailsToCustomer = async (
+export const copyBillingDetailsToCustomer = async (
   uuid: string,
   payment_method: Stripe.PaymentMethod
 ) => {
   //Todo: check this assertion
   const customer = payment_method.customer as string;
-  const { name, phone, address } = payment_method.billing_details;
-  if (!name || !phone || !address) return;
+  const { name, address } = payment_method.billing_details;
+  console.log('name', name, 'address', address);
+  if (!name || !address) return;
   //@ts-ignore
-  await stripe.customers.update(customer, { name, phone, address });
+  await stripe.customers.update(customer, { name, address });
   const updatedProfile = await db
     .update(profiles)
     .set({
+      full_name: name,
       billing_address: { ...address },
       payment_method: { ...payment_method[payment_method.type] },
     })
@@ -208,8 +210,7 @@ const copyBillingDetailsToCustomer = async (
 
 const manageSubscriptionStatusChange = async (
   subscriptionId: string,
-  customerId: string,
-  createAction = false
+  customerId: string
 ) => {
   // Get customer's UUID from mapping table.
   const customerData = await db.query.customers.findFirst({
@@ -260,7 +261,9 @@ const manageSubscriptionStatusChange = async (
 
   const upsertedSubscription = await db
     .insert(subscriptions)
-    .values([subscriptionData]);
+    .values([subscriptionData])
+    .returning({ status: subscriptions.status });
+
   if (!upsertedSubscription)
     throw new Error(
       `Subscription insert/update failed: ${subscriptionData.id}`
@@ -269,9 +272,17 @@ const manageSubscriptionStatusChange = async (
     `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`
   );
 
+  const updatedUserStatus = await db
+    .update(profiles)
+    .set({
+      subscription_status: upsertedSubscription[0].status,
+    })
+    .where(eq(profiles.id, uuid));
+  console.log('Updated user status:', updatedUserStatus);
+
   // For a new subscription copy the billing details to the customer object.
   // NOTE: This is a costly operation and should happen at the very end.
-  if (createAction && subscription.default_payment_method && uuid)
+  if (subscription.default_payment_method && uuid)
     //@ts-ignore
     await copyBillingDetailsToCustomer(
       uuid,
