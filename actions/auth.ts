@@ -27,16 +27,6 @@ export const signUpAction = async (
 
   try {
     const { email, username, password } = signupSchema.parse(formData);
-    // const existingEmail = await isExistingEmail(email);
-
-    // if (existingEmail) {
-    //   redirectPath = getErrorRedirect(
-    //     '/signup',
-    //     'Unavailable',
-    //     'An account already exists with this email address.'
-    //   );
-    // }
-
     const supabase = createClientOnServer();
     const { error, data } = await supabase.auth.signUp({
       email,
@@ -67,7 +57,6 @@ export const signUpAction = async (
         'sign up failed',
         'this email address is taken, please try again'
       );
-      console.log('TAKEN EMAIL REDIRECT PATH:', redirectPath);
     } else if (data.user) {
       redirectPath = getStatusRedirect(
         '/signup/success',
@@ -127,9 +116,9 @@ export const signInAction = async (
       );
     } else {
       redirectPath = getStatusRedirect(
-        '/',
-        'Login successful',
-        'Welcome back!'
+        '/dashboard',
+        'logged in',
+        'welcome back!'
       );
     }
   } catch (error) {
@@ -147,8 +136,8 @@ export const signInAction = async (
       console.error('Unexpected error:', error);
       redirectPath = getErrorRedirect(
         '/login',
-        'Oops',
-        'An unexpected error occurred during login.'
+        'oops',
+        'an unexpected error occurred during login'
       );
     }
   }
@@ -168,8 +157,7 @@ export const sendResetPasswordEmail = async (email: string) => {
     //Check if there's a user with that email
     const existingEmail = await isExistingEmailAddress(email);
     if (!existingEmail) {
-      //Handle as "success" to prevent email phishing
-      redirect('/forgot-password/success');
+      return 'No account found with that email address.';
     }
 
     const supabase = createClientOnServer();
@@ -183,7 +171,13 @@ export const sendResetPasswordEmail = async (email: string) => {
     console.error(error);
     return 'Oops! Something went wrong. Please try again';
   }
-  redirect('/forgot-password/success');
+
+  const redirectPath = getStatusRedirect(
+    '/forgot-password',
+    'success',
+    'a reset link has been sent to your email'
+  );
+  redirect(redirectPath);
 };
 
 export const updatePasswordAction = async (formData: FormData) => {
@@ -195,12 +189,25 @@ export const updatePasswordAction = async (formData: FormData) => {
     return 'Password must be at least 6 characters.';
   }
 
+  let redirectPath: string;
   const supabase = createClientOnServer();
 
   const { error } = await supabase.auth.updateUser({ password });
-  if (error) return error.message;
+  if (error) {
+    console.error('Error updating password:', error);
+    redirectPath = getErrorRedirect(
+      '/reset-password',
+      'oops',
+      'an unexpected error occurred during password reset'
+    );
+  }
 
-  redirect('/dashboard?message=password-updated');
+  redirectPath = getStatusRedirect(
+    '/dashboard',
+    'success',
+    'your password has been updated'
+  );
+  redirect(redirectPath);
 };
 
 export const signInWithGithub = async () => {
@@ -253,15 +260,11 @@ export const logoutAction = async () => {
     console.error('Logout Error:', error);
     redirectPath = getErrorRedirect(
       '/',
-      'Logout failed',
-      'An error occurred during logout.'
+      'logout failed',
+      'an unexpected error occurred during logout'
     );
   } else {
-    redirectPath = getStatusRedirect(
-      '/',
-      'Logout successful',
-      'See you next time!'
-    );
+    redirectPath = getStatusRedirect('/', 'logged out', 'see ya next time!');
   }
   redirect(redirectPath);
 };
@@ -269,7 +272,7 @@ export const logoutAction = async () => {
 /**
  * Returns the authenticated user's profile,
  * essentially a wrapper around Supabase's auth schema.
- * This is necessary as Supabase's auth schema is read-only.
+ * Necessary for Supabase's read-only auth schema.
  */
 
 export type UserProfile = Tables<'profiles'>;
