@@ -4,16 +4,16 @@ import { signUpAction } from '@/actions/auth';
 import { useForm, FieldPath } from 'react-hook-form';
 import { useFormState } from 'react-dom';
 import { useEffect } from 'react';
-import Link from 'next/link';
+import { Link as NextUILink } from '@nextui-org/react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormInput } from './FormInput';
 import { signupSchema } from '@/database/drizzle/validation';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
 import { SendEmailIcon } from '@/components/icons';
 import { ErrorToast } from '../ErrorToast';
 import { ErrorMessage } from '@hookform/error-message';
 import { ActionStatus } from '@/types/drizzle';
+import { Input } from '@nextui-org/react';
 
 type Inputs = z.infer<typeof signupSchema>;
 export default function SignUpForm() {
@@ -48,7 +48,7 @@ export default function SignUpForm() {
 
   return (
     <form className="flex flex-col items-center gap-4">
-      <FormInput
+      <Input
         isRequired
         type="email"
         label="email"
@@ -63,7 +63,7 @@ export default function SignUpForm() {
         render={({ message }) => <ErrorToast text={message} />}
       />
 
-      <FormInput
+      <Input
         isRequired
         label="username"
         placeholder="your username"
@@ -77,7 +77,7 @@ export default function SignUpForm() {
         render={({ message }) => <ErrorToast text={message} />}
       />
 
-      <FormInput
+      <Input
         isRequired
         type="password"
         label="password"
@@ -92,7 +92,7 @@ export default function SignUpForm() {
         render={({ message }) => <ErrorToast text={message} />}
       />
 
-      <FormInput
+      <Input
         isRequired
         type="password"
         label="confirm password"
@@ -106,24 +106,23 @@ export default function SignUpForm() {
         name="confirm_password"
         render={({ message }) => <ErrorToast text={message} />}
       />
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col items-center gap-4 w-full">
         <SubmitButton
+          fullWidth
           variant="flat"
           formAction={formAction}
           pendingText="creating account..."
-          endContent={<SendEmailIcon width={24} color="white" />}
+          endContent={<SendEmailIcon size={28} strokeWidth={2} />}
           className=" text-large tracking-wider"
-          radius="sm"
+          color="success"
           size="lg"
         >
           create
         </SubmitButton>
-        <p className="text-2xl">
-          Have an account?{' '}
-          <Link href="/login" className="underline">
-            Click here to login.
-          </Link>
-        </p>
+
+        <NextUILink href="/login" underline="hover">
+          Have an account?
+        </NextUILink>
       </div>
     </form>
   );

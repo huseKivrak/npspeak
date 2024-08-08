@@ -45,7 +45,7 @@ export function DialogueModal({
     resolver: zodResolver(dialogueSchema),
   });
 
-  async function onSubmit(values: z.infer<typeof dialogueSchema>) {
+  async function onSubmit(values: Inputs) {
     setIsSubmitting(true);
     const formData = new FormData();
     formData.append('npc_id', npcId.toString());

@@ -4,8 +4,7 @@ import { signInAction } from '@/actions/auth';
 import { useEffect } from 'react';
 import { useForm, FieldPath } from 'react-hook-form';
 import { useFormState } from 'react-dom';
-import Link from 'next/link';
-import { FormInput } from './FormInput';
+import { Link as NextUILink } from '@nextui-org/react';
 import { SubmitButton } from '../buttons/SubmitButton';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,6 +12,7 @@ import { loginSchema } from '@/database/drizzle/validation';
 import { ErrorMessage } from '@hookform/error-message';
 import { ErrorToast } from '../ErrorToast';
 import { ActionStatus } from '@/types/drizzle';
+import { Input } from '@nextui-org/react';
 
 type Inputs = z.infer<typeof loginSchema>;
 export default function LoginForm() {
@@ -47,9 +47,9 @@ export default function LoginForm() {
   }, [state, setError]);
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <form className="flex flex-col items-center gap-4">
-        <FormInput
+    <div className="space-y-4">
+      <form className="flex flex-col gap-4">
+        <Input
           isRequired
           type="email"
           label="email"
@@ -63,7 +63,7 @@ export default function LoginForm() {
           errors={errors}
           render={({ message }) => <ErrorToast text={message} />}
         />
-        <FormInput
+        <Input
           isRequired
           type="password"
           label="password"
@@ -79,26 +79,25 @@ export default function LoginForm() {
         />
 
         <SubmitButton
+          fullWidth
           variant="flat"
           formAction={formAction}
           pendingText="signing in..."
-          className="w-full text-large tracking-widest"
-          radius="sm"
+          className="text-large tracking-wider"
           size="lg"
+          color="success"
         >
           login
         </SubmitButton>
       </form>
-      <div className="flex flex-col items-center gap-4">
-        <Link href="/forgot-password" className=" underline">
-          Forgot password?
-        </Link>
-        <p className="flex gap-1">
-          No account?
-          <Link href="/signup" className="underline">
-            Create one
-          </Link>
-        </p>
+      <div className="flex flex-col tracking-wide">
+        <NextUILink href="/forgot-password" underline="hover">
+          forgot password?
+        </NextUILink>
+
+        <NextUILink href="/signup" underline="hover">
+          sign up
+        </NextUILink>
       </div>
     </div>
   );

@@ -6,8 +6,6 @@ import { getStripe } from '@/utils/stripe/client';
 import { checkoutWithStripe } from '@/utils/stripe/server';
 import { SubscriptionCard } from '../cards/SubscriptionCard';
 import { Tables } from '@/types/supabase';
-import { Button, Tooltip } from '@nextui-org/react';
-import { FaQuestionCircle } from 'react-icons/fa';
 
 type Price = Tables<'prices'>;
 type Product = Tables<'products'>;

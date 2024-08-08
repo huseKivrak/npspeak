@@ -22,9 +22,9 @@ export const VoiceSampler = ({
 
   return (
     <div className="flex flex-col gap-2 max-w-xs sm:max-w-xl text-start">
-      <h2 className="text-2xl sm:text-4xl">Over 50 voices to choose from!</h2>
+      <h2 className="text-large md:text-4xl">Over 50 voices to choose from!</h2>
 
-      <p className="text-xl sm:text-2xl">Listen to some samples:</p>
+      <p className="text-medium md:text-large">Listen to some samples:</p>
       <Controller
         name="voice_id"
         control={control}

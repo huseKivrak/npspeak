@@ -46,7 +46,6 @@ export function VoiceLabelFilter({
     selectedUseCase: [],
     selectedDescription: [],
   });
-  console.log('voiceOptions:', voiceOptions);
 
   const handleFilterChange = (
     filterName: keyof FilterState,
@@ -78,100 +77,140 @@ export function VoiceLabelFilter({
   };
 
   useEffect(() => {
-    console.log('filteredOptions:', filters);
     onFilterChange(filteredOptions);
   }, [filteredOptions, onFilterChange]);
 
   return (
-    <div className="flex flex-col max-w-[265px] h-fit border rounded-2xl border-gray-200 px-4 py-2">
-      <div className="flex justify-between mb-2">
-        <h2 className="text-xl tracking-wide">Filter voices by...</h2>
+    <div className="flex flex-col max-w-[265px] h-fit border rounded-xl border-gray-200 px-2 md:px-4 py-2">
+      <Tooltip content="clear filters" size="sm">
+        <Button
+          isIconOnly
+          type="reset"
+          onClick={onReset}
+          size="sm"
+          radius="full"
+          variant="flat"
+          color="danger"
+          className="self-end -mr-2 -mb-3 h-min py-1"
+        >
+          <VscRefresh size={16} />
+        </Button>
+      </Tooltip>
 
-        <Tooltip content="Reset filters">
-          <Button
-            isIconOnly
-            type="reset"
-            onClick={onReset}
-            size="sm"
-            radius="full"
-            variant="flat"
-            className="w-1 h-min p-1"
-          >
-            <VscRefresh size={18} />
-          </Button>
-        </Tooltip>
-      </div>
-      <div className="flex flex-col ">
+      <div className="flex flex-col space-y-1">
         <div className="flex items-center justify-between">
-          <CheckboxGroup
-            onChange={(values) => handleFilterChange('selectedGender', values)}
-            orientation="horizontal"
-            size="sm"
-            radius="full"
-            value={filters.selectedGender}
-          >
-            <Checkbox key={'male'} value={'male'} className="">
-              <Tooltip content="male" placement="bottom-end">
+          <div className="flex flex-col">
+            <span className="font-mono text-xs font-bold mb-1">gender</span>
+            <CheckboxGroup
+              onChange={(values) =>
+                handleFilterChange('selectedGender', values)
+              }
+              orientation="horizontal"
+              size="sm"
+              radius="full"
+              value={filters.selectedGender}
+            >
+              <Checkbox
+                key={'male'}
+                value={'male'}
+                classNames={{
+                  wrapper: 'w-3 h-3',
+                  icon: 'w-2 h-1',
+                }}
+              >
+                <Tooltip content="male" placement="bottom-end" size="sm">
+                  <span>
+                    <FaMale size={16} color="lightblue" className="-ml-1" />
+                  </span>
+                </Tooltip>
+              </Checkbox>
+              <Checkbox
+                key={'female'}
+                value={'female'}
+                classNames={{
+                  wrapper: 'w-3 h-3',
+                  icon: 'w-2 h-1',
+                }}
+              >
+                <Tooltip content="female" placement="bottom" size="sm">
+                  <span>
+                    <FaFemale size={16} color="lightpink" className="-ml-1" />
+                  </span>
+                </Tooltip>
+              </Checkbox>
+            </CheckboxGroup>
+          </div>
+          <Divider orientation="vertical" className="w-[0.5px] h-8 mx-0 mt-4" />
+          <div className="flex flex-col">
+            <span className="font-mono text-xs font-bold mb-1">age</span>
+            <CheckboxGroup
+              onChange={(values) => handleFilterChange('selectedAge', values)}
+              orientation="horizontal"
+              size="sm"
+              radius="full"
+              value={filters.selectedAge}
+            >
+              <Checkbox
+                key={'young'}
+                value={'young'}
+                classNames={{
+                  wrapper: 'w-3 h-3',
+                  icon: 'w-2 h-1',
+                }}
+              >
                 <span>
-                  <FaMale size={20} color="lightblue" className="-ml-1" />
+                  <Tooltip content="young" placement="bottom" size="sm">
+                    <span>
+                      <BiChild size={18} className="-ml-1 text-green-200" />
+                    </span>
+                  </Tooltip>
                 </span>
-              </Tooltip>
-            </Checkbox>
-            <Checkbox key={'female'} value={'female'}>
-              <Tooltip content="female" placement="bottom">
+              </Checkbox>
+              <Checkbox
+                key={'middle-aged'}
+                value={'middle-aged'}
+                classNames={{
+                  wrapper: 'w-3 h-3',
+                  icon: 'w-2 h-1',
+                }}
+              >
                 <span>
-                  <FaFemale size={20} color="lightpink" className="-ml-1" />
+                  <Tooltip content="middle-aged" placement="bottom" size="sm">
+                    <span>
+                      <MdOutlineDirectionsWalk
+                        size={18}
+                        className="-ml-1 text-green-400"
+                      />
+                    </span>
+                  </Tooltip>
                 </span>
-              </Tooltip>
-            </Checkbox>
-          </CheckboxGroup>
-
-          <Divider orientation="vertical" className="self-center h-5" />
-
-          <CheckboxGroup
-            onChange={(values) => handleFilterChange('selectedAge', values)}
-            orientation="horizontal"
-            size="sm"
-            radius="full"
-            value={filters.selectedAge}
-          >
-            <Checkbox key={'young'} value={'young'}>
-              <span>
-                <Tooltip content="young" placement="bottom">
-                  <span>
-                    <BiChild size={20} className="-ml-1 text-green-200" />
-                  </span>
-                </Tooltip>
-              </span>
-            </Checkbox>
-            <Checkbox key={'middle-aged'} value={'middle-aged'}>
-              <span>
-                <Tooltip content="middle-aged" placement="bottom">
-                  <span>
-                    <MdOutlineDirectionsWalk
-                      size={20}
-                      className="-ml-1 text-green-400"
-                    />
-                  </span>
-                </Tooltip>
-              </span>
-            </Checkbox>
-            <Checkbox key={'old'} value={'old'}>
-              <span>
-                <Tooltip content="old" placement="bottom-start">
-                  <span>
-                    <MdOutlineElderly
-                      size={20}
-                      className="-ml-1 text-green-600"
-                    />
-                  </span>
-                </Tooltip>
-              </span>
-            </Checkbox>
-          </CheckboxGroup>
+              </Checkbox>
+              <Checkbox
+                key={'old'}
+                value={'old'}
+                classNames={{
+                  wrapper: 'w-3 h-3',
+                  icon: 'w-2 h-1',
+                }}
+              >
+                <span>
+                  <Tooltip content="old" placement="bottom-start" size="sm">
+                    <span>
+                      <MdOutlineElderly
+                        size={18}
+                        className="-ml-1 text-green-600"
+                      />
+                    </span>
+                  </Tooltip>
+                </span>
+              </Checkbox>
+            </CheckboxGroup>
+          </div>
         </div>
 
-        <Divider className="my-4 self-center" />
+        <span className="mt-4 font-mono text-xs font-bold">accent</span>
+
+        <Divider className="mb-2 h-[0.5px]" />
 
         <CheckboxGroup
           onChange={(values) => handleFilterChange('selectedAccent', values)}
@@ -184,9 +223,17 @@ export function VoiceLabelFilter({
           }}
         >
           {accent.map((accent) => (
-            <Tooltip content={accent} key={accent}>
-              <Checkbox value={accent} aria-label={accent}>
-                <span className="-ml-1 mr-1">
+            <Tooltip content={accent} key={accent} size="sm">
+              <Checkbox
+                value={accent}
+                aria-label={accent}
+                classNames={{
+                  base: 'py-1.5',
+                  wrapper: 'w-3 h-3 ',
+                  icon: 'w-2 h-1 ',
+                }}
+              >
+                <span className="-ml-1 mr-1 text-tiny">
                   {getAccentEmoji(accent.toLowerCase())}
                 </span>
               </Checkbox>
@@ -195,8 +242,8 @@ export function VoiceLabelFilter({
         </CheckboxGroup>
       </div>
 
-      <Divider className="my-4" />
-
+      <span className="mt-3 font-mono text-xs font-bold">use case</span>
+      <Divider className="mb-2 h-[0.5px]" />
       <CheckboxGroup
         onChange={(values) => handleFilterChange('selectedUseCase', values)}
         orientation="horizontal"
@@ -205,15 +252,22 @@ export function VoiceLabelFilter({
         value={filters.selectedUseCase}
       >
         {useCase.sort().map((useCase) => (
-          <Checkbox key={useCase} value={useCase}>
-            <span className="-ml-1 mr-1 tracking-tight">
-              {capitalize(useCase)}
-            </span>
+          <Checkbox
+            key={useCase}
+            value={useCase}
+            classNames={{
+              base: 'py-1.5',
+              wrapper: 'w-3 h-3',
+              icon: 'w-2 h-1',
+            }}
+          >
+            <span className="-ml-1 mr-1 text-sm">{capitalize(useCase)}</span>
           </Checkbox>
         ))}
       </CheckboxGroup>
 
-      <Divider className="my-4" />
+      <span className="mt-3 font-mono text-xs font-bold">description</span>
+      <Divider className="mb-2 h-[0.5px]" />
 
       <CheckboxGroup
         onChange={(values) => handleFilterChange('selectedDescription', values)}
@@ -223,8 +277,16 @@ export function VoiceLabelFilter({
         value={filters.selectedDescription}
       >
         {description.sort().map((description) => (
-          <Checkbox key={description} value={description}>
-            <span className="-ml-1 mr-1 tracking-tight">
+          <Checkbox
+            key={description}
+            value={description}
+            classNames={{
+              base: 'py-1.5',
+              wrapper: 'w-3 h-3',
+              icon: 'w-2 h-1',
+            }}
+          >
+            <span className="-ml-1 mr-1 text-sm">
               {capitalize(description)}
             </span>
           </Checkbox>

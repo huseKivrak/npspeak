@@ -33,6 +33,7 @@ export function AudioButton({ src }: { src: string }) {
       radius="full"
       onClick={togglePlayback}
       className="p-0 m-0"
+      size="lg"
     >
       {isPlaying ? <FaCircleStop /> : <FaVolumeUp />}
       <audio ref={audioRef} src={src} />

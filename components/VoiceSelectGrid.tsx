@@ -35,18 +35,12 @@ export function VoiceGrid({ voices }: { voices: VoiceOptionProps[] }) {
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-white text-center font-alagard">
-        Find the perfect voice!
-      </h1>
+      <h1 className="text-white text-center font-alagard">voice select</h1>
 
       <div className="h-full flex w-full justify-evenly gap-4">
-        <VoiceLabelFilter
-          voiceOptions={voices}
-          onFilterChange={(v) => setFilteredVoices(v)}
-        />
         <div className="flex flex-col w-full">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl md:text-4xl font-alagard ">
+          <div className="flex items-center justify-evenly">
+            <h2 className="text-tiny md:text-large font-alagard flex-1 ml-4">
               <span className="text-warning">{`${filteredVoices.length}`}</span>
               <span className="text-white">{` of ${voices.length} voices`}</span>
             </h2>
@@ -56,9 +50,10 @@ export function VoiceGrid({ voices }: { voices: VoiceOptionProps[] }) {
                 variant="bordered"
                 showControls
                 classNames={{
-                  wrapper: 'gap-2 overflow-visible h-24 font-alagard',
-                  item: 'w-10 h-10 rounded-full',
-                  cursor: 'shadow-xl shadow-warning/10 border-warning',
+                  wrapper: 'gap-2 overflow-visible h-8 md:h-16 font-alagard',
+                  item: 'w-8 h-8 md:w-10 md:h-10 text-tiny rounded-full',
+                  cursor:
+                    'w-8 h-8 md:w-10 md:h-10 text-tiny shadow-xl shadow-warning/10 border-warning rounded-full',
                 }}
                 page={page}
                 total={pages}
@@ -90,10 +85,16 @@ export function VoiceGrid({ voices }: { voices: VoiceOptionProps[] }) {
               </Select>
             </div>
           </div>
-          <div className="grid auto-rows-max grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 items-start justify-items-stretch">
-            {items.map((v) => (
-              <VoiceCard voice={v} key={v.value} />
-            ))}
+          <div className="flex justify-between gap-4">
+            <VoiceLabelFilter
+              voiceOptions={voices}
+              onFilterChange={(v) => setFilteredVoices(v)}
+            />
+            <div className="grid auto-rows-max grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 items-start justify-items-stretch">
+              {items.map((v) => (
+                <VoiceCard voice={v} key={v.value} />
+              ))}
+            </div>
           </div>
         </div>
       </div>

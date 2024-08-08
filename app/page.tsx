@@ -13,12 +13,11 @@ export default async function Index() {
 
   const voiceResponse = await getAllElevenLabsVoices();
   const voices = voiceResponse.status === 'success' ? voiceResponse.data : [];
-  const voiceSample = voices.slice(0, 12);
   return (
-    <div className="flex flex-col items-center text-center gap-12">
+    <div className="flex flex-col items-center text-center">
       <Hero />
       {/* <WorkflowAccordian /> */}
-      {voices && <VoiceSampler voiceOptions={voiceSample} />}
+      {voices && <VoiceSampler voiceOptions={voices} />}
     </div>
   );
 }
