@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const token_hash = searchParams.get('token_hash');
   const type = searchParams.get('type') as EmailOtpType | null;
-  const next = searchParams.get('next') ?? '/';
+  const next = searchParams.get('next') ?? '/subscribe';
   const redirectTo = request.nextUrl.clone();
   redirectTo.pathname = next;
 
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  let successMessage = 'Email confirmed! ';
+  let successMessage = 'email confirmed! ';
 
   successMessage +=
     type === 'recovery'
