@@ -1,6 +1,5 @@
 import {
   pgTable,
-  foreignKey,
   pgEnum,
   bigint,
   timestamp,
@@ -20,7 +19,7 @@ import { sql } from 'drizzle-orm';
 import { authUsers as users } from '../supabase/authSchema';
 
 /**
- * Introspected schema after applying migration for Stripe integration:
+ * Updated & introspected schema after applying migration for Stripe integration:
  * https://github.com/vercel/nextjs-subscription-payments/blob/main/supabase/migrations/20230530034630_init.sql
  *
  *
@@ -346,6 +345,7 @@ export const profiles = pgTable('profiles', {
   payment_method: jsonb('payment_method'),
   username: text('username').notNull(),
   email: text('email').notNull(),
+  subscription_status: subscription_status('subscription_status'),
 });
 
 export const subscriptions = pgTable('subscriptions', {

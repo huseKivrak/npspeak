@@ -7,8 +7,6 @@ export default async function SubscribePage() {
     getUserProfile(),
     getProducts(),
   ]);
-  console.log('USER:', user, 'PRODUCTS:', products);
-  console.log('TEST PRICE:', products[0].prices);
 
   return <SignUpWithStripeForm user={user} products={products} />;
 }

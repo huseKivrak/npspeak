@@ -363,6 +363,9 @@ export type Database = {
           payment_method: Json | null;
           username: string;
           email: string;
+          subscription_status:
+            | Database['public']['Enums']['subscription_status']
+            | null;
         };
         Insert: {
           avatar_url?: string | null;
@@ -372,6 +375,9 @@ export type Database = {
           payment_method?: Json | null;
           username: string;
           email: string;
+          subscription_status?:
+            | Database['public']['Enums']['subscription_status']
+            | null;
         };
         Update: {
           avatar_url?: string | null;
@@ -381,6 +387,9 @@ export type Database = {
           payment_method?: Json | null;
           username?: string;
           email?: string;
+          subscription_status?:
+            | Database['public']['Enums']['subscription_status']
+            | null;
         };
         Relationships: [
           {

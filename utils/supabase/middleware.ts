@@ -47,6 +47,19 @@ export async function updateSession(request: NextRequest) {
   const isUnprotectedPath = unprotectedPaths.some((path) =>
     request.nextUrl.pathname.startsWith(path)
   );
+
+  if (user && !isUnprotectedPath) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('subscription_status')
+      .eq('id', user.id);
+
+    if (profile && profile[0].subscription_status === 'active') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/subscribe';
+      return NextResponse.redirect(url);
+    }
+  }
   if (!user && !isUnprotectedPath) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
