@@ -1,20 +1,31 @@
-'use client';
-
-import { createStripePortal } from '@/utils/stripe/server';
-import { Button } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
+import { getUserProfile } from '@/actions/auth';
+import CustomerPortalForm, {
+  SubscriptionWithPriceAndProduct,
+} from '@/components/CustomerPortalForm';
+import { getSubscription } from '@/database/drizzle/stripeQueries';
+import { getErrorRedirect } from '@/utils/helpers/vercel';
+import { redirect } from 'next/navigation';
 
 export default async function AccountPage() {
-  const router = useRouter();
-  const handleManageSubscription = async () => {
-    const redirectUrl = await createStripePortal('account');
-    return router.push(redirectUrl);
-  };
+  const { user } = await getUserProfile();
+
+  if (!user) {
+    const errorRedirect = getErrorRedirect(
+      '/login',
+      'unauthorized',
+      'please login before subscribing'
+    );
+    return redirect(errorRedirect);
+  }
+  const subscription = await getSubscription(user?.id);
 
   return (
-    <div>
-      <h1>Account</h1>
-      <Button onClick={handleManageSubscription}>Manage Subscription</Button>
+    <div className="flex flex-col gap-4">
+      <h1>{`${user.username}`}</h1>
+
+      <CustomerPortalForm
+        subscription={subscription as SubscriptionWithPriceAndProduct}
+      />
     </div>
   );
 }

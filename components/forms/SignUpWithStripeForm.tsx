@@ -6,6 +6,7 @@ import { getStripe } from '@/utils/stripe/client';
 import { checkoutWithStripe } from '@/utils/stripe/server';
 import { SubscriptionCard } from '../cards/SubscriptionCard';
 import { Tables } from '@/types/supabase';
+import { SubscriptionWithPriceAndProduct } from '../CustomerPortalForm';
 
 type Price = Tables<'prices'>;
 type Product = Tables<'products'>;
@@ -18,9 +19,14 @@ export interface ProductWithPrice extends Product {
 interface Props {
   user: UserProfile | null | undefined;
   products: ProductWithPrice[];
+  subscription?: SubscriptionWithPriceAndProduct;
 }
 
-export default function SignupWithStripeForm({ user, products }: Props) {
+export default function SignupWithStripeForm({
+  user,
+  products,
+  subscription,
+}: Props) {
   const router = useRouter();
 
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
@@ -79,6 +85,9 @@ export default function SignupWithStripeForm({ user, products }: Props) {
                 product={product}
                 handleCheckout={handleStripeCheckout}
                 buttonIsLoading={priceIdLoading === price.id}
+                isCurrentSubscription={
+                  subscription?.price?.product.id === product.id
+                }
               />
             );
           })}

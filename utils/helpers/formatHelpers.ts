@@ -37,3 +37,13 @@ export const formatTimer = (time: number) => {
 export const capitalize = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
+export const formatPrice = (price: Tables<'prices'>) => {
+  const formattedPrice = new Intl.NumberFormat('en-us', {
+    style: 'currency',
+    currency: price.currency!,
+    minimumFractionDigits: 0,
+  }).format((price?.unit_amount || 0) / 100);
+
+  return formattedPrice;
+};
