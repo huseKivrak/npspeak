@@ -6,11 +6,7 @@ import {
 import { redirect } from 'next/navigation';
 import { UserDashboard } from '@/components/views/UserDashboard';
 
-export default async function UserPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined };
-}) {
+export default async function UserPage() {
   const { user } = await getUserProfile();
   if (!user) return redirect('/login');
 
