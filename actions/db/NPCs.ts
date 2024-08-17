@@ -9,9 +9,9 @@ import { npcSchema, deleteNPCSchema } from '@/database/drizzle/validation';
 import { ZodError } from 'zod';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers/vercel';
 
 export const createNPCAction = async (
-  prevState: ActionStatus | null,
   formData: FormData
 ): Promise<ActionStatus> => {
   const { user } = await getUserProfile();
@@ -20,6 +20,7 @@ export const createNPCAction = async (
   const user_id = user.id;
   let newNPCId: number | null = null;
 
+  console.log('FORM DATA:', formData);
   try {
     const { npc_name, description, campaign_ids, voice_id } =
       npcSchema.parse(formData);
@@ -37,7 +38,7 @@ export const createNPCAction = async (
     if (campaign_ids && campaign_ids.length > 0) {
       const campaign_associations = campaign_ids.map((campaign_id) => ({
         npc_id: insertedNPC[0].id,
-        campaign_id: campaign_id as number, //safe assertion post-Zod validation
+        campaign_id: Number(campaign_id),
       }));
 
       await db.insert(campaign_npcs).values(campaign_associations);
@@ -66,7 +67,6 @@ export const createNPCAction = async (
 };
 
 export const updateNPCAction = async (
-  prevState: ActionStatus | null,
   formData: FormData,
   npcId: number
 ): Promise<ActionStatus> => {
@@ -133,7 +133,7 @@ export const deleteNPCAction = async (
   const { user } = await getUserProfile();
   if (!user) throw new Error('You must be logged in to delete NPCs.');
 
-  let deletedNPCName: string | null = null;
+  let redirectPath: string;
 
   try {
     const { npc_id } = deleteNPCSchema.parse(formData);
@@ -142,17 +142,26 @@ export const deleteNPCAction = async (
       .where(and(eq(npcs.id, npc_id), eq(npcs.user_id, user.id)))
       .returning();
 
-    deletedNPCName = deletedNPC[0].npc_name;
+    redirectPath = getStatusRedirect(
+      '/dashboard',
+      'success',
+      `so long, ${deletedNPC[0].npc_name}!`
+    );
   } catch (error) {
+    redirectPath = getErrorRedirect(
+      '/npcs',
+      'oops',
+      'an error occured during NPC deletion'
+    );
     console.error('Error deleting NPC:', error);
     return {
       status: 'error',
       message: 'An error occured while deleting NPC.',
     };
   }
-  const deleted = encodeURIComponent(`${deletedNPCName} has been deleted.`);
+
   revalidatePath('/');
-  redirect(`/dashboard?deleted=true&message=${deleted}`);
+  redirect(redirectPath);
 };
 
 export const addVoiceToNPC = async (
