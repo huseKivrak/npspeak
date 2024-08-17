@@ -57,13 +57,12 @@ export function transformAndNormalizeLabels(
   Object.entries(voice.labels).forEach(([label, value]) => {
     const trimmedLabel = label.trim();
     const normalizedLabel = labelMap[trimmedLabel] || trimmedLabel;
-    if (normalizedLabel) {
-      let trimmedValue = value ? value.trim() : '';
-      if (normalizedLabel === 'age' && trimmedValue === 'middle aged') {
-        trimmedValue = 'middle-aged';
-      }
-      normalizedLabels[normalizedLabel] = trimmedValue;
+
+    let trimmedValue = value ? value.toLowerCase().trim() : '';
+    if (normalizedLabel === 'age' && trimmedValue === 'middle aged') {
+      trimmedValue = 'middle-aged';
     }
+    normalizedLabels[normalizedLabel] = trimmedValue;
   });
 
   //Transform voice object into a format more usable in ReactSelect components
@@ -88,15 +87,14 @@ export const transformAndNormalizeAllVoices = (
     .sort((a, b) => a.label.localeCompare(b.label));
 };
 
+const filterLabels = ['accent', 'description', 'gender', 'age', 'useCase'];
 export const getAllVoiceLabelOptions = (
   voices: VoiceOptionProps[]
 ): LabelOptions => {
-  const labelOptions = ['accent', 'description', 'gender', 'age', 'useCase'];
-  // Initialize the label options
-  const uniqueLabelOptions: Record<
+  const filterOptions: Record<
     NormalizedLabel,
     Set<string>
-  > = labelOptions.reduce(
+  > = filterLabels.reduce(
     (acc, label) => {
       acc[label as NormalizedLabel] = new Set();
       return acc;
@@ -106,17 +104,17 @@ export const getAllVoiceLabelOptions = (
 
   // Add all unique option values for each label
   voices.forEach((voice) => {
-    labelOptions.forEach((label) => {
+    filterLabels.forEach((label) => {
       const value = voice[label as NormalizedLabel];
-      if (value) uniqueLabelOptions[label as NormalizedLabel].add(value);
+      if (value) filterOptions[label as NormalizedLabel].add(value);
     });
   });
 
   // Convert the label options to an array
   const allLabelOptions = {} as LabelOptions;
-  labelOptions.forEach((label) => {
+  filterLabels.forEach((label) => {
     allLabelOptions[label as NormalizedLabel] = Array.from(
-      uniqueLabelOptions[label as NormalizedLabel]
+      filterOptions[label as NormalizedLabel]
     );
   });
 
@@ -132,19 +130,6 @@ export const filterByLabelValues = (
       return value === '' || voiceOption[label as NormalizedLabel] === value;
     });
   });
-};
-
-export const getSingleLabelValues = (
-  voices: VoiceOptionProps[],
-  labelName: NormalizedLabel
-): string[] => {
-  const labelSet = new Set<string>();
-
-  voices.forEach((voice) => {
-    const labelValue = voice[labelName];
-    labelSet.add(labelValue);
-  });
-  return Array.from(labelSet);
 };
 
 //(Unused) Utility for finding non-default labels, in case new options are added
