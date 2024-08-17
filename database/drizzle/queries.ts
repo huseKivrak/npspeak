@@ -1,5 +1,3 @@
-import 'server-only';
-
 import { ActionStatus, CampaignWithNPCs, DetailedNPC } from '@/types/drizzle';
 import {
   npcs,
@@ -11,7 +9,7 @@ import {
   profiles,
 } from '@/database/drizzle/schema';
 import { db } from '.';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { getUserProfile } from '@/actions/auth';
 import { DetailedDialogue } from '@/types/drizzle';
 import { PgSelect } from 'drizzle-orm/pg-core';
