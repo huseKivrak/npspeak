@@ -1,110 +1,55 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { getAllVoiceLabelOptions } from '@/utils/elevenlabs/api';
-import {
-  Button,
-  Tooltip,
-  Select,
-  SelectItem,
-  Selection,
-  Chip,
-} from '@nextui-org/react';
-import {
-  getAccentEmoji,
-  voiceMatchesFilter,
-} from '@/utils/helpers/formHelpers';
+import { useEffect } from 'react';
+import { Button, Tooltip, Select, SelectItem, Chip } from '@nextui-org/react';
+import { getAccentEmoji } from '@/utils/helpers/formHelpers';
 import { capitalize } from '@/utils/helpers/formatHelpers';
 import { FaMale, FaFemale } from 'react-icons/fa';
 import { MdOutlineDirectionsWalk, MdOutlineElderly } from 'react-icons/md';
 import { BiChild } from 'react-icons/bi';
 import { VscRefresh } from 'react-icons/vsc';
 import { VoiceOptionProps } from '@/types/elevenlabs';
-
-interface FilterState {
-  selectedGender: Selection;
-  selectedAge: Selection;
-  selectedAccent: Selection;
-  selectedUseCase: Selection;
-  selectedDescription: Selection;
-}
+import { FilterKey, useVoiceFilter } from '@/hooks/useVoiceFilter';
 
 export function VoiceFilter({
-  voiceOptions,
+  voices,
   onFilterChange,
 }: {
-  voiceOptions: VoiceOptionProps[];
-  onFilterChange: (filteredOptions: VoiceOptionProps[]) => void;
+  voices: VoiceOptionProps[];
+  onFilterChange: (filteredVoices: VoiceOptionProps[]) => void;
 }) {
-  const { accent, useCase, description } =
-    getAllVoiceLabelOptions(voiceOptions);
+  const {
+    allFilterOptions,
+    selectedOptions,
+    filteredVoices,
+    updateFilter,
+    resetFilters,
+  } = useVoiceFilter(voices);
 
-  const [filters, setFilters] = useState<FilterState>({
-    selectedGender: new Set([]),
-    selectedAge: new Set([]),
-    selectedAccent: new Set([]),
-    selectedUseCase: new Set([]),
-    selectedDescription: new Set([]),
-  });
+  const { accent, useCase, description } = allFilterOptions;
 
   const handleSelectionChange =
-    (filterName: keyof FilterState) =>
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [filterName]: new Set(e.target.value.split(',')),
-      }));
+    (filterType: FilterKey) => (e: React.ChangeEvent<HTMLSelectElement>) => {
+      updateFilter(filterType, new Set(e.target.value.split(',')));
     };
 
-  const handleChipClose = (filterName: keyof FilterState, value: string) => {
-    setFilters((prevFilters) => {
-      const newSet = new Set(prevFilters[filterName]);
-      newSet.delete(value);
-      return {
-        ...prevFilters,
-        [filterName]: newSet,
-      };
-    });
-  };
-
-  const filteredOptions = useMemo(() => {
-    return voiceOptions.filter((voice) => {
-      return (
-        voiceMatchesFilter(filters.selectedGender, voice.gender) &&
-        voiceMatchesFilter(filters.selectedAge, voice.age) &&
-        voiceMatchesFilter(filters.selectedAccent, voice.accent) &&
-        voiceMatchesFilter(filters.selectedUseCase, voice.useCase) &&
-        voiceMatchesFilter(filters.selectedDescription, voice.description)
-      );
-    });
-  }, [voiceOptions, filters]);
-
-  const onReset = () => {
-    setFilters({
-      selectedGender: new Set([]),
-      selectedAge: new Set([]),
-      selectedAccent: new Set([]),
-      selectedUseCase: new Set([]),
-      selectedDescription: new Set([]),
-    });
-    onFilterChange(voiceOptions);
+  const handleChipClose = (filterType: FilterKey, value: string) => {
+    const newSet = new Set(selectedOptions[filterType]);
+    newSet.delete(value);
+    updateFilter(filterType, newSet);
   };
 
   useEffect(() => {
-    onFilterChange(filteredOptions);
-  }, [filteredOptions, onFilterChange]);
+    onFilterChange(filteredVoices);
+  }, [filteredVoices, onFilterChange]);
 
   return (
     <div className="flex flex-col space-y-2">
       <div className="flex space-x-8 justify-end">
-        <span className="text-tiny md:text-medium font-alagard ">
-          <span className="text-warning">{`${filteredOptions.length}`}</span>
-          {` of ${voiceOptions.length} voices`}
-        </span>
         <Tooltip content="clear filters" size="sm">
           <Button
-            type="reset"
-            onClick={onReset}
+            type="button"
+            onClick={resetFilters}
             size="sm"
             radius="full"
             variant="flat"
@@ -116,19 +61,27 @@ export function VoiceFilter({
           </Button>
         </Tooltip>
       </div>
-      <div className="flex flex-row justify-end space-x-2">
+      <div className="flex flex-row justify-end space-x-2 font-mono">
         <Select
           aria-label="select gender"
           placeholder="gender"
           selectionMode="multiple"
-          selectedKeys={filters.selectedGender}
-          onChange={handleSelectionChange('selectedGender')}
+          selectedKeys={selectedOptions.gender}
+          onChange={handleSelectionChange('gender')}
           size="sm"
           radius="sm"
           variant="flat"
           isMultiline
           className="max-w-[150px]"
-          classNames={{}}
+          classNames={{
+            value: 'flex items-center justify-center',
+          }}
+          popoverProps={{
+            classNames: {
+              base: 'flex items-center justify-center',
+              content: 'flex items-center justify-center',
+            },
+          }}
           renderValue={(items) => {
             return (
               <div className="flex flex-wrap gap-2">
@@ -138,16 +91,16 @@ export function VoiceFilter({
                     size="sm"
                     key={item.key}
                     classNames={{
-                      closeButton: 'text-tiny',
+                      closeButton: 'text-sm',
                     }}
                     onClose={() =>
-                      handleChipClose('selectedGender', item.key as string)
+                      handleChipClose('gender', item.key as string)
                     }
                   >
                     {item.textValue === 'male' ? (
-                      <FaMale color="lightblue" />
+                      <FaMale color="lightblue" size={20} />
                     ) : (
-                      <FaFemale color="lightpink" />
+                      <FaFemale color="lightpink" size={20} />
                     )}
                   </Chip>
                 ))}
@@ -158,14 +111,14 @@ export function VoiceFilter({
           <SelectItem key="male" value="male" textValue="male">
             <Tooltip content="male" placement="bottom-end" size="sm">
               <span>
-                <FaMale size={16} color="lightblue" className="-ml-1" />
+                <FaMale size={20} color="lightblue" className="-ml-1" />
               </span>
             </Tooltip>
           </SelectItem>
           <SelectItem key="female" value="female" textValue="female">
             <Tooltip content="female" placement="bottom" size="sm">
               <span>
-                <FaFemale size={16} color="lightpink" className="-ml-1" />
+                <FaFemale size={20} color="lightpink" className="-ml-1" />
               </span>
             </Tooltip>
           </SelectItem>
@@ -175,16 +128,19 @@ export function VoiceFilter({
           aria-label="select age"
           placeholder="age"
           selectionMode="multiple"
-          selectedKeys={filters.selectedAge}
-          onChange={handleSelectionChange('selectedAge')}
+          selectedKeys={selectedOptions.age}
+          onChange={handleSelectionChange('age')}
           size="sm"
           radius="sm"
           variant="flat"
           isMultiline
-          className="max-w-[150px]"
+          className="max-w-[200px]"
+          classNames={{
+            value: 'flex items-center justify-center',
+          }}
           renderValue={(items) => {
             return (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap">
                 {items.map((item) => (
                   <Chip
                     variant="light"
@@ -192,21 +148,19 @@ export function VoiceFilter({
                     radius="full"
                     key={item.key}
                     classNames={{
-                      closeButton: 'text-tiny',
+                      closeButton: 'text-xs',
                     }}
-                    onClose={() =>
-                      handleChipClose('selectedAge', item.key as string)
-                    }
+                    onClose={() => handleChipClose('age', item.key as string)}
                   >
                     {item.key === 'young' ? (
-                      <BiChild size={18} className=" text-green-200" />
+                      <BiChild size={20} className=" text-green-200" />
                     ) : item.key === 'middle-aged' ? (
                       <MdOutlineDirectionsWalk
-                        size={18}
+                        size={20}
                         className=" text-green-400"
                       />
                     ) : (
-                      <MdOutlineElderly size={18} className="text-green-600" />
+                      <MdOutlineElderly size={20} className="text-green-600" />
                     )}
                   </Chip>
                 ))}
@@ -217,7 +171,7 @@ export function VoiceFilter({
           <SelectItem key="young" value="young" textValue="young">
             <Tooltip content="young" placement="bottom" size="sm">
               <span>
-                <BiChild size={18} className=" text-green-200" />
+                <BiChild size={20} className=" text-green-200" />
               </span>
             </Tooltip>
           </SelectItem>
@@ -229,7 +183,7 @@ export function VoiceFilter({
             <Tooltip content="middle-aged" placement="bottom" size="sm">
               <span>
                 <MdOutlineDirectionsWalk
-                  size={18}
+                  size={20}
                   className=" text-green-400"
                 />
               </span>
@@ -238,7 +192,7 @@ export function VoiceFilter({
           <SelectItem key="old" value="old" textValue="old">
             <Tooltip content="old" placement="bottom" size="sm">
               <span>
-                <MdOutlineElderly size={18} className="text-green-600" />
+                <MdOutlineElderly size={20} className="text-green-600" />
               </span>
             </Tooltip>
           </SelectItem>
@@ -248,13 +202,16 @@ export function VoiceFilter({
           aria-label="select accent"
           placeholder="accent"
           selectionMode="multiple"
-          selectedKeys={filters.selectedAccent}
-          onChange={handleSelectionChange('selectedAccent')}
+          selectedKeys={selectedOptions.accent}
+          onChange={handleSelectionChange('accent')}
           size="sm"
           radius="sm"
           variant="flat"
           isMultiline
           className="max-w-[200px]"
+          classNames={{
+            value: 'flex items-center justify-center',
+          }}
           renderValue={(items) => {
             return (
               <div className="flex flex-wrap gap-2">
@@ -265,10 +222,10 @@ export function VoiceFilter({
                     radius="full"
                     key={item.key}
                     classNames={{
-                      closeButton: 'text-tiny',
+                      closeButton: 'text-xs',
                     }}
                     onClose={() =>
-                      handleChipClose('selectedAccent', item.key as string)
+                      handleChipClose('accent', item.key as string)
                     }
                   >
                     {getAccentEmoji(item.textValue!)}
@@ -287,13 +244,17 @@ export function VoiceFilter({
         <Select
           selectionMode="multiple"
           placeholder="use case"
-          selectedKeys={filters.selectedUseCase}
-          onChange={handleSelectionChange('selectedUseCase')}
+          selectedKeys={selectedOptions.useCase}
+          onChange={handleSelectionChange('useCase')}
           size="sm"
           radius="sm"
           variant="flat"
           isMultiline
-          className="max-w-[175px]"
+          className="max-w-[200px]"
+          classNames={{
+            value: 'text-center',
+            trigger: 'justify-center',
+          }}
           renderValue={(items) => {
             return (
               <div className="flex flex-wrap gap-2">
@@ -303,11 +264,12 @@ export function VoiceFilter({
                     color="primary"
                     size="sm"
                     key={item.key}
+                    className="text-sm tracking-tighter"
                     classNames={{
-                      closeButton: 'text-tiny',
+                      closeButton: 'text-xs',
                     }}
                     onClose={() =>
-                      handleChipClose('selectedUseCase', item.key as string)
+                      handleChipClose('useCase', item.key as string)
                     }
                   >
                     {item.textValue}
@@ -326,13 +288,17 @@ export function VoiceFilter({
           aria-label="select description"
           placeholder="description"
           selectionMode="multiple"
-          selectedKeys={filters.selectedDescription}
-          onChange={handleSelectionChange('selectedDescription')}
+          selectedKeys={selectedOptions.description}
+          onChange={handleSelectionChange('description')}
           size="sm"
           variant="flat"
           radius="sm"
           isMultiline
-          className="max-w-[175px]"
+          className="max-w-[200px]"
+          classNames={{
+            value: 'text-center',
+            trigger: 'justify-center',
+          }}
           renderValue={(items) => {
             return (
               <div className="flex flex-wrap gap-2">
@@ -342,11 +308,12 @@ export function VoiceFilter({
                     color="secondary"
                     size="sm"
                     key={item.key}
+                    className="text-sm tracking-tighter"
                     classNames={{
-                      closeButton: 'text-tiny',
+                      closeButton: 'text-xs',
                     }}
                     onClose={() =>
-                      handleChipClose('selectedDescription', item.key as string)
+                      handleChipClose('description', item.key as string)
                     }
                   >
                     {item.textValue}
