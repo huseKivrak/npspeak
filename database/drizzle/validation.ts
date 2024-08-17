@@ -75,7 +75,7 @@ export const campaignSchema = zfd
         .max(500, 'Description must be at most 500 characters long')
         .optional()
     ),
-    npc_ids: zfd.repeatableOfType(zfd.numeric().optional()),
+    npc_ids: zfd.repeatableOfType(zfd.numeric()).optional(),
     start_date: zfd.text(z.string().optional()),
     end_date: zfd.text(z.string().optional()),
   })
@@ -125,7 +125,9 @@ export const npcSchema = zfd.formData({
       .max(500, 'Description must be at most 500 characters long')
       .optional()
   ),
-  campaign_ids: zfd.repeatableOfType(zfd.numeric().optional()),
+  campaign_ids: zfd
+    .repeatableOfType(z.union([z.string(), z.number()]))
+    .optional(),
   voice_id: zfd.text(z.string()),
 });
 
