@@ -1,6 +1,7 @@
 import { CampaignWithNPCs, DetailedNPC } from '@/types/drizzle';
 import { Tables } from '@/types/supabase';
 import { AccentEmojiMap } from '@/lib/constants';
+import { Selection } from '@nextui-org/react';
 
 export const transformCampaignOptions = (campaigns: CampaignWithNPCs[]) => {
   return campaigns.map((campaign) => ({
@@ -26,7 +27,7 @@ export const transformDialogueTypeOptions = (
 };
 
 export const getAccentEmoji = (accent: string) =>
-  AccentEmojiMap[accent] || accent;
+  AccentEmojiMap[accent.toLowerCase()] || accent.toLowerCase();
 
 export const truncateText = (text: string, length: number) => {
   if (text.length > length) {
@@ -36,8 +37,9 @@ export const truncateText = (text: string, length: number) => {
 };
 
 export const voiceMatchesFilter = (
-  selectedFilters: string[],
+  selectedFilters: Selection,
   voiceLabel: string
 ) => {
-  return selectedFilters.length === 0 || selectedFilters.includes(voiceLabel);
+  if (selectedFilters === 'all' || selectedFilters.size === 0) return true;
+  return selectedFilters.has(voiceLabel);
 };
