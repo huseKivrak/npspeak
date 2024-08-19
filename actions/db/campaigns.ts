@@ -12,6 +12,7 @@ import {
 import { ZodError } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers/vercel';
 
 export const createCampaignAction = async (
   prevState: ActionStatus | null,
@@ -74,7 +75,7 @@ export const deleteCampaignAction = async (
   if (!user) return { status: 'error', message: 'Unauthenticated' };
   const user_id = user.id;
 
-  let deletedCampaignName;
+  let redirectPath: string;
 
   try {
     const { campaign_id } = deleteCampaignSchema.parse(formData);
@@ -82,14 +83,24 @@ export const deleteCampaignAction = async (
       .delete(campaigns)
       .where(and(eq(campaigns.id, campaign_id), eq(campaigns.user_id, user_id)))
       .returning();
-    deletedCampaignName = deletedCampaign[0].campaign_name;
+
+    redirectPath = getStatusRedirect(
+      '/dashboard',
+      'success',
+      `${deletedCampaign[0].campaign_name} is no more`
+    );
   } catch (error) {
+    redirectPath = getErrorRedirect(
+      '/campaigns',
+      'oops',
+      'an error occured during campaign deletion'
+    );
     return {
       status: 'error',
       message: 'An error occured while deleting campaign.',
     };
   }
-  const deleted = encodeURIComponent(deletedCampaignName);
+
   revalidatePath('/');
-  redirect(`/dashboard?message=${deleted}`);
+  redirect(redirectPath);
 };
