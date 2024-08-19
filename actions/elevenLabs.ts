@@ -4,7 +4,6 @@ import {
   ELEVENLABS_BASE_URL,
   ELEVENLABS_API_HEADERS,
   transformAndNormalizeAllVoices,
-  transformAndNormalizeLabels,
   createSharedVoiceQuery,
 } from '../utils/elevenlabs/api';
 
@@ -74,30 +73,6 @@ export async function getAllSharedElevenLabsVoices(
       status: 'success',
       message: 'Retrieved all shared voices',
       data: normalizedVoices,
-    };
-  } catch (error) {
-    console.error(error);
-    return { status: 'error', message: `Error: ${error}` };
-  }
-}
-
-export async function getElevenLabsVoiceInfo(
-  voice_id: string
-): Promise<ActionStatus> {
-  try {
-    const response = await fetch(
-      `${ELEVENLABS_BASE_URL}/voices/${voice_id}?with_settings=true`,
-      {
-        method: 'GET',
-        headers: ELEVENLABS_API_HEADERS,
-      }
-    );
-    const data = await response.json();
-    const normalizedVoice = transformAndNormalizeLabels(data);
-    return {
-      status: 'success',
-      message: 'Retrieved voice info',
-      data: normalizedVoice,
     };
   } catch (error) {
     console.error(error);

@@ -13,7 +13,7 @@ export const ELEVENLABS_API_HEADERS = {
   'xi-api-key': process.env.ELEVENLABS_API_KEY!,
 };
 
-export const audioFormats = {
+const audioFormats = {
   mp3_32kbps_22kHz: 'mp3_22050_32',
   mp3_32kbps_44kHz: 'mp3_44100_32',
   mp3_64kbps_44kHz: 'mp3_44100_64',
@@ -86,63 +86,6 @@ export const transformAndNormalizeAllVoices = (
     .map(transformAndNormalizeLabels)
     .sort((a, b) => a.label.localeCompare(b.label));
 };
-
-const filterLabels = ['accent', 'description', 'gender', 'age', 'useCase'];
-export const getAllVoiceLabelOptions = (
-  voices: VoiceOptionProps[]
-): LabelOptions => {
-  const filterOptions: Record<
-    NormalizedLabel,
-    Set<string>
-  > = filterLabels.reduce(
-    (acc, label) => {
-      acc[label as NormalizedLabel] = new Set();
-      return acc;
-    },
-    {} as Record<NormalizedLabel, Set<string>>
-  );
-
-  // Add all unique option values for each label
-  voices.forEach((voice) => {
-    filterLabels.forEach((label) => {
-      const value = voice[label as NormalizedLabel];
-      if (value) filterOptions[label as NormalizedLabel].add(value);
-    });
-  });
-
-  // Convert the label options to an array
-  const allLabelOptions = {} as LabelOptions;
-  filterLabels.forEach((label) => {
-    allLabelOptions[label as NormalizedLabel] = Array.from(
-      filterOptions[label as NormalizedLabel]
-    );
-  });
-
-  return allLabelOptions;
-};
-
-export const filterByLabelValues = (
-  voices: VoiceOptionProps[],
-  filters: Record<NormalizedLabel, string>
-): VoiceOptionProps[] => {
-  return voices.filter((voiceOption: VoiceOptionProps) => {
-    return Object.entries(filters).every(([label, value]) => {
-      return value === '' || voiceOption[label as NormalizedLabel] === value;
-    });
-  });
-};
-
-//(Unused) Utility for finding non-default labels, in case new options are added
-// export function getAllVoiceLabels(voices?: ElevenLabsVoice[]): string[] {
-//   if (!voices) return ELEVENLABS_PREMADE_LABELS;
-
-//   const uniqueLabels = voices.reduce<Set<string>>((acc, curr) => {
-//     Object.keys(curr.labels).forEach((label) => acc.add(label));
-//     return acc;
-//   }, new Set<string>());
-
-//   return [...uniqueLabels];
-// }
 
 export const createSharedVoiceQuery = (
   query: SharedElevenLabsVoiceQueryProps

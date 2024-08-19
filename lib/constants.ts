@@ -101,16 +101,6 @@ export const DefaultDialogueTypes: FormOptions = [
   { label: 'exclamation', value: 7 },
 ];
 
-export const AudioCardColors: { [key: string]: string } = {
-  greeting: 'bg-primary',
-  farewell: 'bg-danger',
-  story: 'bg-secondary',
-  question: 'bg-warning',
-  answer: 'bg-primary',
-  exclamation: 'bg-warning',
-  other: 'bg-default',
-};
-
 export const AccentEmojiMap: { [key: string]: string } = {
   american: '🇺🇸',
   'british-essex': '🇬🇧',

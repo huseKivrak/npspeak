@@ -5,15 +5,6 @@ import {
 } from '@/types/drizzle';
 import { Tables } from '@/types/supabase';
 
-export const createTTSFormOptions = (dialogues: Tables<'npc_dialogues'>[]) => {
-  return dialogues.reduce<FormOptions>((acc, dialogue) => {
-    if (!dialogue.tts_audio_id) {
-      acc.push({ label: dialogue.text, value: dialogue.id });
-    }
-    return acc;
-  }, []);
-};
-
 export const formatDialoguesForSoundboard = (
   dialogues: DetailedDialogue[]
 ): SoundboardDialogue[] => {
