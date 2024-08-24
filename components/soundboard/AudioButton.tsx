@@ -1,9 +1,16 @@
+import { cn } from '@/utils/helpers/clsxMerge';
 import { Button } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
 import { FaVolumeUp } from 'react-icons/fa';
 import { FaCircleStop } from 'react-icons/fa6';
 
-export function AudioButton({ src }: { src: string }) {
+export function AudioButton({
+  src,
+  className,
+}: {
+  src: string;
+  className?: string;
+}) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -28,12 +35,15 @@ export function AudioButton({ src }: { src: string }) {
 
   return (
     <Button
-      variant="light"
-      radius="none"
+      variant="bordered"
       onClick={togglePlayback}
-      className="p-0 m-0 w-full h-full"
+      className={cn('', className)}
+      fullWidth
+      endContent={
+        isPlaying ? <FaCircleStop size={24} /> : <FaVolumeUp size={24} />
+      }
     >
-      {isPlaying ? <FaCircleStop size={24} /> : <FaVolumeUp size={24} />}
+      {!isPlaying && <span className="font-mono text-tiny">sample</span>}
       <audio ref={audioRef} src={src} />
     </Button>
   );
