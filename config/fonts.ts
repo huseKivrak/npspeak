@@ -17,6 +17,7 @@ export const fontAlagard = localFont({
 export const redHatText = Red_Hat_Text({
   subsets: ['latin'],
   display: 'swap',
+  variable: '--font-rht',
 });
 
 export const redHatMono = Red_Hat_Mono({
