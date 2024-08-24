@@ -57,11 +57,11 @@ export function VoiceFilter({
             className="h-min py-1"
             endContent={<VscRefresh size={16} />}
           >
-            reset
+            reset filters
           </Button>
         </Tooltip>
       </div>
-      <div className="flex flex-row justify-end space-x-2 font-mono">
+      <div className="flex items-start justify-between">
         <Select
           aria-label="select gender"
           placeholder="gender"
@@ -72,14 +72,13 @@ export function VoiceFilter({
           radius="sm"
           variant="flat"
           isMultiline
-          className="max-w-[150px]"
+          className="w-1/3 pr-2"
           classNames={{
             value: 'flex items-center justify-center',
           }}
           popoverProps={{
             classNames: {
-              base: 'flex items-center justify-center',
-              content: 'flex items-center justify-center',
+              base: 'max-w-fit',
             },
           }}
           renderValue={(items) => {
@@ -134,9 +133,14 @@ export function VoiceFilter({
           radius="sm"
           variant="flat"
           isMultiline
-          className="max-w-[200px]"
+          className="w-1/3 px-1"
           classNames={{
             value: 'flex items-center justify-center',
+          }}
+          popoverProps={{
+            classNames: {
+              base: 'max-w-fit',
+            },
           }}
           renderValue={(items) => {
             return (
@@ -148,7 +152,7 @@ export function VoiceFilter({
                     radius="full"
                     key={item.key}
                     classNames={{
-                      closeButton: 'text-xs',
+                      closeButton: 'text-sm',
                     }}
                     onClose={() => handleChipClose('age', item.key as string)}
                   >
@@ -208,9 +212,14 @@ export function VoiceFilter({
           radius="sm"
           variant="flat"
           isMultiline
-          className="max-w-[200px]"
+          className="w-1/3 pl-2"
           classNames={{
             value: 'flex items-center justify-center',
+          }}
+          popoverProps={{
+            classNames: {
+              base: 'max-w-fit',
+            },
           }}
           renderValue={(items) => {
             return (
@@ -222,7 +231,7 @@ export function VoiceFilter({
                     radius="full"
                     key={item.key}
                     classNames={{
-                      closeButton: 'text-xs',
+                      closeButton: 'text-sm',
                     }}
                     onClose={() =>
                       handleChipClose('accent', item.key as string)
@@ -241,6 +250,8 @@ export function VoiceFilter({
             </SelectItem>
           ))}
         </Select>
+      </div>
+      <div className="flex items-start justify-between">
         <Select
           selectionMode="multiple"
           placeholder="use case"
@@ -250,10 +261,15 @@ export function VoiceFilter({
           radius="sm"
           variant="flat"
           isMultiline
-          className="max-w-[200px]"
+          className="w-1/2 pr-1"
           classNames={{
             value: 'text-center',
             trigger: 'justify-center',
+          }}
+          popoverProps={{
+            classNames: {
+              base: 'max-w-fit',
+            },
           }}
           renderValue={(items) => {
             return (
@@ -266,7 +282,7 @@ export function VoiceFilter({
                     key={item.key}
                     className="text-sm tracking-tighter"
                     classNames={{
-                      closeButton: 'text-xs',
+                      closeButton: 'text-sm',
                     }}
                     onClose={() =>
                       handleChipClose('useCase', item.key as string)
@@ -294,10 +310,15 @@ export function VoiceFilter({
           variant="flat"
           radius="sm"
           isMultiline
-          className="max-w-[200px]"
+          className="w-1/2 pl-2"
           classNames={{
             value: 'text-center',
             trigger: 'justify-center',
+          }}
+          popoverProps={{
+            classNames: {
+              base: 'max-w-fit',
+            },
           }}
           renderValue={(items) => {
             return (
@@ -310,7 +331,7 @@ export function VoiceFilter({
                     key={item.key}
                     className="text-sm tracking-tighter"
                     classNames={{
-                      closeButton: 'text-xs',
+                      closeButton: 'text-sm',
                     }}
                     onClose={() =>
                       handleChipClose('description', item.key as string)
