@@ -12,7 +12,8 @@ const config: Config = {
       fontFamily: {
         alagard: ['var(--font-alagard)'],
         grenze: ['var(--font-grenze)'],
-        redHatMono: ['var(--font-mono)'],
+        mono: ['var(--font-mono)'],
+        rht: ['var(--font-rht)'],
       },
     },
   },
