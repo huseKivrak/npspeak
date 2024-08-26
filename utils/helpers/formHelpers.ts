@@ -1,7 +1,10 @@
 import { CampaignWithNPCs } from '@/types/drizzle';
 import { AccentEmojiMap } from '@/lib/constants';
+import { Tables } from '@/types/supabase';
 
-export const transformCampaignOptions = (campaigns: CampaignWithNPCs[]) => {
+export const transformCampaignOptions = (
+  campaigns: CampaignWithNPCs[] | Tables<'campaigns'>[]
+) => {
   return campaigns.map((campaign) => ({
     value: campaign.id,
     label: campaign.campaign_name,

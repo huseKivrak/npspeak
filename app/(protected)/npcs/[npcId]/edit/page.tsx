@@ -1,7 +1,16 @@
+import { getUserProfile } from '@/actions/auth';
 import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
 import { NPCForm } from '@/components/forms/NPCForm';
-import { getNPCsWithRelatedData } from '@/database/drizzle/queries';
+import { db } from '@/database/drizzle';
+import {
+  getAllUserCampaigns,
+  getCampaignsWithNPCs,
+  getNPCsWithRelatedData,
+} from '@/database/drizzle/queries';
 import { DetailedNPC, UpdateNPC } from '@/types/drizzle';
+import { transformCampaignOptions } from '@/utils/helpers/formHelpers';
+import { eq } from 'drizzle-orm';
+import { redirect } from 'next/navigation';
 
 export default async function EditNPCPage({
   params,
@@ -10,6 +19,11 @@ export default async function EditNPCPage({
     npcId: number;
   };
 }) {
+  const { user } = await getUserProfile();
+  if (!user) {
+    return redirect('/login');
+  }
+
   const voiceResponse = await getAllElevenLabsVoices();
   const voices = voiceResponse.status === 'success' ? voiceResponse.data : '';
 
@@ -27,9 +41,19 @@ export default async function EditNPCPage({
     voice_id: voice_id!,
   };
 
+  const userCampaigns = await getAllUserCampaigns(user.id);
+  const campaignOptions =
+    userCampaigns.status === 'success'
+      ? transformCampaignOptions(userCampaigns.data)
+      : [];
+
   return (
     <div>
-      <NPCForm voiceOptions={voices} npcToUpdate={editableNPC} />
+      <NPCForm
+        voiceOptions={voices}
+        npcToUpdate={editableNPC}
+        campaignOptions={campaignOptions}
+      />
     </div>
   );
 }

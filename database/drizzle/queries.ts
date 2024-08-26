@@ -13,6 +13,7 @@ import { eq } from 'drizzle-orm';
 import { getUserProfile } from '@/actions/auth';
 import { DetailedDialogue } from '@/types/drizzle';
 import { PgSelect } from 'drizzle-orm/pg-core';
+
 /**
  * @param campaignId Optional: Returns all user campaigns if not provided
  * @returns CampaignWithNPCs | CampaignWithNPCs[] | {status: string; message: string}
@@ -73,6 +74,26 @@ export const getCampaignsWithNPCs = async (
     return {
       status: 'error',
       message: `Error fetching campaigns: ${error}`,
+    };
+  }
+};
+
+export const getAllUserCampaigns = async (
+  userId: string
+): Promise<ActionStatus> => {
+  try {
+    const userCampaigns = await db.query.campaigns.findMany({
+      where: eq(campaigns.user_id, userId),
+    });
+    return {
+      status: 'success',
+      data: userCampaigns,
+    };
+  } catch (error) {
+    console.error('Error fetching user campaigns:', error);
+    return {
+      status: 'error',
+      message: `Error fetching user campaigns: ${error}`,
     };
   }
 };
