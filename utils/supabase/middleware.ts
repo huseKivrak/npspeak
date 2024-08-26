@@ -35,7 +35,6 @@ export async function updateSession(request: NextRequest) {
 
   const unprotectedPaths = [
     '/signup',
-    '/subscribe',
     '/login',
     '/about',
     '/contact',
