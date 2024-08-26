@@ -1,94 +1,67 @@
 'use client';
 
 import { AudioButton } from '../soundboard/AudioButton';
-import {
-  Avatar,
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Chip,
-  Divider,
-} from '@nextui-org/react';
+import { Button, Card, CardBody, CardHeader, Chip } from '@nextui-org/react';
 import { VoiceOptionProps } from '@/types/elevenlabs';
 import { cn } from '@/utils/helpers/clsxMerge';
-import { capitalize } from '@/utils/helpers/formatHelpers';
-import { RiUserVoiceLine } from 'react-icons/ri';
+import { FaCheck, FaPlus } from 'react-icons/fa6';
 
 export function VoiceCard({
   voice,
   onSelect,
+  isSelected,
 }: {
   voice: VoiceOptionProps;
   onSelect: (id: string) => void;
+  isSelected?: boolean;
 }) {
-  const { label, value, gender, age, accent, description, useCase, sampleURL } =
-    voice;
+  const { label, value, accent, description, sampleURL, useCase } = voice;
 
   return (
     <Card
-      radius="sm"
+      shadow="lg"
       className={cn(
-        'col-span-1 max-w-[450px] w-full h-[150px] bg-success py-4 px-1'
+        'max-w-[400px] w-full p-2',
+        'transition-all duration-200 ease-in-out',
+        isSelected &&
+          'ring-2 ring-warning-700 text-warning-700 shadow-sm transform scale-[1.05]'
       )}
     >
-      <CardHeader className="flex items-center justify-start h-2/5">
-        <span className="font-mono font-bold ">{label}</span>
-        <Divider
-          orientation="vertical"
-          className="h-6 w-[1px] bg-white mx-2 self-center"
-        />
-        <span className="text-xs font-mono text-pretty">
-          {`${capitalize(age)} ${capitalize(gender)}, ${capitalize(accent)} accent`}
+      <CardHeader className="flex flex-col items-start gap-2">
+        <span
+          className={cn(
+            'font-alagard text-4xl tracking-widest',
+            isSelected && ''
+          )}
+        >
+          {label.toLowerCase()}
         </span>
+        <div className="flex justify-between w-full gap-2">
+          <Chip variant="faded" color="primary">{`${description} `}</Chip>
+          <Chip variant="faded" color="danger">{`${accent} `}</Chip>
+          <Chip variant="faded" color="secondary">{`${useCase} `}</Chip>
+        </div>
       </CardHeader>
 
-      <CardBody className="flex flex-wrap items-center justify-evenly font-sans pt-0">
-        <Chip
-          variant="flat"
-          size="sm"
-          classNames={{
-            base: 'bg-danger m-0 p-1',
-            content: 'text-white text-xs',
-          }}
-        >
-          {capitalize(accent)}
-        </Chip>
-        <Chip
-          variant="flat"
-          size="sm"
-          classNames={{
-            base: 'bg-primary m-0 p-1',
-            content: 'text-white text-xs',
-          }}
-        >
-          {capitalize(description)}
-        </Chip>
-        <Chip
-          variant="flat"
-          size="sm"
-          classNames={{
-            base: 'bg-secondary m-0 p-1',
-            content: 'text-white text-xs',
-          }}
-        >
-          {capitalize(useCase)}
-        </Chip>
-      </CardBody>
-      <CardFooter className="flex items-center justify-around py-0 h-1/3 ">
-        <AudioButton src={sampleURL} />
+      <CardBody className="flex-row space-x-2">
+        <AudioButton src={sampleURL} label="sample" />
 
         <Button
-          variant="light"
+          isDisabled={isSelected}
+          variant="bordered"
           radius="none"
-          size="lg"
-          endContent={<RiUserVoiceLine className="" />}
+          startContent={
+            isSelected ? <FaCheck size={24} /> : <FaPlus size={24} />
+          }
           onPress={() => onSelect(value)}
+          fullWidth
+          color="success"
         >
-          <span className="font-light">Select</span>
+          <span className="font-mono text-tiny">
+            {isSelected ? 'selected' : 'select'}
+          </span>
         </Button>
-      </CardFooter>
+      </CardBody>
     </Card>
   );
 }
