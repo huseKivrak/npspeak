@@ -49,18 +49,18 @@ export async function updateSession(request: NextRequest) {
   );
 
   if (user && !isUnprotectedPath) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('subscription_status')
-      .eq('id', user.id);
+    const { data: subscription } = await supabase
+      .from('subscriptions')
+      .select('status')
+      .eq('user_id', user.id)
+      .single();
 
-    if (profile && profile[0].subscription_status === 'active') {
+    if (!subscription || subscription.status !== 'active') {
       const url = request.nextUrl.clone();
       url.pathname = '/subscribe';
       return NextResponse.redirect(url);
     }
-  }
-  if (!user && !isUnprotectedPath) {
+  } else if (!user && !isUnprotectedPath) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
