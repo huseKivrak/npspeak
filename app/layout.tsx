@@ -51,7 +51,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
             <Navbar>
               <AuthButton />
             </Navbar>
-            <main className="container mx-auto max-w-lg md:max-w-7xl px-4 sm:px-12 flex-grow">
+            <main className="container mx-auto max-w-4xl md:max-w-7xl px-4 sm:px-8 flex-grow">
               {children}
             </main>
             <Analytics />
