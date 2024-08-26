@@ -4,7 +4,14 @@ import { useForm, Controller, FieldPath } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createNPCAction, updateNPCAction } from '@/actions/db/NPCs';
-import { Textarea, Input, Select, SelectItem, Button } from '@nextui-org/react';
+import {
+  Textarea,
+  Input,
+  Select,
+  SelectItem,
+  Button,
+  Chip,
+} from '@nextui-org/react';
 import { npcSchema } from '@/database/drizzle/validation';
 import { FormOptions, UpdateNPC } from '@/types/drizzle';
 import { VoiceOptionProps } from '@/types/elevenlabs';
@@ -27,6 +34,8 @@ export const NPCForm = ({
 }: NPCFormProps) => {
   const [filteredVoices, setFilteredVoices] =
     useState<VoiceOptionProps[]>(voiceOptions);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -56,12 +65,13 @@ export const NPCForm = ({
   const hasCampaigns = campaignOptions && campaignOptions.length > 0;
 
   const onSubmit = async (data: Inputs) => {
+    setIsSubmitting(true);
     const formData = new FormData();
     formData.append('npc_name', data.npc_name);
     formData.append('description', data.description || '');
     formData.append('voice_id', data.voice_id);
-    console.log('FORM DATA', formData);
 
+    //current fix for NextUI multi-select bugs
     if (data.campaign_ids) {
       data.campaign_ids.forEach((id) =>
         formData.append('campaign_ids', id.toString())
@@ -91,12 +101,13 @@ export const NPCForm = ({
         });
       }
     }
+    setIsSubmitting(false);
   };
 
   return (
     <form
       id="npc-form"
-      className="flex flex-col w-full gap-4"
+      className="flex flex-col w-full gap-2"
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="flex flex-wrap gap-4">
@@ -106,11 +117,15 @@ export const NPCForm = ({
           name="npc_name"
           label="name"
           defaultValue={npcToUpdate?.npc_name}
-          className="max-w-[250px]"
+          className="max-w-[400px]"
           placeholder=" "
           size="sm"
           isInvalid={!!errors.npc_name}
-          errorMessage={errors.npc_name?.message}
+          errorMessage={
+            errors.npc_name?.message === 'Required'
+              ? 'your NPC needs a name!'
+              : errors.npc_name?.message
+          }
           variant="flat"
           classNames={{
             inputWrapper: 'h-[64px] font-mono',
@@ -123,7 +138,7 @@ export const NPCForm = ({
           label="description"
           defaultValue={npcToUpdate?.description}
           placeholder=" "
-          className="max-w-[250px]"
+          className="max-w-[400px]"
           size="sm"
           minRows={1}
           maxRows={3}
@@ -132,23 +147,6 @@ export const NPCForm = ({
           classNames={{
             innerWrapper: 'h-fit',
             label: 'font-mono text-md',
-          }}
-        />
-        <Input
-          isClearable
-          readOnly
-          onClear={() => {
-            setValue('voice_id', '');
-          }}
-          label="voice"
-          defaultValue={getVoiceLabel(npcToUpdate?.voice_id)}
-          value={getVoiceLabel(watchVoiceId)}
-          className="max-w-[250px]"
-          isInvalid={!!errors.voice_id}
-          errorMessage={errors.voice_id?.message}
-          classNames={{
-            input: 'text-foreground-500',
-            label: 'font-mono text-md text-default-600',
           }}
         />
 
@@ -162,20 +160,47 @@ export const NPCForm = ({
                 selectionMode="multiple"
                 label="add to campaign(s)"
                 color="secondary"
-                variant="flat"
-                className="max-w-[250px]"
+                variant="bordered"
                 size="sm"
+                isMultiline={true}
                 onSelectionChange={(keys) => {
                   onChange(Array.from(keys).map(Number));
                 }}
                 isInvalid={!!errors.campaign_ids}
                 errorMessage={errors.campaign_ids?.message}
                 classNames={{
-                  label: 'font-mono text-sm',
+                  base: 'h-full max-w-[400px]',
+                  label: 'font-mono text-md',
+                  trigger: 'min-h-12 py-2',
+                }}
+                popoverProps={{
+                  classNames: {},
+                }}
+                renderValue={(selected) => {
+                  return (
+                    <div className="flex flex-wrap gap-2">
+                      {selected.map((item) => (
+                        <Chip
+                          key={item.key}
+                          color="secondary"
+                          size="sm"
+                          variant="flat"
+                          className="text-xs"
+                        >
+                          {item.textValue}
+                        </Chip>
+                      ))}
+                    </div>
+                  );
                 }}
               >
                 {campaignOptions.map((item) => (
-                  <SelectItem key={item.value} value={item.value}>
+                  <SelectItem
+                    key={item.value}
+                    value={item.value}
+                    textValue={item.label}
+                    className="tracking-tighter"
+                  >
                     {item.label}
                   </SelectItem>
                 ))}
@@ -183,8 +208,40 @@ export const NPCForm = ({
             )}
           />
         )}
+        <Input
+          isRequired
+          isClearable
+          readOnly
+          onClear={() => {
+            setValue('voice_id', '');
+          }}
+          label="selected voice"
+          placeholder=" "
+          defaultValue={getVoiceLabel(npcToUpdate?.voice_id)}
+          value={getVoiceLabel(watchVoiceId)}
+          className="max-w-[400px]"
+          isInvalid={!!errors.voice_id}
+          errorMessage={
+            errors.voice_id?.message === 'Required'
+              ? 'your NPC needs a voice!'
+              : errors.voice_id?.message
+          }
+          classNames={{
+            input: 'text-warning',
+            label: 'font-mono text-sm text-foreground/60',
+          }}
+        />
       </div>
-
+      <Button
+        fullWidth
+        type="submit"
+        color="success"
+        className="my-4"
+        size="lg"
+        isLoading={isSubmitting}
+      >
+        {isSubmitting ? 'creating...' : 'create!'}
+      </Button>
       <div className="space-y-4">
         <VoiceFilter voices={voiceOptions} onFilterChange={setFilteredVoices} />
 
@@ -203,7 +260,6 @@ export const NPCForm = ({
           )}
         />
       </div>
-      <Button type="submit">Submit</Button>
     </form>
   );
 };
