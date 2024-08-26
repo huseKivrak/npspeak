@@ -18,8 +18,8 @@ export default async function CreateCampaignPage() {
   const voices = voicesResponse.status === 'success' ? voicesResponse.data : [];
 
   return (
-    <div className="flex flex-col items-center gap-8">
-      <h1 className="underline font-semibold">Create a New NPC</h1>
+    <div className="flex flex-col gap-4">
+      <h1 className="font-semibold">create an NPC</h1>
       <NPCForm campaignOptions={campaignOptions} voiceOptions={voices} />
     </div>
   );

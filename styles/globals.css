@@ -4,6 +4,6 @@
 
 @layer base {
   h1 {
-    @apply font-bold tracking-widest text-4xl lg:text-6xl text-primary;
+    @apply font-bold tracking-wide text-4xl lg:text-6xl text-primary;
   }
 }
