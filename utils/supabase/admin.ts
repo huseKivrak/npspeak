@@ -101,7 +101,11 @@ const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
   try {
     await db
       .insert(customers)
-      .values([{ id: uuid, stripe_customer_id: customerId }]);
+      .values([{ id: uuid, stripe_customer_id: customerId }])
+      .onConflictDoUpdate({
+        target: customers.id,
+        set: { stripe_customer_id: customerId },
+      });
   } catch (error: any) {
     console.error(`Customer insert/update failed: ${error.message}`);
   }
@@ -210,7 +214,8 @@ export const copyBillingDetailsToCustomer = async (
 
 const manageSubscriptionStatusChange = async (
   subscriptionId: string,
-  customerId: string
+  customerId: string,
+  createAction: boolean
 ) => {
   // Get customer's UUID from mapping table.
   const customerData = await db.query.customers.findFirst({
@@ -259,9 +264,14 @@ const manageSubscriptionStatusChange = async (
       : null,
   };
 
+
   const upsertedSubscription = await db
     .insert(subscriptions)
-    .values([subscriptionData])
+    .values(subscriptionData)
+    .onConflictDoUpdate({
+      target: subscriptions.id,
+      set: subscriptionData,
+    })
     .returning({ status: subscriptions.status });
 
   if (!upsertedSubscription)
@@ -272,17 +282,19 @@ const manageSubscriptionStatusChange = async (
     `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`
   );
 
+
   const updatedUserStatus = await db
     .update(profiles)
     .set({
       subscription_status: upsertedSubscription[0].status,
     })
-    .where(eq(profiles.id, uuid));
-  console.log('Updated user status:', updatedUserStatus);
+    .where(eq(profiles.id, uuid))
+    .returning({ status: profiles.subscription_status });
+  console.log('Updated user status:', updatedUserStatus[0].status);
 
   // For a new subscription copy the billing details to the customer object.
   // NOTE: This is a costly operation and should happen at the very end.
-  if (subscription.default_payment_method && uuid)
+  if (createAction && subscription.default_payment_method && uuid)
     //@ts-ignore
     await copyBillingDetailsToCustomer(
       uuid,

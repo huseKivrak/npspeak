@@ -47,25 +47,26 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname.startsWith(path)
   );
 
-  if (user && !isUnprotectedPath) {
-    try {
-      const { data: subscription } = await supabase
-        .from('subscriptions')
-        .select('status')
-        .eq('user_id', user.id)
-        .order('created', { ascending: false })
-        .limit(1);
+  // if (user && !isUnprotectedPath) {
+  //   try {
+  //     const { data: subscription } = await supabase
+  //       .from('subscriptions')
+  //       .select('status')
+  //       .eq('user_id', user.id)
+  //       .order('created', { ascending: false })
+  //       .limit(1)
+  //       .single();
 
-      if (!subscription || subscription[0].status !== 'active') {
-        const url = request.nextUrl.clone();
-        url.pathname = '/subscribe';
-        return NextResponse.redirect(url);
-      }
-    } catch (error) {
-      console.error('Error checking subscription status:', error);
-      return NextResponse.next();
-    }
-  }
+  //     if (!subscription || subscription.status !== 'active') {
+  //       const url = request.nextUrl.clone();
+  //       url.pathname = '/subscribe';
+  //       return NextResponse.redirect(url);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error checking subscription status:', error);
+  //     return NextResponse.next();
+  //   }
+  // }
   if (!user && !isUnprotectedPath) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
