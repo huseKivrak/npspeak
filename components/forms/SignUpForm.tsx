@@ -16,7 +16,7 @@ import { ActionStatus } from '@/types/drizzle';
 import { Input } from '@nextui-org/react';
 
 type Inputs = z.infer<typeof signupSchema>;
-export default function SignUpForm() {
+export default function SignUpForm({ promoCode }: { promoCode?: string }) {
   const [state, formAction] = useFormState<ActionStatus, FormData>(
     signUpAction,
     {
@@ -48,6 +48,16 @@ export default function SignUpForm() {
 
   return (
     <form className="flex flex-col items-center gap-4">
+      {promoCode && (
+        <Input
+          isReadOnly
+          label="applied code"
+          defaultValue={promoCode}
+          size="lg"
+          color="secondary"
+          {...register('promo_code')}
+        />
+      )}
       <Input
         isRequired
         type="email"
