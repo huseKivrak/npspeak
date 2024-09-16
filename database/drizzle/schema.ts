@@ -413,7 +413,7 @@ export const campaign_npcs = pgTable(
 export const promo_codes = pgTable('promo_codes', {
   id: serial('id').primaryKey().notNull(),
   code: varchar('code', { length: 50 }).unique().notNull(),
-  is_active: boolean('is_valid').default(true).notNull(),
+  is_active: boolean('is_active').default(true).notNull(),
   usage_count: integer('usage_count').default(0).notNull(),
   max_usage: integer('max_usage').default(1).notNull(),
   created_at: timestamp('created_at', { withTimezone: true, mode: 'string' })
