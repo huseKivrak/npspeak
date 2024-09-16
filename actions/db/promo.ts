@@ -3,7 +3,50 @@
 import { db } from '@/database/drizzle';
 import { eq } from 'drizzle-orm';
 import { profiles, promo_codes } from '@/database/drizzle/schema';
-import { getPromoCodeStatus } from '@/database/drizzle/queries';
+import { PromoCodeValidation } from '@/types/drizzle';
+
+export const getPromoCodeStatus = async (
+  code: string
+): Promise<PromoCodeValidation> => {
+  try {
+    const promoCode = await db.query.promo_codes.findFirst({
+      where: eq(promo_codes.code, code),
+    });
+
+    if (!promoCode) {
+      return {
+        status: 'error',
+        message: 'invalid promo code.',
+      };
+    }
+
+    if (!promoCode.is_active) {
+      return {
+        status: 'error',
+        message: 'no longer active.',
+      };
+    }
+
+    if (promoCode.usage_count >= promoCode.max_usage) {
+      return {
+        status: 'error',
+        message: 'max uses reached.',
+      };
+    }
+
+    return {
+      status: 'success',
+      message: 'valid promo code.',
+      promoCode: promoCode,
+    };
+  } catch (error) {
+    console.error('Error validating promo code:', error);
+    return {
+      status: 'error',
+      message: `Error validating promo code: ${error}`,
+    };
+  }
+};
 
 export const applyPromoCodeToUser = async (code: string, userId: string) => {
   try {
