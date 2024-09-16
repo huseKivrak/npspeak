@@ -19,13 +19,12 @@ export default function PromoSignUpHandler() {
   return validPromoCode ? (
     <SignUpForm promoCode={validPromoCode} />
   ) : (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col">
       <h1 className="text-secondary font-alagard">what&apos;s the password?</h1>
-      <p className="text-xl">
-        npSpeak is currently in beta and requires an invite code to access.
-        <br />
-        please enter the code you've received below to sign up.
-      </p>
+      <h2 className="text-warning text-2xl mt-4"> npSpeak is in beta!</h2>
+      <span className="text-xl sm:text-2xl">
+        please enter your invite code to get started.
+      </span>
       <PromoForm onValidPromoCode={onValidPromoCode} />
     </div>
   );
