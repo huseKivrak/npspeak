@@ -1,4 +1,9 @@
-import { ActionStatus, CampaignWithNPCs, DetailedNPC } from '@/types/drizzle';
+import {
+  ActionStatus,
+  CampaignWithNPCs,
+  DetailedNPC,
+  PromoCodeValidation,
+} from '@/types/drizzle';
 import {
   npcs,
   campaigns,
@@ -7,6 +12,7 @@ import {
   npc_dialogues,
   tts_audio,
   profiles,
+  promo_codes,
 } from '@/database/drizzle/schema';
 import { db } from '.';
 import { eq } from 'drizzle-orm';
@@ -237,4 +243,47 @@ export const isExistingEmailAddress = async (
     where: eq(profiles.email, emailAddress),
   });
   return !!exisitingEmail;
+};
+
+export const getPromoCodeStatus = async (
+  code: string
+): Promise<PromoCodeValidation> => {
+  try {
+    const promoCode = await db.query.promo_codes.findFirst({
+      where: eq(promo_codes.code, code),
+    });
+
+    if (!promoCode) {
+      return {
+        status: 'error',
+        message: 'invalid promo code.',
+      };
+    }
+
+    if (!promoCode.is_active) {
+      return {
+        status: 'error',
+        message: 'no longer active.',
+      };
+    }
+
+    if (promoCode.usage_count >= promoCode.max_usage) {
+      return {
+        status: 'error',
+        message: 'max uses reached.',
+      };
+    }
+
+    return {
+      status: 'success',
+      message: 'valid promo code.',
+      promoCode: promoCode,
+    };
+  } catch (error) {
+    console.error('Error validating promo code:', error);
+    return {
+      status: 'error',
+      message: `Error validating promo code: ${error}`,
+    };
+  }
 };
