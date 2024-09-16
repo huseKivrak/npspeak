@@ -16,21 +16,21 @@ export const getPromoCodeStatus = async (
     if (!promoCode) {
       return {
         status: 'error',
-        message: 'invalid promo code.',
+        message: 'invalid code: not found',
       };
     }
 
     if (!promoCode.is_active) {
       return {
         status: 'error',
-        message: 'no longer active.',
+        message: 'invalid code: no longer active',
       };
     }
 
     if (promoCode.usage_count >= promoCode.max_usage) {
       return {
         status: 'error',
-        message: 'max uses reached.',
+        message: 'invalid code: max uses reached',
       };
     }
 
