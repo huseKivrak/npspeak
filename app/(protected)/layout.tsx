@@ -9,8 +9,6 @@ export default async function ProtectedLayout({
   const { user } = await getUserProfile();
   if (!user) {
     return redirect('/login');
-  } else if (user.subscription_status !== 'active') {
-    return redirect('/subscribe');
   }
 
   return <>{children}</>;
