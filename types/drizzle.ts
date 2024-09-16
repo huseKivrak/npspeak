@@ -17,6 +17,7 @@ export type UpdateNPC = {
   voice_id: string;
 };
 
+//todo: fix for better typing, non-zod error handling, etc.
 export type ActionStatus =
   | {
       status: 'success';
@@ -65,3 +66,14 @@ export type SoundboardDialogue = {
   audio: string;
   npc_id: number;
 };
+
+export type PromoCodeValidation =
+  | {
+      status: 'error';
+      message: string;
+    }
+  | {
+      status: 'success';
+      message: string;
+      promoCode: Tables<'promo_codes'>;
+    };
