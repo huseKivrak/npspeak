@@ -277,11 +277,11 @@ export type Database = {
         Row: {
           active: boolean | null;
           currency: string | null;
-          description?: string | null;
+          description: string | null;
           id: string;
           interval: Database['public']['Enums']['pricing_plan_interval'] | null;
           interval_count: number | null;
-          metadata?: Json | null | unknown;
+          metadata: Json | null;
           product_id: string | null;
           trial_period_days: number | null;
           type: Database['public']['Enums']['pricing_type'] | null;
@@ -333,7 +333,7 @@ export type Database = {
           description: string | null;
           id: string;
           image: string | null;
-          metadata: Json | null | unknown;
+          metadata: Json | null;
           name: string | null;
         };
         Insert: {
@@ -358,38 +358,41 @@ export type Database = {
         Row: {
           avatar_url: string | null;
           billing_address: Json | null;
+          email: string;
           full_name: string | null;
           id: string;
           payment_method: Json | null;
-          username: string;
-          email: string;
+          promo_code: string | null;
           subscription_status:
             | Database['public']['Enums']['subscription_status']
             | null;
+          username: string;
         };
         Insert: {
           avatar_url?: string | null;
           billing_address?: Json | null;
+          email: string;
           full_name?: string | null;
           id: string;
           payment_method?: Json | null;
-          username: string;
-          email: string;
+          promo_code?: string | null;
           subscription_status?:
             | Database['public']['Enums']['subscription_status']
             | null;
+          username: string;
         };
         Update: {
           avatar_url?: string | null;
           billing_address?: Json | null;
+          email?: string;
           full_name?: string | null;
           id?: string;
           payment_method?: Json | null;
-          username?: string;
-          email?: string;
+          promo_code?: string | null;
           subscription_status?:
             | Database['public']['Enums']['subscription_status']
             | null;
+          username?: string;
         };
         Relationships: [
           {
@@ -400,6 +403,36 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      promo_codes: {
+        Row: {
+          code: string;
+          created_at: string;
+          id: number;
+          is_active: boolean;
+          max_usage: number;
+          updated_at: string;
+          usage_count: number;
+        };
+        Insert: {
+          code: string;
+          created_at?: string;
+          id?: number;
+          is_active?: boolean;
+          max_usage?: number;
+          updated_at?: string;
+          usage_count?: number;
+        };
+        Update: {
+          code?: string;
+          created_at?: string;
+          id?: number;
+          is_active?: boolean;
+          max_usage?: number;
+          updated_at?: string;
+          usage_count?: number;
+        };
+        Relationships: [];
       };
       subscriptions: {
         Row: {
@@ -557,7 +590,12 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      email_exists: {
+        Args: {
+          email_address: string;
+        };
+        Returns: boolean;
+      };
     };
     Enums: {
       pricing_plan_interval: 'day' | 'week' | 'month' | 'year';
@@ -659,14 +697,3 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
     ? PublicSchema['Enums'][PublicEnumNameOrOptions]
     : never;
-
-export interface BasicUserInfo {
-  id: string;
-  username: string;
-  lastSignIn: string | null;
-}
-
-export interface UserAuth {
-  user: BasicUserInfo | null;
-  error: string | null;
-}
