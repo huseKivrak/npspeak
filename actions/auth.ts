@@ -17,6 +17,7 @@ import { db } from '@/database/drizzle';
 import { eq } from 'drizzle-orm';
 import { profiles } from '@/database/drizzle/schema';
 import { Tables } from '@/types/supabase';
+import { applyPromoCodeToUser } from './db/promo';
 
 export const signUpAction = async (
   prevState: ActionStatus,
@@ -26,7 +27,8 @@ export const signUpAction = async (
   let redirectPath: string;
 
   try {
-    const { email, username, password } = signupSchema.parse(formData);
+    const { email, username, password, promo_code } =
+      signupSchema.parse(formData);
     const supabase = createClientOnServer();
     const { error, data } = await supabase.auth.signUp({
       email,
@@ -58,11 +60,30 @@ export const signUpAction = async (
         'this email address is taken, please try again'
       );
     } else if (data.user) {
-      redirectPath = getStatusRedirect(
-        '/signup/success',
-        'Success!',
-        `Confirmation email sent to ${data.user.email}`
-      );
+      //update the user's profile if they used a promo code
+      if (promo_code) {
+        const { error } = await applyPromoCodeToUser(promo_code, data.user.id);
+        if (error) {
+          console.error('Error applying promo code to user:', error);
+          redirectPath = getErrorRedirect(
+            '/signup',
+            'oops',
+            'there was an error applying your promo code'
+          );
+        } else {
+          redirectPath = getStatusRedirect(
+            '/signup/success',
+            'Success!',
+            `Confirmation email sent to ${data.user.email}`
+          );
+        }
+      } else {
+        redirectPath = getStatusRedirect(
+          '/signup/success',
+          'Success!',
+          `Confirmation email sent to ${data.user.email}`
+        );
+      }
     } else {
       redirectPath = getErrorRedirect(
         '/signup',
