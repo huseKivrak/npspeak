@@ -281,7 +281,7 @@ export type Database = {
           id: string;
           interval: Database['public']['Enums']['pricing_plan_interval'] | null;
           interval_count: number | null;
-          metadata: Json | null;
+          metadata: Json | null | unknown;
           product_id: string | null;
           trial_period_days: number | null;
           type: Database['public']['Enums']['pricing_type'] | null;
@@ -296,7 +296,7 @@ export type Database = {
             | Database['public']['Enums']['pricing_plan_interval']
             | null;
           interval_count?: number | null;
-          metadata?: Json | null;
+          metadata?: Json | null | unknown;
           product_id?: string | null;
           trial_period_days?: number | null;
           type?: Database['public']['Enums']['pricing_type'] | null;
@@ -311,7 +311,7 @@ export type Database = {
             | Database['public']['Enums']['pricing_plan_interval']
             | null;
           interval_count?: number | null;
-          metadata?: Json | null;
+          metadata?: Json | null | unknown;
           product_id?: string | null;
           trial_period_days?: number | null;
           type?: Database['public']['Enums']['pricing_type'] | null;
@@ -333,7 +333,7 @@ export type Database = {
           description: string | null;
           id: string;
           image: string | null;
-          metadata: Json | null;
+          metadata: Json | null | unknown;
           name: string | null;
         };
         Insert: {
@@ -341,7 +341,7 @@ export type Database = {
           description?: string | null;
           id: string;
           image?: string | null;
-          metadata?: Json | null;
+          metadata?: Json | null | unknown;
           name?: string | null;
         };
         Update: {
@@ -349,7 +349,7 @@ export type Database = {
           description?: string | null;
           id?: string;
           image?: string | null;
-          metadata?: Json | null;
+          metadata?: Json | null | unknown;
           name?: string | null;
         };
         Relationships: [];
@@ -357,11 +357,11 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null;
-          billing_address: Json | null;
+          billing_address: Json | null | unknown;
           email: string;
           full_name: string | null;
           id: string;
-          payment_method: Json | null;
+          payment_method: Json | null | unknown;
           promo_code: string | null;
           subscription_status:
             | Database['public']['Enums']['subscription_status']
@@ -370,11 +370,11 @@ export type Database = {
         };
         Insert: {
           avatar_url?: string | null;
-          billing_address?: Json | null;
+          billing_address?: Json | null | unknown;
           email: string;
           full_name?: string | null;
           id: string;
-          payment_method?: Json | null;
+          payment_method?: Json | null | unknown;
           promo_code?: string | null;
           subscription_status?:
             | Database['public']['Enums']['subscription_status']
@@ -383,11 +383,11 @@ export type Database = {
         };
         Update: {
           avatar_url?: string | null;
-          billing_address?: Json | null;
+          billing_address?: Json | null | unknown;
           email?: string;
           full_name?: string | null;
           id?: string;
-          payment_method?: Json | null;
+          payment_method?: Json | null | unknown;
           promo_code?: string | null;
           subscription_status?:
             | Database['public']['Enums']['subscription_status']
@@ -444,7 +444,7 @@ export type Database = {
           current_period_start: string;
           ended_at: string | null;
           id: string;
-          metadata: Json | null;
+          metadata: Json | null | unknown;
           price_id: string | null;
           quantity: number | null;
           status: Database['public']['Enums']['subscription_status'] | null;
@@ -461,7 +461,7 @@ export type Database = {
           current_period_start?: string;
           ended_at?: string | null;
           id: string;
-          metadata?: Json | null;
+          metadata?: Json | null | unknown;
           price_id?: string | null;
           quantity?: number | null;
           status?: Database['public']['Enums']['subscription_status'] | null;
@@ -478,7 +478,7 @@ export type Database = {
           current_period_start?: string;
           ended_at?: string | null;
           id?: string;
-          metadata?: Json | null;
+          metadata?: Json | null | unknown;
           price_id?: string | null;
           quantity?: number | null;
           status?: Database['public']['Enums']['subscription_status'] | null;
