@@ -1,9 +1,8 @@
 import { redirect } from 'next/navigation';
 import { getUserProfile } from '@/actions/auth';
 import { VoiceSampler } from '@/components/landingPage/VoiceSampler';
-import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
-import { WorkflowAccordian } from '@/components/landingPage/WorkflowAccordian';
 import { Hero } from '@/components/landingPage/Hero';
+import { elevenLabsVoices } from '@/lib/elevenLabsVoices';
 
 export default async function Index() {
   const { user } = await getUserProfile();
@@ -11,13 +10,10 @@ export default async function Index() {
     redirect('/dashboard');
   }
 
-  const voiceResponse = await getAllElevenLabsVoices();
-  const voices = voiceResponse.status === 'success' ? voiceResponse.data : [];
   return (
     <div className="flex flex-col items-center text-center">
       <Hero />
-      {/* <WorkflowAccordian /> */}
-      {voices && <VoiceSampler voiceOptions={voices} />}
+      <VoiceSampler voiceOptions={elevenLabsVoices} />
     </div>
   );
 }
