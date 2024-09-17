@@ -23,7 +23,6 @@ const config: Config = {
     nextui({
       prefix: 'nextui',
       addCommonColors: false,
-
       themes: {
         light: {
           colors: {
@@ -53,7 +52,7 @@ const config: Config = {
               '800': '#304350',
               '900': '#1f2a33',
               foreground: '#ede4da',
-              DEFAULT: '#668da9',
+              DEFAULT: '#54748b',
             },
             secondary: {
               '50': '#f7f0f4',
@@ -67,7 +66,7 @@ const config: Config = {
               '800': '#59404e',
               '900': '#382932',
               foreground: '#ede4da',
-              DEFAULT: '#bc87a5',
+              DEFAULT: '#7a586b',
             },
             success: {
               '50': '#eaefea',
@@ -95,7 +94,7 @@ const config: Config = {
               '800': '#715626',
               '900': '#473618',
               foreground: '#ede4da',
-              DEFAULT: '#eeb551',
+              DEFAULT: '#c49543',
             },
             danger: {
               '50': '#f8eaea',
@@ -111,7 +110,7 @@ const config: Config = {
               foreground: '#ede4da',
               DEFAULT: '#ca5954',
             },
-            background: '#ede4da',
+            background: '#faf7f4',
             foreground: {
               '50': '#e4e4e5',
               '100': '#bebec0',
