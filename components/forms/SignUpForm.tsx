@@ -48,6 +48,7 @@ export default function SignUpForm({ promoCode }: { promoCode?: string }) {
 
   return (
     <form className="flex flex-col items-center gap-4">
+      <h1>signup</h1>
       {promoCode && (
         <Input
           isReadOnly
