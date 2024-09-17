@@ -30,15 +30,21 @@ export default function PromoForm({ onValidPromoCode }: PromoFormProps) {
   return (
     <form onSubmit={handleSubmit} className="flex gap-2">
       <Input
-        autoFocus
         type="text"
-        aria-label="promo code"
         value={promoCode}
         onChange={(e) => setPromoCode(e.target.value)}
         isInvalid={!!error}
         errorMessage={error}
         size="lg"
-        className="max-w-xs"
+        variant="faded"
+        color="warning"
+        className="max-w-sm"
+        classNames={{
+          input: 'text-3xl tracking-widest font-mono text-center',
+          errorMessage: 'text-lg',
+          description: 'text-xl',
+        }}
+        description="Enter your invite code to get started."
       />
       <Button
         color={error ? 'danger' : 'success'}
