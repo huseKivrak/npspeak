@@ -12,7 +12,7 @@ export default function PromoSignUpHandler() {
     setValidPromoCode(code);
     toast({
       title: 'success!',
-      description: 'code accepted. please continue with sign up.',
+      description: 'code accepted',
     });
   };
 
@@ -20,10 +20,11 @@ export default function PromoSignUpHandler() {
     <SignUpForm promoCode={validPromoCode} />
   ) : (
     <div className="flex flex-col">
-      <h1 className="text-secondary font-alagard">what&apos;s the password?</h1>
-      <h2 className="text-warning text-2xl mt-4"> npSpeak is in beta!</h2>
-      <span className="text-xl sm:text-2xl">
-        please enter your invite code to get started.
+      <h1 className="font-alagard tracking-tight sm:tracking-normal self-center mb-12">
+        what&apos;s the password?
+      </h1>
+      <span className="text-warning font-mono font-semibold text-3xl sm:text-4xl mb-2">
+        early access
       </span>
       <PromoForm onValidPromoCode={onValidPromoCode} />
     </div>
