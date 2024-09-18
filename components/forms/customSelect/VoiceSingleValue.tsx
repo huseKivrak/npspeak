@@ -1,5 +1,5 @@
 import { components, SingleValueProps } from 'react-select';
-import { getAccentEmoji } from '@/utils/helpers/formHelpers';
+import { getAccentEmoji } from '@/utils/helpers/formatHelpers';
 import { Chip } from '@nextui-org/chip';
 import { VoiceOptionProps } from '@/types/elevenlabs';
 

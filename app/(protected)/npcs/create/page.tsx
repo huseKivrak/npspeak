@@ -2,7 +2,7 @@ import { NPCForm } from '@/components/forms/NPCForm';
 import { getUserProfile } from '@/actions/auth';
 import { redirect } from 'next/navigation';
 import { getCampaignsWithNPCs } from '@/database/drizzle/queries';
-import { transformCampaignOptions } from '@/utils/helpers/formHelpers';
+import { transformCampaignOptions } from '@/utils/helpers/formatHelpers';
 import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
 export default async function CreateCampaignPage() {
   const { user } = await getUserProfile();

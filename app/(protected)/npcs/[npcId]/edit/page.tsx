@@ -1,15 +1,12 @@
 import { getUserProfile } from '@/actions/auth';
 import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
 import { NPCForm } from '@/components/forms/NPCForm';
-import { db } from '@/database/drizzle';
 import {
   getAllUserCampaigns,
-  getCampaignsWithNPCs,
   getNPCsWithRelatedData,
 } from '@/database/drizzle/queries';
 import { DetailedNPC, UpdateNPC } from '@/types/drizzle';
-import { transformCampaignOptions } from '@/utils/helpers/formHelpers';
-import { eq } from 'drizzle-orm';
+import { transformCampaignOptions } from '@/utils/helpers/formatHelpers';
 import { redirect } from 'next/navigation';
 
 export default async function EditNPCPage({

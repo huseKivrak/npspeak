@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { Button, Tooltip, Select, SelectItem, Chip } from '@nextui-org/react';
-import { getAccentEmoji } from '@/utils/helpers/formHelpers';
+import { getAccentEmoji } from '@/utils/helpers/formatHelpers';
 import { capitalize } from '@/utils/helpers/formatHelpers';
 import { FaMale, FaFemale } from 'react-icons/fa';
 import { MdOutlineDirectionsWalk, MdOutlineElderly } from 'react-icons/md';
