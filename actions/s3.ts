@@ -29,11 +29,12 @@ export async function getPresignedUploadURL(): Promise<ActionStatus> {
   if (!user) return { status: 'error', message: 'not authenticated' };
 
   const randomString = uuidv4();
-  const s3FileName = `${user.id}/${randomString}.mp3`;
+  const fileName = randomString + '.mp3';
+  const s3FileKey = `${user.id}/${fileName}`;
 
   const putCommand = new PutObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME!,
-    Key: s3FileName,
+    Key: s3FileKey,
     ContentType: 'audio/mpeg',
     Metadata: {
       user: user.id,
@@ -46,7 +47,7 @@ export async function getPresignedUploadURL(): Promise<ActionStatus> {
     });
 
     console.log('Presigned URL: ', presignedURL);
-    return { status: 'success', data: { key: s3FileName, url: presignedURL } };
+    return { status: 'success', data: { key: fileName, url: presignedURL } };
   } catch (error) {
     console.error('Error generating presigned upload URL: ', error);
     return {
@@ -99,10 +100,11 @@ export async function getPresignedDownloadURL(
   const { user } = await getUserProfile();
   if (!user) return { status: 'error', message: 'not authenticated' };
 
+  const fileKey = `${user.id}/${fileName}`;
   try {
     const getCommand = new GetObjectCommand({
       Bucket: process.env.AWS_BUCKET_NAME!,
-      Key: fileName,
+      Key: fileKey,
     });
 
     const url = await getSignedUrl(s3, getCommand, {
