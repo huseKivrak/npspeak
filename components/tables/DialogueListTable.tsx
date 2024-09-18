@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useMemo, useState } from 'react';
-import { DetailedDialogue } from '@/types/drizzle';
+import { DetailedDialogue, DialogueRow } from '@/types/drizzle';
 import { Tooltip } from '@nextui-org/tooltip';
 import { DialogueIcon } from '../icons';
 import { DeleteModal } from '../forms/modals/DeleteModal';
@@ -36,6 +36,7 @@ import {
 import { AudioButton } from '../soundboard/AudioButton';
 import { tableStyles } from '@/styles/tableStyles';
 import { truncateText } from '@/utils/helpers/formatHelpers';
+import { DownloadButton } from '../buttons/DownloadButton';
 
 export const DialogueListTable = ({
   dialogues,
@@ -280,72 +281,76 @@ export const DialogueListTable = ({
     );
   }, [page, pages, selectedKeys, items.length]);
 
-  type Dialogue = (typeof rows)[0];
-  const renderCell = useCallback((dialogue: Dialogue, columnKey: React.Key) => {
-    switch (columnKey) {
-      case 'type':
-        return (
-          <Tooltip
-            content={capitalize(dialogue.type)}
-            delay={200}
-            closeDelay={200}
-          >
-            <div className="flex justify-center">
-              <DialogueIcon dialogueType={dialogue.type} size={20} />
-            </div>
-          </Tooltip>
-        );
-      case 'text':
-        return (
-          <div className="flex flex-col items-start max-w-fit">
-            <Popover>
-              <PopoverTrigger className="sm:hidden">
-                <Button size="sm" variant="light">
-                  {truncateText(dialogue.text, 10)}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="flex items-center justify-center p-2 max-w-xs">
-                <span className="italic">{dialogue.text}</span>
-              </PopoverContent>
-            </Popover>
+  const renderCell = useCallback(
+    (dialogue: DialogueRow, columnKey: React.Key) => {
+      switch (columnKey) {
+        case 'type':
+          return (
+            <Tooltip
+              content={capitalize(dialogue.type)}
+              delay={200}
+              closeDelay={200}
+            >
+              <div className="flex justify-center">
+                <DialogueIcon dialogueType={dialogue.type} size={20} />
+              </div>
+            </Tooltip>
+          );
+        case 'text':
+          return (
+            <div className="flex flex-col items-start max-w-fit">
+              <Popover>
+                <PopoverTrigger className="sm:hidden">
+                  <Button size="sm" variant="light">
+                    {truncateText(dialogue.text, 10)}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="flex items-center justify-center p-2 max-w-xs">
+                  <span className="italic">{dialogue.text}</span>
+                </PopoverContent>
+              </Popover>
 
-            <span className="hidden sm:flex italic">
-              {truncateText(dialogue.text, 100)}
-            </span>
-          </div>
-        );
-      case 'audio':
-        return (
-          <div className="flex flex-col items-center">
-            {dialogue.audio ? (
-              <AudioButton src={dialogue.audio} />
-            ) : (
-              <FaMicrophoneSlash />
-            )}
-          </div>
-        );
-      case 'actions':
-        return (
-          <div className="relative flex justify-center gap-2">
-            {!dialogue.audio && (
-              <TTSModal
-                voiceId={voiceId}
-                npcId={dialogue.npc_id!}
-                dialogueId={dialogue.id}
-                text={dialogue.text}
+              <span className="hidden sm:flex italic">
+                {truncateText(dialogue.text, 100)}
+              </span>
+            </div>
+          );
+        case 'audio':
+          return (
+            <div className="flex flex-col items-center">
+              {dialogue.audio ? (
+                <AudioButton src={dialogue.audio} />
+              ) : (
+                <FaMicrophoneSlash />
+              )}
+            </div>
+          );
+        case 'actions':
+          return (
+            <div className="relative flex justify-center gap-2">
+              {!dialogue.audio ? (
+                <TTSModal
+                  voiceId={voiceId}
+                  npcId={dialogue.npc_id!}
+                  dialogueId={dialogue.id}
+                  text={dialogue.text}
+                />
+              ) : (
+                <DownloadButton dialogue={dialogue} />
+              )}
+              <DeleteModal
+                idName="dialogue_id"
+                serverAction={deleteDialogueAction}
+                id={dialogue.id}
               />
-            )}
-            <DeleteModal
-              idName="dialogue_id"
-              serverAction={deleteDialogueAction}
-              id={dialogue.id}
-            />
-          </div>
-        );
-      default:
-        return null;
-    }
-  }, []);
+            </div>
+          );
+        default:
+          return null;
+      }
+    },
+    []
+  );
 
   return (
     <Table
