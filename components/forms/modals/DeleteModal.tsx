@@ -88,6 +88,9 @@ export function DeleteModal({
               <ModalFooter>
                 <form>
                   <input type="hidden" name={idName} value={id} />
+                  <Button variant="light" onPress={onClose} className="ml-2">
+                    Close
+                  </Button>
                   <SubmitButton
                     pendingText={`Deleting ${title}...`}
                     formAction={formAction}
@@ -96,9 +99,6 @@ export function DeleteModal({
                   >
                     Delete
                   </SubmitButton>
-                  <Button variant="light" onPress={onClose} className="ml-2">
-                    Close
-                  </Button>
                 </form>
               </ModalFooter>
             </>
