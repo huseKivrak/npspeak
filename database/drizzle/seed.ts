@@ -103,11 +103,18 @@ const createNPCs = (count: number, userId: string): TablesInsert<'npcs'>[] => {
   }));
 };
 
+//hack for dialogue type ID error
+type InsertNPCDialogue = Omit<
+  TablesInsert<'npc_dialogues'>,
+  'dialogue_type_id'
+> & {
+  dialogue_type_id: number;
+};
 const createNPCDialogues = (
   count: number,
   npcId: number,
   userId: string
-): TablesInsert<'npc_dialogues'>[] => {
+): InsertNPCDialogue[] => {
   return Array.from({ length: count }, () => ({
     dialogue_type_id: faker.helpers.arrayElement(dialogueTypeIds),
     npc_id: npcId,
