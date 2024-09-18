@@ -103,7 +103,6 @@ export const equality_op = pgEnum('equality_op', [
 ]);
 
 export const npcs = pgTable('npcs', {
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
   id: bigint('id', { mode: 'number' })
     .primaryKey()
     .generatedByDefaultAsIdentity({
@@ -128,7 +127,6 @@ export const npcs = pgTable('npcs', {
 });
 
 export const npc_dialogues = pgTable('npc_dialogues', {
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
   id: bigint('id', { mode: 'number' })
     .primaryKey()
     .generatedByDefaultAsIdentity({
@@ -151,7 +149,6 @@ export const npc_dialogues = pgTable('npc_dialogues', {
     .default(sql`auth.uid()`)
     .references(() => users.id),
   is_default: boolean('is_default').default(false).notNull(),
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
   tts_audio_id: bigint('tts_audio_id', { mode: 'number' }).references(
     () => tts_audio.id,
     { onDelete: 'set null', onUpdate: 'cascade' }
@@ -170,7 +167,6 @@ export const npc_dialogue_types = pgTable('npc_dialogue_types', {
 export const tts_audio = pgTable(
   'tts_audio',
   {
-    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
     id: bigint('id', { mode: 'number' })
       .primaryKey()
       .generatedByDefaultAsIdentity({
@@ -206,7 +202,6 @@ export const tts_audio = pgTable(
 export const audio_clips = pgTable(
   'audio_clips',
   {
-    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
     id: bigint('id', { mode: 'number' })
       .primaryKey()
       .generatedByDefaultAsIdentity({
@@ -226,7 +221,6 @@ export const audio_clips = pgTable(
       .notNull(),
     file_url: text('file_url').notNull(),
     original_file_name: text('original_file_name').notNull(),
-    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
     duration_seconds: bigint('duration_seconds', { mode: 'number' }).notNull(),
     is_default: boolean('is_default').default(false).notNull(),
     audio_clip_name: varchar('audio_clip_name').notNull(),
@@ -241,7 +235,6 @@ export const audio_clips = pgTable(
 );
 
 export const campaigns = pgTable('campaigns', {
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
   id: bigint('id', { mode: 'number' })
     .primaryKey()
     .generatedByDefaultAsIdentity({
@@ -270,7 +263,6 @@ export const campaigns = pgTable('campaigns', {
 export const voice_clones = pgTable(
   'voice_clones',
   {
-    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
     id: bigint('id', { mode: 'number' })
       .primaryKey()
       .generatedByDefaultAsIdentity({
@@ -307,7 +299,6 @@ export const prices = pgTable('prices', {
   product_id: text('product_id').references(() => products.id),
   active: boolean('active'),
   description: text('description'),
-  // You can use { mode: "bigint" } if numbers are exceeding js number limitations
   unit_amount: bigint('unit_amount', { mode: 'number' }),
   currency: text('currency'),
   type: pricing_type('type'),
@@ -346,6 +337,7 @@ export const profiles = pgTable('profiles', {
   username: text('username').notNull(),
   email: text('email').notNull(),
   subscription_status: subscription_status('subscription_status'),
+  promo_code: varchar('promo_code', { length: 50 }),
 });
 
 export const subscriptions = pgTable('subscriptions', {
@@ -398,14 +390,12 @@ export const subscriptions = pgTable('subscriptions', {
 export const campaign_npcs = pgTable(
   'campaign_npcs',
   {
-    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
     campaign_id: bigint('campaign_id', { mode: 'number' })
       .notNull()
       .references(() => campaigns.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
     npc_id: bigint('npc_id', { mode: 'number' })
       .notNull()
       .references(() => npcs.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
@@ -419,3 +409,17 @@ export const campaign_npcs = pgTable(
     };
   }
 );
+
+export const promo_codes = pgTable('promo_codes', {
+  id: serial('id').primaryKey().notNull(),
+  code: varchar('code', { length: 50 }).unique().notNull(),
+  is_active: boolean('is_active').default(true).notNull(),
+  usage_count: integer('usage_count').default(0).notNull(),
+  max_usage: integer('max_usage').default(1).notNull(),
+  created_at: timestamp('created_at', { withTimezone: true, mode: 'string' })
+    .defaultNow()
+    .notNull(),
+  updated_at: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+    .defaultNow()
+    .notNull(),
+});

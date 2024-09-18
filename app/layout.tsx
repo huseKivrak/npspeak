@@ -47,7 +47,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         )}
       >
         <Providers>
-          <div className="relative flex flex-col">
+          <div className="relative flex flex-col min-h-screen">
             <Navbar>
               <AuthButton />
             </Navbar>

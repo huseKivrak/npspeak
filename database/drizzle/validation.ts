@@ -27,6 +27,12 @@ export const signupSchema = zfd
     confirm_password: zfd.text(
       z.string().min(7, 'Password must be at least 7 characters long')
     ),
+    promo_code: zfd.text(
+      z
+        .string()
+        .max(50, 'Promo code must be less than 50 characters')
+        .optional()
+    ),
   })
   .superRefine((data, ctx) => {
     const { password, confirm_password } = data;
