@@ -77,3 +77,12 @@ export type PromoCodeValidation =
       message: string;
       promoCode: Tables<'promo_codes'>;
     };
+
+export type DialogueRow = {
+  id: number;
+  type: string;
+  text: string;
+  audio: string | null | undefined;
+  npc_id: number | null;
+  voice_id: string;
+};
