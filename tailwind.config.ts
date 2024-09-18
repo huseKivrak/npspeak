@@ -202,7 +202,7 @@ const config: Config = {
               '800': '#ccd8cc',
               '900': '#eaefea',
               foreground: '#ede4da',
-              DEFAULT: '#557d55',
+              DEFAULT: '#739473',
             },
             warning: {
               '50': '#473618',
