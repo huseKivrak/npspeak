@@ -304,11 +304,13 @@ export const getUserProfile = async (): Promise<{
   try {
     const {
       data: { user },
-      error,
+      error: authError,
     } = await supabase.auth.getUser();
     if (!user) {
-      console.error(`getUserInfo error ${error?.message}`);
+      console.warn('No user:', authError?.message);
       return { user: null };
+    } else if (authError) {
+      console.error('Supabase getUser error:', authError.message);
     }
 
     const userProfile = await db.query.profiles.findFirst({
