@@ -98,7 +98,7 @@ export const DialogueListTable = ({
       Array.from(typeFilter).length !== typeOptions.length
     ) {
       filteredDialogues = filteredDialogues.filter((dialogue) =>
-        Array.from(typeFilter).includes(dialogue.dialogueType)
+        Array.from(typeFilter).includes(dialogue.dialogueType!)
       );
     }
 

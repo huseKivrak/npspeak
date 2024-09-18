@@ -48,7 +48,7 @@ export type DetailedDialogue = {
   npc_id: number | null;
   user_id: string | null;
   text: string;
-  dialogueType: string;
+  dialogueType: string | null;
   audioFileKey?: string | null;
   audioURL?: string | null;
   audioDuration?: number | null;

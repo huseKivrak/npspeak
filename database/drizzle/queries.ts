@@ -1,9 +1,4 @@
-import {
-  ActionStatus,
-  CampaignWithNPCs,
-  DetailedNPC,
-  PromoCodeValidation,
-} from '@/types/drizzle';
+import { ActionStatus, CampaignWithNPCs, DetailedNPC } from '@/types/drizzle';
 import {
   npcs,
   campaigns,
@@ -12,7 +7,6 @@ import {
   npc_dialogues,
   tts_audio,
   profiles,
-  promo_codes,
 } from '@/database/drizzle/schema';
 import { db } from '.';
 import { eq } from 'drizzle-orm';

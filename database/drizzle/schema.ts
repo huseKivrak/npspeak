@@ -141,9 +141,9 @@ export const npc_dialogues = pgTable('npc_dialogues', {
     onDelete: 'cascade',
     onUpdate: 'cascade',
   }),
-  dialogue_type_id: integer('dialogue_type_id').references(
-    () => npc_dialogue_types.id
-  ),
+  dialogue_type_id: integer('dialogue_type_id')
+    .references(() => npc_dialogue_types.id)
+    .notNull(),
   text: text('text').notNull(),
   user_id: uuid('user_id')
     .default(sql`auth.uid()`)
