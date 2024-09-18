@@ -41,10 +41,11 @@ export function TTSModal({
           isIconOnly
           variant="light"
           size="sm"
+          color="secondary"
           onPress={onOpen}
           aria-label="Create Dialogue Audio"
         >
-          <PiMicrophoneBold className="text-success text-large" />
+          <PiMicrophoneBold className="text-large" />
         </Button>
       </Tooltip>
       <Modal

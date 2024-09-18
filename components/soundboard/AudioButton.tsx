@@ -6,7 +6,6 @@ import { FaCircleStop } from 'react-icons/fa6';
 
 export function AudioButton({
   src,
-  label,
   className,
 }: {
   src: string;
@@ -37,15 +36,17 @@ export function AudioButton({
 
   return (
     <Button
-      variant="bordered"
+      isIconOnly
+      variant="light"
       onClick={togglePlayback}
       className={cn('', className)}
-      fullWidth
+      size="sm"
+      radius="full"
+      color="primary"
       endContent={
         isPlaying ? <FaCircleStop size={24} /> : <FaVolumeUp size={24} />
       }
     >
-      {!isPlaying && <span className="font-mono text-tiny">{label}</span>}
       <audio ref={audioRef} src={src} />
     </Button>
   );
