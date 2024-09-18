@@ -27,7 +27,6 @@ import {
 } from '@nextui-org/react';
 import { capitalize } from '@/utils/helpers/formatHelpers';
 import {
-  FaCheck,
   FaChessBoard,
   FaChevronDown,
   FaMicrophoneLines,
@@ -36,7 +35,7 @@ import {
 } from 'react-icons/fa6';
 import { AudioButton } from '../soundboard/AudioButton';
 import { tableStyles } from '@/styles/tableStyles';
-import { truncateText } from '@/utils/helpers/formHelpers';
+import { truncateText } from '@/utils/helpers/formatHelpers';
 
 export const DialogueListTable = ({
   dialogues,
@@ -47,6 +46,7 @@ export const DialogueListTable = ({
 }) => {
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [audioFilter, setAudioFilter] = useState<Selection>('all');
+  const [typeFilter, setTypeFilter] = useState<Selection>('all');
   const [rowsPerPage, setRowsPerPage] = useState<Selection>(new Set(['5']));
   const [page, setPage] = useState(1);
 
@@ -59,8 +59,18 @@ export const DialogueListTable = ({
   const hasSelectedDialogues = selectedKeys === 'all' || selectedKeys.size > 0;
 
   const audioOptions = [
-    { name: 'with audio', uid: 'withAudio' },
-    { name: 'no audio', uid: 'noAudio' },
+    { name: 'with', uid: 'withAudio' },
+    { name: 'without', uid: 'noAudio' },
+  ];
+
+  const typeOptions = [
+    { name: 'greeting', uid: 'greeting' },
+    { name: 'farewell', uid: 'farewell' },
+    { name: 'story', uid: 'story' },
+    { name: 'question', uid: 'question' },
+    { name: 'answer', uid: 'answer' },
+    { name: 'exclamation', uid: 'exclamation' },
+    { name: 'other', uid: 'other' },
   ];
 
   const rowsPerPageOptions = [
@@ -81,8 +91,18 @@ export const DialogueListTable = ({
           (audioFilter.has('noAudio') && !dialogue.audioURL)
       );
     }
+
+    if (
+      typeFilter !== 'all' &&
+      Array.from(typeFilter).length !== typeOptions.length
+    ) {
+      filteredDialogues = filteredDialogues.filter((dialogue) =>
+        Array.from(typeFilter).includes(dialogue.dialogueType)
+      );
+    }
+
     return filteredDialogues;
-  }, [dialogues, audioFilter]);
+  }, [dialogues, audioFilter, typeFilter]);
 
   //formats dialogues and sorts audio to top rows
   const rows = filteredItems
@@ -158,9 +178,33 @@ export const DialogueListTable = ({
         </div>
 
         <div className="flex gap-4 ">
+          <Dropdown classNames={{ content: ['flex min-w-[20px]'] }}>
+            <DropdownTrigger className="flex max-w-xs md:w-[120px]">
+              <Button
+                endContent={<FaChevronDown className="text-xs md:text-sm" />}
+                size="sm"
+                variant="flat"
+              >
+                <span className="text-tiny md:text-small">type</span>
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              disallowEmptySelection
+              aria-label="type filter"
+              closeOnSelect={false}
+              selectedKeys={typeFilter}
+              selectionMode="multiple"
+              onSelectionChange={setTypeFilter}
+            >
+              {typeOptions.map((option) => (
+                <DropdownItem key={option.uid}>{option.name}</DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+
           <Dropdown
             classNames={{
-              content: ['flex min-w-[20[px]]'],
+              content: ['flex min-w-[20px]'],
             }}
           >
             <DropdownTrigger className="flex max-w-xs md:w-[120px]">
@@ -169,12 +213,12 @@ export const DialogueListTable = ({
                 size="sm"
                 variant="flat"
               >
-                <span className="text-tiny md:text-small">filter</span>
+                <span className="text-tiny md:text-small">audio</span>
               </Button>
             </DropdownTrigger>
             <DropdownMenu
               disallowEmptySelection
-              aria-label="Filter"
+              aria-label="audio filter"
               closeOnSelect={false}
               selectedKeys={audioFilter}
               selectionMode="multiple"
@@ -215,7 +259,7 @@ export const DialogueListTable = ({
         </div>
       </div>
     );
-  }, [audioFilter, dialogues.length, selectedKeys, rowsPerPage]);
+  }, [audioFilter, dialogues.length, selectedKeys, rowsPerPage, typeFilter]);
 
   const bottomContent = useMemo(() => {
     return (
@@ -313,19 +357,7 @@ export const DialogueListTable = ({
       selectedKeys={selectedKeys}
       onSelectionChange={setSelectedKeys}
       classNames={tableStyles}
-      className="max-w-fit"
     >
-      {/* <TableHeader columns={columns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === 'actions' ? 'center' : 'start'}
-            className="sm:text-large font-semibold"
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader> */}
       <TableHeader>
         <TableColumn align="center" key="type" width={12} maxWidth={12}>
           TYPE
