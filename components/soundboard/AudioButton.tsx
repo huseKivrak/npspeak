@@ -9,7 +9,6 @@ export function AudioButton({
   className,
 }: {
   src: string;
-  label?: string;
   className?: string;
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -40,11 +39,11 @@ export function AudioButton({
       variant="light"
       onClick={togglePlayback}
       className={cn('', className)}
-      size="sm"
       radius="full"
+      size="lg"
       color="primary"
       endContent={
-        isPlaying ? <FaCircleStop size={24} /> : <FaVolumeUp size={24} />
+        isPlaying ? <FaCircleStop size={28} /> : <FaVolumeUp size={28} />
       }
     >
       <audio ref={audioRef} src={src} />
