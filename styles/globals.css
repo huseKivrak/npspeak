@@ -4,6 +4,71 @@
 
 @layer base {
   h1 {
-    @apply font-bold tracking-wide text-4xl lg:text-6xl text-primary;
+    @apply text-primary text-balance font-alagard font-light tracking-tight text-5xl md:text-6xl lg:text-7xl xl:text-8xl;
+  }
+}
+
+.fadeInFirst {
+  opacity: 0;
+  animation: fadeInFirst 1s ease-in-out forwards;
+}
+
+.fadeInSecond {
+  opacity: 0;
+  animation: fadeInSecond 1.5s ease-in-out 1.5s forwards;
+}
+
+.fadeInThirdUp {
+  opacity: 0;
+  pointer-events: none;
+  cursor: default;
+  animation: fadeInThirdUp 1.75s ease-in-out 3.5s forwards;
+}
+
+.fadeInThirdDown {
+  opacity: 0;
+  animation: fadeInThirdDown 1.75s ease-in-out 3.5s forwards;
+}
+
+@keyframes fadeInFirst {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInSecond {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInThirdUp {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+@keyframes fadeInThirdDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

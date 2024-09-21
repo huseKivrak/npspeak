@@ -1,41 +1,30 @@
 'use client';
 
 import { Button } from '@nextui-org/button';
-import { Divider, Link } from '@nextui-org/react';
+import { Link } from '@nextui-org/react';
+import { FaArrowRight } from 'react-icons/fa6';
 
 export const Hero = () => {
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold font-alagard tracking-wider">
+      <h1 className="fadeInFirst text-6xl md:text-8xl lg:text-9xl font-bold tracking-wider">
         npSpeak
       </h1>
-      <p className="mt-[-24px] text-warning text-2xl md:text-4xl lg:text-6xl font-bold">
+
+      <p className="fadeInSecond font-bold text-warning text-2xl md:text-4xl lg:text-5xl">
         Give your character a voice.
       </p>
-      <div className="flex gap-4 md:gap-8 justify-center tracking-widest font-semibold">
-        <Link href="/signup">
-          <Button
-            variant="flat"
-            size="lg"
-            className="text-large h-16"
-            color="success"
-          >
-            Get started
-          </Button>
-        </Link>
-        <Link href="/about">
-          <Button
-            variant="flat"
-            size="lg"
-            className="text-large h-16"
-            color="secondary"
-          >
-            Learn more
-          </Button>
-        </Link>
-      </div>
 
-      <Divider className="mt-4" />
+      <Link href="/signup">
+        <Button
+          variant="flat"
+          className="fadeInThirdUp md:h-14 md:text-xl"
+          color="success"
+          endContent={<FaArrowRight />}
+        >
+          Get Started
+        </Button>
+      </Link>
     </div>
   );
 };
