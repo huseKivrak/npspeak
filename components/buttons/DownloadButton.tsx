@@ -25,7 +25,7 @@ export function DownloadButton({ dialogue }: { dialogue: DialogueRow }) {
           radius="full"
           onClick={handleDownload}
         >
-          <FaDownload size={18} />
+          <FaDownload size={24} />
         </Button>
       </Tooltip>
     </>
