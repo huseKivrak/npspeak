@@ -50,7 +50,7 @@ export function DeleteModal({
           onPress={onOpen}
           aria-label={`Delete ${title}`}
         >
-          <DeleteIcon className="text-danger" />
+          <DeleteIcon className="text-danger" size={24} />
         </Button>
       </Tooltip>
       <Modal

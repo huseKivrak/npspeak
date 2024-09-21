@@ -43,18 +43,17 @@ export function VoiceCard({
         </div>
       </CardHeader>
 
-      <CardBody className="flex-row space-x-2">
-        <AudioButton src={sampleURL} label="sample" />
+      <CardBody className="flex-row items-center justify-evenly space-x-2">
+        <AudioButton src={sampleURL} />
 
         <Button
           isDisabled={isSelected}
-          variant="bordered"
-          radius="none"
+          variant="light"
+          radius="full"
           startContent={
             isSelected ? <FaCheck size={24} /> : <FaPlus size={24} />
           }
           onPress={() => onSelect(value)}
-          fullWidth
           color="success"
         >
           <span className="font-mono text-tiny">

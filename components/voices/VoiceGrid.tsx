@@ -15,7 +15,7 @@ export function VoiceGrid({
   selectedVoiceId?: string;
 }) {
   const [page, setPage] = useState(1);
-  const [voicesPerPage, setVoicesPerPage] = useState(12);
+  const [voicesPerPage, setVoicesPerPage] = useState(6);
   const perPageOptions = [
     { label: '3', value: 3 },
     { label: '6', value: 6 },

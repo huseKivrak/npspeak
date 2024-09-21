@@ -1,15 +1,18 @@
 import { SlotsToClasses, TableSlots } from '@nextui-org/react';
 
 export const tableStyles: SlotsToClasses<TableSlots> = {
-  wrapper: 'p-0 w-full h-[200px] max-h-[382px]',
+  wrapper: 'p-0 w-full h-full max-h-[382px] pb-4',
   th: [
     'bg-transparent',
     'font-mono',
-    'tracking-wider',
+    'tracking-tight',
     'border-b',
     'border-divider',
+    'text-sm md:text-xl',
+    'font-normal',
   ],
   td: [
+    'text-xl lg:text-2xl',
     // changing the rows border radius
     // first
     'group-data-[first=true]:first:before:rounded-none',
