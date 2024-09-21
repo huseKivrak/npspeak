@@ -10,8 +10,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema } from '@/database/drizzle/validation';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
 import { SendEmailIcon } from '@/components/icons';
-import { ErrorToast } from '../ErrorToast';
-import { ErrorMessage } from '@hookform/error-message';
 import { ActionStatus } from '@/types/drizzle';
 import { Input } from '@nextui-org/react';
 
@@ -31,7 +29,7 @@ export default function SignUpForm({ promoCode }: { promoCode?: string }) {
     setError,
   } = useForm<Inputs>({
     mode: 'onBlur',
-    criteriaMode: 'all',
+    criteriaMode: 'firstError',
     resolver: zodResolver(signupSchema),
   });
 
@@ -47,75 +45,64 @@ export default function SignUpForm({ promoCode }: { promoCode?: string }) {
   }, [state, setError]);
 
   return (
-    <form className="flex flex-col items-center gap-4">
-      <h1>signup</h1>
+    <form className="flex flex-col self-center items-center gap-4 max-w-xl">
+      <h1 className="mb-4">signup</h1>
       {promoCode && (
         <Input
           isReadOnly
           label="applied code"
           defaultValue={promoCode}
           size="lg"
-          color="secondary"
+          color="warning"
+          variant="bordered"
+          classNames={{
+            inputWrapper: 'border-warning data-[hover=true]:border-warning',
+          }}
           {...register('promo_code')}
         />
       )}
       <Input
         isRequired
-        type="email"
         label="email"
-        placeholder="you@example.com"
         variant="flat"
         size="lg"
+        isInvalid={!!errors.email}
+        errorMessage={errors.email && errors.email.message}
         {...register('email')}
-      />
-      <ErrorMessage
-        errors={errors}
-        name="email"
-        render={({ message }) => <ErrorToast text={message} />}
       />
 
       <Input
         isRequired
         label="username"
-        placeholder="your username"
         variant="flat"
         size="lg"
+        isInvalid={!!errors.username}
+        errorMessage={errors.username && errors.username.message}
         {...register('username')}
-      />
-      <ErrorMessage
-        errors={errors}
-        name="username"
-        render={({ message }) => <ErrorToast text={message} />}
       />
 
       <Input
         isRequired
         type="password"
         label="password"
-        placeholder="••••••••"
         variant="flat"
         size="lg"
         {...register('password')}
-      />
-      <ErrorMessage
-        errors={errors}
-        name="password"
-        render={({ message }) => <ErrorToast text={message} />}
+        isInvalid={!!errors.password}
+        errorMessage={errors.password && errors.password.message}
       />
 
       <Input
         isRequired
         type="password"
         label="confirm password"
-        placeholder="•••••••"
         variant="flat"
         size="lg"
         {...register('confirm_password')}
-      />
-      <ErrorMessage
-        errors={errors}
-        name="confirm_password"
-        render={({ message }) => <ErrorToast text={message} />}
+        isInvalid={!!errors.confirm_password}
+        errorMessage={
+          errors.confirm_password && errors.confirm_password.message
+        }
       />
       <div className="flex flex-col items-center gap-4 w-full">
         <SubmitButton

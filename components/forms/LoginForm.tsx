@@ -9,8 +9,6 @@ import { SubmitButton } from '../buttons/SubmitButton';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/database/drizzle/validation';
-import { ErrorMessage } from '@hookform/error-message';
-import { ErrorToast } from '../ErrorToast';
 import { ActionStatus } from '@/types/drizzle';
 import { Input } from '@nextui-org/react';
 
@@ -29,15 +27,14 @@ export default function LoginForm() {
     formState: { errors },
     setError,
   } = useForm<Inputs>({
-    mode: 'onSubmit',
-    criteriaMode: 'all',
+    mode: 'onBlur',
+    criteriaMode: 'firstError',
     resolver: zodResolver(loginSchema),
   });
 
   useEffect(() => {
     if (state.status === 'idle') return;
     if (state.status === 'error') {
-      console.error(state.errors);
       state.errors?.forEach((error) => {
         setError(error.path as FieldPath<Inputs>, {
           message: error.message,
@@ -47,37 +44,29 @@ export default function LoginForm() {
   }, [state, setError]);
 
   return (
-    <div className="space-y-4">
-      <form className="flex flex-col gap-4">
-        <Input
-          isRequired
-          type="email"
-          label="email"
-          placeholder="you@example.com"
-          variant="flat"
-          size="lg"
-          {...register('email')}
-        />
-        <ErrorMessage
-          name="email"
-          errors={errors}
-          render={({ message }) => <ErrorToast text={message} />}
-        />
-        <Input
-          isRequired
-          type="password"
-          label="password"
-          variant="flat"
-          size="lg"
-          placeholder="••••••••"
-          {...register('password')}
-        />
-        <ErrorMessage
-          name="password"
-          errors={errors}
-          render={({ message }) => <ErrorToast text={message} />}
-        />
+    <form className="flex flex-col gap-4 max-w-xl">
+      <h1>login</h1>
+      <Input
+        isRequired
+        label="email"
+        variant="flat"
+        size="lg"
+        isInvalid={!!errors.email}
+        errorMessage={errors.email && errors.email.message}
+        {...register('email')}
+      />
+      <Input
+        isRequired
+        type="password"
+        label="password"
+        variant="flat"
+        size="lg"
+        isInvalid={!!errors.password}
+        errorMessage={errors.password && errors.password.message}
+        {...register('password')}
+      />
 
+      <div className="flex flex-col gap-4 w-full">
         <SubmitButton
           fullWidth
           variant="flat"
@@ -89,8 +78,6 @@ export default function LoginForm() {
         >
           login
         </SubmitButton>
-      </form>
-      <div className="flex flex-col tracking-wide">
         <NextUILink href="/forgot-password" underline="hover">
           forgot password?
         </NextUILink>
@@ -99,6 +86,6 @@ export default function LoginForm() {
           sign up
         </NextUILink>
       </div>
-    </div>
+    </form>
   );
 }
