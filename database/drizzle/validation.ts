@@ -39,8 +39,8 @@ export const signupSchema = zfd
     if (password !== confirm_password) {
       ctx.addIssue({
         code: 'custom',
-        path: ['password', 'confirm_password'],
-        message: 'Passwords do not match; please try again',
+        path: ['confirm_password'],
+        message: 'Passwords do not match',
       });
     }
   });
