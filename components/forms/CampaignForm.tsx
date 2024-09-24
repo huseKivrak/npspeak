@@ -8,8 +8,6 @@ import { createCampaignAction } from '@/actions/db/campaigns';
 import { campaignSchema } from '@/database/drizzle/validation';
 import { ActionStatus } from '@/types/drizzle';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
-import { ErrorMessage } from '@hookform/error-message';
-import { ErrorToast } from '../ErrorToast';
 import { PlusIcon } from '../icons';
 import { FormOptions } from '@/types/drizzle';
 import {
@@ -49,7 +47,6 @@ export default function CampaignForm({ npcOptions }: CampaignFormProps) {
   useEffect(() => {
     if (state.status === 'idle') return;
     if (state?.status === 'error') {
-      console.log('errors:', state.errors);
       state.errors?.forEach((error) => {
         setError(error.path as FieldPath<Inputs>, {
           message: error.message,
@@ -61,108 +58,98 @@ export default function CampaignForm({ npcOptions }: CampaignFormProps) {
   const hasNPCs = npcOptions && npcOptions.length > 0;
 
   return (
-    <form className="flex flex-col w-full max-w-xl gap-3">
-      <Input
-        isRequired
-        {...register('campaign_name')}
-        type="text"
-        label="Name"
-        variant="bordered"
-        name="campaign_name"
-        placeholder="name your campaign"
-      />
-      <ErrorMessage
-        errors={errors}
-        name="campaign_name"
-        render={({ message }) => <ErrorToast text={message} />}
-      />
-
-      <Textarea
-        {...register('description')}
-        name="description"
-        label="Description (optional)"
-        placeholder="describe your campaign"
-        variant="bordered"
-      />
-      <ErrorMessage
-        errors={errors}
-        name="description"
-        render={({ message }) => <ErrorToast text={message} />}
-      />
-
-      <Input
-        {...register('start_date')}
-        type="date"
-        label="Start Date (optional)"
-        name="start_date"
-        variant="bordered"
-        onChange={() => trigger('start_date')}
-      />
-      <ErrorMessage
-        errors={errors}
-        name="start_date"
-        render={({ message }) => <ErrorToast text={message} />}
-      />
-
-      <Input
-        {...register('end_date')}
-        type="date"
-        label="End date (optional)"
-        name="end_date"
-        variant="bordered"
-        onChange={() => trigger('end_date')}
-      />
-      <ErrorMessage
-        errors={errors}
-        name="end_date"
-        render={({ message }) => <ErrorToast text={message} />}
-      />
-
-      {hasNPCs && (
-        <Button
-          onClick={() => setShowAddNpc(!showAddNpc)}
+    <div className="flex flex-col gap-4 ">
+      <h1>create campaign</h1>
+      <form className="flex flex-col max-w-lg gap-4">
+        <Input
+          isRequired
+          {...register('campaign_name')}
+          type="text"
+          label="name"
           variant="flat"
-          color="secondary"
-          startContent={showAddNpc ? '' : <PlusIcon />}
-        >
-          {showAddNpc ? 'cancel' : 'NPC(s)'}
-        </Button>
-      )}
-      {showAddNpc && hasNPCs && (
-        <Controller
-          name="npc_ids"
-          control={control}
-          render={({ field: { ref } }) => (
-            <CheckboxGroup
-              aria-label="npc options"
-              name="npc_ids"
-              ref={ref}
-              size="sm"
-              classNames={{
-                base: 'w-full inline-flex m-0 p-0',
-                wrapper:
-                  'grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 tracking-wider',
-              }}
-            >
-              {npcOptions.map((option) => (
-                <Checkbox key={option.label} value={option.value.toString()}>
-                  {option.label}
-                </Checkbox>
-              ))}
-            </CheckboxGroup>
-          )}
+          size="lg"
+          isInvalid={!!errors.campaign_name}
+          errorMessage={errors.campaign_name && errors.campaign_name.message}
         />
-      )}
-      <SubmitButton
-        formAction={formAction}
-        pendingText="creating campaign..."
-        variant="flat"
-        size="sm"
-        color="success"
-        className="mt-2 font-bold text-large"
-      >
-        create
-      </SubmitButton>
-    </form>
+
+        <Textarea
+          {...register('description')}
+          name="description"
+          label="description (optional)"
+          variant="flat"
+          size="lg"
+          isInvalid={!!errors.description}
+          errorMessage={errors.description && errors.description.message}
+        />
+
+        <Input
+          {...register('start_date')}
+          type="date"
+          label="Start Date (optional)"
+          variant="flat"
+          size="lg"
+          isInvalid={!!errors.start_date}
+          errorMessage={errors.start_date && errors.start_date.message}
+          onChange={() => trigger('start_date')}
+        />
+
+        <Input
+          {...register('end_date')}
+          type="date"
+          label="End date (optional)"
+          variant="flat"
+          size="lg"
+          isInvalid={!!errors.end_date}
+          errorMessage={errors.end_date && errors.end_date.message}
+          onChange={() => trigger('end_date')}
+        />
+        {hasNPCs && (
+          <Button
+            onClick={() => setShowAddNpc(!showAddNpc)}
+            variant="flat"
+            color="secondary"
+            aria-label="add NPCs to campaign"
+            startContent={showAddNpc ? '' : <PlusIcon />}
+          >
+            {showAddNpc ? 'cancel' : 'NPC(s)'}
+          </Button>
+        )}
+        {showAddNpc && hasNPCs && (
+          <Controller
+            name="npc_ids"
+            control={control}
+            render={({ field: { ref } }) => (
+              <CheckboxGroup
+                aria-label="npc options"
+                name="npc_ids"
+                ref={ref}
+                size="sm"
+                classNames={{
+                  base: 'w-full inline-flex m-0 p-0',
+                  wrapper:
+                    'grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 tracking-wider',
+                }}
+              >
+                {npcOptions.map((option) => (
+                  <Checkbox key={option.label} value={option.value.toString()}>
+                    {option.label}
+                  </Checkbox>
+                ))}
+              </CheckboxGroup>
+            )}
+          />
+        )}
+        <SubmitButton
+          formAction={formAction}
+          pendingText="creating campaign..."
+          variant="flat"
+          size="lg"
+          color="success"
+          className="mt-2 font-bold text-large"
+        >
+          create
+        </SubmitButton>
+      </form>
+    </div>
   );
 }
