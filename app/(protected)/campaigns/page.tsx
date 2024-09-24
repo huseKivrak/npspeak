@@ -8,7 +8,7 @@ export default async function UserCampaignsPage() {
     campaignResponse.status === 'success' ? campaignResponse.data : [];
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col ">
       <CampaignListTable campaigns={campaigns} />
     </div>
   );

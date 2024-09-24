@@ -14,8 +14,8 @@ import { ActionStatus } from '@/types/drizzle';
 import { Input } from '@nextui-org/react';
 
 type Inputs = z.infer<typeof signupSchema>;
-export default function SignUpForm({ promoCode }: { promoCode?: string }) {
-  const [state, formAction] = useFormState<ActionStatus, FormData>(
+export default function SignUpForm({ promoCode }: { promoCode?: string; }) {
+  const [ state, formAction ] = useFormState<ActionStatus, FormData>(
     signUpAction,
     {
       status: 'idle',
@@ -42,11 +42,11 @@ export default function SignUpForm({ promoCode }: { promoCode?: string }) {
         });
       });
     }
-  }, [state, setError]);
+  }, [ state, setError ]);
 
   return (
-    <form className="flex flex-col self-center items-center gap-4 max-w-xl">
-      <h1 className="mb-4">signup</h1>
+    <form className="flex flex-col gap-10 max-w-md">
+      <h1>signup</h1>
       {promoCode && (
         <Input
           isReadOnly
@@ -104,7 +104,7 @@ export default function SignUpForm({ promoCode }: { promoCode?: string }) {
           errors.confirm_password && errors.confirm_password.message
         }
       />
-      <div className="flex flex-col items-center gap-4 w-full">
+      <div className="flex flex-col gap-4 w-full">
         <SubmitButton
           fullWidth
           variant="flat"
@@ -119,7 +119,7 @@ export default function SignUpForm({ promoCode }: { promoCode?: string }) {
         </SubmitButton>
 
         <NextUILink href="/login" underline="hover">
-          Have an account?
+          have an account?
         </NextUILink>
       </div>
     </form>

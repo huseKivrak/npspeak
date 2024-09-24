@@ -20,7 +20,7 @@ export default function ResetPasswordForm() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col gap-12 max-w-md">
       <h1>reset password</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <Input

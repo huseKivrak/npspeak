@@ -1,7 +1,7 @@
 import { SlotsToClasses, TableSlots } from '@nextui-org/react';
 
 export const tableStyles: SlotsToClasses<TableSlots> = {
-  wrapper: 'p-0 w-full h-full max-h-[382px] pb-4',
+  wrapper: 'p-0 w-full h-full max-h-[382px] pb-2',
   th: [
     'bg-transparent',
     'font-mono',

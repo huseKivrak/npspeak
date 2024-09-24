@@ -19,11 +19,9 @@ export default function PromoSignUpHandler() {
   return validPromoCode ? (
     <SignUpForm promoCode={validPromoCode} />
   ) : (
-    <div className="flex flex-col">
-      <h1 className="font-alagard tracking-tight sm:tracking-normal self-center mb-12">
-        what&apos;s the password?
-      </h1>
-      <span className="text-warning font-mono font-semibold text-3xl sm:text-4xl mb-2">
+    <div className="flex flex-col gap-4">
+      <h1>what&apos;s the password?</h1>
+      <span className="text-warning font-mono font-semibold text-3xl md:text-4xl lg:text-6xl ">
         early access
       </span>
       <PromoForm onValidPromoCode={onValidPromoCode} />

@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Navbar as NextUINavbar,
   NavbarBrand,
@@ -8,13 +9,15 @@ import Link from 'next/link';
 import { ScrollEmojiIcon } from '../icons';
 import { ThemeSwitcher } from '../buttons/ThemeSwitcher';
 
-export const Navbar = ({ children }: { children: React.ReactNode }) => {
+
+export const Navbar = ({ children }: { children: React.ReactNode; }) => {
+
   return (
     <NextUINavbar
       shouldHideOnScroll
-      maxWidth="xl"
+      maxWidth="2xl"
       isBlurred={false}
-      className="py-2 sm:py-4 px-0 md:px-4"
+      className='py-2 sm:py-4'
     >
       <NavbarContent justify="start">
         <NavbarBrand as="li" className="gap-4">

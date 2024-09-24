@@ -19,7 +19,6 @@ export default async function CreateCampaignPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="font-semibold">create an NPC</h1>
       <NPCForm campaignOptions={campaignOptions} voiceOptions={voices} />
     </div>
   );

@@ -6,6 +6,10 @@
   h1 {
     @apply text-primary text-balance font-alagard font-light tracking-tight text-5xl md:text-6xl lg:text-7xl xl:text-8xl;
   }
+
+  h2 {
+    @apply text-foreground text-balance font-mono font-semibold tracking-tighter text-xl md:text-3xl lg:text-4xl;
+  }
 }
 
 .fadeInFirst {
@@ -53,7 +57,7 @@
 @keyframes fadeInThirdUp {
   0% {
     opacity: 0;
-    transform: translateY(100px);
+    transform: translateY(50px);
   }
   100% {
     opacity: 1;

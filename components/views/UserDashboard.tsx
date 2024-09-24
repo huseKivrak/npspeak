@@ -18,22 +18,21 @@ export function UserDashboard({
   npcs: DetailedNPC[] | null;
 }) {
   return (
-    <div className="flex flex-col space-y-2">
-      <div className="flex flex-col">
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-4">
         <h1>dashboard</h1>
-        <Divider className="my-2" />
 
-        <div className="flex gap-3 tracking-wider">
+        <div className="flex space-x-4 mb-2 tracking-wider">
           <Link href="/npcs/create">
-            <Button size="sm" radius="sm" variant="flat">
+            <Button variant="flat">
               <PlusIcon />
-              <span className="mb-1 ">NPC</span>
+              <span>NPC</span>
             </Button>
           </Link>
           <Link href="/campaigns/create">
-            <Button size="sm" radius="sm" variant="flat">
+            <Button variant="flat">
               <PlusIcon />
-              <span className="mb-1 ">campaign</span>
+              <span>campaign</span>
             </Button>
           </Link>
         </div>

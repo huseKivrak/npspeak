@@ -28,7 +28,7 @@ export function TTSModal({
   className?: string;
   children?: React.ReactNode;
 }) {
-  const [state, formAction] = useFormState(ttsHandler, {
+  const [ state, formAction ] = useFormState(ttsHandler, {
     status: 'idle',
     message: '',
   });
@@ -40,12 +40,13 @@ export function TTSModal({
         <Button
           isIconOnly
           variant="light"
-          size="sm"
-          color="secondary"
+          size="lg"
+          radius="full"
+          color="success"
           onPress={onOpen}
           aria-label="Create Dialogue Audio"
         >
-          <PiMicrophoneBold className="text-large" />
+          <PiMicrophoneBold size={24} />
         </Button>
       </Tooltip>
       <Modal

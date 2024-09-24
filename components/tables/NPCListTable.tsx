@@ -25,13 +25,13 @@ import { DetailedNPC } from '@/types/drizzle';
 import { FaEdit } from 'react-icons/fa';
 import { tableStyles } from '@/styles/tableStyles';
 
-export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
-  const [filterValue, setFilterValue] = useState('');
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[]; }) => {
+  const [ filterValue, setFilterValue ] = useState('');
+  const [ sortDescriptor, setSortDescriptor ] = useState<SortDescriptor>({
     column: 'npc_name',
     direction: 'ascending',
   });
-  const [page, setPage] = useState(1);
+  const [ page, setPage ] = useState(1);
 
   const rowsPerPage = 5;
   const pages = Math.ceil(npcs.length / rowsPerPage);
@@ -40,7 +40,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
 
   //Items filtered by search value
   const filteredItems = useMemo(() => {
-    let filteredNPCs = [...npcs];
+    let filteredNPCs = [ ...npcs ];
 
     if (hasSearchFilter) {
       filteredNPCs = filteredNPCs.filter((npc) =>
@@ -48,7 +48,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
       );
     }
     return filteredNPCs;
-  }, [npcs, filterValue, hasSearchFilter]);
+  }, [ npcs, filterValue, hasSearchFilter ]);
 
   //Paginated Items
   const items = useMemo(() => {
@@ -56,18 +56,18 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
     const end = start + rowsPerPage;
 
     return filteredItems.slice(start, end);
-  }, [page, filteredItems]);
+  }, [ page, filteredItems ]);
 
   //Sorted Items
   const sortedItems = useMemo(() => {
-    return [...items].sort((a: DetailedNPC, b: DetailedNPC) => {
-      const first = a[sortDescriptor.column as keyof DetailedNPC] as number;
-      const second = b[sortDescriptor.column as keyof DetailedNPC] as number;
+    return [ ...items ].sort((a: DetailedNPC, b: DetailedNPC) => {
+      const first = a[ sortDescriptor.column as keyof DetailedNPC ] as number;
+      const second = b[ sortDescriptor.column as keyof DetailedNPC ] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
     });
-  }, [sortDescriptor, items]);
+  }, [ sortDescriptor, items ]);
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
@@ -109,9 +109,8 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
               >
                 <DropdownTrigger>
                   <Button variant="light" size="sm">
-                    {`${npc.campaigns.length} ${
-                      npc.campaigns.length > 1 ? 'Campaigns' : 'Campaign'
-                    }`}
+                    {`${npc.campaigns.length} ${npc.campaigns.length > 1 ? 'Campaigns' : 'Campaign'
+                      }`}
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu
@@ -147,10 +146,10 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
 
       case 'actions':
         return (
-          <div className="relative flex gap-2">
-            <Tooltip content="Edit NPC">
+          <div className="relative flex justify-center gap-2">
+            <Tooltip content="Edit">
               <NextUILink href={`/npcs/${npc.id}/edit`}>
-                <FaEdit />
+                <FaEdit size={24} className='text-default' aria-label='Edit NPC' />
               </NextUILink>
             </Tooltip>
 
@@ -177,7 +176,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
         />
       </div>
     );
-  }, [filterValue, onSearchChange, onClear]);
+  }, [ filterValue, onSearchChange, onClear ]);
 
   //Pagination UI
   const bottomContent = useMemo(() => {
@@ -196,7 +195,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
         />
       </div>
     );
-  }, [page, pages]);
+  }, [ page, pages ]);
 
   return (
     <Table
@@ -212,14 +211,14 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[] }) => {
     >
       <TableHeader>
         <TableColumn allowsSorting align="start" key="npc_name" maxWidth={48}>
-          Name
+          NAME
         </TableColumn>
         <TableColumn key="campaigns" align="start" maxWidth={48}>
-          Campaigns
+          CAMPAIGNS
         </TableColumn>
 
         <TableColumn key="actions" align="center">
-          Actions
+          ACTIONS
         </TableColumn>
       </TableHeader>
       <TableBody items={sortedItems} emptyContent={'No NPCs to display.'}>

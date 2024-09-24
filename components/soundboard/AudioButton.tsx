@@ -11,7 +11,7 @@ export function AudioButton({
   src: string;
   className?: string;
 }) {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [ isPlaying, setIsPlaying ] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const togglePlayback = () => {
@@ -41,7 +41,7 @@ export function AudioButton({
       className={cn('', className)}
       radius="full"
       size="lg"
-      color="primary"
+      color="warning"
       endContent={
         isPlaying ? <FaCircleStop size={28} /> : <FaVolumeUp size={28} />
       }

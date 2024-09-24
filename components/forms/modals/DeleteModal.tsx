@@ -26,13 +26,13 @@ export function DeleteModal({
   className?: string;
   children?: React.ReactNode;
 }) {
-  const [state, formAction] = useFormState(serverAction, {
+  const [ state, formAction ] = useFormState(serverAction, {
     status: 'idle',
     message: '',
   });
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const modalMessage = DeleteModalMessages[idName];
+  const modalMessage = DeleteModalMessages[ idName ];
   const title =
     idName === 'npc_id'
       ? 'NPC'
@@ -46,11 +46,13 @@ export function DeleteModal({
         <Button
           isIconOnly
           variant="light"
-          size="sm"
+          size="lg"
+          radius="full"
+          color="danger"
           onPress={onOpen}
           aria-label={`Delete ${title}`}
         >
-          <DeleteIcon className="text-danger" size={24} />
+          <DeleteIcon />
         </Button>
       </Tooltip>
       <Modal
@@ -88,9 +90,6 @@ export function DeleteModal({
               <ModalFooter>
                 <form>
                   <input type="hidden" name={idName} value={id} />
-                  <Button variant="light" onPress={onClose} className="ml-2">
-                    Close
-                  </Button>
                   <SubmitButton
                     pendingText={`Deleting ${title}...`}
                     formAction={formAction}
@@ -99,6 +98,9 @@ export function DeleteModal({
                   >
                     Delete
                   </SubmitButton>
+                  <Button variant="light" onPress={onClose} className="ml-2">
+                    Close
+                  </Button>
                 </form>
               </ModalFooter>
             </>

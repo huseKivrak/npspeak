@@ -2,7 +2,7 @@ import { DialogueRow } from '@/types/drizzle';
 import { Button, Tooltip } from '@nextui-org/react';
 import { FaDownload } from 'react-icons/fa';
 
-export function DownloadButton({ dialogue }: { dialogue: DialogueRow }) {
+export function DownloadButton({ dialogue }: { dialogue: DialogueRow; }) {
   const handleDownload = () => {
     if (dialogue.audio) {
       const link = document.createElement('a');
@@ -20,12 +20,11 @@ export function DownloadButton({ dialogue }: { dialogue: DialogueRow }) {
         <Button
           isIconOnly
           variant="light"
-          color="success"
-          size="sm"
+          size="lg"
           radius="full"
           onClick={handleDownload}
         >
-          <FaDownload size={24} />
+          <FaDownload size={20} />
         </Button>
       </Tooltip>
     </>

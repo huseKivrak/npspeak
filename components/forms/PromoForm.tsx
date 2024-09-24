@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { getPromoCodeStatus } from '@/actions/db/promo';
 import { Button, Input } from '@nextui-org/react';
-import { FaRegArrowAltCircleRight } from 'react-icons/fa';
+import { FaCircleArrowRight } from 'react-icons/fa6';
 
 interface PromoFormProps {
   onValidPromoCode: (code: string) => void;
@@ -38,11 +38,11 @@ export default function PromoForm({ onValidPromoCode }: PromoFormProps) {
         size="lg"
         variant="faded"
         color="warning"
-        className="max-w-sm"
+        className="max-w-sm md:max-w-md"
         classNames={{
-          input: 'text-3xl tracking-widest font-mono text-center',
+          input: 'text-3xl tracking-widest font-mono text-center text-warning',
           errorMessage: 'text-lg',
-          description: 'text-xl',
+          description: 'text-lg md:text-xl lg:text-2xl',
         }}
         description="Enter your invite code to get started."
       />
@@ -53,8 +53,9 @@ export default function PromoForm({ onValidPromoCode }: PromoFormProps) {
         type="submit"
         aria-label="apply code"
         size="lg"
+        className="text-success-foreground"
       >
-        <FaRegArrowAltCircleRight />
+        <FaCircleArrowRight size={24} />
       </Button>
     </form>
   );

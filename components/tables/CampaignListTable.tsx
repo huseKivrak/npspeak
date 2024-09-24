@@ -29,12 +29,12 @@ export function CampaignListTable({
 }: {
   campaigns: CampaignWithNPCs[];
 }) {
-  const [filterValue, setFilterValue] = useState('');
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+  const [ filterValue, setFilterValue ] = useState('');
+  const [ sortDescriptor, setSortDescriptor ] = useState<SortDescriptor>({
     column: 'campaign_name',
     direction: 'ascending',
   });
-  const [page, setPage] = useState(1);
+  const [ page, setPage ] = useState(1);
 
   const rowsPerPage = 5;
   const pages = Math.ceil(campaigns.length / rowsPerPage);
@@ -43,7 +43,7 @@ export function CampaignListTable({
 
   //Items filtered by search value
   const filteredItems = useMemo(() => {
-    let filteredCampaigns = [...campaigns];
+    let filteredCampaigns = [ ...campaigns ];
 
     if (hasSearchFilter) {
       filteredCampaigns = filteredCampaigns.filter((c) =>
@@ -51,16 +51,16 @@ export function CampaignListTable({
       );
     }
     return filteredCampaigns;
-  }, [campaigns, filterValue, hasSearchFilter]);
+  }, [ campaigns, filterValue, hasSearchFilter ]);
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     return filteredItems.slice(start, end);
-  }, [page, filteredItems]);
+  }, [ page, filteredItems ]);
 
   const sortedItems = useMemo(() => {
-    return [...items].sort((a: CampaignWithNPCs, b: CampaignWithNPCs) => {
+    return [ ...items ].sort((a: CampaignWithNPCs, b: CampaignWithNPCs) => {
       const first = a[
         sortDescriptor.column as keyof CampaignWithNPCs
       ] as number;
@@ -71,7 +71,7 @@ export function CampaignListTable({
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
     });
-  }, [sortDescriptor, items]);
+  }, [ sortDescriptor, items ]);
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
@@ -114,9 +114,8 @@ export function CampaignListTable({
                 >
                   <DropdownTrigger>
                     <Button variant="light" size="sm">
-                      {`${campaign.npcs.length} ${
-                        campaign.npcs.length > 1 ? 'NPCs' : 'NPC'
-                      }`}
+                      {`${campaign.npcs.length} ${campaign.npcs.length > 1 ? 'NPCs' : 'NPC'
+                        }`}
                     </Button>
                   </DropdownTrigger>
                   <DropdownMenu
@@ -177,7 +176,7 @@ export function CampaignListTable({
         />
       </div>
     );
-  }, [filterValue, onSearchChange, onClear]);
+  }, [ filterValue, onSearchChange, onClear ]);
 
   const bottomContent = useMemo(() => {
     return (
@@ -196,7 +195,7 @@ export function CampaignListTable({
         />
       </div>
     );
-  }, [page, pages]);
+  }, [ page, pages ]);
 
   return (
     <Table
@@ -217,13 +216,13 @@ export function CampaignListTable({
           key="campaign_name"
           maxWidth={48}
         >
-          Name
+          NAME
         </TableColumn>
         <TableColumn key="npcs" align="start" maxWidth={48}>
           NPCs
         </TableColumn>
         <TableColumn key="actions" align="center">
-          Actions
+          ACTIONS
         </TableColumn>
       </TableHeader>
       <TableBody items={sortedItems} emptyContent={'No campaigns to display.'}>

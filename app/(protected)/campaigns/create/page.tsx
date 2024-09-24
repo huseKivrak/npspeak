@@ -18,10 +18,7 @@ export default async function CreateCampaignPage() {
   }));
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <h1 className="mb-4 font-bold tracking-widest underline">
-        create a new campaign
-      </h1>
+    <div className="flex flex-col gap-4">
       <CampaignForm npcOptions={npcOptions} />
     </div>
   );

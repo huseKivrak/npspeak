@@ -24,6 +24,8 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
+  Card,
+  CardBody,
 } from '@nextui-org/react';
 import { capitalize } from '@/utils/helpers/formatHelpers';
 import {
@@ -37,6 +39,8 @@ import { AudioButton } from '../soundboard/AudioButton';
 import { tableStyles } from '@/styles/tableStyles';
 import { truncateText } from '@/utils/helpers/formatHelpers';
 import { DownloadButton } from '../buttons/DownloadButton';
+import { DialogueModal } from '../forms/modals/DialogueModal';
+import { usePathname } from 'next/navigation';
 
 export const DialogueListTable = ({
   dialogues,
@@ -45,15 +49,18 @@ export const DialogueListTable = ({
   dialogues: DetailedDialogue[];
   voiceId: string;
 }) => {
-  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
-  const [audioFilter, setAudioFilter] = useState<Selection>('all');
-  const [typeFilter, setTypeFilter] = useState<Selection>('all');
-  const [rowsPerPage, setRowsPerPage] = useState<Selection>(new Set(['5']));
-  const [page, setPage] = useState(1);
+  const [ selectedKeys, setSelectedKeys ] = useState<Selection>(new Set([]));
+  const [ audioFilter, setAudioFilter ] = useState<Selection>('all');
+  const [ typeFilter, setTypeFilter ] = useState<Selection>('all');
+  const [ rowsPerPage, setRowsPerPage ] = useState<Selection>(new Set([ '5' ]));
+  const [ page, setPage ] = useState(1);
+
+  const pathname = usePathname();
+  const npcId = Number(pathname.split('/')[ 2 ]);
 
   const itemsPerPage = useMemo(
     () => Number(Array.from(rowsPerPage).join(', ').replaceAll('_', ' ')),
-    [rowsPerPage]
+    [ rowsPerPage ]
   );
   const pages = Math.ceil(dialogues.length / Number(itemsPerPage));
 
@@ -80,7 +87,7 @@ export const DialogueListTable = ({
     { name: '15', uid: 15 },
   ];
   const filteredItems = useMemo(() => {
-    let filteredDialogues = [...dialogues];
+    let filteredDialogues = [ ...dialogues ];
 
     if (
       audioFilter !== 'all' &&
@@ -103,7 +110,7 @@ export const DialogueListTable = ({
     }
 
     return filteredDialogues;
-  }, [dialogues, audioFilter, typeFilter]);
+  }, [ dialogues, audioFilter, typeFilter ]);
 
   //formats dialogues and sorts audio to top rows
   const rows = filteredItems
@@ -122,7 +129,7 @@ export const DialogueListTable = ({
 
   const onRowsPerPageChange = useCallback((keys: SharedSelection) => {
     const rowsPerPage = Array.from(keys).join(', ').replaceAll('_', ' ');
-    setRowsPerPage(new Set([rowsPerPage]));
+    setRowsPerPage(new Set([ rowsPerPage ]));
     setPage(1);
   }, []);
 
@@ -131,7 +138,7 @@ export const DialogueListTable = ({
     const end = start + itemsPerPage;
 
     return rows.slice(start, end);
-  }, [page, rows, rowsPerPage]);
+  }, [ page, rows, rowsPerPage ]);
 
   const topContent = useMemo(() => {
     return (
@@ -147,7 +154,7 @@ export const DialogueListTable = ({
                 variant="light"
                 isDisabled={!hasSelectedDialogues}
               >
-                <FaMicrophoneLines className="text-success sm:text-large" />
+                <FaMicrophoneLines className="text-success" size={24} />
               </Button>
             </Tooltip>
             <Tooltip
@@ -159,7 +166,7 @@ export const DialogueListTable = ({
                 variant="light"
                 isDisabled={!hasSelectedDialogues}
               >
-                <FaChessBoard className="text-secondary sm:text-large" />
+                <FaChessBoard className="text-secondary" size={24} />
               </Button>
             </Tooltip>
             <Tooltip
@@ -172,18 +179,17 @@ export const DialogueListTable = ({
                 variant="light"
                 isDisabled={!hasSelectedDialogues}
               >
-                <FaRegTrashCan className="text-danger sm:text-large" />
+                <FaRegTrashCan className="text-danger" size={24} />
               </Button>
             </Tooltip>
           </div>
         </div>
 
         <div className="flex gap-4 ">
-          <Dropdown classNames={{ content: ['flex min-w-[20px]'] }}>
+          <Dropdown classNames={{ content: [ 'flex min-w-[20px]' ] }}>
             <DropdownTrigger className="flex max-w-xs md:w-[120px]">
               <Button
                 endContent={<FaChevronDown className="text-xs md:text-sm" />}
-                size="sm"
                 variant="flat"
               >
                 <span className="text-tiny md:text-small">type</span>
@@ -205,13 +211,12 @@ export const DialogueListTable = ({
 
           <Dropdown
             classNames={{
-              content: ['flex min-w-[20px]'],
+              content: [ 'flex min-w-[20px]' ],
             }}
           >
             <DropdownTrigger className="flex max-w-xs md:w-[120px]">
               <Button
                 endContent={<FaChevronDown className="text-xs md:text-sm" />}
-                size="sm"
                 variant="flat"
               >
                 <span className="text-tiny md:text-small">audio</span>
@@ -233,13 +238,12 @@ export const DialogueListTable = ({
 
           <Dropdown
             classNames={{
-              content: ['flex min-w-[20px]'],
+              content: [ 'flex min-w-[20px]' ],
             }}
           >
             <DropdownTrigger className="hidden sm:flex md:w-[100px]">
               <Button
                 endContent={<FaChevronDown className="text-xs sm:text-sm" />}
-                size="sm"
                 variant="flat"
               >
                 <span className="text-small">rows</span>
@@ -260,16 +264,16 @@ export const DialogueListTable = ({
         </div>
       </div>
     );
-  }, [audioFilter, dialogues.length, selectedKeys, rowsPerPage, typeFilter]);
+  }, [ audioFilter, dialogues.length, selectedKeys, rowsPerPage, typeFilter ]);
 
   const bottomContent = useMemo(() => {
     return (
       <div className="flex w-full items-center justify-center bg-transparent">
         <Pagination
+          isCompact
           page={page}
           total={pages}
           onChange={setPage}
-          size="sm"
           color="secondary"
           classNames={{
             wrapper: 'gap-2 bg-transparent',
@@ -279,7 +283,7 @@ export const DialogueListTable = ({
         />
       </div>
     );
-  }, [page, pages, selectedKeys, items.length]);
+  }, [ page, pages, selectedKeys, items.length ]);
 
   const renderCell = useCallback(
     (dialogue: DialogueRow, columnKey: React.Key) => {
@@ -292,17 +296,19 @@ export const DialogueListTable = ({
               closeDelay={200}
             >
               <div className="flex justify-center">
-                <DialogueIcon dialogueType={dialogue.type} size={20} />
+                <DialogueIcon dialogueType={dialogue.type} />
               </div>
             </Tooltip>
           );
         case 'text':
           return (
-            <div className="flex flex-col items-start max-w-fit">
+            <div className="">
               <Popover>
                 <PopoverTrigger className="sm:hidden">
-                  <Button size="sm" variant="light">
-                    {truncateText(dialogue.text, 10)}
+                  <Button variant="light">
+                    <span className="underline text-start">
+                      {truncateText(dialogue.text, 8)}
+                    </span>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="flex items-center justify-center p-2 max-w-xs">
@@ -310,9 +316,25 @@ export const DialogueListTable = ({
                 </PopoverContent>
               </Popover>
 
-              <span className="hidden sm:flex italic">
-                {truncateText(dialogue.text, 100)}
-              </span>
+              {dialogue.text.length > 50 ? (
+                <Tooltip
+                  content={
+                    <Card className="flex flex-col max-w-xs">
+                      <CardBody>
+                        <span className="italic">{dialogue.text}</span>
+                      </CardBody>
+                    </Card>
+                  }
+                >
+                  <span className="hidden sm:flex italic">
+                    {truncateText(dialogue.text, 50)}
+                  </span>
+                </Tooltip>
+              ) : (
+                <span className="hidden sm:flex italic">
+                  {truncateText(dialogue.text, 50)}
+                </span>
+              )}
             </div>
           );
         case 'audio':
@@ -321,7 +343,7 @@ export const DialogueListTable = ({
               {dialogue.audio ? (
                 <AudioButton src={dialogue.audio} />
               ) : (
-                <FaMicrophoneSlash />
+                <FaMicrophoneSlash size={24} className="text-default" />
               )}
             </div>
           );
@@ -364,20 +386,30 @@ export const DialogueListTable = ({
       classNames={tableStyles}
     >
       <TableHeader>
-        <TableColumn align="center" key="type" width={12} maxWidth={12}>
+        <TableColumn align="start" key="type">
           TYPE
         </TableColumn>
-        <TableColumn align="start" key="text" maxWidth={100}>
+        <TableColumn align="start" key="text">
           TEXT
         </TableColumn>
-        <TableColumn align="center" key="audio" width={12} maxWidth={12}>
+        <TableColumn align="center" key="audio">
           AUDIO
         </TableColumn>
-        <TableColumn align="center" key="actions" width={12} maxWidth={12}>
+        <TableColumn align="center" key="actions">
           ACTIONS
         </TableColumn>
       </TableHeader>
-      <TableBody items={items} emptyContent={'No dialogues to display.'}>
+      <TableBody
+        items={items}
+        emptyContent={
+          <div className="flex flex-col items-center justify-center gap-4">
+            <span className="text-lg font-mono">
+              This NPC has no dialogues yet. Create one!
+            </span>
+            <DialogueModal npcId={npcId} className="" />
+          </div>
+        }
+      >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (

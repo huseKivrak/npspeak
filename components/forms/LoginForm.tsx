@@ -14,7 +14,7 @@ import { Input } from '@nextui-org/react';
 
 type Inputs = z.infer<typeof loginSchema>;
 export default function LoginForm() {
-  const [state, formAction] = useFormState<ActionStatus, FormData>(
+  const [ state, formAction ] = useFormState<ActionStatus, FormData>(
     signInAction,
     {
       status: 'idle',
@@ -41,10 +41,10 @@ export default function LoginForm() {
         });
       });
     }
-  }, [state, setError]);
+  }, [ state, setError ]);
 
   return (
-    <form className="flex flex-col gap-4 max-w-xl">
+    <form className="flex flex-col gap-10 max-w-md">
       <h1>login</h1>
       <Input
         isRequired

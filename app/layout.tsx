@@ -43,12 +43,12 @@ export default async function RootLayout({ children }: PropsWithChildren) {
             <Navbar>
               <AuthButton />
             </Navbar>
-            <main className="container mx-auto px-8 pt-2 sm:pt-8 flex-grow">
+            <main className="container mx-auto px-4 sm:px-8 md:px-8 lg:px-10 pt-2 flex-grow">
               {children}
             </main>
             <Analytics />
             <SpeedInsights />
-            <footer className="container mx-auto flex items-center justify-center px-4 py-8 lg:py-12">
+            <footer className="container mx-auto flex items-center justify-center px-4 py-2">
               <span className="sm:text-small md:text-base lg:text-large tracking-wider">
                 &copy; {new Date().getFullYear()} npSpeak. All rights reserved.
               </span>
