@@ -6,10 +6,10 @@ import { FaCircleStop } from 'react-icons/fa6';
 
 export function AudioButton({
   src,
-  className,
+  ...props
 }: {
   src: string;
-  className?: string;
+  [ key: string ]: any;
 }) {
   const [ isPlaying, setIsPlaying ] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -26,9 +26,18 @@ export function AudioButton({
   };
 
   useEffect(() => {
+    const handleEnded = () => {
+      setIsPlaying(false);
+    };
+
+    if (audioRef.current) {
+      audioRef.current.addEventListener('ended', handleEnded);
+    }
+
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.removeEventListener('ended', handleEnded);
       }
     };
   }, []);
@@ -38,15 +47,16 @@ export function AudioButton({
       isIconOnly
       variant="light"
       onClick={togglePlayback}
-      className={cn('', className)}
+      className={props.className}
       radius="full"
       size="lg"
       color="warning"
+
       endContent={
         isPlaying ? <FaCircleStop size={28} /> : <FaVolumeUp size={28} />
       }
     >
-      <audio ref={audioRef} src={src} />
+      <audio ref={audioRef} src={src} {...props} />
     </Button>
   );
 }
