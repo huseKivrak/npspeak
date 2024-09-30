@@ -6,18 +6,17 @@ import { VoiceOptionProps } from '@/types/elevenlabs';
 export const VoiceOption: React.FC<OptionProps<VoiceOptionProps, false>> = (
   props
 ) => {
-  const { label, accent, description, useCase } = props.data;
+  const { label, accent, description } = props.data;
 
-  const accentEmoji = getAccentEmoji(accent.toLowerCase());
+
 
   return (
     <components.Option {...props}>
       <div className="flex gap-3 md:gap-6 items-center">
         <span className="text-primary text-small md:text-large">{label}</span>
-        <span className="hidden sm:flex text-large ">{accentEmoji}</span>
-        {useCase && (
+        {accent && (
           <Chip variant="flat" color="secondary">
-            {useCase}
+            {accent}
           </Chip>
         )}
         {description && (
