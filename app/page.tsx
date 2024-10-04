@@ -1,8 +1,11 @@
 import { redirect } from 'next/navigation';
 import { getUserProfile } from '@/actions/auth';
-import { VoiceSampler } from '@/components/landingPage/VoiceSampler';
 import { Hero } from '@/components/landingPage/Hero';
-import { elevenLabsVoices } from '@/lib/elevenLabsVoices';
+import { Features } from '@/components/landingPage/Features';
+import { VoiceSampler } from '@/components/landingPage/VoiceSampler';
+import { curatedVoices } from '@/lib/curatedVoices';
+
+
 
 export default async function Index() {
   const { user } = await getUserProfile();
@@ -10,10 +13,12 @@ export default async function Index() {
     redirect('/dashboard');
   }
 
+
   return (
-    <div className="flex flex-col items-center text-center">
+    <div className="flex flex-col space-y-4">
       <Hero />
-      <VoiceSampler voiceOptions={elevenLabsVoices} />
+      <Features />
+      <VoiceSampler voiceOptions={curatedVoices} />
     </div>
   );
 }

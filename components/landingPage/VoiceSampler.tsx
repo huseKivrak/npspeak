@@ -13,18 +13,18 @@ export const VoiceSampler = ({
 }: {
   voiceOptions: VoiceOptionProps[];
 }) => {
-  const [selectedVoiceSampleURL, setSelectedVoiceSampleURL] = useState<
+  const [ selectedVoiceSampleURL, setSelectedVoiceSampleURL ] = useState<
     string | null
   >(null);
-  const [autoplay, setAutoplay] = useState(false);
+  const [ autoplay, setAutoplay ] = useState(false);
 
   const { control } = useForm(); //just needed for VoiceSelect props
 
   return (
-    <div className="flex flex-col gap-2 max-w-xs sm:max-w-xl text-start">
-      <h2 className="text-large md:text-4xl">Over 50 voices to choose from!</h2>
+    <div className="flex flex-col gap-2 sm:max-w-xl text-start">
+      <h2 >over 30 voices to choose from!</h2>
 
-      <p className="text-medium md:text-large">Listen to some samples:</p>
+      <p className="text-medium md:text-large">listen to some samples:</p>
       <Controller
         name="voice_id"
         control={control}
