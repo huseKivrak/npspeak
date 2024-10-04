@@ -3,7 +3,7 @@ import {
   DetailedDialogue,
   SoundboardDialogue,
 } from '@/types/drizzle';
-import { AccentEmojiMap } from '@/lib/constants';
+import { AccentEmojiMap } from '@/lib/iconMap';
 import { Tables } from '@/types/supabase';
 
 export const formatDialoguesForSoundboard = (

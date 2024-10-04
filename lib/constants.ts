@@ -1,95 +1,4 @@
 import { FormOptions } from '@/types/drizzle';
-import { IconBaseProps } from 'react-icons';
-import {
-  FaRegHandshake,
-  FaBook,
-  FaRegQuestionCircle,
-  FaRegCheckCircle,
-  FaExclamation,
-  FaAsterisk,
-  FaRegHandPeace,
-} from 'react-icons/fa';
-import { FaMars, FaVenus, FaMarsAndVenus } from 'react-icons/fa6';
-
-interface IconProps {
-  icon: React.ComponentType<IconBaseProps>;
-  props: IconBaseProps;
-}
-export const GenderIconMap: { [key: string]: IconProps } = {
-  male: {
-    icon: FaMars,
-    props: {
-      size: 12,
-      color: '#60a5fa',
-    },
-  },
-  female: {
-    icon: FaVenus,
-    props: {
-      size: 12,
-      color: '#f472b6',
-    },
-  },
-  default: {
-    icon: FaMarsAndVenus,
-    props: {
-      size: 12,
-      color: '#a78bfa',
-    },
-  },
-};
-
-export const DialogueIconMap: { [key: string]: IconProps } = {
-  greeting: {
-    icon: FaRegHandshake,
-    props: {
-      size: 20,
-      color: '#f7d599',
-    },
-  },
-  farewell: {
-    icon: FaRegHandPeace,
-    props: {
-      size: 20,
-      color: '#fd7e76',
-    },
-  },
-  story: {
-    icon: FaBook,
-    props: {
-      size: 20,
-      color: '#56a787',
-    },
-  },
-  question: {
-    icon: FaRegQuestionCircle,
-    props: {
-      size: 20,
-      color: '#99d7fe',
-    },
-  },
-  answer: {
-    icon: FaRegCheckCircle,
-    props: {
-      size: 20,
-      color: '#019cfd',
-    },
-  },
-  exclamation: {
-    icon: FaExclamation,
-    props: {
-      size: 20,
-      color: '#ea9700',
-    },
-  },
-  other: {
-    icon: FaAsterisk,
-    props: {
-      size: 20,
-      color: '#efefef',
-    },
-  },
-};
 
 export const DefaultDialogueTypes: FormOptions = [
   { label: 'greeting', value: 1 },
@@ -101,25 +10,6 @@ export const DefaultDialogueTypes: FormOptions = [
   { label: 'exclamation', value: 7 },
 ];
 
-export const AccentEmojiMap: { [key: string]: string } = {
-  american: '🇺🇸',
-  'british-essex': '🇬🇧',
-  irish: '🇮🇪',
-  australian: '🇦🇺',
-  british: '🇬🇧',
-  'english-swedish': '🇬🇧/🇸🇪',
-  'british-swedish': '🇬🇧/🇸🇪',
-  'american-swedish': '🇺🇸/🇸🇪',
-  'american-irish': '🇺🇸/🇮🇪',
-  'american-southern': '🤠',
-  'american (south)': '🤠',
-  'english-italian': '🇬🇧/🇮🇹',
-  italian: '🇮🇹',
-  swedish: '🇸🇪',
-  transatlantic: '🇬🇧/🇺🇸',
-  jolly: '🎅🏼',
-};
-
 export const DeleteModalMessages: { [key: string]: string } = {
   npc_id:
     'Are you sure you want to delete this NPC and all of its dialogue? This action cannot be undone.',
@@ -128,3 +18,80 @@ export const DeleteModalMessages: { [key: string]: string } = {
   campaign_id:
     'Are you sure you want to delete this campaign? This action cannot be undone.',
 };
+
+export interface DemoFile {
+  file: string;
+  iconName: string;
+  iconStyle?: string;
+  name: string;
+  text: string;
+}
+
+export const MultilingualFiles: DemoFile[] = [
+  {
+    file: '/audio/english.mp3',
+    iconName: 'IconUKFlag',
+    name: 'english',
+    text: 'Time heals all wounds.',
+  },
+  {
+    file: '/audio/spanish.mp3',
+    iconName: 'IconSpainFlag',
+    name: 'spanish',
+    text: 'El tiempo lo cura todo.',
+  },
+  {
+    file: '/audio/turkish.mp3',
+    iconName: 'IconTurkeyFlag',
+    name: 'turkish',
+    text: 'Zaman her şeyin ilacı.',
+  },
+];
+
+export const ContextualAwarenessFiles: DemoFile[] = [
+  {
+    file: '/audio/lovelies.mp3',
+    iconName: 'IconFaceKissWinkHeart',
+    iconStyle: 'text-primary',
+    name: 'pleasant',
+    text: 'Hello my little lovelies!',
+  },
+  {
+    file: '/audio/oops.mp3',
+    iconName: 'IconFaceGrinSweat',
+    iconStyle: 'text-success',
+    name: 'cheeky',
+    text: 'Oops, did I say hex? I meant... blessing!',
+  },
+  {
+    file: '/audio/dare.mp3',
+    iconName: 'IconFaceAngry',
+    iconStyle: 'text-danger',
+    name: 'angry',
+    text: 'How DARE you!',
+  },
+];
+
+export const ModelFiles: DemoFile[] = [
+  {
+    file: '/audio/carmen.mp3',
+    iconName: 'IconHatWizard',
+    iconStyle: 'text-primary',
+    name: 'carmen',
+    text: 'Perhaps a gluten-free potion would help?',
+  },
+  {
+    file: '/audio/doktor.mp3',
+    iconName: 'IconExperiment',
+    iconStyle: 'text-success',
+    name: 'doktor',
+    text: 'With an intellect as marvelous as my own, hygiene is of no import.',
+  },
+  {
+    file: '/audio/demon.mp3',
+    iconName: 'IconEmoticonDevilOutline',
+    iconStyle: 'text-danger',
+    name: 'demon',
+    text: "I don't 'just collect souls'.... I also collect Pokémon cards.",
+  },
+];

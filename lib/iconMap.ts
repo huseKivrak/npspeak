@@ -1,0 +1,86 @@
+import React from 'react';
+import {
+  IconUKFlag,
+  IconSpainFlag,
+  IconTurkeyFlag,
+  IconFaceKissWinkHeart,
+  IconFaceGrinSweat,
+  IconFaceAngry,
+  IconHatWizard,
+  IconExperiment,
+  IconEmoticonDevilOutline,
+  IconSendEmail,
+  IconError,
+  IconPlus,
+  IconDelete,
+  IconScrollEmoji,
+  IconSearch,
+  IconMoonFilled,
+  IconSunFilled,
+  IconGlobe,
+  IconWand,
+  IconBrain,
+} from '@/lib/icons';
+
+import {
+  FaAsterisk,
+  FaBook,
+  FaExclamation,
+  FaRegHandPeace,
+  FaRegHandshake,
+  FaRegCircleCheck,
+  FaRegCircleQuestion,
+} from 'react-icons/fa6';
+
+export interface IconMapType {
+  [key: string]: React.ElementType;
+}
+
+export const iconMap: IconMapType = {
+  IconUKFlag,
+  IconSpainFlag,
+  IconTurkeyFlag,
+  IconFaceKissWinkHeart,
+  IconFaceGrinSweat,
+  IconFaceAngry,
+  IconHatWizard,
+  IconExperiment,
+  IconEmoticonDevilOutline,
+  IconSendEmail,
+  IconError,
+  IconPlus,
+  IconDelete,
+  IconScrollEmoji,
+  IconSearch,
+  IconMoonFilled,
+  IconSunFilled,
+  IconGlobe,
+  IconBrain,
+  IconWand,
+  greeting: FaRegHandshake,
+  farewell: FaRegHandPeace,
+  story: FaBook,
+  question: FaRegCircleQuestion,
+  answer: FaRegCircleCheck,
+  exclamation: FaExclamation,
+  other: FaAsterisk,
+};
+
+export const AccentEmojiMap: { [key: string]: string } = {
+  american: '🇺🇸',
+  'british-essex': '🇬🇧',
+  irish: '🇮🇪',
+  australian: '🇦🇺',
+  british: '🇬🇧',
+  'english-swedish': '🇬🇧/🇸🇪',
+  'british-swedish': '🇬🇧/🇸🇪',
+  'american-swedish': '🇺🇸/🇸🇪',
+  'american-irish': '🇺🇸/🇮🇪',
+  'american-southern': '🤠',
+  'american (south)': '🤠',
+  'english-italian': '🇬🇧/🇮🇹',
+  italian: '🇮🇹',
+  swedish: '🇸🇪',
+  transatlantic: '🇬🇧/🇺🇸',
+  jolly: '🎅🏼',
+};
