@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema } from '@/database/drizzle/validation';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
-import { SendEmailIcon } from '@/components/icons';
+import { IconSendEmail } from '@/lib/icons';
 import { ActionStatus } from '@/types/drizzle';
 import { Input } from '@nextui-org/react';
 
@@ -110,7 +110,7 @@ export default function SignUpForm({ promoCode }: { promoCode?: string; }) {
           variant="flat"
           formAction={formAction}
           pendingText="creating account..."
-          endContent={<SendEmailIcon size={28} strokeWidth={2} />}
+          endContent={<IconSendEmail size={28} strokeWidth={2} />}
           className=" text-large tracking-wider"
           color="success"
           size="lg"

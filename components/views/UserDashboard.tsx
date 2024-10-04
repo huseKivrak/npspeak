@@ -3,7 +3,7 @@ import { CampaignWithNPCs, DetailedNPC } from '@/types/drizzle';
 import { CampaignListTable } from '../tables/CampaignListTable';
 import { NPCListTable } from '../tables/NPCListTable';
 import { Tabs, Tab, Chip, Button, Divider } from '@nextui-org/react';
-import { PlusIcon } from '../icons';
+import { IconPlus } from '../../lib/icons';
 
 import Link from 'next/link';
 import { UserProfile } from '@/actions/auth';
@@ -25,13 +25,13 @@ export function UserDashboard({
         <div className="flex space-x-4 mb-2 tracking-wider">
           <Link href="/npcs/create">
             <Button variant="flat">
-              <PlusIcon />
+              <IconPlus />
               <span>NPC</span>
             </Button>
           </Link>
           <Link href="/campaigns/create">
             <Button variant="flat">
-              <PlusIcon />
+              <IconPlus />
               <span>campaign</span>
             </Button>
           </Link>

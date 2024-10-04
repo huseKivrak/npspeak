@@ -7,11 +7,11 @@ import { useTheme } from 'next-themes';
 import { useIsSSR } from '@react-aria/ssr';
 import clsx from 'clsx';
 
-import { SunFilledIcon, MoonFilledIcon } from '@/components/icons';
+import { IconSunFilled, IconMoonFilled } from '@/lib/icons';
 
 export interface ThemeSwitchProps {
   className?: string;
-  classNames?: SwitchProps['classNames'];
+  classNames?: SwitchProps[ 'classNames' ];
 }
 
 export const ThemeSwitcher: FC<ThemeSwitchProps> = ({
@@ -34,9 +34,8 @@ export const ThemeSwitcher: FC<ThemeSwitchProps> = ({
     getWrapperProps,
   } = useSwitch({
     isSelected: theme === 'light' || isSSR,
-    'aria-label': `Switch to ${
-      theme === 'light' || isSSR ? 'dark' : 'light'
-    } mode`,
+    'aria-label': `Switch to ${theme === 'light' || isSSR ? 'dark' : 'light'
+      } mode`,
     onChange,
   });
 
@@ -73,9 +72,9 @@ export const ThemeSwitcher: FC<ThemeSwitchProps> = ({
         })}
       >
         {!isSelected || isSSR ? (
-          <SunFilledIcon color="#ede4da" />
+          <IconSunFilled color="#ede4da" />
         ) : (
-          <MoonFilledIcon color="#7e674c" />
+          <IconMoonFilled color="#7e674c" />
         )}
       </div>
     </Component>

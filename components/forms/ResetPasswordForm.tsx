@@ -3,11 +3,11 @@
 import { updatePasswordAction } from '@/actions/auth';
 import { useState } from 'react';
 import { Button, Input, Spinner } from '@nextui-org/react';
-import { SendEmailIcon } from '../icons';
+import { IconSendEmail } from '../../lib/icons';
 
 export default function ResetPasswordForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [ isSubmitting, setIsSubmitting ] = useState(false);
+  const [ errorMessage, setErrorMessage ] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,7 +54,7 @@ export default function ResetPasswordForm() {
           size="lg"
           color="success"
           isDisabled={isSubmitting}
-          endContent={!isSubmitting && <SendEmailIcon />}
+          endContent={!isSubmitting && <IconSendEmail />}
           type="submit"
         >
           {isSubmitting ? <Spinner /> : 'update'}

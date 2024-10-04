@@ -6,7 +6,7 @@ import {
   NavbarContent,
 } from '@nextui-org/navbar';
 import Link from 'next/link';
-import { ScrollEmojiIcon } from '../icons';
+import { IconScrollEmoji } from '../../lib/icons';
 import { ThemeSwitcher } from '../buttons/ThemeSwitcher';
 
 
@@ -22,7 +22,7 @@ export const Navbar = ({ children }: { children: React.ReactNode; }) => {
       <NavbarContent justify="start">
         <NavbarBrand as="li" className="gap-4">
           <Link href="/" className="flex justify-start items-center">
-            <ScrollEmojiIcon className="w-8 h-8 sm:w-16 sm:h-16" />
+            <IconScrollEmoji className="w-8 h-8 sm:w-16 sm:h-16" />
             <p className="text-xl sm:text-4xl tracking-widest font-thin font-alagard">
               npSpeak
             </p>

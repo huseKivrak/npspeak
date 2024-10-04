@@ -4,12 +4,12 @@ import { sendResetPasswordEmail } from '@/actions/auth';
 
 import { isValidEmail } from '@/utils/helpers/vercel';
 import { Button, Input, Spinner } from '@nextui-org/react';
-import { SendEmailIcon } from '../icons';
+import { IconSendEmail } from '../../lib/icons';
 
 export function ForgotPasswordForm() {
-  const [email, setEmail] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ email, setEmail ] = useState('');
+  const [ errorMessage, setErrorMessage ] = useState('');
+  const [ isSubmitting, setIsSubmitting ] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,7 +47,7 @@ export function ForgotPasswordForm() {
           size="lg"
           color="success"
           isDisabled={isSubmitting}
-          endContent={!isSubmitting && <SendEmailIcon />}
+          endContent={!isSubmitting && <IconSendEmail />}
           type="submit"
         >
           {isSubmitting ? <Spinner /> : 'Send reset link'}

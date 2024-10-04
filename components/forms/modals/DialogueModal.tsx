@@ -20,7 +20,7 @@ import {
   Textarea,
 } from '@nextui-org/react';
 import { useState } from 'react';
-import { PlusIcon } from '@/components/icons';
+import { IconPlus } from '@/lib/icons';
 
 type Inputs = z.infer<typeof dialogueSchema>;
 export function DialogueModal({
@@ -30,7 +30,7 @@ export function DialogueModal({
   npcId: number;
   className?: string;
 }) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ isSubmitting, setIsSubmitting ] = useState(false);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const {
@@ -68,7 +68,7 @@ export function DialogueModal({
         variant="flat"
         color="success"
         size="sm"
-        startContent={<PlusIcon />}
+        startContent={<IconPlus />}
       >
         <span className="tracking-tight">add dialogue</span>
       </Button>

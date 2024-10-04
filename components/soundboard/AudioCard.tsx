@@ -20,9 +20,9 @@ import {
   PiPlayBold as PlayIcon,
   PiPauseBold as PauseIcon,
 } from 'react-icons/pi';
-import { DialogueIcon } from '../icons';
 import { SoundboardDialogue } from '@/types/drizzle';
 import { formatTimer } from '@/utils/helpers/formatHelpers';
+import { RenderIcon } from '@/utils/renderIcon';
 
 export const AudioCard = ({
   dialogue,
@@ -31,12 +31,12 @@ export const AudioCard = ({
   dialogue: SoundboardDialogue;
   id: number;
 }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState<null | number>(null);
-  const [currentTime, setCurrentTime] = useState(0);
+  const [ isLoading, setIsLoading ] = useState(true);
+  const [ isPlaying, setIsPlaying ] = useState(false);
+  const [ isCompleted, setIsCompleted ] = useState(false);
+  const [ progress, setProgress ] = useState(0);
+  const [ duration, setDuration ] = useState<null | number>(null);
+  const [ currentTime, setCurrentTime ] = useState(0);
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -83,7 +83,7 @@ export const AudioCard = ({
       audio?.removeEventListener('timeupdate', updateProgress);
       audio?.removeEventListener('ended', onEnded);
     };
-  }, [dialogue.audio]);
+  }, [ dialogue.audio ]);
 
   const togglePlayPause = useCallback(() => {
     const audio = audioRef.current;
@@ -101,7 +101,7 @@ export const AudioCard = ({
         setIsPlaying(false);
       }
     }
-  }, [dialogue.audio]);
+  }, [ dialogue.audio ]);
 
   const timeRemaining =
     duration !== null ? formatTimer(duration - currentTime) : '--:--';
@@ -148,11 +148,11 @@ export const AudioCard = ({
             content={dialogue.type}
             placement="top"
             classNames={{
-              content: ['px-2 shadow-none'],
+              content: [ 'px-2 shadow-none' ],
             }}
           >
             <div className="m-2">
-              <DialogueIcon dialogueType={dialogue.type!} size={30} />
+              <RenderIcon iconName={dialogue.type!} size={30} />
             </div>
           </Tooltip>
         </CardHeader>

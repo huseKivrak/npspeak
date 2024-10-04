@@ -8,7 +8,7 @@ import { createCampaignAction } from '@/actions/db/campaigns';
 import { campaignSchema } from '@/database/drizzle/validation';
 import { ActionStatus } from '@/types/drizzle';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
-import { PlusIcon } from '../icons';
+import { IconPlus } from '../../lib/icons';
 import { FormOptions } from '@/types/drizzle';
 import {
   CheckboxGroup,
@@ -24,14 +24,14 @@ interface CampaignFormProps {
 
 type Inputs = z.infer<typeof campaignSchema>;
 export default function CampaignForm({ npcOptions }: CampaignFormProps) {
-  const [state, formAction] = useFormState<ActionStatus, FormData>(
+  const [ state, formAction ] = useFormState<ActionStatus, FormData>(
     createCampaignAction,
     {
       status: 'idle',
       message: '',
     }
   );
-  const [showAddNpc, setShowAddNpc] = useState(false);
+  const [ showAddNpc, setShowAddNpc ] = useState(false);
   const {
     register,
     formState: { errors },
@@ -53,7 +53,7 @@ export default function CampaignForm({ npcOptions }: CampaignFormProps) {
         });
       });
     }
-  }, [state, setError]);
+  }, [ state, setError ]);
 
   const hasNPCs = npcOptions && npcOptions.length > 0;
 
@@ -109,7 +109,7 @@ export default function CampaignForm({ npcOptions }: CampaignFormProps) {
             variant="flat"
             color="secondary"
             aria-label="add NPCs to campaign"
-            startContent={showAddNpc ? '' : <PlusIcon />}
+            startContent={showAddNpc ? '' : <IconPlus />}
           >
             {showAddNpc ? 'cancel' : 'NPC(s)'}
           </Button>

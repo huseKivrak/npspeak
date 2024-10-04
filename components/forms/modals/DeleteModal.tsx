@@ -12,7 +12,7 @@ import {
 import { ServerAction } from '@/types/drizzle';
 import { useFormState } from 'react-dom';
 import { DeleteModalMessages } from '@/lib/constants';
-import { DeleteIcon } from '../../icons';
+import { IconDelete } from '../../../lib/icons';
 import { SubmitButton } from '../../buttons/SubmitButton';
 
 export function DeleteModal({
@@ -52,7 +52,7 @@ export function DeleteModal({
           onPress={onOpen}
           aria-label={`Delete ${title}`}
         >
-          <DeleteIcon />
+          <IconDelete />
         </Button>
       </Tooltip>
       <Modal

@@ -2,7 +2,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { DetailedDialogue, DialogueRow } from '@/types/drizzle';
 import { Tooltip } from '@nextui-org/tooltip';
-import { DialogueIcon } from '../icons';
+import { RenderIcon } from '@/utils/renderIcon';
 import { DeleteModal } from '../forms/modals/DeleteModal';
 import { deleteDialogueAction } from '@/actions/db/dialogue';
 import { TTSModal } from '../forms/modals/TTSModal';
@@ -296,7 +296,7 @@ export const DialogueListTable = ({
               closeDelay={200}
             >
               <div className="flex justify-center">
-                <DialogueIcon dialogueType={dialogue.type} />
+                <RenderIcon iconName={dialogue.type} />
               </div>
             </Tooltip>
           );
