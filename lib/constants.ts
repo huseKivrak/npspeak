@@ -95,3 +95,6 @@ export const ModelFiles: DemoFile[] = [
     text: "I don't 'just collect souls'.... I also collect Pokémon cards.",
   },
 ];
+
+export const SupportedLanguages =
+  'English, Japanese, Chinese, German, Hindi, French, Korean, Portuguese, Italian, Spanish, Indonesian, Dutch, Turkish, Filipino, Polish, Swedish, Bulgarian, Romanian, Arabic, Czech, Greek, Finnish, Croatian, Malay, Slovak, Danish, Tamil, Ukrainian, Russian, Hungarian, Norwegian, Vietnamese';
