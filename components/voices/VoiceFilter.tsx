@@ -34,14 +34,14 @@ export function VoiceFilter({
     };
 
   const handleChipClose = (filterType: FilterKey, value: string) => {
-    const newSet = new Set(selectedOptions[filterType]);
+    const newSet = new Set(selectedOptions[ filterType ]);
     newSet.delete(value);
     updateFilter(filterType, newSet);
   };
 
   useEffect(() => {
     onFilterChange(filteredVoices);
-  }, [filteredVoices, onFilterChange]);
+  }, [ filteredVoices, onFilterChange ]);
 
   return (
     <div className="flex flex-col space-y-2">
