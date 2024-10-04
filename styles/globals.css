@@ -8,11 +8,11 @@
   }
 
   h2 {
-    @apply text-foreground text-balance font-mono font-semibold tracking-tighter text-xl md:text-3xl lg:text-4xl;
+    @apply text-foreground text-balance font-mono font-medium tracking-tighter text-2xl md:text-3xl lg:text-4xl xl:text-5xl;
   }
 }
 
-.fadeInFirst {
+/* .fadeInFirst {
   opacity: 0;
   animation: fadeInFirst 1s ease-in-out forwards;
 }
@@ -75,4 +75,4 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
+} */
