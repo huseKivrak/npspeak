@@ -1,4 +1,3 @@
-import { cn } from '@/utils/helpers/clsxMerge';
 import { Button } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
 import { FaVolumeUp } from 'react-icons/fa';
@@ -49,7 +48,6 @@ export function AudioButton({
       onClick={togglePlayback}
       className={props.className}
       radius="full"
-      size="lg"
       color="warning"
 
       endContent={
