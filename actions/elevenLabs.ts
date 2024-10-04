@@ -18,13 +18,10 @@ import { ActionStatus } from '@/types/drizzle';
 //todo: save as json, revalidating periodically?
 export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
   try {
-    const response = await fetch(
-      `${ELEVENLABS_BASE_URL}/voices?show_legacy=true`,
-      {
-        method: 'GET',
-        headers: ELEVENLABS_API_HEADERS,
-      }
-    );
+    const response = await fetch(`${ELEVENLABS_BASE_URL}/voices`, {
+      method: 'GET',
+      headers: ELEVENLABS_API_HEADERS,
+    });
     const data = await response.json();
     const allVoices: ElevenLabsVoice[] = data.voices;
     const normalizedVoices = transformAndNormalizeAllVoices(allVoices);
