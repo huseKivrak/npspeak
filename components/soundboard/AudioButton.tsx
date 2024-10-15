@@ -15,12 +15,19 @@ export function AudioButton({
 
   const togglePlayback = () => {
     if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
+      const playbackAction = isPlaying ? audioRef.current.pause() : audioRef.current.play();
+
+      if (!isPlaying) {
+        (playbackAction as Promise<void>)
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch((error) => {
+            console.error('Playback error:', error);
+          });
       } else {
-        audioRef.current.play();
+        setIsPlaying(false);
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
@@ -39,7 +46,7 @@ export function AudioButton({
         audioRef.current.removeEventListener('ended', handleEnded);
       }
     };
-  }, []);
+  }, [ src ]);
 
   return (
     <Button
