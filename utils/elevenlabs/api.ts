@@ -41,6 +41,7 @@ export function transformAndNormalizeLabels(
     use_case: 'useCase',
     accent: 'accent',
     description: 'description',
+    descriptive: 'description',
     age: 'age',
     gender: 'gender',
   };
@@ -56,16 +57,23 @@ export function transformAndNormalizeLabels(
   //Normalize and trim labels/values
   Object.entries(voice.labels).forEach(([label, value]) => {
     const trimmedLabel = label.trim();
-    const normalizedLabel = labelMap[trimmedLabel] || trimmedLabel;
+    const normalizedLabel = labelMap[trimmedLabel] || undefined;
 
-    let trimmedValue = value ? value.toLowerCase().trim() : '';
-    if (normalizedLabel === 'age' && trimmedValue === 'middle aged') {
-      trimmedValue = 'middle-aged';
+    if (normalizedLabel) {
+      let trimmedValue = value ? value.toLowerCase().trim() : '';
+
+      //age normalization
+      //todo: make more generic/refactor
+      if (normalizedLabel === 'age' && trimmedValue === 'middle aged') {
+        trimmedValue = 'middle-aged';
+      }
+      normalizedLabels[normalizedLabel] = trimmedValue;
+    } else {
+      console.warn(`Unexpected label "${trimmedLabel}" encountered.`);
     }
-    normalizedLabels[normalizedLabel] = trimmedValue;
   });
 
-  //Transform voice object into a format more usable in ReactSelect components
+  //transform into ui component-friendly format
   const transformedVoice: VoiceOptionProps = {
     label: voice.name,
     value: voice.voice_id,
@@ -75,6 +83,7 @@ export function transformAndNormalizeLabels(
     description: normalizedLabels.description || '',
     useCase: normalizedLabels.useCase || '',
     sampleURL: voice.preview_url,
+    summary: voice.description || '',
   };
   return transformedVoice;
 }
@@ -82,9 +91,21 @@ export function transformAndNormalizeLabels(
 export const transformAndNormalizeAllVoices = (
   voices: ElevenLabsVoice[]
 ): VoiceOptionProps[] => {
-  return voices
-    .map(transformAndNormalizeLabels)
-    .sort((a, b) => a.label.localeCompare(b.label));
+  const transformedVoices = voices.map(transformAndNormalizeLabels);
+
+  //separate custom voices by filtering for summary
+  const voicesWithSummary = transformedVoices.filter((voice) => voice.summary);
+  const voicesWithoutSummary = transformedVoices.filter(
+    (voice) => !voice.summary
+  );
+
+  // sort both arrays alphabetically by label (name)
+  const sortByLabel = (a: VoiceOptionProps, b: VoiceOptionProps) =>
+    a.label.localeCompare(b.label);
+  voicesWithSummary.sort(sortByLabel);
+  voicesWithoutSummary.sort(sortByLabel);
+
+  return [...voicesWithSummary, ...voicesWithoutSummary];
 };
 
 export const createSharedVoiceQuery = (
