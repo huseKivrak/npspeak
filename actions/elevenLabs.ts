@@ -4,15 +4,9 @@ import {
   ELEVENLABS_BASE_URL,
   ELEVENLABS_API_HEADERS,
   transformAndNormalizeAllVoices,
-  createSharedVoiceQuery,
 } from '../utils/elevenlabs/api';
 
-import {
-  ElevenLabsVoice,
-  SharedElevenLabsVoice,
-  SharedElevenLabsVoiceQueryProps,
-  VoiceOptionProps,
-} from '@/types/elevenlabs';
+import { ElevenLabsVoice } from '@/types/elevenlabs';
 import { ActionStatus } from '@/types/drizzle';
 
 //todo: save as json, revalidating periodically?
@@ -29,46 +23,6 @@ export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
     return {
       status: 'success',
       message: 'Retrieved all voices',
-      data: normalizedVoices,
-    };
-  } catch (error) {
-    console.error(error);
-    return { status: 'error', message: `Error: ${error}` };
-  }
-}
-
-//todo: format to align with premades
-export async function getAllSharedElevenLabsVoices(
-  queryProps: SharedElevenLabsVoiceQueryProps = {
-    page_size: 100,
-  }
-): Promise<ActionStatus> {
-  try {
-    const response = await fetch(
-      `${ELEVENLABS_BASE_URL}/shared-voices?${createSharedVoiceQuery(queryProps)}`,
-      {
-        method: 'GET',
-        headers: ELEVENLABS_API_HEADERS,
-      }
-    );
-    const data = await response.json();
-    const allVoices: SharedElevenLabsVoice[] = data.voices;
-    const normalizedVoices: VoiceOptionProps[] = allVoices.map((voice) => {
-      return {
-        label: voice.name,
-        value: voice.voice_id,
-        gender: voice.gender,
-        age: voice.age,
-        accent: voice.accent,
-        description: voice.descriptive,
-        use_case: voice.use_case,
-        sampleURL: voice.preview_url,
-        useCase: voice.use_case,
-      };
-    });
-    return {
-      status: 'success',
-      message: 'Retrieved all shared voices',
       data: normalizedVoices,
     };
   } catch (error) {
