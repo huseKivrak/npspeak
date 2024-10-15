@@ -296,7 +296,7 @@ export const DialogueListTable = ({
               closeDelay={200}
             >
               <div className="flex justify-center">
-                <RenderIcon iconName={dialogue.type} />
+                <RenderIcon iconName={dialogue.type} isDialogue={true} />
               </div>
             </Tooltip>
           );
