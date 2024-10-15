@@ -26,7 +26,7 @@ export function VoiceFilter({
     resetFilters,
   } = useVoiceFilter(voices);
 
-  const { accent, useCase, description } = allFilterOptions;
+  const { accent, description } = allFilterOptions;
 
   const handleSelectionChange =
     (filterType: FilterKey) => (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -44,14 +44,14 @@ export function VoiceFilter({
   }, [ filteredVoices, onFilterChange ]);
 
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="flex flex-col">
       <div className="flex space-x-8 justify-end">
         <Tooltip content="clear filters" size="sm">
           <Button
             type="button"
             onClick={resetFilters}
+            radius="sm"
             size="sm"
-            radius="full"
             variant="flat"
             color="danger"
             className="h-min py-1"
@@ -61,7 +61,7 @@ export function VoiceFilter({
           </Button>
         </Tooltip>
       </div>
-      <div className="flex items-start justify-between">
+      <div className="flex flex-wrap py-2 justify-end gap-2">
         <Select
           aria-label="select gender"
           placeholder="gender"
@@ -72,7 +72,7 @@ export function VoiceFilter({
           radius="sm"
           variant="flat"
           isMultiline
-          className="w-1/3 pr-2"
+          className="w-full sm:w-1/3 md:w-1/6"
           classNames={{
             value: 'flex items-center justify-center',
           }}
@@ -133,7 +133,7 @@ export function VoiceFilter({
           radius="sm"
           variant="flat"
           isMultiline
-          className="w-1/3 px-1"
+          className="w-full sm:w-1/3 md:w-1/6"
           classNames={{
             value: 'flex items-center justify-center',
           }}
@@ -212,7 +212,7 @@ export function VoiceFilter({
           radius="sm"
           variant="flat"
           isMultiline
-          className="w-1/3 pl-2"
+          className="w-full sm:w-1/3 md:w-1/6"
           classNames={{
             value: 'flex items-center justify-center',
           }}
@@ -250,7 +250,58 @@ export function VoiceFilter({
             </SelectItem>
           ))}
         </Select>
+        <Select
+          aria-label="select description"
+          placeholder="description"
+          selectionMode="multiple"
+          selectedKeys={selectedOptions.description}
+          onChange={handleSelectionChange('description')}
+          size="sm"
+          variant="flat"
+          radius="sm"
+          isMultiline
+          className="w-full sm:w-1/3 md:w-1/4"
+          classNames={{
+            value: 'text-center',
+            trigger: 'justify-center',
+          }}
+          popoverProps={{
+            classNames: {
+              base: 'max-w-fit',
+            },
+          }}
+          renderValue={(items) => {
+            return (
+              <div className="flex flex-wrap gap-2">
+                {items.map((item) => (
+                  <Chip
+                    variant="light"
+                    color="secondary"
+                    size="sm"
+                    key={item.key}
+                    className="text-sm tracking-tighter"
+                    classNames={{
+                      closeButton: 'text-sm',
+                    }}
+                    onClose={() =>
+                      handleChipClose('description', item.key as string)
+                    }
+                  >
+                    {item.textValue}
+                  </Chip>
+                ))}
+              </div>
+            );
+          }}
+        >
+          {description.sort().map((d) => (
+            <SelectItem key={d} value={d}>
+              {d}
+            </SelectItem>
+          ))}
+        </Select>
       </div>
+      {/*
       <div className="flex items-start justify-between">
         <Select
           selectionMode="multiple"
@@ -298,59 +349,11 @@ export function VoiceFilter({
           {useCase.sort().map((useCase) => (
             <SelectItem key={useCase}>{useCase}</SelectItem>
           ))}
-        </Select>
+      </Select>
 
-        <Select
-          aria-label="select description"
-          placeholder="description"
-          selectionMode="multiple"
-          selectedKeys={selectedOptions.description}
-          onChange={handleSelectionChange('description')}
-          size="sm"
-          variant="flat"
-          radius="sm"
-          isMultiline
-          className="w-1/2 pl-2"
-          classNames={{
-            value: 'text-center',
-            trigger: 'justify-center',
-          }}
-          popoverProps={{
-            classNames: {
-              base: 'max-w-fit',
-            },
-          }}
-          renderValue={(items) => {
-            return (
-              <div className="flex flex-wrap gap-2">
-                {items.map((item) => (
-                  <Chip
-                    variant="light"
-                    color="secondary"
-                    size="sm"
-                    key={item.key}
-                    className="text-sm tracking-tighter"
-                    classNames={{
-                      closeButton: 'text-sm',
-                    }}
-                    onClose={() =>
-                      handleChipClose('description', item.key as string)
-                    }
-                  >
-                    {item.textValue}
-                  </Chip>
-                ))}
-              </div>
-            );
-          }}
-        >
-          {description.sort().map((d) => (
-            <SelectItem key={d} value={d}>
-              {d}
-            </SelectItem>
-          ))}
-        </Select>
+
       </div>
-    </div>
+           */}
+    </div >
   );
 }
