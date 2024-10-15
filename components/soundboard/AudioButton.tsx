@@ -43,18 +43,17 @@ export function AudioButton({
 
   return (
     <Button
-      isIconOnly
-      variant="light"
+      isIconOnly={props.isIconOnly ?? true}
+      variant={props.variant ?? 'light'}
       onClick={togglePlayback}
       className={props.className}
-      radius="full"
-      color="warning"
-
+      radius={props.radius ?? 'full'}
+      color={props.color ?? 'warning'}
       endContent={
         isPlaying ? <FaCircleStop size={28} /> : <FaVolumeUp size={28} />
       }
     >
-      <audio ref={audioRef} src={src} {...props} />
+      <audio ref={audioRef} src={src} />
     </Button>
   );
 }
