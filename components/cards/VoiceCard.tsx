@@ -1,10 +1,11 @@
 'use client';
 
 import { AudioButton } from '../soundboard/AudioButton';
-import { Button, Card, CardBody, CardHeader, Chip } from '@nextui-org/react';
+import { Button, Card, CardBody, CardFooter, CardHeader, Chip } from '@nextui-org/react';
 import { VoiceOptionProps } from '@/types/elevenlabs';
 import { cn } from '@/utils/helpers/clsxMerge';
 import { FaCheck, FaPlus } from 'react-icons/fa6';
+
 
 export function VoiceCard({
   voice,
@@ -15,52 +16,89 @@ export function VoiceCard({
   onSelect: (id: string) => void;
   isSelected?: boolean;
 }) {
-  const { label, value, accent, description, sampleURL, useCase } = voice;
+  const { label, value, accent, description, sampleURL, summary } = voice;
 
   return (
     <Card
       shadow="lg"
       className={cn(
-        'max-w-[400px] w-full p-2',
-        'transition-all duration-200 ease-in-out',
+        'max-w-[300px] h-[200px] px-2',
+        'transition-transform duration-200 ease-in-out',
         isSelected &&
-          'ring-2 ring-warning-700 text-warning-700 shadow-sm transform scale-[1.05]'
+        'ring-2 ring-warning text-warning-700 shadow-sm transform scale-105'
       )}
     >
-      <CardHeader className="flex flex-col items-start gap-2">
+      <CardHeader className="flex flex-col items-start gap-2 pb-0">
         <span
           className={cn(
             'font-alagard text-4xl tracking-widest',
-            isSelected && ''
+            isSelected && 'text-warning'
           )}
         >
           {label.toLowerCase()}
         </span>
-        <div className="flex justify-between w-full gap-2">
-          <Chip variant="faded" color="primary">{`${description} `}</Chip>
-          <Chip variant="faded" color="danger">{`${accent} `}</Chip>
-          <Chip variant="faded" color="secondary">{`${useCase} `}</Chip>
+        <div className="flex gap-4 font-mono">
+          <Chip
+            variant="solid"
+            color="primary"
+            size='sm'
+            radius='lg'
+            classNames={
+              {
+                base: 'h-min',
+                content: 'text-sm'
+              }
+            }
+          >
+            {`${description} `}
+          </Chip>
+          <Chip
+            variant="solid"
+            color="secondary"
+            size='sm'
+            radius='lg'
+            classNames={
+              {
+                base: 'h-min',
+                content: 'text-sm'
+              }
+            }
+          >
+            {`${accent} `}
+          </Chip>
         </div>
       </CardHeader>
+      <CardBody className="py-0 justify-center">
+        <p className="text-sm lg:text-base lg:leading-tight text-default-400 lowercase font-mono text-pretty tracking-tight">
+          {summary || 'a default voice model'}
+        </p>
+      </CardBody>
+      <CardFooter className='justify-evenly gap-2 h-14'>
 
-      <CardBody className="flex-row items-center justify-evenly space-x-2">
-        <AudioButton src={sampleURL} />
+        <AudioButton
+          src={sampleURL}
+          variant='flat'
+          radius='lg'
+          fullWidth={true}
+          isIconOnly={false}
+        />
 
         <Button
+          fullWidth
           isDisabled={isSelected}
-          variant="light"
-          radius="full"
+          variant="flat"
+          radius="lg"
           startContent={
             isSelected ? <FaCheck size={24} /> : <FaPlus size={24} />
           }
           onPress={() => onSelect(value)}
           color="success"
         >
-          <span className="font-mono text-tiny">
+          <span className="font-mono text-tiny font-semibold">
             {isSelected ? 'selected' : 'select'}
           </span>
         </Button>
-      </CardBody>
+      </CardFooter>
     </Card>
   );
 }
