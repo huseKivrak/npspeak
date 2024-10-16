@@ -32,10 +32,10 @@ export const NPCForm = ({
   voiceOptions,
   npcToUpdate,
 }: NPCFormProps) => {
-  const [filteredVoices, setFilteredVoices] =
+  const [ filteredVoices, setFilteredVoices ] =
     useState<VoiceOptionProps[]>(voiceOptions);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ isSubmitting, setIsSubmitting ] = useState(false);
 
   const {
     register,
@@ -105,171 +105,175 @@ export const NPCForm = ({
   };
 
   return (
-    <form
-      id="npc-form"
-      className="flex flex-col w-full gap-2"
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <div className='flex flex-col w-full gap-4'>
       <h1>create an NPC</h1>
-      <div className="flex">
-        {/* Left Column */}
-        <div className="flex flex-col w-1/5 gap-4">
-          <Input
-            isRequired
-            {...register('npc_name')}
-            name="npc_name"
-            label="name"
-            defaultValue={npcToUpdate?.npc_name}
-            className="max-w-full"
-            placeholder=" "
-            size="sm"
-            isInvalid={!!errors.npc_name}
-            errorMessage={
-              errors.npc_name?.message === 'Required'
-                ? 'your NPC needs a name!'
-                : errors.npc_name?.message
-            }
-            variant="flat"
-            classNames={{
-              inputWrapper: 'h-[64px] font-mono',
-              label: 'text-md',
-            }}
-          />
-          <Textarea
-            {...register('description')}
-            name="description"
-            label="description"
-            defaultValue={npcToUpdate?.description}
-            placeholder=" "
-            className="max-w-full"
-            size="sm"
-            minRows={1}
-            maxRows={3}
-            isInvalid={!!errors.description}
-            errorMessage={errors.description?.message}
-            classNames={{
-              innerWrapper: 'h-fit',
-              label: 'font-mono text-md',
-            }}
-          />
+      <p className='text-lg lg:text-3xl font-mono'>
+        NPCs just need a name and a voice, but you can also add a description and assign them to campaigns.
+      </p>
 
-          {hasCampaigns && (
-            <Controller
-              name="campaign_ids"
-              control={control}
-              render={({ field: { value, onChange, ...field } }) => (
-                <Select
-                  {...field}
-                  selectionMode="multiple"
-                  label="add to campaign(s)"
-                  placeholder=" "
-                  color="secondary"
-                  variant="bordered"
-                  size="sm"
-                  isMultiline={true}
-                  onSelectionChange={(keys) => {
-                    onChange(Array.from(keys).map(Number));
-                  }}
-                  isInvalid={!!errors.campaign_ids}
-                  errorMessage={errors.campaign_ids?.message}
-                  classNames={{
-                    base: 'max-w-full',
-                    label: 'font-mono',
-                    innerWrapper: 'h-fit',
-                    trigger: 'min-h-12 py-2',
-                  }}
-                  popoverProps={{
-                    classNames: {},
-                  }}
-                  renderValue={(selected) => {
-                    return (
-                      <div className="flex flex-wrap gap-2">
-                        {selected.map((item) => (
-                          <Chip
-                            key={item.key}
-                            color="secondary"
-                            size="sm"
-                            variant="flat"
-                            className="text-xs"
-                          >
-                            {item.textValue}
-                          </Chip>
-                        ))}
-                      </div>
-                    );
-                  }}
-                >
-                  {campaignOptions.map((item) => (
-                    <SelectItem
-                      key={item.value}
-                      value={item.value}
-                      textValue={item.label}
-                      className="tracking-tighter"
-                    >
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
+      <form
+        id="npc-form"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="flex flex-col md:flex-row justify-between">
+
+          {/* Left Column */}
+          <div className="flex flex-col w-full md:w-1/5 gap-4">
+            <Input
+              isRequired
+              {...register('npc_name')}
+              name="npc_name"
+              label="name"
+              defaultValue={npcToUpdate?.npc_name}
+              className="max-w-full"
+              placeholder=" "
+              size="sm"
+              isInvalid={!!errors.npc_name}
+              errorMessage={
+                errors.npc_name?.message === 'Required'
+                  ? 'your NPC needs a name!'
+                  : errors.npc_name?.message
+              }
+              variant="flat"
+              classNames={{
+                inputWrapper: 'h-[64px] font-mono',
+              }}
             />
-          )}
-          <Input
-            isRequired
-            isClearable
-            readOnly
-            onClear={() => {
-              setValue('voice_id', '');
-            }}
-            label="selected voice"
-            placeholder=" "
-            defaultValue={getVoiceLabel(npcToUpdate?.voice_id)}
-            value={getVoiceLabel(watchVoiceId)}
-            className="max-w-full"
-            isInvalid={!!errors.voice_id}
-            errorMessage={
-              errors.voice_id?.message === 'Required'
-                ? 'your NPC needs a voice!'
-                : errors.voice_id?.message
-            }
-            classNames={{
-              input: 'text-warning',
-              label: 'font-mono text-sm text-foreground/60',
-            }}
-          />
-          <Button
-            type="submit"
-            color="success"
-            className="my-4"
-            size="lg"
-            isLoading={isSubmitting}
-          >
-            {isSubmitting ? 'creating...' : 'create!'}
-          </Button>
-        </div>
+            <Textarea
+              {...register('description')}
+              name="description"
+              label="description"
+              defaultValue={npcToUpdate?.description}
+              placeholder=" "
+              className="max-w-full"
+              size="sm"
+              minRows={1}
+              maxRows={3}
+              isInvalid={!!errors.description}
+              errorMessage={errors.description?.message}
+              classNames={{
+                innerWrapper: 'h-fit',
+                label: 'font-mono',
+              }}
+            />
 
-        {/* Right Column */}
-        <div className="flex flex-col w-4/5 space-y-4 ml-4">
-          <VoiceFilter
-            voices={voiceOptions}
-            onFilterChange={setFilteredVoices}
-          />
-
-          <Controller
-            name="voice_id"
-            control={control}
-            render={({ field }) => (
-              <VoiceGrid
-                {...field}
-                voices={filteredVoices}
-                onSelectVoice={(selectedVoiceId) => {
-                  field.onChange(selectedVoiceId);
-                }}
-                selectedVoiceId={field.value}
+            {hasCampaigns && (
+              <Controller
+                name="campaign_ids"
+                control={control}
+                render={({ field: { value, onChange, ...field } }) => (
+                  <Select
+                    {...field}
+                    selectionMode="multiple"
+                    label="add to campaign(s)"
+                    placeholder=" "
+                    variant="bordered"
+                    size="sm"
+                    isMultiline={true}
+                    onSelectionChange={(keys) => {
+                      onChange(Array.from(keys).map(Number));
+                    }}
+                    isInvalid={!!errors.campaign_ids}
+                    errorMessage={errors.campaign_ids?.message}
+                    classNames={{
+                      base: 'max-w-full',
+                      label: 'font-mono',
+                      innerWrapper: 'h-fit',
+                      trigger: 'min-h-12 py-2',
+                    }}
+                    popoverProps={{
+                      classNames: {},
+                    }}
+                    renderValue={(selected) => {
+                      return (
+                        <div className="flex flex-wrap gap-2">
+                          {selected.map((item) => (
+                            <Chip
+                              key={item.key}
+                              color="secondary"
+                              size="sm"
+                              variant="flat"
+                              className="text-xs"
+                            >
+                              {item.textValue}
+                            </Chip>
+                          ))}
+                        </div>
+                      );
+                    }}
+                  >
+                    {campaignOptions.map((item) => (
+                      <SelectItem
+                        key={item.value}
+                        value={item.value}
+                        textValue={item.label}
+                        className="tracking-tighter"
+                      >
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                )}
               />
             )}
-          />
+            <Input
+              isRequired
+              isClearable
+              readOnly
+              onClear={() => {
+                setValue('voice_id', '');
+              }}
+              label="selected voice"
+              placeholder=" "
+              defaultValue={getVoiceLabel(npcToUpdate?.voice_id)}
+              value={getVoiceLabel(watchVoiceId)}
+              className="max-w-full"
+              isInvalid={!!errors.voice_id}
+              errorMessage={
+                errors.voice_id?.message === 'Required'
+                  ? 'your NPC needs a voice!'
+                  : errors.voice_id?.message
+              }
+              classNames={{
+                input: 'text-warning',
+                label: 'font-mono text-foreground/60',
+              }}
+            />
+            <Button
+              type="submit"
+              color="success"
+              className="my-4"
+              size="lg"
+              isLoading={isSubmitting}
+            >
+              {isSubmitting ? 'creating...' : 'create!'}
+            </Button>
+          </div>
+
+          {/* Right Column */}
+          <div className="flex flex-col w-full md:w-3/4 space-y-4">
+            <VoiceFilter
+              voices={voiceOptions}
+              onFilterChange={setFilteredVoices}
+            />
+
+            <Controller
+              name="voice_id"
+              control={control}
+              render={({ field }) => (
+                <VoiceGrid
+                  {...field}
+                  voices={filteredVoices}
+                  onSelectVoice={(selectedVoiceId) => {
+                    field.onChange(selectedVoiceId);
+                  }}
+                  selectedVoiceId={field.value}
+                />
+              )}
+            />
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
