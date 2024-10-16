@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Pagination, Select, SelectItem } from '@nextui-org/react';
 import { VoiceOptionProps } from '@/types/elevenlabs';
 import { VoiceCard } from '../cards/VoiceCard';
@@ -14,8 +14,8 @@ export function VoiceGrid({
   onSelectVoice: (voiceId: string) => void;
   selectedVoiceId?: string;
 }) {
-  const [page, setPage] = useState(1);
-  const [voicesPerPage, setVoicesPerPage] = useState(6);
+  const [ page, setPage ] = useState(1);
+  const [ voicesPerPage, setVoicesPerPage ] = useState(12);
   const perPageOptions = [
     { label: '3', value: 3 },
     { label: '6', value: 6 },
@@ -25,7 +25,7 @@ export function VoiceGrid({
 
   const pages = useMemo(() => {
     return Math.ceil(voices.length / voicesPerPage);
-  }, [voices, voicesPerPage]);
+  }, [ voices, voicesPerPage ]);
 
   const handlePerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = parseInt(e.target.value, 10);
@@ -37,11 +37,11 @@ export function VoiceGrid({
     const end = start + voicesPerPage;
 
     return voices.slice(start, end);
-  }, [page, voices, voicesPerPage]);
+  }, [ page, voices, voicesPerPage ]);
 
   return (
     <div className="flex flex-col">
-      <div className="grid auto-rows-max grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 items-start justify-items-stretch">
+      <div className="grid auto-rows-max grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 lg:gap-6 items-start justify-items-stretch">
         {items.map((v) => (
           <VoiceCard
             voice={v}
@@ -51,15 +51,15 @@ export function VoiceGrid({
           />
         ))}
       </div>
-      <div className="flex items-center justify-end gap-8">
+      <div className="flex items-center justify-end gap-8 mt-4">
         <Pagination
           showControls
           size="lg"
-          variant="bordered"
-          color="secondary"
+          variant="light"
+          color="default"
           classNames={{
             wrapper: 'gap-2 overflow-visible h-8 md:h-12 font-alagard',
-            item: 'w-6 h-6 text-tiny rounded-full',
+            item: 'w-6 h-6 text-small rounded-full',
             cursor: 'w-6 h-6 text-tiny shadow-xl rounded-full',
           }}
           page={page}
@@ -72,7 +72,7 @@ export function VoiceGrid({
           color="warning"
           radius="none"
           aria-label="rows per page"
-          selectedKeys={[voicesPerPage.toString()]}
+          selectedKeys={[ voicesPerPage.toString() ]}
           onChange={handlePerPageChange}
           popoverProps={{
             placement: 'top-start',
