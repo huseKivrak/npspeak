@@ -22,7 +22,7 @@ export function VoiceCard({
     <Card
       shadow="lg"
       className={cn(
-        'max-w-[300px] h-[200px] px-2',
+        'max-w-[300px] h-[200px] ',
         'transition-transform duration-200 ease-in-out',
         isSelected &&
         'ring-2 ring-warning text-warning-700 shadow-sm transform scale-105'
@@ -31,7 +31,7 @@ export function VoiceCard({
       <CardHeader className="flex flex-col items-start gap-2 pb-0">
         <span
           className={cn(
-            'font-alagard text-4xl tracking-widest',
+            'font-alagard text-3xl',
             isSelected && 'text-warning'
           )}
         >
@@ -45,8 +45,8 @@ export function VoiceCard({
             radius='lg'
             classNames={
               {
-                base: 'h-min',
-                content: 'text-sm'
+                base: 'h-min p-0',
+                content: 'text-xs'
               }
             }
           >
@@ -59,8 +59,8 @@ export function VoiceCard({
             radius='lg'
             classNames={
               {
-                base: 'h-min',
-                content: 'text-sm'
+                base: 'h-min p-0',
+                content: 'text-xs'
               }
             }
           >
@@ -68,18 +68,18 @@ export function VoiceCard({
           </Chip>
         </div>
       </CardHeader>
-      <CardBody className="py-0 justify-center">
+      <CardBody className="py-0 px-2 justify-center">
         <p className="text-sm lg:text-base lg:leading-tight text-default-400 lowercase font-mono text-pretty tracking-tight">
           {summary || 'a default voice model'}
         </p>
       </CardBody>
-      <CardFooter className='justify-evenly gap-2 h-14'>
+      <CardFooter className='justify-evenly gap-2 h-10 items-center pb-5'>
 
         <AudioButton
           src={sampleURL}
           variant='flat'
           radius='lg'
-          fullWidth={true}
+          size='sm'
           isIconOnly={false}
         />
 
@@ -88,6 +88,7 @@ export function VoiceCard({
           isDisabled={isSelected}
           variant="flat"
           radius="lg"
+          size='sm'
           startContent={
             isSelected ? <FaCheck size={24} /> : <FaPlus size={24} />
           }
