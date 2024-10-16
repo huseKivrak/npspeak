@@ -56,6 +56,7 @@ export function AudioButton({
       className={props.className}
       radius={props.radius ?? 'full'}
       color={props.color ?? 'warning'}
+      size={props.size ?? 'md'}
       endContent={
         isPlaying ? <FaCircleStop size={28} /> : <FaVolumeUp size={28} />
       }
