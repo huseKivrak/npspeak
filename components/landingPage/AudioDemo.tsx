@@ -69,7 +69,7 @@ export const AudioDemo: React.FC<AudioDemoProps> = ({ title, iconName, iconStyle
                 shadow='sm'
                 className="border-none p-0"
               >
-                <CardBody className='w-full bg-default-200/40 p-1 h-32 justify-center break-words'>
+                <CardBody className='w-full bg-default-200/40 py-0 px-1 h-28 justify-center break-words'>
                   <span className="text-sm md:text-lg text-default-500 text-center text-balance font-alagard  italic">
                     &quot;{demo.text}&quot;
                   </span>
