@@ -28,7 +28,7 @@ export function VoiceCard({
         'ring-2 ring-warning text-warning-700 shadow-sm transform scale-105'
       )}
     >
-      <CardHeader className="flex flex-col items-start gap-2 pb-0">
+      <CardHeader className="flex flex-col items-start gap-3 pb-0">
         <span
           className={cn(
             'font-alagard text-3xl',
@@ -68,9 +68,9 @@ export function VoiceCard({
           </Chip>
         </div>
       </CardHeader>
-      <CardBody className="py-0 px-2 justify-center">
-        <p className="text-sm lg:text-base lg:leading-tight text-default-400 lowercase font-mono text-pretty tracking-tight">
-          {summary || 'a default voice model'}
+      <CardBody className="py-0 justify-center">
+        <p className="text-sm lg:text-base text-default-400 lowercase font-mono text-balance tracking-tight lg:tracking-tighter">
+          {summary || 'a generic voice'}
         </p>
       </CardBody>
       <CardFooter className='justify-evenly gap-2 h-10 items-center pb-5'>
