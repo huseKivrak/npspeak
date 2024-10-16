@@ -21,10 +21,9 @@ export const VoiceSampler = ({
   const { control } = useForm(); //just needed for VoiceSelect props
 
   return (
-    <div className="flex flex-col gap-2 sm:max-w-xl text-start">
-      <h2 >over 30 voices to choose from!</h2>
+    <div className="flex flex-col gap-2 sm:max-w-4xl text-start p-2">
 
-      <p className="text-medium md:text-large">listen to some samples:</p>
+      <p className="text-3xl font-mono">sample some voices:</p>
       <Controller
         name="voice_id"
         control={control}
@@ -41,9 +40,9 @@ export const VoiceSampler = ({
               Option: VoiceOption,
               SingleValue: VoiceSingleValue,
             }}
-            placeholder="Select a voice"
+            placeholder="select voice"
             isSearchable={false}
-            className="text-2xl"
+            className="text-2xl max-w-sm"
           />
         )}
       />
