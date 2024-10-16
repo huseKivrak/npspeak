@@ -6,7 +6,6 @@ import { VoiceSampler } from '@/components/landingPage/VoiceSampler';
 import { curatedVoices } from '@/lib/curatedVoices';
 
 
-
 export default async function Index() {
   const { user } = await getUserProfile();
   if (user) {
@@ -15,7 +14,7 @@ export default async function Index() {
 
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-8">
       <Hero />
       <Features />
       <VoiceSampler voiceOptions={curatedVoices} />
