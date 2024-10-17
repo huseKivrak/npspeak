@@ -20,6 +20,7 @@ import {
   IconGlobe,
   IconWand,
   IconBrain,
+  IconReset,
 } from '@/lib/icons';
 
 import {
@@ -57,6 +58,7 @@ export const iconMap: IconMapType = {
   IconGlobe,
   IconBrain,
   IconWand,
+  IconReset,
   greeting: FaRegHandshake,
   farewell: FaRegHandPeace,
   story: FaBook,
@@ -64,23 +66,4 @@ export const iconMap: IconMapType = {
   answer: FaRegCircleCheck,
   exclamation: FaExclamation,
   other: FaAsterisk,
-};
-
-export const AccentEmojiMap: { [key: string]: string } = {
-  american: '🇺🇸',
-  'british-essex': '🇬🇧',
-  irish: '🇮🇪',
-  australian: '🇦🇺',
-  british: '🇬🇧',
-  'english-swedish': '🇬🇧/🇸🇪',
-  'british-swedish': '🇬🇧/🇸🇪',
-  'american-swedish': '🇺🇸/🇸🇪',
-  'american-irish': '🇺🇸/🇮🇪',
-  'american-southern': '🤠',
-  'american (south)': '🤠',
-  'english-italian': '🇬🇧/🇮🇹',
-  italian: '🇮🇹',
-  swedish: '🇸🇪',
-  transatlantic: '🇬🇧/🇺🇸',
-  jolly: '🎅🏼',
 };

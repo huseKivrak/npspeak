@@ -3,7 +3,6 @@ import {
   DetailedDialogue,
   SoundboardDialogue,
 } from '@/types/drizzle';
-import { AccentEmojiMap } from '@/lib/iconMap';
 import { Tables } from '@/types/supabase';
 
 export const formatDialoguesForSoundboard = (
@@ -48,9 +47,6 @@ export const transformCampaignOptions = (
     label: campaign.campaign_name,
   }));
 };
-
-export const getAccentEmoji = (accent: string) =>
-  AccentEmojiMap[accent.toLowerCase()] || accent.toLowerCase();
 
 export const truncateText = (text: string, length: number) => {
   if (text.length > length) {
