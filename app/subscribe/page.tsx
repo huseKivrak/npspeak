@@ -4,10 +4,10 @@ import { getProducts, getSubscription } from '@/database/drizzle/stripeQueries';
 
 import { redirect } from 'next/navigation';
 import { getErrorRedirect } from '@/utils/helpers/vercel';
-import { SubscriptionWithPriceAndProduct } from '@/components/CustomerPortalForm';
+import { SubscriptionWithPriceAndProduct } from '@/components/forms/CustomerPortalForm';
 
 export default async function SubscribePage() {
-  const [{ user }, products] = await Promise.all([
+  const [ { user }, products ] = await Promise.all([
     getUserProfile(),
     getProducts(),
   ]);
