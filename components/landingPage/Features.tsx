@@ -37,7 +37,7 @@ export const Features = () => {
 
           <br />
           <br />
-          here&apos;s <span className='font-medium'>carmen, dr.doktor</span>, and the <span className='font-medium'>demon</span>!
+          here&apos;s <span className='font-medium'>carmen, dr.doktor</span>, and the <span className='font-medium'>demon</span>.
         </>
       ),
     },
