@@ -2,8 +2,6 @@
 
 import { useEffect } from 'react';
 import { Button, Tooltip, Select, SelectItem, Chip } from '@nextui-org/react';
-import { getAccentEmoji } from '@/utils/helpers/formatHelpers';
-import { capitalize } from '@/utils/helpers/formatHelpers';
 import { FaMale, FaFemale } from 'react-icons/fa';
 import { MdOutlineDirectionsWalk, MdOutlineElderly } from 'react-icons/md';
 import { BiChild } from 'react-icons/bi';
@@ -90,7 +88,7 @@ export function VoiceFilter({
                     size="sm"
                     key={item.key}
                     classNames={{
-                      closeButton: 'text-sm',
+                      closeButton: 'text-xs',
                     }}
                     onClose={() =>
                       handleChipClose('gender', item.key as string)
@@ -152,7 +150,7 @@ export function VoiceFilter({
                     radius="full"
                     key={item.key}
                     classNames={{
-                      closeButton: 'text-sm',
+                      closeButton: 'text-xs',
                     }}
                     onClose={() => handleChipClose('age', item.key as string)}
                   >
@@ -209,12 +207,11 @@ export function VoiceFilter({
           selectedKeys={selectedOptions.accent}
           onChange={handleSelectionChange('accent')}
           size="sm"
-          radius="sm"
-          variant="flat"
           isMultiline
-          className="w-full sm:w-1/3 md:w-1/6"
+          className="w-full sm:w-1/3 md:w-1/4"
           classNames={{
-            value: 'flex items-center justify-center',
+            value: 'text-center',
+            trigger: 'justify-center',
           }}
           popoverProps={{
             classNames: {
@@ -227,17 +224,18 @@ export function VoiceFilter({
                 {items.map((item) => (
                   <Chip
                     variant="light"
+                    color="warning"
                     size="sm"
-                    radius="full"
                     key={item.key}
+                    className="text-sm tracking-tighter"
                     classNames={{
-                      closeButton: 'text-sm',
+                      closeButton: 'text-xs',
                     }}
                     onClose={() =>
                       handleChipClose('accent', item.key as string)
                     }
                   >
-                    {getAccentEmoji(item.textValue!)}
+                    {item.textValue}
                   </Chip>
                 ))}
               </div>
@@ -246,7 +244,7 @@ export function VoiceFilter({
         >
           {accent.map((a) => (
             <SelectItem key={a} value={a} textValue={a}>
-              {capitalize(a)}
+              {a}
             </SelectItem>
           ))}
         </Select>
@@ -281,7 +279,7 @@ export function VoiceFilter({
                     key={item.key}
                     className="text-sm tracking-tighter"
                     classNames={{
-                      closeButton: 'text-sm',
+                      closeButton: 'text-xs',
                     }}
                     onClose={() =>
                       handleChipClose('description', item.key as string)
@@ -301,59 +299,6 @@ export function VoiceFilter({
           ))}
         </Select>
       </div>
-      {/*
-      <div className="flex items-start justify-between">
-        <Select
-          selectionMode="multiple"
-          placeholder="use case"
-          selectedKeys={selectedOptions.useCase}
-          onChange={handleSelectionChange('useCase')}
-          size="sm"
-          radius="sm"
-          variant="flat"
-          isMultiline
-          className="w-1/2 pr-1"
-          classNames={{
-            value: 'text-center',
-            trigger: 'justify-center',
-          }}
-          popoverProps={{
-            classNames: {
-              base: 'max-w-fit',
-            },
-          }}
-          renderValue={(items) => {
-            return (
-              <div className="flex flex-wrap gap-2">
-                {items.map((item) => (
-                  <Chip
-                    variant="light"
-                    color="primary"
-                    size="sm"
-                    key={item.key}
-                    className="text-sm tracking-tighter"
-                    classNames={{
-                      closeButton: 'text-sm',
-                    }}
-                    onClose={() =>
-                      handleChipClose('useCase', item.key as string)
-                    }
-                  >
-                    {item.textValue}
-                  </Chip>
-                ))}
-              </div>
-            );
-          }}
-        >
-          {useCase.sort().map((useCase) => (
-            <SelectItem key={useCase}>{useCase}</SelectItem>
-          ))}
-      </Select>
-
-
-      </div>
-           */}
     </div >
   );
 }
