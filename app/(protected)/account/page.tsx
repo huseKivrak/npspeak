@@ -1,7 +1,7 @@
 import { getUserProfile } from '@/actions/auth';
 import CustomerPortalForm, {
   SubscriptionWithPriceAndProduct,
-} from '@/components/CustomerPortalForm';
+} from '@/components/forms/CustomerPortalForm';
 import { getSubscription } from '@/database/drizzle/stripeQueries';
 import { getErrorRedirect } from '@/utils/helpers/vercel';
 import { redirect } from 'next/navigation';
