@@ -31,7 +31,7 @@ export const Navbar = ({ children }: { children: React.ReactNode; }) => {
       </NavbarContent>
       <NavbarContent justify="end">
         {children}
-        <ThemeSwitcher />
+        {/* <ThemeSwitcher /> */}
       </NavbarContent>
     </NextUINavbar>
   );
