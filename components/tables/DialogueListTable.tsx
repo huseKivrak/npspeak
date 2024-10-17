@@ -296,7 +296,7 @@ export const DialogueListTable = ({
               closeDelay={200}
             >
               <div className="flex justify-center">
-                <RenderIcon iconName={dialogue.type} isDialogue={true} />
+                <RenderIcon iconName={dialogue.type} isDialogue />
               </div>
             </Tooltip>
           );
@@ -404,7 +404,7 @@ export const DialogueListTable = ({
         emptyContent={
           <div className="flex flex-col items-center justify-center gap-4">
             <span className="text-lg font-mono">
-              This NPC has no dialogues yet. Create one!
+              this NPC has no dialogue yet.
             </span>
             <DialogueModal npcId={npcId} className="" />
           </div>
