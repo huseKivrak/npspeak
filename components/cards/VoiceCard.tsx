@@ -70,7 +70,7 @@ export function VoiceCard({
       </CardHeader>
       <CardBody className="py-0 justify-center">
         <p className="text-sm lg:text-base text-default-400 lowercase font-mono text-balance tracking-tight lg:tracking-tighter">
-          {summary || 'a generic voice'}
+          {summary || 'no description available'}
         </p>
       </CardBody>
       <CardFooter className='justify-evenly gap-2 h-10 items-center pb-5'>
