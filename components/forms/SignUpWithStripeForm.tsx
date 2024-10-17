@@ -6,7 +6,7 @@ import { getStripe } from '@/utils/stripe/client';
 import { checkoutWithStripe } from '@/utils/stripe/server';
 import { SubscriptionCard } from '../cards/SubscriptionCard';
 import { Tables } from '@/types/supabase';
-import { SubscriptionWithPriceAndProduct } from '../CustomerPortalForm';
+import { SubscriptionWithPriceAndProduct } from './CustomerPortalForm';
 
 type Price = Tables<'prices'>;
 type Product = Tables<'products'>;
@@ -29,7 +29,7 @@ export default function SignupWithStripeForm({
 }: Props) {
   const router = useRouter();
 
-  const [priceIdLoading, setPriceIdLoading] = useState<string>();
+  const [ priceIdLoading, setPriceIdLoading ] = useState<string>();
   const currentPath = usePathname();
 
   const handleStripeCheckout = async (price: Price) => {
@@ -71,13 +71,13 @@ export default function SignupWithStripeForm({
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:gap-8 justify-center py-4">
         {products
           .sort((a, b) => {
-            const aPrice: Price | null = a.prices[0] ?? null;
-            const bPrice: Price | null = b.prices[0] ?? null;
+            const aPrice: Price | null = a.prices[ 0 ] ?? null;
+            const bPrice: Price | null = b.prices[ 0 ] ?? null;
             if (!aPrice?.unit_amount || !bPrice?.unit_amount) return 0;
             return aPrice.unit_amount - bPrice.unit_amount;
           })
           .map((product) => {
-            const price = product.prices[0];
+            const price = product.prices[ 0 ];
             if (!price) return null;
             return (
               <SubscriptionCard
