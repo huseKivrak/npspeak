@@ -72,6 +72,7 @@ export const NPCDetail = ({
           title={
             <div className="flex items-center">
               <span>SOUNDBOARD</span>
+              <span className='text-tiny text-primary tracking-tighter font-mono ml-1 place-self-start'>beta</span>
             </div>
           }
         >
