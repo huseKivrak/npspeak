@@ -13,15 +13,9 @@ import {
   Button,
   Tooltip,
   Image,
-  Chip,
 } from '@nextui-org/react';
-import { cn } from '@/utils/helpers/clsxMerge';
-import {
-  PiPlayBold as PlayIcon,
-  PiPauseBold as PauseIcon,
-} from 'react-icons/pi';
 import { SoundboardDialogue } from '@/types/drizzle';
-import { formatTimer } from '@/utils/helpers/formatHelpers';
+import { formatTimer, truncateText } from '@/utils/helpers/formatHelpers';
 import { RenderIcon } from '@/utils/renderIcon';
 
 export const AudioCard = ({
@@ -103,21 +97,29 @@ export const AudioCard = ({
     }
   }, [ dialogue.audio ]);
 
+  const resetAudio = () => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.currentTime = 0;
+      setProgress(0);
+    }
+  };
+
   const timeRemaining =
     duration !== null ? formatTimer(duration - currentTime) : '--:--';
   const isPaused = currentTime > 0 && !isPlaying;
+
   const cardStyles = {
-    base: 'flex flex-col justify-center  w-[250px] h-[250px] transition-all ease-in-out duration-300',
-    playing: ' scale-105',
-    paused: ' scale-105 animate-pulse',
+    base: 'flex flex-col justify-center w-full h-full md:w-[200px] h-[200px] transition-all ease-in-out duration-300',
+    playing: '',
+    paused: 'animate-[pulse_2s_ease-in-out_infinite] bg-default',
     completed: '',
   };
 
   const progressStyles = {
-    base: 'max-w-md',
-    track: 'drop-shadow-md border border-default',
-    indicator: '',
-    label: 'tracking-wider font-medium ',
+    base: 'w-full',
+    track: '',
+    indicator: "bg-gradient-to-r from-success-600 to-success-400",
     value: '',
   };
 
@@ -129,64 +131,80 @@ export const AudioCard = ({
         ? cardStyles.paused
         : '';
 
+  const imageSrc = isPlaying ? '/images/pause_icon.svg' : '/images/play_icon.svg';
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
-      className="z-0 list-none"
+      className="list-none cursor-pointer"
       onClick={togglePlayPause}
     >
+      <audio ref={audioRef} src={dialogue.audio} preload="auto" />
+
       <Card
-        className={cn(cardStyles.base, currentStyle)}
-        shadow="lg"
-        radius="sm"
+        className={`${cardStyles.base} ${currentStyle}`}
       >
-        <CardHeader className=" z-10 h-5 justify-end p-1 pb-0">
-          <Tooltip
-            content={dialogue.type}
-            placement="top"
-            classNames={{
-              content: [ 'px-2 shadow-none' ],
-            }}
-          >
-            <div className="m-2">
-              <RenderIcon iconName={dialogue.type!} size={30} />
-            </div>
-          </Tooltip>
-        </CardHeader>
 
         <Image
           removeWrapper
+          src={imageSrc}
           alt="card background"
-          className="absolute z-0 w-full h-full object-cover p-2"
-          src={isPlaying ? '/images/pause_icon.svg' : '/images/play_icon.svg'}
+          className="absolute z-0 w-full h-full object-cover"
         />
 
-        <CardBody className="z-10 px-4 items-center justify-center max-h-[150px]">
-          <p className="text-center text-balance text-tiny">{dialogue.text}</p>
+
+        <CardHeader className="justify-end h-10 pb-0">
+          <Tooltip
+            content={dialogue.type}
+            placement="top"
+          >
+            <RenderIcon iconName={dialogue.type!} size={32} isDialogue className='opacity-40 mt-2' />
+          </Tooltip>
+        </CardHeader>
+
+        <CardBody className="pt-0 h-full justify-center ">
+          {dialogue.text.length > 50 ?
+            <Tooltip
+              content={dialogue.text}
+              classNames={
+                {
+                  base: 'max-w-xs',
+                  content: 'text-tiny tracking-tight p-4'
+                }
+              }
+            >
+              <span className="italic tracking-tight text-tiny font-mono text-default-500">{truncateText(dialogue.text, 50)}</span>
+            </Tooltip>
+            :
+            <span className="text-balance text-tiny font-mono text-default-500">{truncateText(dialogue.text, 75)}</span>
+          }
         </CardBody>
 
-        <CardFooter className="z-10 bottom-0 gap-1 px-1 my-1">
-          <audio ref={audioRef} src={dialogue.audio} preload="auto" />
+
+        <CardFooter className="py-4 px-2 gap-1">
           <Button
             isIconOnly
-            aria-label="play/pause"
-            className=" h-6 my-1"
-            size="sm"
+            aria-label="reset audio"
+            onClick={resetAudio}
+            size='sm'
+            radius='full'
+            variant='light'
           >
-            {isPlaying ? <PauseIcon /> : <PlayIcon />}
+            <RenderIcon iconName="IconReset" className='text-2xl' />
           </Button>
+
           <Progress
             size="lg"
-            aria-label="Audio progress"
+            aria-label="Audio played..."
             value={progress}
             classNames={progressStyles}
           />
-          <Chip variant="light">
-            <p className="text-secondary">{timeRemaining}</p>
-          </Chip>
+
+          <p className="font-mono">{timeRemaining}</p>
+
         </CardFooter>
       </Card>
     </div>
