@@ -1,8 +1,8 @@
 'use client';
-import { CampaignWithNPCs, DetailedNPC } from '@/types/drizzle';
+import { CampaignWithDetailedNPCs, DetailedNPC } from '@/types/drizzle';
 import { CampaignListTable } from '../tables/CampaignListTable';
 import { NPCListTable } from '../tables/NPCListTable';
-import { Tabs, Tab, Chip, Button, Divider } from '@nextui-org/react';
+import { Tabs, Tab, Chip, Button } from '@nextui-org/react';
 import { IconPlus } from '../../lib/icons';
 
 import Link from 'next/link';
@@ -14,7 +14,7 @@ export function UserDashboard({
   npcs,
 }: {
   user: UserProfile;
-  campaigns: CampaignWithNPCs[] | null;
+  campaigns: CampaignWithDetailedNPCs[] | null;
   npcs: DetailedNPC[] | null;
 }) {
   return (

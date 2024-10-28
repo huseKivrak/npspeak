@@ -1,7 +1,7 @@
 import { getUserProfile } from '@/actions/auth';
-import { redirect } from 'next/navigation';
-import { getCampaignsWithNPCs } from '@/database/drizzle/queries';
-import { CampaignWithNPCs } from '@/types/drizzle';
+import { notFound, redirect } from 'next/navigation';
+import { getCampaignWithDetailedNPCs } from '@/database/drizzle/queries';
+import { CampaignWithDetailedNPCs } from '@/types/drizzle';
 import { CampaignDetail } from '@/components/views/CampaignDetail';
 
 export default async function CampaignDetailPage({
@@ -12,14 +12,14 @@ export default async function CampaignDetailPage({
   };
 }) {
   const { user } = await getUserProfile();
-  if (!user) return redirect('/login');
+  if (!user) redirect('/login');
 
   const campaignId = params.campaignId;
-  const campaignResponse = await getCampaignsWithNPCs(campaignId);
-  const campaign: CampaignWithNPCs =
-    campaignResponse.status === 'success' ? campaignResponse.data : null;
 
-  if (campaign.user_id !== user.id) return <div>Unauthorized</div>;
+  const response = await getCampaignWithDetailedNPCs(user.id, campaignId);
+  if (response.status !== 'success') notFound();
+
+  const campaign: CampaignWithDetailedNPCs = response.data;
 
   return (
     <div>

@@ -1,10 +1,16 @@
-import { getCampaignsWithNPCs } from '@/database/drizzle/queries';
+import { getAllCampaignsWithDetailedNPCs } from '@/database/drizzle/queries';
 import { CampaignListTable } from '@/components/tables/CampaignListTable';
-import { CampaignWithNPCs } from '@/types/drizzle';
+import { CampaignWithDetailedNPCs } from '@/types/drizzle';
+import { getUserProfile } from '@/actions/auth';
+import { redirect } from 'next/navigation';
 
 export default async function UserCampaignsPage() {
-  const campaignResponse = await getCampaignsWithNPCs();
-  const campaigns: CampaignWithNPCs[] =
+  const { user } = await getUserProfile();
+  if (!user) redirect('/login');
+
+
+  const campaignResponse = await getAllCampaignsWithDetailedNPCs(user.id);
+  const campaigns: CampaignWithDetailedNPCs[] =
     campaignResponse.status === 'success' ? campaignResponse.data : [];
 
   return (

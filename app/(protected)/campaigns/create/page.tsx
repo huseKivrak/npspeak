@@ -1,7 +1,7 @@
 import CampaignForm from '@/components/forms/CampaignForm';
 import { getUserProfile } from '@/actions/auth';
 import { redirect } from 'next/navigation';
-import { getNPCsWithRelatedData } from '@/database/drizzle/queries';
+import { getAllDetailedNPCs } from '@/database/drizzle/queries';
 import { DetailedNPC } from '@/types/drizzle';
 
 export default async function CreateCampaignPage() {
@@ -9,7 +9,7 @@ export default async function CreateCampaignPage() {
   if (!user) {
     redirect('/login');
   }
-  const npcsResponse = await getNPCsWithRelatedData();
+  const npcsResponse = await getAllDetailedNPCs(user.id);
   const npcs: DetailedNPC[] =
     npcsResponse.status === 'success' ? npcsResponse.data : [];
   const npcOptions = npcs?.map((npc) => ({

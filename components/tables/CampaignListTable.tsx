@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useMemo, useState } from 'react';
-import { CampaignWithNPCs } from '@/types/drizzle';
+import { CampaignWithDetailedNPCs } from '@/types/drizzle';
 import {
   Table,
   TableHeader,
@@ -27,7 +27,7 @@ import { tableStyles } from '@/styles/tableStyles';
 export function CampaignListTable({
   campaigns,
 }: {
-  campaigns: CampaignWithNPCs[];
+  campaigns: CampaignWithDetailedNPCs[];
 }) {
   const [ filterValue, setFilterValue ] = useState('');
   const [ sortDescriptor, setSortDescriptor ] = useState<SortDescriptor>({
@@ -60,12 +60,12 @@ export function CampaignListTable({
   }, [ page, filteredItems ]);
 
   const sortedItems = useMemo(() => {
-    return [ ...items ].sort((a: CampaignWithNPCs, b: CampaignWithNPCs) => {
+    return [ ...items ].sort((a: CampaignWithDetailedNPCs, b: CampaignWithDetailedNPCs) => {
       const first = a[
-        sortDescriptor.column as keyof CampaignWithNPCs
+        sortDescriptor.column as keyof CampaignWithDetailedNPCs
       ] as number;
       const second = b[
-        sortDescriptor.column as keyof CampaignWithNPCs
+        sortDescriptor.column as keyof CampaignWithDetailedNPCs
       ] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
@@ -88,7 +88,7 @@ export function CampaignListTable({
   }, []);
 
   const renderCell = useCallback(
-    (campaign: CampaignWithNPCs, columnKey: React.Key) => {
+    (campaign: CampaignWithDetailedNPCs, columnKey: React.Key) => {
       switch (columnKey) {
         case 'campaign_name':
           return (
@@ -105,7 +105,7 @@ export function CampaignListTable({
         case 'npcs':
           return (
             <div className="flex flex-col items-start justify-start gap-1">
-              {campaign.npcs.length > 0 ? (
+              {campaign.npcs && campaign.npcs.length > 0 ? (
                 <Dropdown
                   showArrow
                   classNames={{
