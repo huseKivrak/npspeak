@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { getAllCampaigns } from '@/database/drizzle/queries';
 import { transformCampaignOptions } from '@/utils/helpers/formatHelpers';
 import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
-import voiceData from '@/lib/voiceData.json';
+import { getErrorRedirect } from '@/utils/helpers/vercel';
 
 export default async function CreateNPCPage() {
   const { user } = await getUserProfile();
@@ -18,8 +18,11 @@ export default async function CreateNPCPage() {
       : [];
 
   const voicesResponse = await getAllElevenLabsVoices();
-  const voices =
-    voicesResponse.status === 'success' ? voicesResponse.data : voiceData;
+  if (voicesResponse.status !== 'success') {
+    const redirectPath = getErrorRedirect('/npcs/create', 'error', 'unable to get voices');
+    redirect(redirectPath);
+  }
+  const voices = voicesResponse.data;
 
   return (
     <div className="flex flex-col gap-4">
