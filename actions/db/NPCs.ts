@@ -10,6 +10,7 @@ import { ZodError } from 'zod';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers/vercel';
+import { redirectIfDemoUserDeleting } from '@/utils/permissions';
 
 export const createNPCAction = async (
   formData: FormData
@@ -133,6 +134,12 @@ export const deleteNPCAction = async (
   const { user } = await getUserProfile();
   if (!user) throw new Error('You must be logged in to delete NPCs.');
 
+  redirectIfDemoUserDeleting(
+    user.id,
+    '/dashboard',
+    'demo user cannot delete NPCs.'
+  );
+
   let redirectPath: string;
 
   try {
@@ -148,12 +155,12 @@ export const deleteNPCAction = async (
       `so long, ${deletedNPC[0].npc_name}!`
     );
   } catch (error) {
+    console.error('Error deleting NPC:', error);
     redirectPath = getErrorRedirect(
       '/npcs',
       'oops',
-      'an error occured during NPC deletion'
+      'an error occured while deleting NPC.'
     );
-    console.error('Error deleting NPC:', error);
     return {
       status: 'error',
       message: 'An error occured while deleting NPC.',

@@ -13,6 +13,7 @@ import { ZodError } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers/vercel';
+import { redirectIfDemoUserDeleting } from '@/utils/permissions';
 
 export const createCampaignAction = async (
   prevState: ActionStatus | null,
@@ -73,7 +74,12 @@ export const deleteCampaignAction = async (
 ): Promise<ActionStatus> => {
   const { user } = await getUserProfile();
   if (!user) return { status: 'error', message: 'Unauthenticated' };
-  const user_id = user.id;
+
+  redirectIfDemoUserDeleting(
+    user.id,
+    '/dashboard',
+    'demo user cannot delete campaigns.'
+  );
 
   let redirectPath: string;
 
@@ -81,7 +87,7 @@ export const deleteCampaignAction = async (
     const { campaign_id } = deleteCampaignSchema.parse(formData);
     const deletedCampaign = await db
       .delete(campaigns)
-      .where(and(eq(campaigns.id, campaign_id), eq(campaigns.user_id, user_id)))
+      .where(and(eq(campaigns.id, campaign_id), eq(campaigns.user_id, user.id)))
       .returning();
 
     redirectPath = getStatusRedirect(

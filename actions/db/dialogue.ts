@@ -15,6 +15,9 @@ import {
   deleteDialogueSchema,
 } from '@/database/drizzle/validation';
 import { ZodError } from 'zod';
+import { redirectIfDemoUserDeleting } from '@/utils/permissions';
+import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers/vercel';
+import { truncateText } from '@/utils/helpers/formatHelpers';
 
 export const createDialogueAction = async (
   formData: FormData
@@ -76,9 +79,18 @@ export const deleteDialogueAction = async (
       message: 'You must be logged in to delete dialogues.',
     };
 
-  const { dialogue_id } = deleteDialogueSchema.parse(formData);
-  let deletedDialogue: Tables<'npc_dialogues'> | null = null;
+  redirectIfDemoUserDeleting(
+    user.id,
+    '/dashboard',
+    'demo user cannot delete dialogue.'
+  );
+
+  let redirectPath: string;
+
   try {
+    const { dialogue_id } = deleteDialogueSchema.parse(formData);
+    let deletedDialogue: Tables<'npc_dialogues'> | null = null;
+
     //Check if dialogue has an audio file
     const dialogueAudioIdRows = await db
       .select({ tts_audio_id: npc_dialogues.tts_audio_id })
@@ -116,21 +128,28 @@ export const deleteDialogueAction = async (
         )
       )
       .returning();
+
     deletedDialogue = deletedDialogueRows[0];
+    const fullText = deletedDialogue?.text || '';
+    const deletedDialogueTextSnippet = truncateText(fullText, 50);
+    const deletedMessage = encodeURIComponent(
+      `dialogue "${deletedDialogueTextSnippet}" deleted successfully.`
+    );
+
+    redirectPath = getStatusRedirect('/', 'success', deletedMessage);
   } catch (error) {
-    console.error(error);
-    return {
-      status: 'error',
-      message: 'An error occured while deleting dialogue.',
-    };
+    console.error('Error deleting dialogue:', error);
+    redirectPath = getErrorRedirect(
+      '/npcs',
+      'oops',
+      'an error occured while deleting dialogue.'
+    );
   }
-  const deletedDialogueTextSnippet = deletedDialogue?.text.slice(0, 10) + '...';
-  const deletedMessage = encodeURIComponent(deletedDialogueTextSnippet);
+
   revalidatePath('/');
-  redirect(
-    `/npcs/${deletedDialogue.npc_id}?deleted=true&message=${deletedMessage}`
-  );
+  redirect(redirectPath);
 };
+
 export async function updateDialogueTTSAudioAction(
   prevState: ActionStatus | null,
   formData: FormData
