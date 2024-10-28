@@ -1,12 +1,14 @@
+import { VoiceOptionProps } from './elevenlabs';
 import { Tables } from './supabase';
-
-export type CampaignWithNPCs = Tables<'campaigns'> & {
-  npcs: Tables<'npcs'>[];
-};
 
 export type DetailedNPC = Tables<'npcs'> & {
   campaigns: Tables<'campaigns'>[];
   dialogues: Tables<'npc_dialogues'>[];
+  voice: VoiceOptionProps;
+};
+
+export type CampaignWithDetailedNPCs = Tables<'campaigns'> & {
+  npcs?: Array<DetailedNPC>;
 };
 
 export type UpdateNPC = {
@@ -18,11 +20,11 @@ export type UpdateNPC = {
 };
 
 //todo: fix for better typing, non-zod error handling, etc.
-export type ActionStatus =
+export type ActionStatus<T = any> =
   | {
       status: 'success';
       message?: string;
-      data: any;
+      data: T;
     }
   | {
       status: 'error';
