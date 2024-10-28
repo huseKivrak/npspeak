@@ -122,7 +122,7 @@ export const npcs = pgTable('npcs', {
     .references(() => users.id, { onDelete: 'set null' }),
   npc_name: varchar('npc_name').notNull(),
   description: text('description'),
-  voice_id: text('voice_id'),
+  voice_id: text('voice_id').notNull(),
   is_default: boolean('is_default').default(false).notNull(),
 });
 

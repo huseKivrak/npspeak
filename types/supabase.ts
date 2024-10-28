@@ -243,7 +243,7 @@ export type Database = {
           is_default: boolean;
           npc_name: string;
           user_id: string;
-          voice_id: string | null;
+          voice_id: string;
         };
         Insert: {
           created_at?: string;
@@ -252,7 +252,7 @@ export type Database = {
           is_default?: boolean;
           npc_name: string;
           user_id?: string;
-          voice_id?: string | null;
+          voice_id: string;
         };
         Update: {
           created_at?: string;
@@ -261,7 +261,7 @@ export type Database = {
           is_default?: boolean;
           npc_name?: string;
           user_id?: string;
-          voice_id?: string | null;
+          voice_id?: string;
         };
         Relationships: [
           {
