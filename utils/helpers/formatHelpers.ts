@@ -1,9 +1,10 @@
 import {
-  CampaignWithNPCs,
+  CampaignWithDetailedNPCs,
   DetailedDialogue,
   SoundboardDialogue,
 } from '@/types/drizzle';
 import { Tables } from '@/types/supabase';
+import voiceData from '@/lib/voiceData.json';
 
 export const formatDialoguesForSoundboard = (
   dialogues: DetailedDialogue[]
@@ -40,7 +41,7 @@ export const formatPrice = (price: Tables<'prices'>) => {
 };
 
 export const transformCampaignOptions = (
-  campaigns: CampaignWithNPCs[] | Tables<'campaigns'>[]
+  campaigns: CampaignWithDetailedNPCs[] | Tables<'campaigns'>[]
 ) => {
   return campaigns.map((campaign) => ({
     value: campaign.id,
@@ -53,4 +54,9 @@ export const truncateText = (text: string, length: number) => {
     return `${text.substring(0, length)}...`;
   }
   return text;
+};
+
+export const findVoiceById = (voiceId: string) => {
+  const voice = voiceData.find((voice) => voice.value === voiceId);
+  return voice;
 };

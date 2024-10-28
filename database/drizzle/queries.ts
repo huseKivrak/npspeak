@@ -1,90 +1,154 @@
-import { ActionStatus, CampaignWithNPCs, DetailedNPC } from '@/types/drizzle';
+import {
+  ActionStatus,
+  CampaignWithDetailedNPCs,
+  DetailedDialogue,
+  DetailedNPC,
+} from '@/types/drizzle';
 import {
   npcs,
   campaigns,
-  campaign_npcs,
-  npc_dialogue_types,
   npc_dialogues,
-  tts_audio,
   profiles,
 } from '@/database/drizzle/schema';
 import { db } from '.';
-import { eq } from 'drizzle-orm';
-import { getUserProfile } from '@/actions/auth';
-import { DetailedDialogue } from '@/types/drizzle';
-import { PgSelect } from 'drizzle-orm/pg-core';
+import { and, eq } from 'drizzle-orm';
+import { findVoiceById } from '@/utils/helpers/formatHelpers';
+import { VoiceOptionProps } from '@/types/elevenlabs';
 
 /**
- * @param campaignId Optional: Returns all user campaigns if not provided
- * @returns CampaignWithNPCs | CampaignWithNPCs[] | {status: string; message: string}
+ * Fetch NPC with related campaigns and dialogues.
+ *
+ * @param userId
+ * @param npcId
+ * @returns
  */
-export const getCampaignsWithNPCs = async (
-  campaignId?: number
-): Promise<ActionStatus> => {
-  const { user } = await getUserProfile();
-  if (!user)
-    return {
-      status: 'error',
-      message: 'Unauthorized',
+export const getDetailedNPC = async (
+  userId: string,
+  npcId: number
+): Promise<ActionStatus<DetailedNPC>> => {
+  try {
+    //Fetch NPC with related dialogues and campaigns
+    const npcData = await db.query.npcs.findFirst({
+      where: and(eq(npcs.user_id, userId), eq(npcs.id, npcId)),
+      with: {
+        campaign_npcs: {
+          with: {
+            campaign: true,
+          },
+        },
+        npc_dialogues: true,
+      },
+    });
+
+    if (!npcData) {
+      return {
+        status: 'error',
+        message: 'No NPCs found',
+      };
+    }
+
+    //Process NPC to include campaigns and voice data
+    const detailedNPC: DetailedNPC = {
+      ...npcData,
+      dialogues: npcData.npc_dialogues,
+      campaigns: npcData.campaign_npcs
+        .map((cn) => cn.campaign)
+        .filter((c) => c !== undefined),
+      voice: findVoiceById(npcData.voice_id)!,
     };
 
-  function withCampaignId<T extends PgSelect>(qb: T, campaignId: number) {
-    return qb.where(eq(campaigns.id, campaignId));
-  }
-
-  try {
-    let campaignQuery = db
-      .select()
-      .from(campaigns)
-      .leftJoin(campaign_npcs, eq(campaigns.id, campaign_npcs.campaign_id))
-      .leftJoin(npcs, eq(npcs.id, campaign_npcs.npc_id))
-      .where(eq(campaigns.user_id, user.id))
-      .$dynamic();
-
-    campaignQuery = campaignId
-      ? withCampaignId(campaignQuery, campaignId)
-      : campaignQuery;
-
-    const rows = await campaignQuery;
-
-    const campaignData: CampaignWithNPCs[] = rows.reduce((acc, row) => {
-      let campaign = acc.find((entry) => entry.id === row.campaigns.id);
-      if (!campaign) {
-        campaign = {
-          ...row.campaigns,
-          npcs: row.npcs ? [row.npcs] : [],
-        };
-        acc.push(campaign);
-      } else {
-        if (row.npcs) {
-          campaign.npcs.push(row.npcs);
-        }
-      }
-      return acc;
-    }, [] as CampaignWithNPCs[]);
-
-    const data =
-      campaignId && campaignData.length ? campaignData[0] : campaignData;
     return {
       status: 'success',
-      data,
+      data: detailedNPC,
     };
   } catch (error) {
-    console.error('Error fetching campaigns:', error);
+    console.error('Error fetching Detailed NPC:', error);
     return {
       status: 'error',
-      message: `Error fetching campaigns: ${error}`,
+      message: `Error fetching Detailed NPC: ${error}`,
     };
   }
 };
 
-export const getAllUserCampaigns = async (
+/**
+ * Fetches all user NPCs with related campaigns and dialogues.
+ *
+ * @param userId
+ * @returns
+ */
+export const getAllDetailedNPCs = async (
   userId: string
-): Promise<ActionStatus> => {
+): Promise<ActionStatus<DetailedNPC[]>> => {
+  try {
+    const npcsData = await db.query.npcs.findMany({
+      where: eq(npcs.user_id, userId),
+      with: {
+        campaign_npcs: {
+          with: {
+            campaign: true,
+          },
+        },
+        npc_dialogues: true,
+      },
+    });
+
+    if (!npcsData || npcsData.length === 0) {
+      return {
+        status: 'error',
+        message: 'No NPCs found',
+      };
+    }
+
+    // Process each NPC to include campaigns and voice data
+    const detailedNPCs: DetailedNPC[] = npcsData.map((npcData) => {
+      const relatedCampaigns = npcData.campaign_npcs
+        .map((cn) => cn.campaign)
+        .filter((c) => c !== undefined);
+
+      const voice: VoiceOptionProps = findVoiceById(npcData.voice_id)!;
+
+      return {
+        ...npcData,
+        dialogues: npcData.npc_dialogues,
+        campaigns: relatedCampaigns,
+        voice,
+      };
+    });
+
+    return {
+      status: 'success',
+      data: detailedNPCs,
+    };
+  } catch (error) {
+    console.error('Error fetching all NPCs:', error);
+    return {
+      status: 'error',
+      message: `Error fetching all NPCs: ${error}`,
+    };
+  }
+};
+
+/**
+ * Fetches all campaigns for a user.
+ *
+ * @param userId
+ * @returns
+ */
+export const getAllCampaigns = async (
+  userId: string
+): Promise<ActionStatus<(typeof campaigns.$inferSelect)[]>> => {
   try {
     const userCampaigns = await db.query.campaigns.findMany({
       where: eq(campaigns.user_id, userId),
     });
+
+    if (!userCampaigns || userCampaigns.length === 0) {
+      return {
+        status: 'error',
+        message: 'No campaigns found',
+      };
+    }
+
     return {
       status: 'success',
       data: userCampaigns,
@@ -98,131 +162,167 @@ export const getAllUserCampaigns = async (
   }
 };
 
-///////////////////////////////////////////////////
-/// NPCs
-///////////////////////////////////////////////////
-
 /**
+ * Fetches a campaign with related NPCs.
  *
- * @param npcId Optional: Returns all user NPCs if not provided
- * @returns DetailedNPC | DetailedNPC[] | {status: string; message: string}
+ * @param userId
+ * @param campaignId
+ * @returns
  */
-export const getNPCsWithRelatedData = async (
-  npcId?: number
-): Promise<ActionStatus> => {
-  const { user } = await getUserProfile();
-  if (!user)
-    return {
-      status: 'error',
-      message: 'Unauthenticated',
-    };
-
-  function withNPCId<T extends PgSelect>(qb: T, npcId: number) {
-    return qb.where(eq(npcs.id, npcId));
-  }
-
+export const getCampaignWithDetailedNPCs = async (
+  userId: string,
+  campaignId: number
+): Promise<ActionStatus<CampaignWithDetailedNPCs>> => {
   try {
-    let npcQuery = db
-      .select()
-      .from(npcs)
-      .leftJoin(campaign_npcs, eq(npcs.id, campaign_npcs.npc_id))
-      .leftJoin(campaigns, eq(campaigns.id, campaign_npcs.campaign_id))
-      .leftJoin(npc_dialogues, eq(npcs.id, npc_dialogues.npc_id))
-      .where(eq(npcs.user_id, user.id))
-      .$dynamic();
+    const campaignData = await db.query.campaigns.findFirst({
+      where: and(eq(campaigns.id, campaignId), eq(campaigns.user_id, userId)),
+      with: {
+        campaign_npcs: {
+          with: {
+            npc: {
+              with: {
+                npc_dialogues: true,
+                campaign_npcs: {
+                  with: {
+                    campaign: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
 
-    npcQuery = npcId ? withNPCId(npcQuery, npcId) : npcQuery;
-
-    const rows = await npcQuery;
-
-    if (rows.length === 0)
+    if (!campaignData) {
       return {
         status: 'error',
-        message: 'NPC not found',
+        message: 'Campaign not found',
       };
+    }
 
-    const npcData: DetailedNPC[] = rows.reduce((acc, row) => {
-      let npc = acc.find((entry) => entry.id === row.npcs.id);
-      if (!npc) {
-        npc = {
-          ...row.npcs,
-          campaigns: row.campaigns ? [row.campaigns] : [],
-          dialogues: row.npc_dialogues ? [row.npc_dialogues] : [],
-        };
-        acc.push(npc);
-      } else {
-        if (
-          row.campaigns &&
-          !npc.campaigns.find((campaign) => campaign.id === row.campaigns?.id)
-        ) {
-          npc.campaigns.push(row.campaigns);
-        }
-        if (
-          row.npc_dialogues &&
-          !npc.dialogues.find(
-            (dialogue) => dialogue.id === row.npc_dialogues?.id
-          )
-        ) {
-          npc.dialogues.push(row.npc_dialogues);
-        }
-      }
-      return acc;
-    }, [] as DetailedNPC[]);
+    // Transform NPCs to include dialogues, campaigns, and voice
+    const detailedNPCs: DetailedNPC[] = campaignData.campaign_npcs.map(
+      (cn) => ({
+        ...cn.npc,
+        dialogues: cn.npc.npc_dialogues,
+        campaigns: cn.npc.campaign_npcs.map((c) => c.campaign),
+        voice: findVoiceById(cn.npc.voice_id)!,
+      })
+    );
 
-    const data = npcId && npcData.length ? npcData[0] : npcData;
+    const campaign: CampaignWithDetailedNPCs = {
+      ...campaignData,
+      npcs: detailedNPCs,
+    };
+
     return {
       status: 'success',
-      data,
+      data: campaign,
     };
   } catch (error) {
-    console.error('Error fetching NPC:', error);
+    console.error('Error fetching campaign with NPCs:', error);
     return {
       status: 'error',
-      message: `Error fetching NPC: ${error}`,
+      message: `Error fetching campaign with NPCs: ${error}`,
     };
   }
 };
 
 /**
- * Fetches detailed dialogue data for given NPC
+ * Fetches all campaigns with related NPCs.
  *
- * @param npcId
- * @returns DetailedDialogue[] | {status: string; message: string}
+ * @param userId
+ * @returns
  */
-export const getDetailedDialogues = async (
-  npcId: number
-): Promise<ActionStatus> => {
-  const { user } = await getUserProfile();
-  if (!user) {
-    return {
-      status: 'error',
-      message: 'Unauthenticated',
-    };
-  }
+export const getAllCampaignsWithDetailedNPCs = async (
+  userId: string
+): Promise<ActionStatus<CampaignWithDetailedNPCs[]>> => {
   try {
-    const rows: DetailedDialogue[] = await db
-      .select({
-        id: npc_dialogues.id,
-        npc_id: npc_dialogues.npc_id,
-        user_id: npc_dialogues.user_id,
-        text: npc_dialogues.text,
-        dialogueType: npc_dialogue_types.type_name,
-        audioFileKey: tts_audio.file_url,
-        audioDuration: tts_audio.duration_seconds,
-      })
-      .from(npc_dialogues)
-      .leftJoin(tts_audio, eq(npc_dialogues.tts_audio_id, tts_audio.id))
-      .leftJoin(
-        npc_dialogue_types,
-        eq(npc_dialogues.dialogue_type_id, npc_dialogue_types.id)
-      )
-      .where(eq(npc_dialogues.npc_id, npcId));
+    const rows = await db.query.campaigns.findMany({
+      where: eq(campaigns.user_id, userId),
+      with: {
+        campaign_npcs: {
+          with: {
+            npc: {
+              with: {
+                npc_dialogues: true,
+                campaign_npcs: {
+                  with: {
+                    campaign: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const campaignsWithNPCs = rows.map((row) => ({
+      ...row,
+      npcs: row.campaign_npcs.map((cn) => ({
+        ...cn.npc,
+        dialogues: cn.npc.npc_dialogues,
+        campaigns: cn.npc.campaign_npcs.map((c) => c.campaign),
+        voice: findVoiceById(cn.npc.voice_id)!,
+      })),
+    }));
+
     return {
       status: 'success',
-      data: rows,
+      data: campaignsWithNPCs,
     };
   } catch (error) {
-    console.error('Error fetching detailed dialogues: ', error);
+    console.error('Error fetching campaigns with NPCs:', error);
+    return {
+      status: 'error',
+      message: `Error fetching campaigns with NPCs: ${error}`,
+    };
+  }
+};
+
+/**
+ * Fetches an NPC's dialogues with related audio and dialogue type.
+ *
+ * @param userId
+ * @param npcId
+ * @returns
+ */
+export const getDetailedDialoguesByNPCId = async (
+  userId: string,
+  npcId: number
+): Promise<ActionStatus<DetailedDialogue[]>> => {
+  try {
+    const rows = await db.query.npc_dialogues.findMany({
+      where: and(
+        eq(npc_dialogues.npc_id, npcId),
+        eq(npc_dialogues.user_id, userId)
+      ),
+      with: {
+        tts_audio: {
+          columns: {
+            file_url: true,
+            duration_seconds: true,
+          },
+        },
+        npc_dialogue_type: true,
+      },
+    });
+
+    const dialogues: DetailedDialogue[] = rows.map((row) => ({
+      ...row,
+      audioFileKey: row.tts_audio?.file_url,
+      dialogueType: row.npc_dialogue_type.type_name,
+      audioDuration: row.tts_audio?.duration_seconds,
+    }));
+
+    return {
+      status: 'success',
+      data: dialogues,
+    };
+  } catch (error) {
+    console.error('Error fetching detailed dialogues:', error);
     return {
       status: 'error',
       message: `Error fetching detailed dialogues: ${error}`,
@@ -230,6 +330,12 @@ export const getDetailedDialogues = async (
   }
 };
 
+/**
+ * Checks if an email address is already associated with a profile
+ *
+ * @param emailAddress - The email address to check
+ * @returns A boolean indicating whether the email address is in use.
+ */
 export const isExistingEmailAddress = async (
   emailAddress: string
 ): Promise<boolean> => {
