@@ -9,9 +9,9 @@ interface PromoFormProps {
   onValidPromoCode: (code: string) => void;
 }
 export default function PromoForm({ onValidPromoCode }: PromoFormProps) {
-  const [promoCode, setPromoCode] = useState('');
-  const [error, setError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ promoCode, setPromoCode ] = useState('');
+  const [ error, setError ] = useState('');
+  const [ isSubmitting, setIsSubmitting ] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +44,7 @@ export default function PromoForm({ onValidPromoCode }: PromoFormProps) {
           errorMessage: 'text-lg',
           description: 'text-lg md:text-xl lg:text-2xl',
         }}
-        description="Enter your invite code to get started."
+        description="enter your invite code to get started."
       />
       <Button
         color={error ? 'danger' : 'success'}

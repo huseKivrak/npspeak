@@ -28,9 +28,12 @@ export function ForgotPasswordForm() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col gap-8">
       <h1>reset password</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <span className="font-mono text-xl">
+        please enter your email address to send a reset link.
+      </span>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md">
         <Input
           isRequired
           label="email address"
@@ -43,14 +46,14 @@ export function ForgotPasswordForm() {
 
         <Button
           variant="flat"
-          className=" tracking-wider"
+          className="tracking-wider"
           size="lg"
           color="success"
           isDisabled={isSubmitting}
           endContent={!isSubmitting && <IconSendEmail />}
           type="submit"
         >
-          {isSubmitting ? <Spinner /> : 'Send reset link'}
+          {isSubmitting ? <Spinner /> : 'send email'}
         </Button>
       </form>
     </div>
