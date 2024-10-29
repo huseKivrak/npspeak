@@ -4,6 +4,7 @@ import { NPCForm } from '@/components/forms/NPCForm';
 import { getAllCampaigns, getDetailedNPC } from '@/database/drizzle/queries';
 import { DetailedNPC, UpdateNPC } from '@/types/types';
 import { transformCampaignOptions } from '@/utils/helpers/formatHelpers';
+import { redirectIfDemoUser } from '@/utils/permissions';
 import { notFound, redirect } from 'next/navigation';
 
 export default async function EditNPCPage({
@@ -17,6 +18,7 @@ export default async function EditNPCPage({
   if (!user) {
     return redirect('/login');
   }
+  redirectIfDemoUser(user.id, '/campaigns/52', 'demo user cannot edit NPCs.');
 
   const voiceResponse = await getAllElevenLabsVoices();
   const voices = voiceResponse.status === 'success' ? voiceResponse.data : '';
