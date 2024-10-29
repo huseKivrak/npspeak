@@ -4,7 +4,6 @@ import {
   SoundboardDialogue,
 } from '@/types/drizzle';
 import { Tables } from '@/types/supabase';
-import voiceData from '@/lib/voiceData.json';
 
 export const formatDialoguesForSoundboard = (
   dialogues: DetailedDialogue[]
@@ -54,9 +53,4 @@ export const truncateText = (text: string, length: number) => {
     return `${text.substring(0, length)}...`;
   }
   return text;
-};
-
-export const findVoiceById = (voiceId: string) => {
-  const voice = voiceData.find((voice) => voice.value === voiceId);
-  return voice;
 };

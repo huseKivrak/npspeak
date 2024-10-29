@@ -12,8 +12,7 @@ import {
 } from '@/database/drizzle/schema';
 import { db } from '.';
 import { and, eq } from 'drizzle-orm';
-import { findVoiceById } from '@/utils/helpers/formatHelpers';
-import { VoiceOptionProps } from '@/types/elevenlabs';
+import { findVoicesByIds } from '@/config/server/voiceDataHelpers';
 
 /**
  * Fetch NPC with related campaigns and dialogues.
@@ -47,6 +46,9 @@ export const getDetailedNPC = async (
       };
     }
 
+    const voiceMap = await findVoicesByIds([npcData.voice_id]);
+    const voice = voiceMap[npcData.voice_id];
+
     //Process NPC to include campaigns and voice data
     const detailedNPC: DetailedNPC = {
       ...npcData,
@@ -54,7 +56,7 @@ export const getDetailedNPC = async (
       campaigns: npcData.campaign_npcs
         .map((cn) => cn.campaign)
         .filter((c) => c !== undefined),
-      voice: findVoiceById(npcData.voice_id)!,
+      voice,
     };
 
     return {
@@ -99,13 +101,15 @@ export const getAllDetailedNPCs = async (
       };
     }
 
+    const voiceIds = Array.from(new Set(npcsData.map((npc) => npc.voice_id)));
+    const voiceMap = await findVoicesByIds(voiceIds);
+
     // Process each NPC to include campaigns and voice data
     const detailedNPCs: DetailedNPC[] = npcsData.map((npcData) => {
+      const voice = voiceMap[npcData.voice_id];
       const relatedCampaigns = npcData.campaign_npcs
         .map((cn) => cn.campaign)
         .filter((c) => c !== undefined);
-
-      const voice: VoiceOptionProps = findVoiceById(npcData.voice_id)!;
 
       return {
         ...npcData,
@@ -201,15 +205,22 @@ export const getCampaignWithDetailedNPCs = async (
       };
     }
 
+    const voiceIds = Array.from(
+      new Set(campaignData.campaign_npcs.map((cn) => cn.npc.voice_id))
+    );
+    const voiceMap = await findVoicesByIds(voiceIds);
+
     // Transform NPCs to include dialogues, campaigns, and voice
-    const detailedNPCs: DetailedNPC[] = campaignData.campaign_npcs.map(
-      (cn) => ({
+    const detailedNPCs: DetailedNPC[] = campaignData.campaign_npcs.map((cn) => {
+      const voice = voiceMap[cn.npc.voice_id];
+
+      return {
         ...cn.npc,
         dialogues: cn.npc.npc_dialogues,
         campaigns: cn.npc.campaign_npcs.map((c) => c.campaign),
-        voice: findVoiceById(cn.npc.voice_id)!,
-      })
-    );
+        voice,
+      };
+    });
 
     const campaign: CampaignWithDetailedNPCs = {
       ...campaignData,
@@ -259,15 +270,28 @@ export const getAllCampaignsWithDetailedNPCs = async (
       },
     });
 
-    const campaignsWithNPCs = rows.map((row) => ({
-      ...row,
-      npcs: row.campaign_npcs.map((cn) => ({
-        ...cn.npc,
-        dialogues: cn.npc.npc_dialogues,
-        campaigns: cn.npc.campaign_npcs.map((c) => c.campaign),
-        voice: findVoiceById(cn.npc.voice_id)!,
-      })),
-    }));
+    const voiceIds = Array.from(
+      new Set(
+        rows.flatMap((row) => row.campaign_npcs.map((cn) => cn.npc.voice_id))
+      )
+    );
+    const voiceMap = await findVoicesByIds(voiceIds);
+
+    const campaignsWithNPCs = rows.map((row) => {
+      return {
+        ...row,
+        npcs: row.campaign_npcs.map((cn) => {
+          const voice = voiceMap[cn.npc.voice_id];
+
+          return {
+            ...cn.npc,
+            dialogues: cn.npc.npc_dialogues,
+            campaigns: cn.npc.campaign_npcs.map((c) => c.campaign),
+            voice,
+          };
+        }),
+      };
+    });
 
     return {
       status: 'success',
