@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import { VoiceOptionProps } from '@/types/elevenlabs';
+import path from 'path';
 
 /**
  * Loads the voice model data stored in a JSON file.
@@ -11,10 +12,8 @@ import { VoiceOptionProps } from '@/types/elevenlabs';
  * @returns The voice data as an array of VoiceOptionProps
  */
 async function loadVoiceData(): Promise<VoiceOptionProps[]> {
-  const file = await fs.readFile(
-    process.cwd() + '/config/server/voiceData.json',
-    'utf-8'
-  );
+  const filePath = path.join(__dirname, 'voiceData.json');
+  const file = await fs.readFile(filePath, 'utf-8');
   return JSON.parse(file) as VoiceOptionProps[];
 }
 
