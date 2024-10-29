@@ -1,7 +1,7 @@
 'use server';
 
 import { getUserProfile } from './auth';
-import { ActionStatus } from '@/types/drizzle';
+import { ActionStatus } from '@/types/types';
 
 import {
   S3Client,

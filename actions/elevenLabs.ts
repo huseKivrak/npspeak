@@ -7,7 +7,7 @@ import {
 } from '../utils/elevenlabs/api';
 
 import { ElevenLabsVoice, VoiceOptionProps } from '@/types/elevenlabs';
-import { ActionStatus } from '@/types/drizzle';
+import { ActionStatus } from '@/types/types';
 
 export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
   try {

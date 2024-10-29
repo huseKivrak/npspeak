@@ -14,7 +14,7 @@ import {
   Tooltip,
   Image,
 } from '@nextui-org/react';
-import { SoundboardDialogue } from '@/types/drizzle';
+import { SoundboardDialogue } from '@/types/types';
 import { formatTimer, truncateText } from '@/utils/helpers/formatHelpers';
 import { RenderIcon } from '@/utils/renderIcon';
 

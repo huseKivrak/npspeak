@@ -21,7 +21,7 @@ import {
   Link as NextUILink,
 } from '@nextui-org/react';
 
-import { DetailedNPC } from '@/types/drizzle';
+import { DetailedNPC } from '@/types/types';
 import { FaEdit } from 'react-icons/fa';
 import { tableStyles } from '@/styles/tableStyles';
 

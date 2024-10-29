@@ -3,7 +3,7 @@
 import { DialogueListTable } from '@/components/tables/DialogueListTable';
 import { DialogueModal } from '../forms/modals/DialogueModal';
 import { Tabs, Tab } from '@nextui-org/tabs';
-import { DetailedDialogue, DetailedNPC } from '@/types/drizzle';
+import { DetailedDialogue, DetailedNPC } from '@/types/types';
 import { formatDialoguesForSoundboard } from '@/utils/helpers/formatHelpers';
 import { Soundboard } from '../soundboard/Soundboard';
 import { Chip } from '@nextui-org/react';

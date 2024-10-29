@@ -2,7 +2,7 @@ import {
   CampaignWithDetailedNPCs,
   DetailedDialogue,
   SoundboardDialogue,
-} from '@/types/drizzle';
+} from '@/types/types';
 import { Tables } from '@/types/supabase';
 
 export const formatDialoguesForSoundboard = (

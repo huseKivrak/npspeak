@@ -1,7 +1,7 @@
 import { getUserProfile } from '@/actions/auth';
 import { notFound, redirect } from 'next/navigation';
 import { getCampaignWithDetailedNPCs } from '@/database/drizzle/queries';
-import { CampaignWithDetailedNPCs } from '@/types/drizzle';
+import { CampaignWithDetailedNPCs } from '@/types/types';
 import { CampaignDetail } from '@/components/views/CampaignDetail';
 
 export default async function CampaignDetailPage({

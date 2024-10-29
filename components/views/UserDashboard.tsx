@@ -1,5 +1,5 @@
 'use client';
-import { CampaignWithDetailedNPCs, DetailedNPC } from '@/types/drizzle';
+import { CampaignWithDetailedNPCs, DetailedNPC } from '@/types/types';
 import { CampaignListTable } from '../tables/CampaignListTable';
 import { NPCListTable } from '../tables/NPCListTable';
 import { Tabs, Tab, Chip, Button } from '@nextui-org/react';

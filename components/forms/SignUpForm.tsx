@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema } from '@/database/drizzle/validation';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
 import { IconSendEmail } from '@/lib/icons';
-import { ActionStatus } from '@/types/drizzle';
+import { ActionStatus } from '@/types/types';
 import { Input } from '@nextui-org/react';
 
 type Inputs = z.infer<typeof signupSchema>;

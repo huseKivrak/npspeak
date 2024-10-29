@@ -8,7 +8,7 @@ import { getUserProfile } from '../auth';
 import { deleteAudioFromS3 } from '../s3';
 import { npc_dialogues, tts_audio } from '@/database/drizzle/schema';
 import { Tables } from '@/types/supabase';
-import { ActionStatus } from '@/types/drizzle';
+import { ActionStatus } from '@/types/types';
 import {
   dialogueSchema,
   ttsAudioSchema,

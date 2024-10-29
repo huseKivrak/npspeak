@@ -17,13 +17,13 @@ import {
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { AudioCard } from './AudioCard';
-import { SoundboardDialogue } from '@/types/drizzle';
+import { SoundboardDialogue } from '@/types/types';
 export const Soundboard = ({
   dialogues,
 }: {
   dialogues: SoundboardDialogue[];
 }) => {
-  const [items, setItems] = useState(dialogues);
+  const [ items, setItems ] = useState(dialogues);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {

@@ -2,7 +2,7 @@ import { getUserProfile } from '@/actions/auth';
 import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
 import { NPCForm } from '@/components/forms/NPCForm';
 import { getAllCampaigns, getDetailedNPC } from '@/database/drizzle/queries';
-import { DetailedNPC, UpdateNPC } from '@/types/drizzle';
+import { DetailedNPC, UpdateNPC } from '@/types/types';
 import { transformCampaignOptions } from '@/utils/helpers/formatHelpers';
 import { notFound, redirect } from 'next/navigation';
 

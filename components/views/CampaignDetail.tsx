@@ -1,6 +1,6 @@
 'use client';
 
-import { CampaignWithDetailedNPCs } from '@/types/drizzle';
+import { CampaignWithDetailedNPCs } from '@/types/types';
 import { Divider } from '@nextui-org/react';
 import { NPCListTable } from '../tables/NPCListTable';
 

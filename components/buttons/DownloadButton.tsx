@@ -1,4 +1,4 @@
-import { DialogueRow } from '@/types/drizzle';
+import { DialogueRow } from '@/types/types';
 import { Button, Tooltip } from '@nextui-org/react';
 import { FaDownload } from 'react-icons/fa';
 

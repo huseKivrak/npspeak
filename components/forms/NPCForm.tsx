@@ -13,7 +13,7 @@ import {
   Chip,
 } from '@nextui-org/react';
 import { npcSchema } from '@/database/drizzle/validation';
-import { FormOptions, UpdateNPC } from '@/types/drizzle';
+import { FormOptions, UpdateNPC } from '@/types/types';
 import { VoiceOptionProps } from '@/types/elevenlabs';
 import { useState } from 'react';
 import { VoiceGrid } from '../voices/VoiceGrid';

@@ -6,10 +6,10 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createCampaignAction } from '@/actions/db/campaigns';
 import { campaignSchema } from '@/database/drizzle/validation';
-import { ActionStatus } from '@/types/drizzle';
+import { ActionStatus } from '@/types/types';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
 import { IconPlus } from '../../lib/icons';
-import { FormOptions } from '@/types/drizzle';
+import { FormOptions } from '@/types/types';
 import {
   CheckboxGroup,
   Checkbox,

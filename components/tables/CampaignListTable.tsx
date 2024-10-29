@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useMemo, useState } from 'react';
-import { CampaignWithDetailedNPCs } from '@/types/drizzle';
+import { CampaignWithDetailedNPCs } from '@/types/types';
 import {
   Table,
   TableHeader,

@@ -3,7 +3,7 @@ import {
   CampaignWithDetailedNPCs,
   DetailedDialogue,
   DetailedNPC,
-} from '@/types/drizzle';
+} from '@/types/types';
 import {
   npcs,
   campaigns,

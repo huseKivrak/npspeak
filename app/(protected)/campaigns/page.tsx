@@ -1,6 +1,6 @@
 import { getAllCampaignsWithDetailedNPCs } from '@/database/drizzle/queries';
 import { CampaignListTable } from '@/components/tables/CampaignListTable';
-import { CampaignWithDetailedNPCs } from '@/types/drizzle';
+import { CampaignWithDetailedNPCs } from '@/types/types';
 import { getUserProfile } from '@/actions/auth';
 import { redirect } from 'next/navigation';
 

@@ -9,7 +9,7 @@ import {
   useDisclosure,
   Tooltip,
 } from '@nextui-org/react';
-import { ServerAction } from '@/types/drizzle';
+import { ServerAction } from '@/types/types';
 import { useFormState } from 'react-dom';
 import { DeleteModalMessages } from '@/lib/constants';
 import { IconDelete } from '../../../lib/icons';

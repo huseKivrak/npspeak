@@ -4,7 +4,7 @@ import { getUserProfile } from '../auth';
 import { npcs, campaign_npcs } from '@/database/drizzle/schema';
 import { eq, and } from 'drizzle-orm';
 import { Tables } from '@/types/supabase';
-import { ActionStatus } from '@/types/drizzle';
+import { ActionStatus } from '@/types/types';
 import { npcSchema, deleteNPCSchema } from '@/database/drizzle/validation';
 import { ZodError } from 'zod';
 import { redirect } from 'next/navigation';

@@ -3,7 +3,7 @@
 import { db } from '@/database/drizzle';
 import { eq } from 'drizzle-orm';
 import { profiles, promo_codes } from '@/database/drizzle/schema';
-import { PromoCodeValidation } from '@/types/drizzle';
+import { PromoCodeValidation } from '@/types/types';
 
 export const getPromoCodeStatus = async (
   code: string

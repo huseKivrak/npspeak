@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import { getUserProfile } from '@/actions/auth';
 import { getDetailedNPC, getDetailedDialoguesByNPCId } from '@/database/drizzle/queries';
 import { getPresignedDownloadURL } from '@/actions/s3';
-import { DetailedNPC, DetailedDialogue } from '@/types/drizzle';
+import { DetailedNPC, DetailedDialogue } from '@/types/types';
 import { NPCDetail } from '@/components/views/NPCDetail';
 
 export default async function NPCDetailPage({

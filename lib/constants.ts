@@ -1,4 +1,4 @@
-import { FormOptions } from '@/types/drizzle';
+import { FormOptions } from '@/types/types';
 
 export const DefaultDialogueTypes: FormOptions = [
   { label: 'greeting', value: 1 },

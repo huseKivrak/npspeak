@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useMemo, useState } from 'react';
-import { DetailedDialogue, DialogueRow } from '@/types/drizzle';
+import { DetailedDialogue, DialogueRow } from '@/types/types';
 import { Tooltip } from '@nextui-org/tooltip';
 import { RenderIcon } from '@/utils/renderIcon';
 import { DeleteModal } from '../forms/modals/DeleteModal';

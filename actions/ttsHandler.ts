@@ -7,7 +7,7 @@ import { ttsHandlerSchema } from '@/database/drizzle/validation';
 import { db } from '@/database/drizzle';
 import { eq } from 'drizzle-orm';
 import { npc_dialogues } from '@/database/drizzle/schema';
-import { ActionStatus } from '@/types/drizzle';
+import { ActionStatus } from '@/types/types';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 

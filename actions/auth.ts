@@ -5,7 +5,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { signupSchema, loginSchema } from '@/database/drizzle/validation';
 import { ZodError } from 'zod';
-import { ActionStatus } from '@/types/drizzle';
+import { ActionStatus } from '@/types/types';
 import {
   getErrorRedirect,
   getStatusRedirect,

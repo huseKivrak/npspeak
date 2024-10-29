@@ -9,7 +9,7 @@ import { SubmitButton } from '../buttons/SubmitButton';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/database/drizzle/validation';
-import { ActionStatus } from '@/types/drizzle';
+import { ActionStatus } from '@/types/types';
 import { Input } from '@nextui-org/react';
 
 type Inputs = z.infer<typeof loginSchema>;
