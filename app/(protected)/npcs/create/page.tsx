@@ -5,12 +5,15 @@ import { getAllCampaigns } from '@/database/drizzle/queries';
 import { transformCampaignOptions } from '@/utils/helpers/formatHelpers';
 import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
 import { getErrorRedirect } from '@/utils/helpers/vercel';
+import { redirectIfDemoUser } from '@/utils/permissions';
 
 export default async function CreateNPCPage() {
   const { user } = await getUserProfile();
   if (!user) {
     redirect('/login');
   }
+  redirectIfDemoUser(user.id, '/campaigns/52', 'demo user cannot create NPCs.');
+
   const campaignsResponse = await getAllCampaigns(user.id);
   const campaignOptions =
     campaignsResponse.status === 'success' && campaignsResponse.data.length > 0
