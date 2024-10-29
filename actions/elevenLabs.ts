@@ -6,10 +6,9 @@ import {
   transformAndNormalizeAllVoices,
 } from '../utils/elevenlabs/api';
 
-import { ElevenLabsVoice } from '@/types/elevenlabs';
+import { ElevenLabsVoice, VoiceOptionProps } from '@/types/elevenlabs';
 import { ActionStatus } from '@/types/drizzle';
 
-//todo: save as json, revalidating periodically?
 export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
   try {
     const response = await fetch(`${ELEVENLABS_BASE_URL}/voices`, {
@@ -29,6 +28,26 @@ export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
     console.error(error);
     return { status: 'error', message: `Error: ${error}` };
   }
+}
+
+export async function findVoicesByIds(
+  voiceIds: string[]
+): Promise<Record<string, VoiceOptionProps>> {
+  const response = await getAllElevenLabsVoices();
+  if (response.status !== 'success') {
+    console.error(response.message);
+    return {};
+  }
+
+  const voices = response.data;
+  const voiceMap: Record<string, VoiceOptionProps> = {};
+  voiceIds.forEach((id) => {
+    const voice = voices.find((voice: VoiceOptionProps) => voice.value === id);
+    if (voice) {
+      voiceMap[id] = voice;
+    }
+  });
+  return voiceMap;
 }
 
 export async function createElevenLabsTTSAction(

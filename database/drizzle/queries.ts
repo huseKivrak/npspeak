@@ -12,7 +12,7 @@ import {
 } from '@/database/drizzle/schema';
 import { db } from '.';
 import { and, eq } from 'drizzle-orm';
-import { findVoicesByIds } from '@/config/server/voiceDataHelpers';
+import { findVoicesByIds } from '@/actions/elevenLabs';
 
 /**
  * Fetch NPC with related campaigns and dialogues.
