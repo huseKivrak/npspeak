@@ -171,14 +171,16 @@ export const sendResetPasswordEmail = async (email: string) => {
 
   const validEmail = isValidEmail(email.trim());
   if (!validEmail) {
-    return 'Please enter a valid email.';
+    return 'please enter a valid email';
   }
 
   try {
     //Check if there's a user with that email
     const existingEmail = await isExistingEmailAddress(email);
-    if (!existingEmail) {
-      return 'No account found with that email address.';
+    if (email === process.env.DEMO_EMAIL) {
+      return 'demo user cannot reset password';
+    } else if (!existingEmail) {
+      return 'no account found with that email address';
     }
 
     const supabase = createClientOnServer();
@@ -186,17 +188,17 @@ export const sendResetPasswordEmail = async (email: string) => {
       redirectTo: callbackURL,
     });
     if (error) {
-      return 'Oops! Something went wrong. Please try again';
+      return 'oops! something went wrong. please try again';
     }
   } catch (error) {
     console.error(error);
-    return 'Oops! Something went wrong. Please try again';
+    return 'oops! something went wrong. please try again';
   }
 
   const redirectPath = getStatusRedirect(
     '/forgot-password',
-    'success',
-    'a reset link has been sent to your email'
+    'email sent',
+    'please check your email for a reset link'
   );
   redirect(redirectPath);
 };
@@ -205,9 +207,9 @@ export const updatePasswordAction = async (formData: FormData) => {
   const password = String(formData.get('password')).trim();
   const confirmPassword = String(formData.get('confirm_password')).trim();
   if (password !== confirmPassword) {
-    return 'Passwords do not match.';
+    return 'passwords do not match';
   } else if (password.length < 6) {
-    return 'Password must be at least 6 characters.';
+    return 'password must be at least 6 characters';
   }
 
   let redirectPath: string;

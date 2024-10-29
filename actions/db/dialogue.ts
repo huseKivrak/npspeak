@@ -15,7 +15,7 @@ import {
   deleteDialogueSchema,
 } from '@/database/drizzle/validation';
 import { ZodError } from 'zod';
-import { redirectIfDemoUserDeleting } from '@/utils/permissions';
+import { redirectIfDemoUser } from '@/utils/permissions';
 import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers/vercel';
 import { truncateText } from '@/utils/helpers/formatHelpers';
 
@@ -79,7 +79,7 @@ export const deleteDialogueAction = async (
       message: 'You must be logged in to delete dialogues.',
     };
 
-  redirectIfDemoUserDeleting(
+  redirectIfDemoUser(
     user.id,
     '/dashboard',
     'demo user cannot delete dialogue.'

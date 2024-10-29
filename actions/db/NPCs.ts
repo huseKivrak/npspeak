@@ -10,13 +10,15 @@ import { ZodError } from 'zod';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers/vercel';
-import { redirectIfDemoUserDeleting } from '@/utils/permissions';
+import { redirectIfDemoUser } from '@/utils/permissions';
 
 export const createNPCAction = async (
   formData: FormData
 ): Promise<ActionStatus> => {
   const { user } = await getUserProfile();
   if (!user) throw new Error('You must be logged in to create NPCs.');
+
+  redirectIfDemoUser(user.id, '/campaigns/52', 'demo user cannot create NPCs.');
 
   const user_id = user.id;
   let newNPCId: number | null = null;
@@ -73,6 +75,8 @@ export const updateNPCAction = async (
 ): Promise<ActionStatus> => {
   const { user } = await getUserProfile();
   if (!user) throw new Error('You must be logged in to update NPCs.');
+
+  redirectIfDemoUser(user.id, '/campaigns/52', 'demo user cannot edit NPCs.');
 
   try {
     const { npc_name, description, voice_id, campaign_ids } =
@@ -134,11 +138,7 @@ export const deleteNPCAction = async (
   const { user } = await getUserProfile();
   if (!user) throw new Error('You must be logged in to delete NPCs.');
 
-  redirectIfDemoUserDeleting(
-    user.id,
-    '/dashboard',
-    'demo user cannot delete NPCs.'
-  );
+  redirectIfDemoUser(user.id, '/dashboard', 'demo user cannot delete NPCs.');
 
   let redirectPath: string;
 
