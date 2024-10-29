@@ -19,11 +19,11 @@ export const CampaignDetail = ({
         <h1>{campaign.campaign_name}</h1>
         <span className="max-w-prose font-mono sm:text-xl text-balance">{campaign.description}</span>
 
-        <Divider className='h-[.5px] bg-foreground my-2' />
+        <Divider className='h-[.5px] bg-foreground' />
 
         <div className='flex space-x-8'>
           <h2>NPCs</h2>
-          <Link href="/npcs/create" className='mt-2'>
+          <Link href="/npcs/create" className='mt-1'>
             <Button variant="flat" color='success'>
               <IconPlus />
               <span>NPC</span>
