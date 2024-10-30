@@ -3,7 +3,7 @@ import { getUserProfile } from '@/actions/auth';
 import { Hero } from '@/components/landingPage/Hero';
 import { Features } from '@/components/landingPage/Features';
 import { VoiceSampler } from '@/components/landingPage/VoiceSampler';
-import { curatedVoices } from '@/lib/curatedVoices';
+import { loadJSONVoiceData } from '@/config/server/voiceDataHelpers';
 
 
 export default async function Index() {
@@ -12,12 +12,13 @@ export default async function Index() {
     redirect('/dashboard');
   }
 
+  const voices = await loadJSONVoiceData();
 
   return (
     <div className="flex flex-col space-y-8">
       <Hero />
       <Features />
-      <VoiceSampler voiceOptions={curatedVoices} />
+      <VoiceSampler voiceOptions={voices} />
     </div>
   );
 }
