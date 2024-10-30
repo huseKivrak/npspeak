@@ -45,9 +45,9 @@ export function VoiceGrid({
         {items.map((v) => (
           <VoiceCard
             voice={v}
-            key={v.value}
-            onSelect={() => onSelectVoice(v.value)}
-            isSelected={v.value === selectedVoiceId}
+            key={v.id}
+            onSelect={() => onSelectVoice(v.id)}
+            isSelected={v.id === selectedVoiceId}
           />
         ))}
       </div>

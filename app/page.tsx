@@ -3,7 +3,8 @@ import { getUserProfile } from '@/actions/auth';
 import { Hero } from '@/components/landingPage/Hero';
 import { Features } from '@/components/landingPage/Features';
 import { VoiceSampler } from '@/components/landingPage/VoiceSampler';
-import { loadJSONVoiceData } from '@/config/server/voiceDataHelpers';
+import { db } from '@/database/drizzle';
+
 
 
 export default async function Index() {
@@ -12,7 +13,8 @@ export default async function Index() {
     redirect('/dashboard');
   }
 
-  const voices = await loadJSONVoiceData();
+  const voices = await db.query.voices.findMany();
+
 
   return (
     <div className="flex flex-col space-y-8">

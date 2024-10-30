@@ -76,7 +76,7 @@ export function transformAndNormalizeLabels(
   //transform into ui component-friendly format
   const transformedVoice: VoiceOptionProps = {
     label: voice.name,
-    value: voice.voice_id,
+    id: voice.voice_id,
     gender: normalizedLabels.gender || '',
     age: normalizedLabels.age || '',
     accent: normalizedLabels.accent || '',

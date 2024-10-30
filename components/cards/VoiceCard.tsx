@@ -16,7 +16,7 @@ export function VoiceCard({
   onSelect: (id: string) => void;
   isSelected?: boolean;
 }) {
-  const { label, value, accent, description, sampleURL, summary } = voice;
+  const { label, id, accent, description, sampleURL, summary } = voice;
 
   return (
     <Card
@@ -92,7 +92,7 @@ export function VoiceCard({
           startContent={
             isSelected ? <FaCheck size={24} /> : <FaPlus size={24} />
           }
-          onPress={() => onSelect(value)}
+          onPress={() => onSelect(id)}
           color="success"
         >
           <span className="font-mono text-tiny font-semibold">

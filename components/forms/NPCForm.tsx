@@ -57,7 +57,7 @@ export const NPCForm = ({
   const watchVoiceId = watch('voice_id');
   const getVoiceLabel = (voiceId: string | undefined) => {
     if (!voiceId) return '';
-    const selectedVoice = voiceOptions.find((v) => v.value === voiceId);
+    const selectedVoice = voiceOptions.find((v) => v.id === voiceId);
     return selectedVoice ? selectedVoice.label : '';
   };
 
