@@ -30,26 +30,6 @@ export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
   }
 }
 
-export async function findVoicesByIds(
-  voiceIds: string[]
-): Promise<Record<string, VoiceOptionProps>> {
-  const response = await getAllElevenLabsVoices();
-  if (response.status !== 'success') {
-    console.error(response.message);
-    return {};
-  }
-
-  const voices = response.data;
-  const voiceMap: Record<string, VoiceOptionProps> = {};
-  voiceIds.forEach((id) => {
-    const voice = voices.find((voice: VoiceOptionProps) => voice.value === id);
-    if (voice) {
-      voiceMap[id] = voice;
-    }
-  });
-  return voiceMap;
-}
-
 export async function createElevenLabsTTSAction(
   prevState: any,
   formData: FormData

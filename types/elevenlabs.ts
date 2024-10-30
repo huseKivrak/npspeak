@@ -99,11 +99,10 @@ export type ElevenLabsVoice = {
   is_mixed: boolean;
 };
 
-//
 export type VoiceOptionProps = {
+  id: string;
   label: string; //model name
-  value: string; //voice id
-  summary?: string;
+  summary?: string | null;
   sampleURL: string; //audio preview
 
   // voice labels:

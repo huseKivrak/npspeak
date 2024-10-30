@@ -122,7 +122,9 @@ export const npcs = pgTable('npcs', {
     .references(() => users.id, { onDelete: 'set null' }),
   npc_name: varchar('npc_name').notNull(),
   description: text('description'),
-  voice_id: text('voice_id').notNull(),
+  voice_id: text('voice_id')
+    .references(() => voices.id, { onDelete: 'set null' })
+    .notNull(),
   is_default: boolean('is_default').default(false).notNull(),
 });
 
@@ -422,4 +424,16 @@ export const promo_codes = pgTable('promo_codes', {
   updated_at: timestamp('updated_at', { withTimezone: true, mode: 'string' })
     .defaultNow()
     .notNull(),
+});
+
+export const voices = pgTable('voices', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  label: varchar('label', { length: 255 }).notNull(),
+  summary: varchar('summary', { length: 500 }),
+  sampleURL: varchar('sample_url', { length: 500 }).notNull(),
+  gender: varchar('gender', { length: 50 }).notNull(),
+  age: varchar('age', { length: 50 }).notNull(),
+  accent: varchar('accent', { length: 100 }).notNull(),
+  description: varchar('description', { length: 255 }).notNull(),
+  useCase: varchar('use_case', { length: 255 }).notNull(),
 });

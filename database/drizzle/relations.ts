@@ -13,6 +13,7 @@ import {
   profiles,
   subscriptions,
   campaign_npcs,
+  voices,
 } from './schema';
 import { authUsers as usersInAuth } from '../supabase/authSchema';
 
@@ -23,6 +24,10 @@ export const npcsRelations = relations(npcs, ({ one, many }) => ({
   }),
   npc_dialogues: many(npc_dialogues),
   campaign_npcs: many(campaign_npcs),
+  voice: one(voices, {
+    fields: [npcs.voice_id],
+    references: [voices.id],
+  }),
 }));
 
 export const usersInAuthRelations = relations(usersInAuth, ({ many }) => ({
@@ -144,4 +149,8 @@ export const campaign_npcsRelations = relations(campaign_npcs, ({ one }) => ({
     fields: [campaign_npcs.npc_id],
     references: [npcs.id],
   }),
+}));
+
+export const voicesRelations = relations(voices, ({ many }) => ({
+  npcs: many(npcs),
 }));
