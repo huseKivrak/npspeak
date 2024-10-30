@@ -11,7 +11,7 @@ import path from 'path';
  *
  * @returns The voice data as an array of VoiceOptionProps
  */
-export async function loadVoiceData(): Promise<VoiceOptionProps[]> {
+export async function loadJSONVoiceData(): Promise<VoiceOptionProps[]> {
   const filePath = path.join(
     process.cwd(),
     'config',
@@ -36,7 +36,7 @@ export async function loadVoiceData(): Promise<VoiceOptionProps[]> {
 export async function findVoicesByIds(
   voiceIds: string[]
 ): Promise<Record<string, VoiceOptionProps>> {
-  const voiceData = await loadVoiceData();
+  const voiceData = await loadJSONVoiceData();
   const voiceMap: Record<string, VoiceOptionProps> = {};
   voiceIds.forEach((id) => {
     const voice = voiceData.find((voice) => voice.value === id);
