@@ -12,12 +12,7 @@ import path from 'path';
  * @returns The voice data as an array of VoiceOptionProps
  */
 export async function loadJSONVoiceData(): Promise<VoiceOptionProps[]> {
-  const filePath = path.join(
-    process.cwd(),
-    'config',
-    'server',
-    'voiceData.json'
-  );
+  const filePath = path.join(__dirname, 'voiceData.json');
   try {
     const file = await fs.readFile(filePath, 'utf-8');
     return JSON.parse(file) as VoiceOptionProps[];
