@@ -11,10 +11,20 @@ import path from 'path';
  *
  * @returns The voice data as an array of VoiceOptionProps
  */
-async function loadVoiceData(): Promise<VoiceOptionProps[]> {
-  const filePath = path.join(__dirname, 'voiceData.json');
-  const file = await fs.readFile(filePath, 'utf-8');
-  return JSON.parse(file) as VoiceOptionProps[];
+export async function loadVoiceData(): Promise<VoiceOptionProps[]> {
+  const filePath = path.join(
+    process.cwd(),
+    'config',
+    'server',
+    'voiceData.json'
+  );
+  try {
+    const file = await fs.readFile(filePath, 'utf-8');
+    return JSON.parse(file) as VoiceOptionProps[];
+  } catch (error) {
+    console.error(`Failed to read voice data from ${filePath}:`, error);
+    throw new Error('Unable to load voice data.');
+  }
 }
 
 /**
