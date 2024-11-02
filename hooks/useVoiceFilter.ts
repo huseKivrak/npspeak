@@ -13,6 +13,17 @@ export type AllFilterOptions = {
   [K in FilterKey]: string[];
 };
 
+/**
+ * Custom hook for filtering voices based on selected options.
+ *
+ * @param voices - An array of available voices
+ * @returns An object containing:
+ * - allFilterOptions: An object mapping each filter key to an array of all unique options.
+ * - selectedOptions: The currently selected options for each filter key.
+ * - filteredVoices: An array of voices that match the selected options.
+ * - updateFilter: Function to update the selected options for a given filter key.
+ * - resetFilters: Function to reset all filters to their default (empty) state.
+ */
 export function useVoiceFilter(voices: VoiceOptionProps[]) {
   const [selectedOptions, setSelectedOptions] = useState<FilterOptions>({
     gender: new Set(),
