@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { getAllCampaigns } from '@/database/drizzle/queries';
 import { transformCampaignOptions } from '@/utils/helpers/formatHelpers';
 import { getErrorRedirect } from '@/utils/helpers/vercel';
-import { fetchAndTransformVoices } from '@/utils/elevenlabs/server';
+import { db } from '@/database/drizzle';
 
 export default async function CreateNPCPage() {
   const { user } = await getUserProfile();
@@ -18,7 +18,8 @@ export default async function CreateNPCPage() {
       ? transformCampaignOptions(campaignsResponse.data)
       : [];
 
-  const voiceOptions = await fetchAndTransformVoices();
+  const voiceOptions = await db.query.voices.findMany();
+
   if (voiceOptions.length === 0) {
     const redirectPath = getErrorRedirect(
       '/npcs/create',
