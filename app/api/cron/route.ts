@@ -1,6 +1,8 @@
 import { syncVoices } from '@/jobs/syncVoices';
 import { NextRequest, NextResponse } from 'next/server';
 
+export const runtime = 'edge';
+
 export async function GET(request: NextRequest) {
   const { CRON_ACTION_SECRET } = process.env;
   if (!CRON_ACTION_SECRET) {
