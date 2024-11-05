@@ -2,15 +2,15 @@ import { VoiceOptionProps } from './elevenlabs';
 import { Tables } from './supabase';
 import { SVGProps } from 'react';
 
-export type DetailedNPC = Tables<'npcs'> & {
+export interface DetailedNPC extends Tables<'npcs'> {
   campaigns: Tables<'campaigns'>[];
   dialogues: Tables<'npc_dialogues'>[];
   voice: VoiceOptionProps;
-};
+}
 
-export type CampaignWithDetailedNPCs = Tables<'campaigns'> & {
+export interface CampaignWithDetailedNPCs extends Tables<'campaigns'> {
   npcs?: Array<DetailedNPC>;
-};
+}
 
 export type UpdateNPC = {
   npc_id: number;
@@ -20,7 +20,7 @@ export type UpdateNPC = {
   voice_id: string;
 };
 
-//todo: fix for better typing, non-zod error handling, etc.
+//todo: fix
 export type ActionStatus<T = any> =
   | {
       status: 'success';
