@@ -1,12 +1,11 @@
 //docs - https://elevenlabs.io/docs/api-reference/
 
 import {
-  ElevenLabsVoice,
-  LabelOptions,
   NormalizedLabel,
   SharedElevenLabsVoiceQueryProps,
 } from '@/types/elevenlabs';
 import { VoiceOptionProps } from '@/types/elevenlabs';
+import { Voice } from 'elevenlabs/api';
 
 export const ELEVENLABS_BASE_URL = 'https://api.elevenlabs.io/v1';
 export const ELEVENLABS_API_HEADERS = {
@@ -32,9 +31,7 @@ const audioFormats = {
  * @param voice - The voice object to transform and normalize.
  * @returns The transformed and normalized voice object.
  */
-export function transformAndNormalizeLabels(
-  voice: ElevenLabsVoice
-): VoiceOptionProps {
+export function transformAndNormalizeLabels(voice: Voice): VoiceOptionProps {
   const labelMap: Record<string, NormalizedLabel> = {
     'use case': 'useCase',
     usecase: 'useCase',
@@ -55,41 +52,43 @@ export function transformAndNormalizeLabels(
   };
 
   //Normalize and trim labels/values
-  Object.entries(voice.labels).forEach(([label, value]) => {
-    const trimmedLabel = label.trim();
-    const normalizedLabel = labelMap[trimmedLabel] || undefined;
+  if (voice.labels) {
+    Object.entries(voice.labels).forEach(([label, value]) => {
+      const trimmedLabel = label.trim();
+      const normalizedLabel = labelMap[trimmedLabel] || undefined;
 
-    if (normalizedLabel) {
-      let trimmedValue = value ? value.toLowerCase().trim() : '';
+      if (normalizedLabel) {
+        let trimmedValue = value ? value.toLowerCase().trim() : '';
 
-      //age normalization
-      //todo: make more generic/refactor
-      if (normalizedLabel === 'age' && trimmedValue === 'middle aged') {
-        trimmedValue = 'middle-aged';
+        //age normalization
+        //todo: make more generic/refactor
+        if (normalizedLabel === 'age' && trimmedValue === 'middle aged') {
+          trimmedValue = 'middle-aged';
+        }
+        normalizedLabels[normalizedLabel] = trimmedValue;
+      } else {
+        console.warn(`Unexpected label "${trimmedLabel}" encountered.`);
       }
-      normalizedLabels[normalizedLabel] = trimmedValue;
-    } else {
-      console.warn(`Unexpected label "${trimmedLabel}" encountered.`);
-    }
-  });
+    });
+  }
 
   //transform into ui component-friendly format
   const transformedVoice: VoiceOptionProps = {
-    label: voice.name,
+    label: voice.name || 'unknown',
     id: voice.voice_id,
     gender: normalizedLabels.gender || '',
     age: normalizedLabels.age || '',
     accent: normalizedLabels.accent || '',
     description: normalizedLabels.description || '',
     useCase: normalizedLabels.useCase || '',
-    sampleURL: voice.preview_url,
+    sampleURL: voice.preview_url || '',
     summary: voice.description || '',
   };
   return transformedVoice;
 }
 
 export const transformAndNormalizeAllVoices = (
-  voices: ElevenLabsVoice[]
+  voices: Voice[]
 ): VoiceOptionProps[] => {
   const transformedVoices = voices.map(transformAndNormalizeLabels);
 
