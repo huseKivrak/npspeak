@@ -3,6 +3,7 @@ name: Daily Voice Sync
 on:
   schedule:
     - cron: '0 10 * * *' # runs daily at 5am EST
+  workflow_dispatch: # allows manual triggering
 
 jobs:
   sync-voices:
