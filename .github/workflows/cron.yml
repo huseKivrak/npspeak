@@ -1,0 +1,24 @@
+name: Daily Voice Sync
+
+on:
+  schedule:
+    - cron: '0 10 * * *' # runs daily at 5am EST
+
+jobs:
+  sync-voices:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync Voices
+        env:
+          CRON_ACTION_SECRET: ${{ secrets.CRON_ACTION_SECRET }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $CRON_ACTION_SECRET" \
+          -X GET "https://npspeak.com/api/cron")
+
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "Sync Voices failed with status code $RESPONSE"
+            exit 1
+          else
+            echo "Sync Voices executed successfully."
+          fi
