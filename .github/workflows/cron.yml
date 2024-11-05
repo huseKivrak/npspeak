@@ -14,15 +14,13 @@ jobs:
           CRON_ACTION_SECRET: ${{ secrets.CRON_ACTION_SECRET }}
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
         run: |
-          RESPONSE=$(curl -s -L -H "Authorization: Bearer $CRON_ACTION_SECRET" \
+          RESPONSE=$(curl -s -L -w "%{http_code}" -H "Authorization: Bearer $CRON_ACTION_SECRET" \
           -X GET "https://www.npspeak.com/api/cron")
 
+          STATUS_CODE=${RESPONSE: -3}
+          BODY=${RESPONSE::-3}
 
-          echo "Response body: $RESPONSE"
-
-          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" -L -H "Authorization: Bearer $CRON_ACTION_SECRET" \
-          -X GET "https://www.npspeak.com/api/cron")
-
+          echo "Response body: $BODY"
           if [ "$STATUS_CODE" -ne 200 ]; then
             echo "Sync Voices failed with status code $STATUS_CODE"
             exit 1
