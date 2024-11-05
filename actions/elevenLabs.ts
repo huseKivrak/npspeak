@@ -6,8 +6,8 @@ import {
   transformAndNormalizeAllVoices,
 } from '../utils/elevenlabs/api';
 
-import { ElevenLabsVoice, VoiceOptionProps } from '@/types/elevenlabs';
 import { ActionStatus } from '@/types/types';
+import { Voice } from 'elevenlabs/api';
 
 export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
   try {
@@ -16,7 +16,7 @@ export async function getAllElevenLabsVoices(): Promise<ActionStatus> {
       headers: ELEVENLABS_API_HEADERS,
     });
     const data = await response.json();
-    const allVoices: ElevenLabsVoice[] = data.voices;
+    const allVoices: Voice[] = data.voices;
     const normalizedVoices = transformAndNormalizeAllVoices(allVoices);
 
     return {

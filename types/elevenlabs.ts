@@ -73,7 +73,7 @@ export type FineTuning = {
 
 export type ElevenLabsVoice = {
   voice_id: string;
-  name: string;
+  name?: string;
   samples: File[] | null;
   category: string;
   fine_tuning: FineTuning;
@@ -89,7 +89,7 @@ export type ElevenLabsVoice = {
     language: string | null;
     verification_attempts: string[] | null;
   };
-  owner_id: string | null;
+  owner_id?: string | null;
   permission_on_resource: string | null;
   available_for_tiers: string[] | null;
   settings: Record<string, any> | null;
@@ -102,7 +102,7 @@ export type ElevenLabsVoice = {
 export type VoiceOptionProps = {
   id: string;
   label: string; //model name
-  summary?: string | null;
+  summary: string | null;
   sampleURL: string; //audio preview
 
   // voice labels:
