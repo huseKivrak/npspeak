@@ -1,9 +1,10 @@
 import { getUserProfile } from '@/actions/auth';
-import { getAllElevenLabsVoices } from '@/actions/elevenLabs';
 import { NPCForm } from '@/components/forms/NPCForm';
 import { getAllCampaigns, getDetailedNPC } from '@/database/drizzle/queries';
 import { DetailedNPC, UpdateNPC } from '@/types/types';
+import { fetchAndTransformVoices } from '@/utils/elevenlabs/server';
 import { transformCampaignOptions } from '@/utils/helpers/formatHelpers';
+import { getErrorRedirect } from '@/utils/helpers/vercel';
 import { redirectIfDemoUser } from '@/utils/permissions';
 import { notFound, redirect } from 'next/navigation';
 
@@ -20,8 +21,15 @@ export default async function EditNPCPage({
   }
   redirectIfDemoUser(user.id, '/campaigns/52', 'demo user cannot edit NPCs.');
 
-  const voiceResponse = await getAllElevenLabsVoices();
-  const voices = voiceResponse.status === 'success' ? voiceResponse.data : '';
+  const voiceOptions = await fetchAndTransformVoices();
+  if (voiceOptions.length === 0) {
+    const redirectPath = getErrorRedirect(
+      `/npcs/${params.npcId}/edit`,
+      'error',
+      'unable to get voices'
+    );
+    redirect(redirectPath);
+  }
 
   const npcResponse = await getDetailedNPC(user.id, params.npcId);
   if (npcResponse.status !== 'success') notFound();
@@ -47,7 +55,7 @@ export default async function EditNPCPage({
   return (
     <div>
       <NPCForm
-        voiceOptions={voices}
+        voiceOptions={voiceOptions}
         npcToUpdate={editableNPC}
         campaignOptions={campaignOptions}
       />

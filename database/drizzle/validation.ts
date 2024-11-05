@@ -164,6 +164,7 @@ export const ttsAudioSchema = zfd.formData({
   source_text: zfd.text(z.string()),
   file_url: zfd.text(z.string()),
   duration_seconds: zfd.numeric(),
+  dialogue_id: zfd.numeric(),
 });
 
 export const ttsHandlerSchema = zfd.formData({

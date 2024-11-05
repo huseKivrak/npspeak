@@ -164,7 +164,7 @@ export async function updateDialogueTTSAudioAction(
     };
 
   try {
-    const { duration_seconds, source_text, voice_id, file_url } =
+    const { duration_seconds, source_text, voice_id, file_url, dialogue_id } =
       ttsAudioSchema.parse(formData);
 
     const insertedTTS: Tables<'tts_audio'>[] = await db
@@ -177,6 +177,26 @@ export async function updateDialogueTTSAudioAction(
         duration_seconds,
       })
       .returning();
+
+    if (insertedTTS.length === 0) {
+      return {
+        status: 'error',
+        message: 'Failed to insert TTS audio',
+      };
+    }
+
+    const updatedDialogue = await db
+      .update(npc_dialogues)
+      .set({ tts_audio_id: insertedTTS[0].id })
+      .where(eq(npc_dialogues.id, dialogue_id))
+      .returning();
+
+    if (updatedDialogue.length === 0) {
+      return {
+        status: 'error',
+        message: 'Failed to update dialogue with TTS audio id',
+      };
+    }
     revalidatePath('/');
     return {
       status: 'success',
