@@ -28,7 +28,6 @@ export default async function ttsHandler(
 
   //make request to ElevenLabs API
   const ttsResponse = await createElevenLabsTTSAction(prevState, formData);
-  console.log('ELEVEN LABS RESPONSE:', ttsResponse);
   if (ttsResponse.status !== 'success') {
     return ttsResponse;
   }
@@ -37,18 +36,16 @@ export default async function ttsHandler(
 
   //upload to s3
   const s3Response = await uploadAudioToS3(buffer);
-  console.log('S3 RESPONSE:', s3Response);
   if (s3Response.status !== 'success') {
     return s3Response;
   }
-  const s3Key = s3Response.data.key;
-  const duration = s3Response.data.duration;
+  const { fileName, duration } = s3Response.data;
 
   const ttsAudioData = new FormData();
   ttsAudioData.append('source_text', text);
   ttsAudioData.append('voice_id', voice_id);
   ttsAudioData.append('npc_id', npc_id.toString());
-  ttsAudioData.append('file_url', s3Key);
+  ttsAudioData.append('file_url', fileName);
   ttsAudioData.append('duration_seconds', duration);
 
   //insert TTS audio into database
@@ -68,7 +65,6 @@ export default async function ttsHandler(
     .set({ tts_audio_id: ttsAudioId })
     .where(eq(npc_dialogues.id, dialogue_id))
     .returning({ updatedId: npc_dialogues.id });
-  console.log('UPDATE DIALOGUE:', updateDialogue);
 
   if (updateDialogue.length === 0) {
     return {
