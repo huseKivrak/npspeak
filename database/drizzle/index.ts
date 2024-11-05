@@ -13,7 +13,9 @@ if (!connectionString) {
   process.exit(1);
 }
 
-const client = postgres(connectionString, {
-  prepare: false,
+//Disable prepared statements - not supported by Supavisor pooler (transactions)
+const postgresClient = postgres(connectionString, { prepare: false });
+export const db = drizzle(postgresClient, {
+  schema: { ...schema, ...relations },
+  logger: true,
 });
-export const db = drizzle(client, { schema: { ...schema, ...relations } });

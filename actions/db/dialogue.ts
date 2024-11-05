@@ -91,52 +91,54 @@ export const deleteDialogueAction = async (
     const { dialogue_id } = deleteDialogueSchema.parse(formData);
     let deletedDialogue: Tables<'npc_dialogues'> | null = null;
 
-    //Check if dialogue has an audio file
-    const dialogueAudioIdRows = await db
-      .select({ tts_audio_id: npc_dialogues.tts_audio_id })
-      .from(npc_dialogues)
-      .where(
-        and(
-          eq(npc_dialogues.id, dialogue_id),
-          eq(npc_dialogues.user_id, user.id)
-        )
-      );
-    const dialogueAudioId = dialogueAudioIdRows[0].tts_audio_id;
+    //Get the dialogue and its associated audio
+    const dialogueWithAssociatedAudio = await db.query.npc_dialogues.findFirst({
+      where: and(
+        eq(npc_dialogues.id, dialogue_id),
+        eq(npc_dialogues.user_id, user.id)
+      ),
+      columns: {
+        id: true,
+      },
+      with: {
+        tts_audio: {
+          columns: {
+            file_url: true,
+          },
+        },
+      },
+    });
 
-    //If it does, get the file name and delete it from S3
-    if (dialogueAudioId) {
-      const ttsAudioRows = await db
-        .select()
-        .from(tts_audio)
-        .where(eq(tts_audio.id, dialogueAudioId));
-      if (ttsAudioRows.length > 0) {
-        const fileName = ttsAudioRows[0].file_url;
-        const response = await deleteAudioFromS3(fileName);
-        if (response.status !== 'success') {
-          console.error('Error deleting audio from S3: ', response);
-        }
+    if (!dialogueWithAssociatedAudio) {
+      return {
+        status: 'error',
+        message: 'Dialogue not found',
+      };
+    }
+    const { id: dialogueId, tts_audio } = dialogueWithAssociatedAudio;
+
+    //If an audio file exists, delete it from s3
+    if (tts_audio?.file_url) {
+      const response = await deleteAudioFromS3(tts_audio.file_url);
+      if (response.status !== 'success') {
+        console.error('Error deleting audio from S3: ', response);
       }
     }
 
     //Delete the dialogue from the database
     const deletedDialogueRows = await db
       .delete(npc_dialogues)
-      .where(
-        and(
-          eq(npc_dialogues.id, dialogue_id),
-          eq(npc_dialogues.user_id, user.id)
-        )
-      )
+      .where(and(eq(npc_dialogues.id, dialogueId)))
       .returning();
 
     deletedDialogue = deletedDialogueRows[0];
     const fullText = deletedDialogue?.text || '';
-    const deletedDialogueTextSnippet = truncateText(fullText, 50);
-    const deletedMessage = encodeURIComponent(
-      `dialogue "${deletedDialogueTextSnippet}" deleted successfully.`
+    const dialogueSnippet = truncateText(fullText, 10);
+    redirectPath = getStatusRedirect(
+      '/',
+      'success',
+      `dialogue "${dialogueSnippet}" deleted.`
     );
-
-    redirectPath = getStatusRedirect('/', 'success', deletedMessage);
   } catch (error) {
     console.error('Error deleting dialogue:', error);
     redirectPath = getErrorRedirect(
@@ -161,22 +163,40 @@ export async function updateDialogueTTSAudioAction(
       message: 'You must be logged in to create audio.',
     };
 
-  const user_id = user.id;
-
   try {
-    const { duration_seconds, source_text, voice_id, file_url } =
+    const { duration_seconds, source_text, voice_id, file_url, dialogue_id } =
       ttsAudioSchema.parse(formData);
 
     const insertedTTS: Tables<'tts_audio'>[] = await db
       .insert(tts_audio)
       .values({
-        user_id,
+        user_id: user.id,
         voice_id,
         source_text,
         file_url,
         duration_seconds,
       })
       .returning();
+
+    if (insertedTTS.length === 0) {
+      return {
+        status: 'error',
+        message: 'Failed to insert TTS audio',
+      };
+    }
+
+    const updatedDialogue = await db
+      .update(npc_dialogues)
+      .set({ tts_audio_id: insertedTTS[0].id })
+      .where(eq(npc_dialogues.id, dialogue_id))
+      .returning();
+
+    if (updatedDialogue.length === 0) {
+      return {
+        status: 'error',
+        message: 'Failed to update dialogue with TTS audio id',
+      };
+    }
     revalidatePath('/');
     return {
       status: 'success',

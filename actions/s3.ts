@@ -10,7 +10,7 @@ import {
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION!,
@@ -28,8 +28,7 @@ export async function getPresignedUploadURL(): Promise<ActionStatus> {
   const { user } = await getUserProfile();
   if (!user) return { status: 'error', message: 'not authenticated' };
 
-  const randomString = uuidv4();
-  const fileName = randomString + '.mp3';
+  const fileName = `${uuid()}.mp3`;
   const s3FileKey = `${user.id}/${fileName}`;
 
   const putCommand = new PutObjectCommand({
@@ -46,8 +45,10 @@ export async function getPresignedUploadURL(): Promise<ActionStatus> {
       expiresIn: 900,
     });
 
-    console.log('Presigned URL: ', presignedURL);
-    return { status: 'success', data: { key: fileName, url: presignedURL } };
+    return {
+      status: 'success',
+      data: { fileName, presignedURL },
+    };
   } catch (error) {
     console.error('Error generating presigned upload URL: ', error);
     return {
@@ -58,18 +59,19 @@ export async function getPresignedUploadURL(): Promise<ActionStatus> {
 }
 
 export async function uploadAudioToS3(
-  audioBuffer: ArrayBuffer
+  audioBuffer: Buffer
 ): Promise<ActionStatus> {
   try {
     const response = await getPresignedUploadURL();
     if (response.status !== 'success') return response;
-    const { key, url } = response.data;
-    const uploadResponse = await fetch(url, {
+    const { fileName, presignedURL } = response.data;
+
+    const uploadResponse = await fetch(presignedURL, {
       method: 'PUT',
       headers: {
         'Content-Type': 'audio/mpeg',
       },
-      body: Buffer.from(audioBuffer),
+      body: audioBuffer,
     });
 
     if (!uploadResponse.ok) {
@@ -78,12 +80,12 @@ export async function uploadAudioToS3(
       );
     }
 
+    //calculate duration in seconds
     const duration = audioBuffer.byteLength / 44100 / 2;
-
     return {
       status: 'success',
       message: 'uploaded to s3',
-      data: { key, duration },
+      data: { fileName, duration },
     };
   } catch (error) {
     console.error('Error uploading audio to S3: ', error);
@@ -100,11 +102,11 @@ export async function getPresignedDownloadURL(
   const { user } = await getUserProfile();
   if (!user) return { status: 'error', message: 'not authenticated' };
 
-  const fileKey = `${user.id}/${fileName}`;
+  const s3FileKey = `${user.id}/${fileName}`;
   try {
     const getCommand = new GetObjectCommand({
       Bucket: process.env.AWS_BUCKET_NAME!,
-      Key: fileKey,
+      Key: s3FileKey,
     });
 
     const url = await getSignedUrl(s3, getCommand, {
@@ -131,9 +133,12 @@ export async function deleteAudioFromS3(
   const { user } = await getUserProfile();
   if (!user) return { status: 'error', message: 'not authenticated' };
 
+  //Generate the s3 file key using the user id
+  const s3FileKey = `${user.id}/${fileName}`;
+
   const deleteCommand = new DeleteObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME!,
-    Key: fileName,
+    Key: s3FileKey,
   });
 
   try {

@@ -1,6 +1,5 @@
 'use server';
 import { getUserProfile } from './auth';
-import { createElevenLabsTTSAction } from './elevenLabs';
 import { updateDialogueTTSAudioAction } from './db/dialogue';
 import { uploadAudioToS3 } from './s3';
 import { ttsHandlerSchema } from '@/database/drizzle/validation';
@@ -10,6 +9,8 @@ import { npc_dialogues } from '@/database/drizzle/schema';
 import { ActionStatus } from '@/types/types';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { createAudioStreamFromText } from '@/utils/elevenlabs/server';
+import { ZodError } from 'zod';
 
 export default async function ttsHandler(
   prevState: any,
@@ -23,59 +24,54 @@ export default async function ttsHandler(
     };
   }
 
-  const { text, voice_id, npc_id, dialogue_id } =
-    ttsHandlerSchema.parse(formData);
+  try {
+    const { text, voice_id, npc_id, dialogue_id } =
+      ttsHandlerSchema.parse(formData);
 
-  //make request to ElevenLabs API
-  const ttsResponse = await createElevenLabsTTSAction(prevState, formData);
-  console.log('ELEVEN LABS RESPONSE:', ttsResponse);
-  if (ttsResponse.status !== 'success') {
-    return ttsResponse;
-  }
+    //create audio stream from text
+    const buffer = await createAudioStreamFromText(voice_id, text);
 
-  const buffer = ttsResponse.data.buffer;
+    //upload to s3
+    const s3Response = await uploadAudioToS3(buffer);
+    if (s3Response.status !== 'success') {
+      return s3Response;
+    }
+    const { fileName, duration } = s3Response.data;
 
-  //upload to s3
-  const s3Response = await uploadAudioToS3(buffer);
-  console.log('S3 RESPONSE:', s3Response);
-  if (s3Response.status !== 'success') {
-    return s3Response;
-  }
-  const s3Key = s3Response.data.key;
-  const duration = s3Response.data.duration;
+    const ttsAudioData = new FormData();
+    ttsAudioData.append('source_text', text);
+    ttsAudioData.append('voice_id', voice_id);
+    ttsAudioData.append('npc_id', npc_id.toString());
+    ttsAudioData.append('file_url', fileName);
+    ttsAudioData.append('duration_seconds', duration);
+    ttsAudioData.append('dialogue_id', dialogue_id.toString());
 
-  const ttsAudioData = new FormData();
-  ttsAudioData.append('source_text', text);
-  ttsAudioData.append('voice_id', voice_id);
-  ttsAudioData.append('npc_id', npc_id.toString());
-  ttsAudioData.append('file_url', s3Key);
-  ttsAudioData.append('duration_seconds', duration);
+    //insert TTS audio into database
+    const audioAction = await updateDialogueTTSAudioAction(
+      prevState,
+      ttsAudioData
+    );
+    if (audioAction.status !== 'success') {
+      return audioAction;
+    }
 
-  //insert TTS audio into database
-  const audioAction = await updateDialogueTTSAudioAction(
-    prevState,
-    ttsAudioData
-  );
-  console.log('AUDIO ACTION:', audioAction);
-  if (audioAction.status !== 'success') {
-    return audioAction;
-  }
-  const ttsAudioId = parseInt(audioAction.data);
-
-  //update dialogue with tts_audio_id
-  const updateDialogue = await db
-    .update(npc_dialogues)
-    .set({ tts_audio_id: ttsAudioId })
-    .where(eq(npc_dialogues.id, dialogue_id))
-    .returning({ updatedId: npc_dialogues.id });
-  console.log('UPDATE DIALOGUE:', updateDialogue);
-
-  if (updateDialogue.length === 0) {
+    revalidatePath('/');
+    redirect(`/npcs/${npc_id}`);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        status: 'error',
+        message: 'Invalid form data',
+        errors: error.issues.map((issue) => ({
+          path: issue.path.join('.'),
+          message: `${issue.message}`,
+        })),
+      };
+    }
+    console.error('TTS HANDLER ERROR:', error);
     return {
       status: 'error',
-      message: 'Failed to update dialogue with TTS audio id',
+      message: 'An error occurred while processing TTS audio.',
     };
   }
-  revalidatePath('/');
-  redirect(`/npcs/${npc_id}`);
 }

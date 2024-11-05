@@ -30,6 +30,7 @@ export const getDetailedNPC = async (
       where: and(eq(npcs.user_id, userId), eq(npcs.id, npcId)),
       with: {
         campaign_npcs: {
+          columns: {},
           with: {
             campaign: true,
           },
@@ -46,14 +47,10 @@ export const getDetailedNPC = async (
       };
     }
 
-    //Process NPC to include campaigns and voice data
     const detailedNPC: DetailedNPC = {
       ...npcData,
       dialogues: npcData.npc_dialogues,
-      campaigns: npcData.campaign_npcs
-        .map((cn) => cn.campaign)
-        .filter((c) => c !== undefined),
-      voice: npcData.voice,
+      campaigns: npcData.campaign_npcs.map((cn) => cn.campaign),
     };
 
     return {
@@ -92,24 +89,20 @@ export const getAllDetailedNPCs = async (
       },
     });
 
-    if (!npcsData || npcsData.length === 0) {
+    if (npcsData.length === 0) {
       return {
         status: 'error',
         message: 'No NPCs found',
       };
     }
 
-    // Process each NPC to include campaigns and voice data
     const detailedNPCs: DetailedNPC[] = npcsData.map((npcData) => {
-      const relatedCampaigns = npcData.campaign_npcs
-        .map((cn) => cn.campaign)
-        .filter((c) => c !== undefined);
+      const relatedCampaigns = npcData.campaign_npcs.map((cn) => cn.campaign);
 
       return {
         ...npcData,
         dialogues: npcData.npc_dialogues,
         campaigns: relatedCampaigns,
-        voice: npcData.voice,
       };
     });
 
