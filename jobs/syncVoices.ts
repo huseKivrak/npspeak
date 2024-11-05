@@ -1,3 +1,5 @@
+'use server';
+
 import { fetchAndTransformVoices } from '@/utils/elevenlabs/server';
 import { db } from '@/database/drizzle';
 import { voices } from '@/database/drizzle/schema';
