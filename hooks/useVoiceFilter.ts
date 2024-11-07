@@ -49,13 +49,21 @@ export function useVoiceFilter(voices: VoiceOptionProps[]) {
   }, [voices]);
 
   const filteredVoices = useMemo(() => {
-    return voices.filter((voice) =>
+    const filtered = voices.filter((voice) =>
       filterKeys.every(
         (key) =>
           selectedOptions[key].size === 0 ||
           selectedOptions[key].has(voice[key])
       )
     );
+
+    //Sort by voices with summaries first, alphabetically otherwise
+    return filtered.sort((a, b) => {
+      const aHasSummary = a.summary ? 1 : 0;
+      const bHasSummary = b.summary ? 1 : 0;
+      if (aHasSummary !== bHasSummary) return bHasSummary - aHasSummary;
+      return a.label.localeCompare(b.label);
+    });
   }, [voices, selectedOptions]);
 
   const updateFilter = (key: FilterKey, selectedKeys: Set<string>) => {
