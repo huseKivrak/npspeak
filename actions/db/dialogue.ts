@@ -79,12 +79,6 @@ export const deleteDialogueAction = async (
       message: 'You must be logged in to delete dialogues.',
     };
 
-  redirectIfDemoUser(
-    user.id,
-    '/dashboard',
-    'demo user cannot delete dialogue.'
-  );
-
   let redirectPath: string;
 
   try {
@@ -99,6 +93,7 @@ export const deleteDialogueAction = async (
       ),
       columns: {
         id: true,
+        is_default: true,
       },
       with: {
         tts_audio: {
@@ -115,6 +110,7 @@ export const deleteDialogueAction = async (
         message: 'Dialogue not found',
       };
     }
+
     const { id: dialogueId, tts_audio } = dialogueWithAssociatedAudio;
 
     //If an audio file exists, delete it from s3

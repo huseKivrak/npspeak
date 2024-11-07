@@ -55,6 +55,7 @@ export type DetailedDialogue = {
   audioFileKey?: string | null;
   audioURL?: string | null;
   audioDuration?: number | null;
+  isDefault: boolean;
 };
 
 export type ServerAction = (
@@ -88,6 +89,7 @@ export type DialogueRow = {
   audio: string | null | undefined;
   npc_id: number | null;
   voice_id: string;
+  isDefault: boolean;
 };
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {

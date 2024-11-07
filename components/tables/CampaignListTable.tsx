@@ -148,13 +148,14 @@ export function CampaignListTable({
             <div className="relative flex items-center gap-2">
               <Tooltip content="Edit Campaign">
                 <NextUILink href={`/campaigns/${campaign.id}/edit`}>
-                  <FaEdit />
+                  <FaEdit size={24} className='text-default' aria-label='Edit Campaign' />
                 </NextUILink>
               </Tooltip>
               <DeleteModal
                 idName="campaign_id"
                 serverAction={deleteCampaignAction}
                 id={campaign.id}
+                isDisabled={campaign.is_default}
               />
             </div>
           );

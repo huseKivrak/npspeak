@@ -157,6 +157,7 @@ export const NPCListTable = ({ npcs }: { npcs: DetailedNPC[]; }) => {
               idName="npc_id"
               serverAction={deleteNPCAction}
               id={npc.id}
+              isDisabled={npc.is_default}
             />
           </div>
         );

@@ -19,12 +19,12 @@ export function DeleteModal({
   id,
   idName,
   serverAction,
+  isDisabled,
 }: {
   id: number;
   idName: 'npc_id' | 'dialogue_id' | 'campaign_id';
   serverAction: ServerAction;
-  className?: string;
-  children?: React.ReactNode;
+  isDisabled?: boolean;
 }) {
   const [ state, formAction ] = useFormState(serverAction, {
     status: 'idle',
@@ -45,6 +45,7 @@ export function DeleteModal({
       <Tooltip content="Delete">
         <Button
           isIconOnly
+          isDisabled={isDisabled}
           variant="light"
           size="lg"
           radius="full"

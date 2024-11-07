@@ -312,6 +312,7 @@ export const getDetailedDialoguesByNPCId = async (
       audioFileKey: row.tts_audio?.file_url,
       dialogueType: row.npc_dialogue_type.type_name,
       audioDuration: row.tts_audio?.duration_seconds,
+      isDefault: row.is_default,
     }));
 
     return {

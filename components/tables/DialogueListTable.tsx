@@ -115,7 +115,7 @@ export const DialogueListTable = ({
   //formats dialogues and sorts audio to top rows
   const rows = filteredItems
     .map((dialogue) => {
-      const { id, dialogueType, text, audioURL, npc_id } = dialogue;
+      const { id, dialogueType, text, audioURL, npc_id, isDefault } = dialogue;
       return {
         id,
         type: dialogueType || 'other',
@@ -123,6 +123,7 @@ export const DialogueListTable = ({
         audio: audioURL,
         npc_id,
         voice_id: voiceId,
+        isDefault,
       };
     })
     .sort((a, b) => (b.audio ? 1 : 0) - (a.audio ? 1 : 0));
@@ -360,11 +361,14 @@ export const DialogueListTable = ({
               ) : (
                 <DownloadButton dialogue={dialogue} />
               )}
+
               <DeleteModal
                 idName="dialogue_id"
                 serverAction={deleteDialogueAction}
                 id={dialogue.id}
+                isDisabled={dialogue.isDefault}
               />
+
             </div>
           );
         default:
