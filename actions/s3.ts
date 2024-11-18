@@ -2,6 +2,7 @@
 
 import { getUserProfile } from './auth';
 import { ActionStatus } from '@/types/types';
+import { parseBuffer } from 'music-metadata';
 
 import {
   S3Client,
@@ -81,7 +82,8 @@ export async function uploadAudioToS3(
     }
 
     //calculate duration in seconds
-    const duration = audioBuffer.byteLength / 44100 / 2;
+    const metadata = await parseBuffer(new Uint8Array(audioBuffer));
+    const duration = metadata.format.duration;
     return {
       status: 'success',
       message: 'uploaded to s3',
