@@ -130,11 +130,19 @@ export const signInAction = async (
       password,
     });
     if (error) {
-      redirectPath = getErrorRedirect(
-        '/login',
-        'Login failed',
-        'Invalid email/password. Please try again.'
-      );
+      redirectPath =
+        //todo: resend email
+        error.message === 'Email not confirmed'
+          ? getErrorRedirect(
+              '/login',
+              'unconfirmed email',
+              'please check your email for a confirmation link'
+            )
+          : getErrorRedirect(
+              '/login',
+              'login failed',
+              'invalid email/password. please try again.'
+            );
     } else {
       redirectPath = getStatusRedirect(
         '/dashboard',
