@@ -45,7 +45,7 @@ export default function SignUpForm({ promoCode }: { promoCode?: string; }) {
   }, [ state, setError ]);
 
   return (
-    <form className="flex flex-col gap-10 max-w-md">
+    <form className="flex flex-col gap-6 sm:gap-8 max-w-md">
       <h1>signup</h1>
       {promoCode && (
         <Input
@@ -61,6 +61,7 @@ export default function SignUpForm({ promoCode }: { promoCode?: string; }) {
           {...register('promo_code')}
         />
       )}
+
       <Input
         isRequired
         label="email"
@@ -69,6 +70,9 @@ export default function SignUpForm({ promoCode }: { promoCode?: string; }) {
         isInvalid={!!errors.email}
         errorMessage={errors.email && errors.email.message}
         {...register('email')}
+        classNames={{
+          description: 'text-sm text-default-400 '
+        }}
       />
 
       <Input
@@ -104,7 +108,14 @@ export default function SignUpForm({ promoCode }: { promoCode?: string; }) {
           errors.confirm_password && errors.confirm_password.message
         }
       />
-      <div className="flex flex-col gap-4 w-full">
+
+      <div className="flex flex-col gap-2 w-full">
+
+        <span className='text-default-500 text-sm tracking-normal text-balance'>
+          we confirm email addresses for security and lost passwords,
+          and won&apos;t send another without asking nicely first.
+        </span>
+
         <SubmitButton
           fullWidth
           variant="flat"
