@@ -73,15 +73,15 @@ export const signUpAction = async (
         } else {
           redirectPath = getStatusRedirect(
             '/signup/success',
-            'Success!',
-            `Confirmation email sent to ${data.user.email}`
+            'account created',
+            `confirmation email sent to ${data.user.email}`
           );
         }
       } else {
         redirectPath = getStatusRedirect(
           '/signup/success',
-          'Success!',
-          `Confirmation email sent to ${data.user.email}`
+          'account created',
+          `confirmation email sent to ${data.user.email}`
         );
       }
     } else {
