@@ -12,12 +12,10 @@ import AuthButton from '@/components/buttons/AuthButton';
 import { Toaster } from '@/components/toaster/toaster';
 import { Suspense, PropsWithChildren } from 'react';
 
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : 'http://localhost:3000';
+const url = process.env.NEXT_PUBLIC_SITE_URL!;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(defaultUrl),
+  metadataBase: new URL(url),
   title: {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`,
